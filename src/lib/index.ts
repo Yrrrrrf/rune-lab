@@ -19,3 +19,6 @@ export const yellow = (str: string): string => color('33', str);
 export const blue = (str: string): string => color('34', str);
 export const magenta = (str: string): string => color('35', str);
 export const cyan = (str: string): string => color('36', str);
+
+
+export { default as UIShowcase } from './components/UIShowcase.svelte';
