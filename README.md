@@ -1,58 +1,64 @@
-# create-svelte
+<h1 align="center">
+   <img src="./resources/img/rune.png" alt="Rune-Lab Icon" width="128" height="128" description="Some glowing runes"> 
+   <div align="center">Rune Lab</div>
+</h1>
 
-Everything you need to build a Svelte library, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+<!-- [![JSR Package](https://img.shields.io/badge/JSR-Package-blue?style=for-the-badge&logo=typescript)](https://jsr.io/@yrrrrrf/rune-lab) -->
+[![GitHub](https://img.shields.io/badge/github-rune--lab-blue?style=for-the-badge&logo=github)](https://github.com/Yrrrrrf/rune-lab)
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+## Overview
 
-## Creating a project
+Rune Lab is a SvelteKit component library **designed for the SvelteHack 2024**. It provides a collection of reusable UI components and utilities built with modern web technologies. The library emphasizes type safety, performance, and developer experience.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Features
 
-```bash
-# create a new project in the current directory
-npx sv create
+- **Svelte 5 Ready**: Built with the latest Svelte features
+- **TypeScript Support**: Full type safety and IDE integration
+- **Tailwind CSS**: Utility-first styling with custom components
+- **Zero Dependencies**: Lightweight and efficient
+- **Hot Reload**: Development-friendly with watch mode
+- **JSR Distribution**: Modern package distribution
 
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
-
-## Building
-
-To build your library:
+## Installation
 
 ```bash
-npm run package
+jsr add @rune-lab
+# jsr add @yrrrrrf/rune-lab
 ```
 
-To create a production version of your showcase app:
+## Usage
+
+### Components
+
+TODO
+TODO
+TODO
+TODO
+TODO
+
+## Development
 
 ```bash
-npm run build
+bun install  # Install dependencies
+bun watch  # Start development watch mode
+bun run build  # Build library
+bun test  # Run tests
 ```
 
-You can preview the production build with `npm run preview`.
+## Project Structure
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```bash
-npm publish
 ```
+rune-lab/
+├── src/
+│   └── lib/
+│       ├── components/
+│       ├── utils/
+│       └── index.ts
+├── tests/
+├── watch.ts
+└── package.json
+```
+
+## License
+
+MIT License - [LICENSE](LICENSE)
