@@ -1,28 +1,32 @@
-import chokidar from 'chokidar';
-import { cyan, green, yellow, red } from './src/lib';
+// watch.ts
+import { createServer } from 'vite';
 
-const log = {
-  info: (msg: string) => console.log(cyan('ℹ ') + msg),
-  success: (msg: string) => console.log(green('✓ ') + msg),
-  warn: (msg: string) => console.log(yellow('⚠ ') + msg),
-  error: (msg: string) => console.log(red('✗ ') + msg),
-};
+const server = await createServer({
+  configFile: './vite.config.ts',
+  server: {
+    watch: {
+      ignored: ['!**/src/**']
+    }
+  }
+});
+
+await server.listen();
+console.log('Watching for changes...');
 
 async function build() {
-  const proc = Bun.spawn(["bun", "run", "build"], {
+  // First run svelte-kit sync
+  const syncProc = Bun.spawn(["bunx", "svelte-kit", "sync"], {
     stdout: "inherit",
   });
-  const success = (await proc.exited) === 0;
+  await syncProc.exited;
+
+  // Then run the package build
+  const buildProc = Bun.spawn(["bunx", "svelte-package"], {
+    stdout: "inherit",
+  });
+  const success = (await buildProc.exited) === 0;
   return success;
 }
 
+// Run the build process
 await build();
-log.info('Watching for changes...\n');
-
-chokidar.watch('src').on('change', async (path) => {
-  log.warn(`File changed: ${path}`);
-  const success = await build();
-  success 
-    ? log.success('Rebuild complete\n') 
-    : log.error('Build failed\n');
-});
