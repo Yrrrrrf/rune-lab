@@ -4,7 +4,7 @@ import typography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
 import daisyui from 'daisyui';
 
-import { availableThemes, customThemes } from './src/lib/stores/theme';
+import availableThemes from "./src/lib/theme/index";
 
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
@@ -21,7 +21,7 @@ export default {
   ],
 
   daisyui: {
-    themes: [...availableThemes, customThemes],
+    themes: [...availableThemes.availableThemes],
     themeRoot: ":root",
     styled: true,
     utils: true,

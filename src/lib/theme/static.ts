@@ -43,7 +43,7 @@ export const THEMES_CONFIG = {
 } as const;
 
 // Export theme names for DaisyUI configuration
-export const availableThemes = Object.keys(THEMES_CONFIG);
+export const staticThemes = Object.keys(THEMES_CONFIG);
 
 // Custom themes can be added here
 export const customThemes = {

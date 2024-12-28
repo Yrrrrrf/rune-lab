@@ -18,4 +18,3 @@ export * from './components/tools/format.js';
 
 // creat a re-export for the stores/theme.ts file
 // this must be called as 'rune-lab/theme' in the consuming app
-export { availableThemes, customThemes } from './stores/theme.js';

@@ -1,9 +1,8 @@
 import { 
     THEMES_CONFIG, 
-    availableThemes, 
+    staticThemes,
     type ThemeConfig 
-} from "./theme.js";
-
+} from "./../theme/static.js";
 
 
 class ThemeStore {
@@ -26,7 +25,7 @@ class ThemeStore {
     }
 
     getAvailableThemes(): ThemeConfig[] {
-        return availableThemes.map(theme => this.createThemeConfig(theme));
+        return staticThemes.map(theme => this.createThemeConfig(theme));
     }
 
     setTheme(theme: string) {

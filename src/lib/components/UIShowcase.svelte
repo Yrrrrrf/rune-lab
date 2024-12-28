@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ThemeSelector } from "./layout/ThemeSelector.svelte";
+//   import { ThemeSelector } from "./layout/ThemeSelector.svelte";
 
   // State for interactive demos
   let activeTab = $state(0);
@@ -53,9 +53,9 @@
 
 <!-- Theme Selector -->
 <!-- Replace the old theme selector with: -->
-<div class="flex justify-end mb-8">
+<!-- <div class="flex justify-end mb-8">
   <ThemeSelector />
-</div>
+</div> -->
 
 <!-- Tabs -->
 <div class="tabs tabs-boxed justify-center mb-8">
