@@ -4,12 +4,8 @@
 
 // export * from './stores/gwa-store.svelte.ts';
 
-export function init_lab(): string {
-    let forge_str = "This fn is called from 'rune-lab'";
-    console.log(forge_str);
-    return forge_str;
-  }
-  
+export { app, type AppData } from './stores/app.js';
+
 
 export const color = (color: string, str: string): string => `\x1b[${color}m${str}\x1b[0m`;
 
