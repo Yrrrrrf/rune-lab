@@ -3,6 +3,9 @@
 
 // ^ UI Showcase
 export { default as UIShowcase } from './components/UIShowcase.svelte';
+// . Solvarn rune...
+export { default as Solvarn } from './components/Solvarn.svelte';
+
 
 // ^ App related components
 export { appData, type AppData } from './stores/app.svelte.js';
