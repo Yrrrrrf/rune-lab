@@ -1,7 +1,8 @@
 <!-- src/lib/components/layout/URLDisplay.svelte -->
 <script lang="ts">
+    import { Book, Copy, CheckCircle, Terminal } from 'phosphor-svelte';
+
     import { onMount } from 'svelte';
-    // import { Book, Copy, CheckCircle, Terminal } from 'lucide-svelte';
     import { apiStore } from '$lib/stores/api.svelte';
 
     let copied = $state(false);
@@ -60,10 +61,10 @@
             onclick={goToDocs}
             aria-label="Go to API Documentation"
         >
-            <!-- <Book class="w-4 h-4" /> -->
+            <Book class="w-4 h-4" />
         </button>
 
-        <!-- <Terminal class="w-4 h-4 text-primary" /> -->
+        <Terminal class="w-4 h-4 text-primary" />
 
         <!-- API URL Display and Copy Button -->
         <button
@@ -74,9 +75,9 @@
         >
             <span class="text-xs font-mono">{apiStore.baseUrl}</span>
             {#if copied}
-                <!-- <CheckCircle class="w-4 h-4 text-success" /> -->
+                <CheckCircle class="w-4 h-4 text-success" />
             {:else}
-                <!-- <Copy class="w-4 h-4 opacity-50 group-hover:opacity-100 transition-all duration-200" /> -->
+                <Copy class="w-4 h-4 opacity-50 group-hover:opacity-100 transition-all duration-200" />
             {/if}
         </button>
     </div>
