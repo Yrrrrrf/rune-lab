@@ -1,13 +1,25 @@
 {
 	"name": "rune-lab",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"type": "module",
+	"license": "MIT",
+	"author": "Yrrrrrf <fer.rezac@outlook.com>",
+	"repository": {
+	  "type": "git",
+	  "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
+	},
+	"keywords": [
+	  "svelte",
+	  "components",
+	  "ui",
+	  "daisyui",
+	  "tailwind"
+	],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js",
-			"default": "./dist/index.js",
-			"style": "./dist/style.css"
+			"default": "./dist/index.js"
 		},
 		"./themes": {
 			"types": "./dist/theme/static.d.ts",

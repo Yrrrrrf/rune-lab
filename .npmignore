@@ -1,0 +1,8 @@
+.svelte-kit/
+src/
+tests/
+.*
+*.config.*
+
+bun.lockb
+watch.ts

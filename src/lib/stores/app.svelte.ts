@@ -18,7 +18,7 @@ class AppStore {
         if (data.description) this.description = data.description;
         if (data.author) this.author = data.author;
 
-        // console.clear();
+        console.clear();
         console.log('🔮 App initialized:', {
             name: this.name,
             version: this.version,
