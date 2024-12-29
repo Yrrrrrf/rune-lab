@@ -12,9 +12,10 @@ export { default as UIShowcase } from './components/UIShowcase.svelte';
 export { themeStore  } from './stores/theme.svelte.js';
 export { default as ThemeSelector } from './components/layout/ThemeSelector.svelte';
 
+export { default as TestCard } from './components/TestCard.svelte';
 
-export * from './components/tools/format.js';
 
+// export * from './components/tools/format.js';
 
 // creat a re-export for the stores/theme.ts file
 // this must be called as 'rune-lab/theme' in the consuming app

@@ -17,7 +17,6 @@ class AppStore {
         if (data.version) this.version = data.version;
         if (data.description) this.description = data.description;
         if (data.author) this.author = data.author;
-        
 
         // console.clear();
         console.log('🔮 App initialized:', {
@@ -30,4 +29,3 @@ class AppStore {
 }
 
 export const appData = new AppStore();
-

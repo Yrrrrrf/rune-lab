@@ -39,7 +39,10 @@ class ThemeStore {
     // Initialize theme system
     init() {
         if (typeof window === 'undefined') return;
-        
+        // ^ Important:
+            // ^ To make this works as intended, you must add: <html lang="en" data-theme="light">
+            // ^ to your index.html file (or equivalent) to set the initial theme
+            // ^ before the application is mounted.
         $effect(() => {
             document.documentElement.setAttribute('data-theme', this.currentTheme);
         });

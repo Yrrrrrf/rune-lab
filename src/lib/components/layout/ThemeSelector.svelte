@@ -9,7 +9,7 @@
     
     // Get available themes
     const themes = themeStore.getAvailableThemes();
-    
+
     function handleThemeSelect(themeValue: string) {
         themeStore.setTheme(themeValue);
         showDropdown = false;
