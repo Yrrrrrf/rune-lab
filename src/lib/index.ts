@@ -7,10 +7,7 @@ export { default as UIShowcase } from './components/UIShowcase.svelte';
 export { default as Solvarn } from './components/Solvarn.svelte';
 
 
-// ^ App related components
-export { appData, type AppData } from './stores/app.svelte.js';
-export { apiStore, type ApiStore } from './stores/api.svelte.js';
-export { authStore, type AuthState } from './stores/auth.svelte.js';
+
 // layout related components
 export { default as NavBar } from './components/layout/NavBar.svelte';
 export { default as UrlDisplay } from './components/layout/URLDisplay.svelte';
@@ -34,3 +31,21 @@ export { default as ThemeSelector } from './components/layout/ThemeSelector.svel
 // export * from './components/tools/qr.js';
 // export * from './components/tools/uuid.js';
 // export * from './components/tools/validate.js';
+
+// * I don't know if this is some allusion or something...
+// * But I think that if I import this later, (I mean, at last)
+// * This fix some of the problems with the store management...
+// * I don't know why, but it works...
+// todo: investigate why this works...
+// ^ App related components
+export {
+    footerStore, 
+    type FooterLink,
+    type FooterConfig,
+    type FooterSection
+ } from './stores/layout/footer.svelte.js';
+
+
+export { appData, type AppData } from './stores/app.svelte.js';
+export { apiStore, type ApiStore } from './stores/api.svelte.js';
+export { authStore, type AuthState } from './stores/auth.svelte.js';

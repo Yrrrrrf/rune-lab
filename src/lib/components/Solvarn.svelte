@@ -1,6 +1,6 @@
 <!-- src/lib/components/stores/StoreManager.svelte -->
 <script lang="ts">
-    import { Gear, Database, User, Key, X, Check } from 'phosphor-svelte';
+    import { Gear, Database, User, X } from 'phosphor-svelte';
     import { appData } from '$lib/stores/app.svelte.js';
     import { apiStore } from '$lib/stores/api.svelte.js';
     import { authStore } from '$lib/stores/auth.svelte.js';

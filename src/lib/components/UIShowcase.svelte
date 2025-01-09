@@ -58,8 +58,6 @@
   ];
 </script>
 
-<ThemeSelector />
-
 <div class="min-h-screen bg-base-200 p-4">
   <!-- Header with Theme Demo -->
   <div class="text-center mb-8 hero bg-base-100 rounded-box p-8">
@@ -70,6 +68,7 @@
         <div class="flex justify-center gap-2">
           <button class="btn btn-primary" onclick={() => modalOpen = true}>Open Modal</button>
           <button class="btn btn-secondary" onclick={() => drawerOpen = true}>Open Drawer</button>
+          <ThemeSelector />
         </div>
       </div>
     </div>
