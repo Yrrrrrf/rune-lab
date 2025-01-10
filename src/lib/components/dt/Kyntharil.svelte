@@ -1,4 +1,5 @@
-<!-- src/lib/components/stores/StoreManager.svelte -->
+<!-- Kyntharil (from Old Norse "kyn" = kind, kin + suffix -tharil suggesting evolution) -->
+<!-- src/lib/components/dt/Kyntharil.svelte -->
 <script lang="ts">
     import { Gear, Database, User, X } from 'phosphor-svelte';
     import { appData } from '$lib/stores/app.svelte.js';

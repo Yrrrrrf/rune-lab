@@ -3,9 +3,16 @@
 
 // ^ UI Showcase
 export { default as UIShowcase } from './components/UIShowcase.svelte';
-// . Solvarn rune...
-export { default as Solvarn } from './components/Solvarn.svelte';
 
+// * RUENES OF...
+
+// * Kyntharil 
+// *    from Old Norse "kyn" = kind, kin + suffix -tharil suggesting evolution
+export { default as Altharun } from './components/dt/Altharun.svelte';
+
+// * Altharun
+// *    from Old Norse "aldir" = age, wisdom
+export { default as Kyntharil } from './components/dt/Kyntharil.svelte';
 
 
 // layout related components
