@@ -336,7 +336,7 @@
           class="drawer-overlay" 
           onclick={() => drawerOpen = false}
           onkeydown={(e) => e.key === 'Escape' && (drawerOpen = false)}
-        ></button>
+        >.</button>
         <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
           <li><button class="w-full text-left">Sidebar Item 1</button></li>
           <li><button class="w-full text-left">Sidebar Item 2</button></li>

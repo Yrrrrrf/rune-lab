@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { themeStore } from '$lib/stores/theme.svelte.js';
+    // jdaslkfjsklsajdklj
+    import { themeStore } from '../../stores/theme.svelte.js';
     
     // Local state using runes
     let showDropdown = $state(false);
@@ -16,7 +17,7 @@
     }
 </script>
 
-<div class="theme-selector">
+<div class="relative">
     <button 
         class="btn"
         onclick={() => showDropdown = !showDropdown}
@@ -25,12 +26,12 @@
     </button>
 
     {#if showDropdown}
-        <ul class="theme-menu">
+        <ul class="absolute right-0 top-full mt-2 min-w-[150px] p-2 bg-base-100 border border-base-300 rounded-lg shadow-lg">
             {#each themes as theme}
                 <li>
                     <button
-                        class="theme-option"
-                        class:active={themeStore.currentTheme === theme.value}
+                        class="w-full flex items-center gap-2 px-2 py-2 text-left hover:bg-base-200 transition-colors duration-200 rounded-lg
+                               {themeStore.currentTheme === theme.value ? 'bg-base-300' : ''}"
                         onclick={() => handleThemeSelect(theme.value)}
                     >
                         <span>{theme.icon}</span>
@@ -41,38 +42,3 @@
         </ul>
     {/if}
 </div>
-
-<style>
-    .theme-selector {
-        position: relative;
-    }
-
-    .theme-menu {
-        position: absolute;
-        right: 0;
-        top: 100%;
-        margin-top: 0.5rem;
-        background: var(--background);
-        border: 1px solid var(--border);
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-        min-width: 150px;
-    }
-
-    .theme-option {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem;
-        width: 100%;
-        text-align: left;
-    }
-
-    .theme-option:hover {
-        background: var(--hover);
-    }
-
-    .active {
-        background: var(--active);
-    }
-</style>

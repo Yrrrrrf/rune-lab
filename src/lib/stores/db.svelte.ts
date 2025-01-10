@@ -1,9 +1,9 @@
 // src/lib/stores/database.svelte.ts
-import { forge as f, crud, base, t_types as t } from 'ts-forge';
-export { f, crud, base, t };
+
+import { BaseClient, TsForge, type SchemaMetadata } from "ts-forge";
 
 export interface DatabaseState {
-    schemas: Record<string, f.SchemaMetadata>;
+    schemas: Record<string, SchemaMetadata>;
     tables: Record<string, Record<string, any>>;
     activeSchema: string | null;
     activeTable: string | null;
@@ -11,9 +11,9 @@ export interface DatabaseState {
     currentOperation: 'POST' | 'GET' | 'PUT' | 'DELETE' | null;
 }
 
-class DatabaseStore {
+class DatabaseStore {   
     // Core state with proper initialization
-    schemas = $state<Record<string, f.SchemaMetadata>>({});
+    schemas = $state<Record<string, SchemaMetadata>>({});
     tables = $state<Record<string, Record<string, any>>>({});
     activeSchema = $state<string | null>(null);
     activeTable = $state<string | null>(null);
@@ -31,8 +31,8 @@ class DatabaseStore {
         console.log('Active schema:', this.activeSchema, 'Tables:', this.schemas[schema]);
     }
     // Base client
-    private baseClient = new base.BaseClient('http://localhost:8000/');
-    private forge = new f.TsForge(this.baseClient);
+    private baseClient = new BaseClient('http://localhost:8000/');
+    private forge = new TsForge(this.baseClient);
 
 
     // Table management
