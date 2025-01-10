@@ -126,6 +126,9 @@
         {/if}
 
         <!-- Theme Selector -->
-        <ThemeSelector />
+         <!-- if isAuthenticated show the theme selector -->
+        {#if authStore.isAuthenticated}
+            <ThemeSelector />
+        {/if}
     </div>
 </nav>

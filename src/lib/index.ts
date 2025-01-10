@@ -49,3 +49,4 @@ export {
 export { appData, type AppData } from './stores/app.svelte.js';
 export { apiStore, type ApiStore } from './stores/api.svelte.js';
 export { authStore, type AuthState } from './stores/auth.svelte.js';
+export { databaseStore, type DatabaseState,} from './stores/db.svelte.js';
