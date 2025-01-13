@@ -1,53 +1,49 @@
-import { 
-    THEMES_CONFIG, 
-    staticThemes,
-    type ThemeConfig 
-} from "./../theme/static.js";
-
+import { THEMES, availableThemes, type ThemeConfig } from "./../theme/static.js";
 
 class ThemeStore {
     // State management with runes
     currentTheme = $state(this.getInitialTheme());
 
     private getInitialTheme(): string {
-        if (typeof window === 'undefined') return 'light';
-        return localStorage?.getItem('theme') || 'light';
-    }
-
-    private createThemeConfig(themeName: string): ThemeConfig {
-        const config = THEMES_CONFIG[themeName as keyof typeof THEMES_CONFIG];
-        return {
-            name: themeName.charAt(0).toUpperCase() + themeName.slice(1),
-            value: themeName,
-            icon: config?.icon || '🎨',
-            description: config?.description || `${themeName} theme`
-        };
-    }
-
-    getAvailableThemes(): ThemeConfig[] {
-        return staticThemes.map(theme => this.createThemeConfig(theme));
+        if (typeof window === 'undefined') return 'dracula';
+        return localStorage?.getItem('theme') || 'dracula';
     }
 
     setTheme(theme: string) {
         if (typeof window === 'undefined') return;
         
+        console.log('Setting theme to:', theme);
         this.currentTheme = theme;
         localStorage?.setItem('theme', theme);
+        // Let's try setting it directly here as well
         document.documentElement.setAttribute('data-theme', theme);
+        console.log('Current theme after setting:', this.currentTheme);
+        console.log('Current data-theme attribute:', document.documentElement.getAttribute('data-theme'));
     }
 
-    // Initialize theme system
     init() {
         if (typeof window === 'undefined') return;
-        // ^ Important:
-            // ^ To make this works as intended, you must add: <html lang="en" data-theme="light">
-            // ^ to your index.html file (or equivalent) to set the initial theme
-            // ^ before the application is mounted.
+        
         $effect(() => {
+            console.log('Effect running, current theme:', this.currentTheme);
             document.documentElement.setAttribute('data-theme', this.currentTheme);
+            console.log('Theme attribute after effect:', document.documentElement.getAttribute('data-theme'));
         });
 
         return this.currentTheme;
+    }
+    private createThemeConfig(themeName: string): ThemeConfig {
+        const config = THEMES.find(theme => theme.name === themeName);
+        return {
+            name: themeName.charAt(0).toUpperCase() + themeName.slice(1),
+            icon: config?.icon || '🎨',
+            description: config?.description || `${themeName} theme`
+        };
+    }
+    
+
+    getAvailableThemes(): ThemeConfig[] {
+        return availableThemes.map(theme => this.createThemeConfig(theme));
     }
 
     // Get current theme configuration

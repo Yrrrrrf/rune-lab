@@ -2,6 +2,7 @@
 
 import { BaseClient, TsForge, type SchemaMetadata } from "ts-forge";
 
+
 export interface DatabaseState {
     schemas: Record<string, SchemaMetadata>;
     tables: Record<string, Record<string, any>>;

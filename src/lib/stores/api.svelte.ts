@@ -1,4 +1,8 @@
 // src/lib/stores/api.svelte.ts
+
+import { BaseClient, TsForge } from 'ts-forge';
+
+
 interface ApiConfig {
     URL: string;
     VERSION: string;
@@ -8,7 +12,7 @@ interface ApiConfig {
 
 export class ApiStore {
     // Core API configuration
-    URL = $state(import.meta.env.VITE_URL || 'http://localhost:8000');
+    URL = $state('http://localhost:8000');
     VERSION = $state('v1');
     TIMEOUT = $state(30000); // 30 seconds
     IS_CONNECTED = $state(false);
@@ -58,3 +62,37 @@ export class ApiStore {
 
 // Export singleton instance
 export const apiStore = new ApiStore();
+
+
+
+// * New code to  manage the API configuration
+// const baseClient: BaseClient = new BaseClient(apiStore.URL);
+const baseClient: BaseClient = new BaseClient(apiStore.getConfig().URL);
+
+const forge: TsForge = new TsForge(baseClient);
+await forge.init();
+
+// todo: Export the forge instance for use in other parts of the app
+// todo: Export the forge instance for use in other parts of the app
+// todo: Export the forge instance for use in other parts of the app
+export { forge };  // * Export the forge instance for use in other parts of the app
+
+export function gen_types(forge: TsForge) {
+    let aHubSchemas = [
+        'agnostic',
+        'infrastruct',
+        'hr',
+        'academic',
+        'course_offer',
+        'student',
+        'library',
+    ]
+    let coreSchemas = [
+        'account',
+        'auth',
+    ]
+    forge.genSchemaTypes([ 
+        ...coreSchemas,
+        ...aHubSchemas
+    ]);
+}

@@ -1,42 +1,69 @@
 // src/lib/stores/auth.svelte.ts
+interface UserProfile {
+    id: string;
+    username: string;
+    email: string;
+    fullName: string;
+    status: 'active' | 'inactive' | 'suspended';
+    roles: UserRole[];
+    createdAt: string;
+    updatedAt: string;
+}
 
-export interface User {
-		id: string;
-		name: string;
-		email: string;
-		role: 'admin' | 'staff' | 'user';
-	}
+interface UserRole {
+    id: string;
+    name: string;
+    permissions: Record<string, boolean>;
+}
 
-export interface AuthState {
-	isAuthenticated: boolean;
-	user: User | null;
+import { availableThemes } from "$lib/theme/static.js";
+
+interface UserPreferences {
+	// Themes can only be one of the available themes
+    theme: typeof availableThemes[number];
+    language: string;
+    notifications: {
+        email: boolean;
+        push: boolean;
+    };
+    settings: Record<string, unknown>;
 }
 
 class AuthStore {
-	isAuthenticated = $state(false);
-	user = $state<User | null>(null);
+    // Core state
+    profile = $state<UserProfile | null>(null);
+    preferences = $state<UserPreferences>({
+        theme: 'system',
+        language: 'en',
+        notifications: { email: true, push: false },
+        settings: {}
+    });
 
-	login(user: User) {
-		this.isAuthenticated = true;
-		this.user = user;
-		console.log('🔐 User logged in:', user);
-	}
+    // Derived states
+    isAuthenticated = $derived(!!this.profile);
+    userRoles = $derived(this.profile?.roles.map(r => r.name) ?? []);
+    
+    // Instead of a derived method, we'll use a regular method that reads the derived state
+    hasPermission(permission: string): boolean {
+        return this.profile?.roles.some(role => role.permissions[permission]) ?? false;
+    }
 
-	logout() {
-		this.isAuthenticated = false;
-		this.user = null;
-		console.log('👋 User logged out');
-	}
+    setProfile(profile: UserProfile) {
+        this.profile = profile;
+		console.log('👤 User profile set:', profile);
+    }
 
-	init(initialState?: Partial<AuthState>) {
-		if (initialState?.isAuthenticated) this.isAuthenticated = initialState.isAuthenticated;
-		if (initialState?.user) this.user = initialState.user;
+    setPreferences(preferences: UserPreferences) {
+        this.preferences = preferences;
+		console.log('⚙️ User preferences set:', preferences);
+    }
 
-		console.log('🔑 Auth initialized:', {
-			isAuthenticated: this.isAuthenticated,
-			user: this.user
-		});
-	}
+    clearAuth() {
+        this.profile = null;
+		console.log('🔓 User profile cleared. Goodbye! 👋');
+    }
+
+    getUserId() {return this.profile?.id;}
 }
 
 export const authStore = new AuthStore();

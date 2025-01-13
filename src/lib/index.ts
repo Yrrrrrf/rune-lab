@@ -16,6 +16,7 @@ export { default as Kyntharil } from './components/dt/Kyntharil.svelte';
 
 
 // layout related components
+export { default as SignInCard } from './components/layout/SignInCard.svelte';
 export { default as NavBar } from './components/layout/NavBar.svelte';
 export { default as UrlDisplay } from './components/layout/URLDisplay.svelte';
 export { default as Footer } from './components/layout/Footer.svelte';
@@ -27,7 +28,7 @@ export { default as Footer } from './components/layout/Footer.svelte';
 // export { default as DataItem } from './components/data/DataItem.svelte';
 
 // ^ Theme related components
-export { themeStore  } from './stores/theme.svelte.js';
+export { themeStore } from './stores/theme.svelte.js';
 export { default as ThemeSelector } from './components/layout/ThemeSelector.svelte';
 
 
@@ -53,7 +54,9 @@ export {
  } from './stores/layout/footer.svelte.js';
 
 
-export { appData, type AppData } from './stores/app.svelte.js';
-export { apiStore, type ApiStore } from './stores/api.svelte.js';
-export { authStore, type AuthState } from './stores/auth.svelte.js';
+export { authStore } from './stores/auth.svelte.js';
 export { databaseStore, type DatabaseState,} from './stores/db.svelte.js';
+
+// * Import the main forge from the ts-forge library...
+export { apiStore, forge, gen_types, type ApiStore } from './stores/api.svelte.js';
+export { appData, type AppData } from './stores/app.svelte.js';

@@ -1,6 +1,3 @@
-import { staticThemes as availableThemes } from "./static.js";
+import { availableThemes } from './static.js'
 
-
-export default {
-    availableThemes,
-}
+export default { availableThemes }

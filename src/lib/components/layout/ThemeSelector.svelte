@@ -1,5 +1,4 @@
 <script lang="ts">
-    // jdaslkfjsklsajdklj
     import { themeStore } from '../../stores/theme.svelte.js';
     
     // Local state using runes
@@ -11,8 +10,8 @@
     // Get available themes
     const themes = themeStore.getAvailableThemes();
 
-    function handleThemeSelect(themeValue: string) {
-        themeStore.setTheme(themeValue);
+    function handleThemeSelect(themeName: string) {
+        themeStore.setTheme(themeName);
         showDropdown = false;
     }
 </script>
@@ -31,8 +30,8 @@
                 <li>
                     <button
                         class="w-full flex items-center gap-2 px-2 py-2 text-left hover:bg-base-200 transition-colors duration-200 rounded-lg
-                               {themeStore.currentTheme === theme.value ? 'bg-base-300' : ''}"
-                        onclick={() => handleThemeSelect(theme.value)}
+                               {themeStore.currentTheme === theme.name ? 'bg-base-300' : ''}"
+                        onclick={() => handleThemeSelect(theme.name)}
                     >
                         <span>{theme.icon}</span>
                         <span>{theme.name}</span>
