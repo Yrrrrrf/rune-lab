@@ -1,10 +1,9 @@
-<h1 align="center">
-   <img src="./resources/img/rune.png" alt="Rune-Lab Icon" width="128" height="128" description="Some glowing runes"> 
-   <div align="center">Rune Lab</div>
-</h1>
+# <div align="center"><img src="./resources/img/rune.png" alt="Rune-Lab Icon" width="128" height="128" description="Some glowing runes"></div>
+<h1 align="center">Rune Lab</h1>
 
-<!-- [![JSR Package](https://img.shields.io/badge/JSR-Package-blue?style=for-the-badge&logo=typescript)](https://jsr.io/@yrrrrrf/rune-lab) -->
-[![GitHub](https://img.shields.io/badge/github-rune--lab-blue?style=for-the-badge&logo=github)](https://github.com/Yrrrrrf/rune-lab)
+[![npm pkg](https://badge.fury.io/js/rune-lab.svg)](https://www.npmjs.com/package/rune-lab)
+[![GitHub](https://img.shields.io/badge/GitHub-Yrrrrrf%2Frune--lab-blue)](https://github.com/Yrrrrrf/rune-lab)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://choosealicense.com/licenses/mit/)
 
 ## Overview
 

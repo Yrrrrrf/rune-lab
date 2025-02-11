@@ -75,6 +75,6 @@
 		"@tailwindcss/typography": "0.5.16",
 		"@types/bun": "1.1.16",
 		"phosphor-svelte": "3.0.1",
-		"ts-forge": "link:ts-forge"
+		"ts-forge": "0.0.7"
 	}
 }
