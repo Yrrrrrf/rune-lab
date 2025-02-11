@@ -2,28 +2,27 @@ import { THEMES, availableThemes, type ThemeConfig } from "./../theme/static.js"
 
 class ThemeStore {
     // State management with runes
-    currentTheme = $state(this.getInitialTheme());
+    currentTheme: string = $state('dracula');
+    availableThemes: ThemeConfig[] = $state(THEMES);
 
-    private getInitialTheme(): string {
-        if (typeof window === 'undefined') return 'dracula';
-        return localStorage?.getItem('theme') || 'dracula';
-    }
-
+    constructor() {
+        if (typeof window !== 'undefined') {
+          this.currentTheme = localStorage.getItem('theme') || 'dracula';
+        }
+      }
+    
     setTheme(theme: string) {
-        if (typeof window === 'undefined') return;
-        
-        console.log('Setting theme to:', theme);
         this.currentTheme = theme;
-        localStorage?.setItem('theme', theme);
-        // Let's try setting it directly here as well
-        document.documentElement.setAttribute('data-theme', theme);
+        console.log('Setting theme to:', theme);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('theme', theme);
+            document.documentElement.setAttribute('data-theme', theme);
+        }
         console.log('Current theme after setting:', this.currentTheme);
         console.log('Current data-theme attribute:', document.documentElement.getAttribute('data-theme'));
     }
 
     init() {
-        if (typeof window === 'undefined') return;
-        
         $effect(() => {
             console.log('Effect running, current theme:', this.currentTheme);
             document.documentElement.setAttribute('data-theme', this.currentTheme);

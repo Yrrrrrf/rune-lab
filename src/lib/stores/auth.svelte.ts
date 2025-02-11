@@ -1,5 +1,5 @@
 // src/lib/stores/auth.svelte.ts
-interface UserProfile {
+export interface UserProfile {
     id: string;
     username: string;
     email: string;

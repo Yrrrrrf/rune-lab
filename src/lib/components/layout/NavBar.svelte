@@ -1,11 +1,11 @@
 <script lang="ts">
     import { 
         // MagnifyingGlass, 
-        // Bell,
         Gear, 
         User, 
         SignIn,
         SignOut,
+        Bell,
     } from 'phosphor-svelte';
     
     import { appData } from '$lib/stores/app.svelte.js';
@@ -14,8 +14,8 @@
 
     // State using Runes
     // let isSearchActive = $state(false);
-    // let searchQuery = $state('');
-    // let notificationCount = $state(3);
+    let searchQuery = $state('');
+    let notificationCount = $state(3);
     let showLoginModal = $state(false);
 
     // function handleSearch(e: KeyboardEvent) {
@@ -103,5 +103,12 @@
 
 <!-- Login Modal -->
 {#if showLoginModal}
-    <SignInCard />
+    <div class="modal modal-open">
+        <div class="modal-box p-0 bg-transparent shadow-none">
+            <SignInCard />
+        </div>
+        <button class="modal-backdrop" onclick={() => showLoginModal = false}>
+            <span class="sr-only">Close</span>
+        </button>
+    </div>
 {/if}

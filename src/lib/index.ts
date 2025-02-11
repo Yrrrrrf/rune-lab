@@ -5,17 +5,16 @@
 export { default as UIShowcase } from './components/UIShowcase.svelte';
 
 // * RUENES OF...
-
-// * Kyntharil 
-// *    from Old Norse "kyn" = kind, kin + suffix -tharil suggesting evolution
+//    from Old Norse "aldir" = age, wisdom
 export { default as Altharun } from './components/dt/Altharun.svelte';
-
-// * Altharun
-// *    from Old Norse "aldir" = age, wisdom
+//    from Old Norse "kyn" = kind, kin + suffix -tharil suggesting evolution
 export { default as Kyntharil } from './components/dt/Kyntharil.svelte';
+//    from Old Norse "ryne" = secret, mystery
+// & possible new rune: Ryneheim! (like 'mistery home')
+// export { default as Ryneheim } from './components/dt/Ryneheim.svelte';
 
 
-// layout related components
+// * layout related components
 export { default as SignInCard } from './components/layout/SignInCard.svelte';
 export { default as NavBar } from './components/layout/NavBar.svelte';
 export { default as UrlDisplay } from './components/layout/URLDisplay.svelte';
@@ -26,11 +25,6 @@ export { default as Footer } from './components/layout/Footer.svelte';
 // export { default as DataForm } from './components/data/DataForm.svelte';
 // export { default as DataList } from './components/data/DataList.svelte';
 // export { default as DataItem } from './components/data/DataItem.svelte';
-
-// ^ Theme related components
-export { themeStore } from './stores/theme.svelte.js';
-export { default as ThemeSelector } from './components/layout/ThemeSelector.svelte';
-
 
 // ^ Tools related components
 // export * from './components/tools/format.js';
@@ -53,10 +47,12 @@ export {
     type FooterSection
  } from './stores/layout/footer.svelte.js';
 
+export { themeStore } from './stores/theme.svelte.js';
+export { default as ThemeSelector } from './components/layout/ThemeSelector.svelte'; 
 
-export { authStore } from './stores/auth.svelte.js';
-export { databaseStore, type DatabaseState,} from './stores/db.svelte.js';
+export { authStore, type UserProfile } from './stores/auth.svelte.js';
+
+export { forge } from './forge.svelte.js'
 
 // * Import the main forge from the ts-forge library...
-export { apiStore, forge, gen_types, type ApiStore } from './stores/api.svelte.js';
 export { appData, type AppData } from './stores/app.svelte.js';

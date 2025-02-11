@@ -1,7 +1,7 @@
 <script lang="ts">
     import { appData } from '$lib/stores/app.svelte';
     import { fly } from 'svelte/transition';
-    import { Envelope, Pill, Eye, EyeSlash } from 'phosphor-svelte';
+    import { Envelope, SignIn, Eye, EyeSlash } from 'phosphor-svelte';
 
     
     let showPassword = $state(false);
@@ -18,7 +18,7 @@
         <!-- Header -->
         <div class="text-center space-y-2 mb-6">
             <div class="flex justify-center mb-4">
-                <Pill class="h-12 w-12 text-primary" />
+                <SignIn class="h-12 w-12 text-primary" />
             </div>
             <h2 class="card-title text-3xl justify-center">{appData.name}</h2>
             <p class="text-base-content/60">Sign in to continue</p>

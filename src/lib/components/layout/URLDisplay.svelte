@@ -2,8 +2,8 @@
 <script lang="ts">
     import { Book, Copy, CheckCircle, Terminal } from 'phosphor-svelte';
 
+    import { apiStore } from '$lib/forge.svelte.js';
     import { onMount } from 'svelte';
-    import { apiStore } from '$lib/stores/api.svelte';
 
     let copied = $state(false);
     let isVisible = $state(true);
@@ -24,7 +24,7 @@
     });
 
     function copyToClipboard() {
-        navigator.clipboard.writeText(apiStore.baseUrl);
+        navigator.clipboard.writeText(apiStore.URL);
         copied = true;
         setTimeout(() => copied = false, 2000);
     }
@@ -73,7 +73,7 @@
             onkeydown={handleKeyDown}
             aria-label="Copy API URL"
         >
-            <span class="text-xs font-mono">{apiStore.baseUrl}</span>
+            <span class="text-xs font-mono">{apiStore.URL}/{apiStore.VERSION}</span>
             {#if copied}
                 <CheckCircle class="w-4 h-4 text-success" />
             {:else}

@@ -1,6 +1,6 @@
 {
 	"name": "rune-lab",
-	"version": "0.0.2-alpha-2",
+	"version": "0.0.3",
 	"type": "module",
 	"license": "MIT",
 	"author": "Yrrrrrf <fer.rezac@outlook.com>",
@@ -15,28 +15,28 @@
 		"daisyui",
 		"tailwind"
 	],
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "svelte": "./dist/index.js",
-            "default": "./dist/index.js"
-        },
-        "./themes": {
-            "types": "./dist/theme/static.d.ts",
-            "import": "./dist/theme/static.js",
-            "default": "./dist/theme/static.js"
-        }
-    },
-    "files": [
-        "dist",
-        "dist/**/*.js",
-        "dist/**/*.d.ts",
-        "dist/stores/**/*",
-        "dist/theme/**/*"
-    ],
-    "svelte": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./themes": {
+			"types": "./dist/theme/static.d.ts",
+			"import": "./dist/theme/static.js",
+			"default": "./dist/theme/static.js"
+		}
+	},
+	"files": [
+		"dist",
+		"dist/**/*.js",
+		"dist/**/*.d.ts",
+		"dist/stores/**/*",
+		"dist/theme/**/*"
+	],
+	"svelte": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"scripts": {
 		"build": "svelte-kit sync && svelte-package",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -75,6 +75,6 @@
 		"@tailwindcss/typography": "0.5.16",
 		"@types/bun": "1.1.16",
 		"phosphor-svelte": "3.0.1",
-		"ts-forge": "0.0.4"
+		"ts-forge": "link:ts-forge"
 	}
 }
