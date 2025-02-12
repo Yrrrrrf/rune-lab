@@ -18,12 +18,12 @@ Rune Lab is a SvelteKit component library **designed for the SvelteHack 2024**. 
 - **Hot Reload**: Development-friendly with watch mode
 - **JSR Distribution**: Modern package distribution
 
-## Installation
-
+<!-- ## Installation -->
+<!-- 
 ```bash
 jsr add @rune-lab
 # jsr add @yrrrrrf/rune-lab
-```
+``` -->
 
 ## Usage
 

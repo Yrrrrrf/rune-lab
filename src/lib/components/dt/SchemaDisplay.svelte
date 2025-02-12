@@ -7,17 +7,16 @@
         SimpleEnumInfo,
         FunctionMetadataResponse,
         ColumnMetadata,
-        ViewColumnMetadata
     } from 'ts-forge';
     import MetadataTable from './MetadataTable.svelte';
+    import ApiInterface from '../api/ApiInterface.svelte';
 
     // Props
     let { schema } = $props<{
         schema: SchemaMetadata;
     }>();
 
-    // Local state
-    let activeView = $state<'tables' | 'views' | 'enums' | 'functions' | 'procedures' | 'triggers'>('tables');
+    let activeView =  $state<'tables' | 'views' | 'enums' | 'functions' | 'procedures' | 'triggers'>('tables'); 
 
     // Helper functions
     function getContent(type: typeof activeView): Record<string, any> {
@@ -35,7 +34,7 @@
         return Object.entries(obj);
     }
 
-    function getColumns(content: TableMetadata | ViewMetadata): (ColumnMetadata | ViewColumnMetadata)[] {
+    function getColumns(content: TableMetadata | ViewMetadata): (ColumnMetadata)[] {
         if (!content) return [];
         
         // Handle table metadata
@@ -45,7 +44,7 @@
         
         // Handle view metadata
         if ('view_columns' in content && Array.isArray(content.view_columns)) {
-            return content.view_columns.map(vc => ({
+            return content.view_columns.map((vc: any) => ({
                 ...vc,
                 isPrimaryKey: false,
                 isEnum: false
@@ -90,12 +89,24 @@
     {#if activeView === 'tables' || activeView === 'views'}
         {#each safeEntries(getContent(activeView)) as [name, content]}
             {#if isTableMetadata(content) || isViewMetadata(content)}
+
                 <MetadataTable
                     title={name}
                     type={activeView}
                     columns={getColumns(content)}
                 />
+
+                API Interface ( {name} )
+                <ApiInterface
+                    resource={{
+                        type: activeView.slice(0, -1) as 'table' | 'view',
+                        schema: schema.name,
+                        name,
+                    }}
+                    columns={getColumns(content)}
+                />
             {/if}
+        
         {/each}
     {:else if activeView === 'enums'}
         {#each safeEntries(getContent('enums')) as [name, enumInfo]}

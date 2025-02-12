@@ -5,17 +5,16 @@
     let { title, type, columns } = $props<{
         title: string;
         type: string;
-        columns: (ColumnMetadata)[];
+        columns: ColumnMetadata[];
     }>();
 
-    function isColumnMetadata(column: ColumnMetadata): column is ColumnMetadata {
-        return 'isPrimaryKey' in column;
-    }
-
+    // Helper function to format references
     function formatReference(ref: ColumnRef | undefined): string {
         if (!ref) return '';
         return `${ref.schema}.${ref.table}.${ref.column}`;
     }
+
+    // console.log(columns);
 </script>
 
 <div class="card bg-base-100 shadow-xl">
@@ -39,7 +38,13 @@
                     {#each columns as column}
                         <tr class="hover">
                             <td>{column.name}</td>
-                            <td class="font-mono text-sm">{column.type}</td>
+                            <td class="font-mono text-sm">
+                                {#if column.is_enum}
+                                    <span class="badge badge-warning">ENUM</span> {column.name}
+                                {:else}
+                                    {column.type}
+                                {/if}
+                            </td>
                             <td class="text-center">
                                 {#if column.nullable}
                                     <span class="text-success">✓</span>
@@ -48,18 +53,14 @@
                                 {/if}
                             </td>
                             <td class="text-center">
-                                {#if isColumnMetadata(column)}
-                                    {#if column.isPrimaryKey}
-                                        <span class="badge badge-primary badge-sm">PK</span>
-                                    {:else if column.references}
-                                        <span class="badge badge-secondary badge-sm">FK</span>
-                                    {/if}
+                                {#if column.is_pk}
+                                    <span class="badge badge-primary badge-sm">PK</span>
+                                {:else if column.references}
+                                    <span class="badge badge-secondary badge-sm">FK</span>
                                 {/if}
                             </td>
                             <td class="text-sm text-gray-600">
-                                {#if isColumnMetadata(column) && column.references}
-                                    {formatReference(column.references)}
-                                {/if}
+                                {formatReference(column.references)}
                             </td>
                         </tr>
                     {/each}
