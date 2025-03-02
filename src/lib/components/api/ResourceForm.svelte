@@ -1,13 +1,10 @@
 <!-- src/lib/components/api/APIResourceForm.svelte -->
 <script lang="ts">
     import type { ColumnMetadata } from 'ts-forge';
-    import type { APIOperation } from '$lib/components/dt/types.js';
 
-    let { operation, columns, onSubmit, loading } = $props<{
-        operation: APIOperation;
+    let { columns, onSubmit } = $props<{
         columns: ColumnMetadata[];
         onSubmit: (data: any) => Promise<void>;
-        loading: boolean;
     }>();
 
     let formData = $state<Record<string, any>>({});
@@ -37,8 +34,6 @@
     <button 
         type="submit" 
         class="btn btn-primary"
-        disabled={loading}
-    >
-        {loading ? 'Processing...' : 'Submit'}
+    >Submit
     </button>
 </form>

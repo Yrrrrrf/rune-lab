@@ -4,7 +4,6 @@
     import type { APIResource, APIOperation } from '$lib/components/dt/types.js';
 
     import { getAllowedOperations } from '$lib/components/dt/types.js';
-    import OpButton from './OpButton.svelte';
     import OpModal from './OpModal.svelte';
 
     let { resource, columns } = $props<{
@@ -24,10 +23,15 @@
 <div class="space-y-4">
     <div class="flex gap-2">
         {#each getAllowedOperations(resource.type) as operation}
-            <OpButton 
-                op={operation}
-                onClick={() => handleOperationClick(operation)}
-            />
+        <button
+            class="px-4 py-2 text-white rounded-md"
+            onclick={() => handleOperationClick(operation)}
+        >
+            <div class="flex items-center gap-2">
+                {operation}
+            </div>
+        </button>
+    
         {/each}
     </div>
 

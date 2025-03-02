@@ -23,17 +23,22 @@
         try {
             loading = true;
             error = null;
-            
+
             // Get the CRUD operations for this resource
             const crud = await forge.getTableOperations(
                 resource.schema,
                 resource.name
             );
 
+        // on get: it should recive the filters
+        // on create must receive the object data
+        // on delete the filters that select the specific object to delete
+
             // Handle different operations based on the operation type
             let result;
             switch (operation) {
                 case 'GET':
+                    console.log(data)
                     // For GET operations, we use findMany with the query data
                     result = await crud.findMany({
                         where: data.filters || {},
@@ -84,30 +89,27 @@
 </script>
 
 {#if isOpen}
-<div class="modal modal-open">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg">
-            {operation} {resource.name.toUpperCase()}
-        </h3>
-        
-        {#if error}
-            <div class="alert alert-error mt-4">{error}</div>
-        {/if}
+    <div class="modal modal-open">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">
+                {operation} {resource.name.toUpperCase()}
+            </h3>
+            
+            {#if error}
+                <div class="alert alert-error mt-4">{error}</div>
+            {/if}
 
-        {#if operation === 'GET'}
-            <QueryBuilder {columns} onSubmit={handleSubmit} />
-        {:else}
-            <ResourceForm 
-                {operation}
-                {columns}
-                onSubmit={handleSubmit}
-                {loading}
-            />
-        {/if}
+            {#if operation === 'GET'}
+            <!-- todo: Fix the handleSumbit -->
+             <!-- on Get -->
+                <QueryBuilder {columns} onSubmit={handleSubmit} />
+            {:else}
+                <ResourceForm {columns} onSubmit={handleSubmit} />
+            {/if}
 
-        <div class="modal-action">
-            <button class="btn" onclick={onClose}>Close</button>
+            <div class="modal-action">
+                <button class="btn" onclick={onClose}>Close</button>
+            </div>
         </div>
     </div>
-</div>
 {/if}

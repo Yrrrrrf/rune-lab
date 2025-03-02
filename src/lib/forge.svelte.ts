@@ -23,7 +23,7 @@ export class ApiStore {
         console.log('🌐 API initialized:', {
             url: this.URL,
             version: this.VERSION,
-            timeout: this.TIMEOUT
+        timeout: this.TIMEOUT
         });
 
         this.checkConnection();
