@@ -1,0 +1,49 @@
+{
+    "name": "@yrrrrrf/rune-lab",
+    "version": "0.1.0",
+    "license": "MIT",
+    "exports": "./mod.ts",
+    "tasks": {
+        "dev": "deno run --allow-read --allow-write --allow-net --allow-env --allow-run npm:vite dev"
+    },
+    "imports": {
+        "svelte": "npm:svelte",
+        "@sveltejs/kit": "npm:@sveltejs/kit",
+        "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
+        "@sveltejs/package": "npm:@sveltejs/package",
+        "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
+        "@tailwindcss/forms": "npm:@tailwindcss/forms",
+        "@tailwindcss/typography": "npm:@tailwindcss/typography",
+        "@tailwindcss/vite": "npm:@tailwindcss/vite",
+        "tailwindcss": "npm:tailwindcss",
+        "vite": "npm:vite"
+    },
+    "compilerOptions": {"strict": true},
+    "lint": {
+        "include": ["src/"],
+        "exclude": ["node_modules/", ".svelte-kit/"],
+        "rules": {
+            "tags": ["recommended"]
+        }
+    },
+    "fmt": {
+        "indentWidth": 4,
+        "useTabs": true,
+        "singleQuote": false,
+        "lineWidth": 80
+    },
+    "publish": {
+        "exclude": [
+            ".github/",
+            "node_modules/",
+            ".svelte-kit/",
+            "examples/",
+            "tests/"
+        ]
+    },
+    "jsr": {
+        "peerDependencies": {
+            "svelte": "5.23.0"
+        }
+    }
+}
