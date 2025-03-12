@@ -1,10 +1,12 @@
+// src/lib/theme/static.ts
+
 export interface ThemeConfig {
 	name: string;
 	icon: string;
 	description?: string;
 }
 
-export const THEMES: ThemeConfig[] = [
+export const STATIC_THEMES: ThemeConfig[] = [
 	{ name: "light", icon: "🌞", description: "Clean, light mode appearance" },
 	{ name: "dark", icon: "🌙", description: "Sleek dark mode interface" },
 	{ name: "cupcake", icon: "🧁", description: "Sweet pastel colors" },
@@ -37,17 +39,33 @@ export const THEMES: ThemeConfig[] = [
 	{ name: "dim", icon: "🔅", description: "Dimmed light theme" },
 	{ name: "nord", icon: "❄️", description: "Arctic color palette" },
 	{ name: "sunset", icon: "🌅", description: "Warm sunset colors" },
+	// { name: "uaemex", icon: "🦅", description: "UAEMEX university colors" },
 ];
 
-export const availableThemes = THEMES.map((theme) => theme.name);
+export const availableThemes = STATIC_THEMES.map((theme) => theme.name);
 
 export const customThemes = {
-	// Example custom theme
-	mytheme: {
-		primary: "#a991f7",
-		secondary: "#f6d860",
-		accent: "#37cdbe",
-		neutral: "#3d4451",
-		"base-100": "#ffffff",
+	// UAEMEX Theme (Universidad Autónoma del Estado de México)
+	uaemex: {
+		"primary": "#006633", // UAEMEX deep green
+		"secondary": "#D4AF37", // Gold/yellow accent
+		"accent": "#8C1515", // Complementary dark red
+		"neutral": "#3D4451", // Dark neutral for text
+		"base-100": "#FFFFFF", // White background
+		"base-200": "#F2F2F2", // Light gray for contrasting areas
+		"base-300": "#E5E5E5", // Slightly darker gray for borders
+		"info": "#0072CE", // Informational blue
+		"success": "#00843D", // Success green (slightly lighter than primary)
+		"warning": "#F2C75C", // Warning yellow
+		"error": "#C41E3A", // Error red
+
+		// ^Additional customizations
+		"--rounded-box": "0.5rem", // More conservative border radius
+		"--rounded-btn": "0.25rem", // Conservative buttons
+		"--btn-text-case": "normal", // No text transform
+		"--animation-btn": "0.25s", // Faster button animations
+		"--animation-input": "0.2s", // Faster input animations
+		"--navbar-padding": "0.75rem", // Compact navbar
+		"--border-btn": "1px", // Thin button borders
 	},
 };
