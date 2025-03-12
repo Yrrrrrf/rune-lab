@@ -2,7 +2,7 @@
     // import { ThemeSelector } from '$lib';
 
     // import { appStore, themeStore } from '../lib/stores/app.svelte.js';
-    import { themeStore } from "$lib/index.js";
+    import { themeStore } from "$lib/mod.js";
     import { appData } from "$lib/stores/app.svelte.js";
 
     // Local state with runes

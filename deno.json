@@ -2,7 +2,7 @@
 	"name": "@yrrrrrf/rune-lab",
 	"version": "0.1.0",
 	"license": "MIT",
-	"exports": "./mod.ts",
+	"exports": "./src/lib/mod.ts",
 	"tasks": {
 		"dev": "deno run --allow-read --allow-write --allow-net --allow-env --allow-run npm:vite dev"
 	},
@@ -18,7 +18,10 @@
 		"tailwindcss": "npm:tailwindcss",
 		"vite": "npm:vite"
 	},
-	"compilerOptions": { "strict": true },
+	"compilerOptions": {
+		"strict": true,
+		"types": ["./svelte-runes.d.ts"]
+	},
 	"lint": {
 		"include": ["src/"],
 		"exclude": ["node_modules/", ".svelte-kit/"],

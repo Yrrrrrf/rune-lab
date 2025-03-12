@@ -7,12 +7,13 @@ export interface AppData {
 }
 
 class AppStore {
-	name = $state("Rune Lab");
-	version = $state("0.0.0");
-	description = $state("No description provided");
-	author = $state("<Yrrrrrf>");
+	// Add explicit type annotations to all properties
+	name: string = $state("Rune Lab");
+	version: string = $state("0.0.0");
+	description: string = $state("No description provided");
+	author: string = $state("<Yrrrrrf>");
 
-	init(data: Partial<AppData>) {
+	init(data: Partial<AppData>): void {
 		if (data.name) this.name = data.name;
 		if (data.version) this.version = data.version;
 		if (data.description) this.description = data.description;
@@ -28,4 +29,5 @@ class AppStore {
 	}
 }
 
-export const appData = new AppStore();
+// Export with explicit type annotation
+export const appData: AppStore = new AppStore();

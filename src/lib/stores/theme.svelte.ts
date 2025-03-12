@@ -1,24 +1,40 @@
-/// <reference lib="dom" />
-
-import { type ThemeConfig, THEMES } from "../core/theme/constants.ts";
+import { STATIC_THEMES as THEMES, type ThemeConfig } from "../core/theme/constants.ts";
 import { availableThemes as _availableThemes } from "../core/theme/constants.ts";
 
+// Type definitions for browser environment
+type Window = typeof globalThis & {
+	localStorage?: {
+		getItem(key: string): string | null;
+		setItem(key: string, value: string): void;
+	};
+};
+
+type Document = {
+	documentElement: {
+		setAttribute(name: string, value: string): void;
+	};
+};
+
+// Global variables with type safety
+declare const window: Window | undefined;
+declare const document: Document | undefined;
+
 export class ThemeStore {
-	// State using Runes
-	currentTheme = $state("dracula");
+	// Add explicit type annotations to all properties
+	currentTheme: string = $state("dracula");
 
 	// Track if we've initialized
-	private _initialized = $state(false);
+	private _initialized: boolean = $state(false);
 
 	constructor() {
 		// No DOM operations in constructor for SSR compatibility
 	}
 
-	init() {
-		if (this._initialized) return;
+	init(): ThemeStore {
+		if (this._initialized) return this;
 
-		if (typeof window !== "undefined") {
-			const savedTheme = localStorage.getItem("theme") || "dracula";
+		if (typeof window !== "undefined" && window.localStorage) {
+			const savedTheme = window.localStorage.getItem("theme") || "dracula";
 			this.setTheme(savedTheme);
 			this._initialized = true;
 		}
@@ -26,18 +42,15 @@ export class ThemeStore {
 		return this;
 	}
 
-	setTheme(theme: string) {
-		// Check against available themes if needed
-		// todo: Check if this is needed...
-		// if (!_availableThemes.includes(theme)) {
-		//    console.warn(`Theme "${theme}" not found, using default theme.`);
-		//    theme = 'dracula';
-		// }
-
+	setTheme(theme: string): void {
 		this.currentTheme = theme;
 
-		if (typeof window !== "undefined" && typeof document !== "undefined") {
-			localStorage.setItem("theme", theme);
+		// Safe DOM operations with proper type checking
+		if (
+			typeof window !== "undefined" && window.localStorage &&
+			typeof document !== "undefined" && document.documentElement
+		) {
+			window.localStorage.setItem("theme", theme);
 			document.documentElement.setAttribute("data-theme", theme);
 		}
 	}
@@ -51,5 +64,5 @@ export class ThemeStore {
 	}
 }
 
-// Export singleton instance
-export const themeStore = new ThemeStore();
+// Export singleton instance with explicit type
+export const themeStore: ThemeStore = new ThemeStore();
