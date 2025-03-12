@@ -1,4 +1,5 @@
 # <div align="center">
+
 <h1 align="center">
   <img src="https://raw.githubusercontent.com/Yrrrrrf/prism-py/main/static/rune.png" alt="Rune Lab Icon" width="128" height="128" description="Some rune that represents the Svelte rune system">
   <div align="center">Rune Lab</div>
@@ -6,8 +7,8 @@
 
 <div align="center">
 
-
 <!-- [![JSR](https://jsr.io/badges/@yrrrrrf/rune-lab)](https://jsr.io/@yrrrrrf/rune-lab) -->
+
 [![NPM Package](https://img.shields.io/npm/v/rune-lab.svg)](https://www.npmjs.com/package/rune-lab)
 [![GitHub](https://img.shields.io/badge/GitHub-Yrrrrrf%2Frune--lab-blue)](https://github.com/Yrrrrrf/rune-lab)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://choosealicense.com/licenses/mit/)
@@ -16,7 +17,9 @@
 
 ## Overview
 
-Rune Lab is a modern component library built with Svelte 5, focused on providing powerful, reactive UI components using Svelte's runes system. It offers a comprehensive set of components, theming capabilities, and utilities for building modern web applications.
+Rune Lab is a modern component library built with Svelte 5, focused on providing powerful,
+reactive UI components using Svelte's runes system. It offers a comprehensive set of components,
+theming capabilities, and utilities for building modern web applications.
 
 ## Features
 
