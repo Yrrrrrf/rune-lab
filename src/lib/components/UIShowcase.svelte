@@ -20,14 +20,7 @@
     // Color variants for demonstration
     const colors = ['primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'];
     const sizes = ['xs', 'sm', 'md', 'lg'];
-    
-    // Mock data for examples
-    const stats = [
-      { title: "Downloads", value: "31K", desc: "Jan 1st - Feb 1st" },
-      { title: "New Users", value: "4,200", desc: "↗︎ 400 (22%)" },
-      { title: "New Registers", value: "1,200", desc: "↘︎ 90 (14%)" }
-    ];
-  
+
     // Define tabs with icon components (not JSX syntax)
     const tabs = [
       { title: 'Basic UI', icon: PaintBucket },
