@@ -1,6 +1,6 @@
 {
 	"name": "rune-lab",
-	"version": "0.0.1",
+	"version": "0.0.1-rc0",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",

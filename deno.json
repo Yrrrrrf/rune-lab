@@ -1,6 +1,6 @@
 {
 	"name": "@yrrrrrf/rune-lab",
-	"version": "0.1.0",
+	"version": "0.0.1-rc0",
 	"license": "MIT",
 	"exports": "./src/lib/mod.ts",
 	"tasks": {

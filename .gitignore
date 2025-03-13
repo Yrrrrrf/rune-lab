@@ -26,3 +26,5 @@ vite.config.ts.timestamp-*
 
 # others...
 deno.lock
+.idea
+

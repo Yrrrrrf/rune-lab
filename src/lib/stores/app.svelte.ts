@@ -7,7 +7,6 @@ export interface AppData {
 }
 
 class AppStore {
-	// Add explicit type annotations to all properties
 	name: string = $state("Rune Lab");
 	version: string = $state("0.0.0");
 	description: string = $state("No description provided");
@@ -29,5 +28,4 @@ class AppStore {
 	}
 }
 
-// Export with explicit type annotation
 export const appData: AppStore = new AppStore();
