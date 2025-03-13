@@ -9,6 +9,8 @@
 	"imports": {
 		"svelte": "npm:svelte",
 		"@sveltejs/kit": "npm:@sveltejs/kit",
+		"daisyui": "npm:daisyui",
+		"lucide-svelte": "npm:lucide-svelte",
 		"@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
 		"@sveltejs/package": "npm:@sveltejs/package",
 		"@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",

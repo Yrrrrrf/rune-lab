@@ -1,4 +1,6 @@
 <script lang="ts">
+    import UrlDisplay from '$lib/components/layout/URLDisplay.svelte';
+    import { UIShowcase } from '$lib/mod.js';
 	import '../app.css';
 	let { children } = $props();
 
@@ -18,7 +20,7 @@
 
 <!-- <Altharun /> -->
 
-<!-- <UIShowcase /> -->
+<UIShowcase />
 
 <div class="min-h-screen flex flex-col">
     <main class="flex-grow">
@@ -28,4 +30,4 @@
     <!-- <Footer /> -->
 </div>
 
-<!-- <UrlDisplay /> -->
+<UrlDisplay />
