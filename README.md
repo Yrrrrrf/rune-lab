@@ -7,8 +7,7 @@
 
 <div align="center">
 
-<!-- [![JSR](https://jsr.io/badges/@yrrrrrf/rune-lab)](https://jsr.io/@yrrrrrf/rune-lab) -->
-
+[![JSR](https://jsr.io/badges/@yrrrrrf/rune-lab)](https://jsr.io/@yrrrrrf/rune-lab)
 [![NPM Package](https://img.shields.io/npm/v/rune-lab.svg)](https://www.npmjs.com/package/rune-lab)
 [![GitHub](https://img.shields.io/badge/GitHub-Yrrrrrf%2Frune--lab-blue)](https://github.com/Yrrrrrf/rune-lab)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://choosealicense.com/licenses/mit/)
@@ -51,23 +50,6 @@ bun add rune-lab
 
 # Yarn
 yarn add rune-lab
-```
-
-## Project Structure
-
-```
-rune-lab/
-├── src/
-│   ├── lib/               # Library source code
-│   │   ├── components/    # UI components
-│   │   ├── core/          # Core functionality
-│   │   ├── stores/        # Svelte stores
-│   │   └── index.ts       # Main exports
-│   └── routes/            # Documentation routes
-├── static/                # Static assets
-├── deno.json              # Deno configuration
-├── svelte.config.js       # Svelte configuration
-└── tsconfig.json          # TypeScript configuration
 ```
 
 ## License

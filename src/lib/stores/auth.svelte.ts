@@ -38,9 +38,14 @@ class AuthStore {
 		settings: {},
 	});
 
-	// Derived states
-	isAuthenticated: boolean = $derived(!!this.profile);
-	userRoles: string[] = $derived(this.profile?.roles.map((r) => r.name) ?? []);
+	// Use accessor properties for derived values
+	get isAuthenticated(): boolean {
+		return !!this.profile;
+	}
+
+	get userRoles(): string[] {
+		return this.profile?.roles.map((r) => r.name) ?? [];
+	}
 
 	// Method that checks user permissions
 	hasPermission(permission: string): boolean {

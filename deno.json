@@ -1,6 +1,6 @@
 {
 	"name": "@yrrrrrf/rune-lab",
-	"version": "0.0.1-rc0",
+	"version": "0.0.1-rc1",
 	"license": "MIT",
 	"exports": "./src/lib/mod.ts",
 	"tasks": {
@@ -25,7 +25,11 @@
 	},
 	"lint": {
 		"include": ["src/"],
-		"exclude": ["node_modules/", ".svelte-kit/"],
+		"exclude": [
+			"node_modules/",
+			".svelte-kit/",
+			"src/lib/index.ts"
+		],
 		"rules": {
 			"tags": ["recommended"]
 		}

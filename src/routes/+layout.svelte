@@ -2,7 +2,7 @@
     import UrlDisplay from '$lib/components/layout/URLDisplay.svelte';
     import { appData } from '$lib/stores/app.svelte.js';
     import { themeStore } from "$lib/mod.js";
-    import { UIShowcase } from '$lib/mod.js';
+    import { UIShowcase } from '$lib/index.js';
 
     import '../app.css';
 
