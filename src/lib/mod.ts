@@ -18,3 +18,19 @@ export { authStore, type UserProfile } from "./stores/auth.svelte.ts";
 // * Components
 // todo: Comment this when using JSR to avoid the export error
 // todo: JSR don't support exporting anything else than '.ts' files
+
+export function getVersion(): string {
+	return "0.0.1";
+}
+
+export function init() {
+	// * This is the entry point for the JSR package
+	// * This function is called when the package is imported
+	// * You can use this function to initialize the package
+	// * For example, you can fetch data from an API
+	// * or initialize a store
+	console.log("JSR package initialized");
+
+	// * Initialize the theme store
+	// themeStore.init();
+}

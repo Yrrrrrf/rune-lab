@@ -4,7 +4,9 @@
 	"license": "MIT",
 	"exports": "./src/lib/mod.ts",
 	"tasks": {
-		"dev": "deno run --allow-read --allow-write --allow-net --allow-env --allow-run npm:vite dev"
+		"dev": "deno run --allow-all npm:vite dev",
+		"build": "deno run --allow-all npm:vite build",
+		"preview": "deno run --allow-all npm:vite preview"
 	},
 	"imports": {
 		"svelte": "npm:svelte",
@@ -17,7 +19,8 @@
 		"@tailwindcss/typography": "npm:@tailwindcss/typography",
 		"@tailwindcss/vite": "npm:@tailwindcss/vite",
 		"tailwindcss": "npm:tailwindcss",
-		"vite": "npm:vite"
+		"vite": "npm:vite",
+		"daisyui": "npm:daisyui"
 	},
 	"compilerOptions": {
 		"strict": true,
@@ -43,10 +46,8 @@
 	"publish": {
 		"exclude": [
 			".github/",
-			"node_modules/",
 			".svelte-kit/",
-			"examples/",
-			"tests/"
+			"node_modules/"
 		]
 	},
 	"jsr": {
