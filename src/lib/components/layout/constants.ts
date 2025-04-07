@@ -43,4 +43,4 @@ export const STATIC_THEMES: ThemeConfig[] = [
 ];
 
 // Export all theme names for easy access
-export const allThemeNames = STATIC_THEMES.map(theme => theme.name);
+export const allThemeNames = STATIC_THEMES.map((theme) => theme.name);
