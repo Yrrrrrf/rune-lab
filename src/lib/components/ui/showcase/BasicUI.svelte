@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Shared data for both buttons and badges
+  // Shared data for both buttons and badgesdeno 
   const colors = ['neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'];
   const styles = [
     { id: 'default', label: 'Default', btnClass: '', badgeClass: '' },

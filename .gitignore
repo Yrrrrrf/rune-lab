@@ -25,7 +25,7 @@ vite.config.ts.timestamp-*
 
 
 # others...
-deno.lock
+*.lock
 .idea
 
 **/old-rune-lib

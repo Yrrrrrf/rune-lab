@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Book, Copy, CheckCircle, RefreshCw } from "lucide-svelte";
+	import { Book, Copy, CheckCircle, RefreshCw } from '@lucide/svelte';
 	import { apiStore, ConnectionState } from "./../stores/api.svelte.js";
 
 	let copied = $state(false);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Sparkle, FileInput, PaintBucket, Ruler, ChartBar, Puzzle } from 'lucide-svelte';
+  import { Sparkle, FileInput, PaintBucket, Ruler, ChartBar, Puzzle } from '@lucide/svelte';
   import BasicUI from './BasicUI.svelte';
   import DataInput from './DataInput.svelte';
   

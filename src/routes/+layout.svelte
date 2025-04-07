@@ -9,6 +9,8 @@
     // import UIShowcase from '$lib/components/ui/showcase/main.svelte';
     // import UrlDisplay from '$lib/components/layout/URLDisplay.svelte';
 
+    import * as prism_ts from "@yrrrrrf/prism-ts";
+
     let { children } = $props();
 
     onMount(() => {

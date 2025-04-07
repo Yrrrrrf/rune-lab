@@ -1,6 +1,7 @@
 {
 	"name": "rune-lab",
 	"version": "0.0.6",
+	"license": "MIT",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
@@ -31,8 +32,9 @@
 		"svelte": "5.25.7"
 	},
 	"dependencies": {
-		"daisyui": "5.0.13",
-		"lucide-svelte": "^0.487.0"
+		"@lucide/svelte": "0.487.0",
+		"@yrrrrrf/prism-ts": "npm:@jsr/yrrrrrf__prism-ts",
+		"daisyui": "5.0.13"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "3.0.8",

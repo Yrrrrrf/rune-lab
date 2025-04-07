@@ -11,7 +11,8 @@
 	"imports": {
 		"svelte": "npm:svelte",
 		"@sveltejs/kit": "npm:@sveltejs/kit",
-		"lucide-svelte": "npm:lucide-svelte",
+		"@lucide/svelte": "npm:@lucide/svelte",
+		"@lucide/svelte/icons/": "npm:@lucide/svelte/icons/",
 		"@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
 		"@sveltejs/package": "npm:@sveltejs/package",
 		"@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
@@ -22,7 +23,7 @@
 		"vite": "npm:vite",
 		"daisyui": "npm:daisyui"
 	},
-	"compilerOptions": { "strict": true	},
+	"compilerOptions": { "strict": true },
 	"lint": {
 		"include": ["src/"],
 		"exclude": [
@@ -49,7 +50,7 @@
 	},
 	"jsr": {
 		"peerDependencies": {
-			"svelte": "5.23.0"
+			"svelte": "5.25.7"
 		}
 	}
 }
