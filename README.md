@@ -1,5 +1,3 @@
-# <div align="center">
-
 <h1 align="center">
   <img src="https://raw.githubusercontent.com/Yrrrrrf/rune-lab/main/static/rune.png" alt="Rune Lab Icon" width="128" height="128" description="Some rune that represents the Svelte rune system">
   <div align="center">Rune Lab</div>

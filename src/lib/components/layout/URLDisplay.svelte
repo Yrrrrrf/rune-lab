@@ -1,28 +1,28 @@
 <script lang="ts">
-import { Book, Copy, CheckCircle, RefreshCw } from "lucide-svelte";
-import { apiStore, ConnectionState } from "./../stores/api.svelte.js";
+	import { Book, Copy, CheckCircle, RefreshCw } from "lucide-svelte";
+	import { apiStore, ConnectionState } from "./../stores/api.svelte.js";
 
-let copied = $state(false);
-let isVisible = $state(true);
+	let copied = $state(false);
+	let isVisible = $state(true);
 
-function copyToClipboard() {
-	navigator.clipboard.writeText(apiStore.URL);
-	copied = true;
-	setTimeout(() => copied = false, 2000);
-}
-
-function handleKeyDown(event: KeyboardEvent) {
-	if (event.key === 'Enter' || event.key === ' ') {
-		copyToClipboard();
+	function copyToClipboard() {
+		navigator.clipboard.writeText(apiStore.URL);
+		copied = true;
+		setTimeout(() => copied = false, 2000);
 	}
-}
 
-const containerClass = $derived(`
-	fixed bottom-4 left-4 z-50 
-	flex items-center space-x-2 
-	transition-all duration-300 transform
-	${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}
-`);
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.key === 'Enter' || event.key === ' ') {
+			copyToClipboard();
+		}
+	}
+
+	const containerClass = $derived(`
+		fixed bottom-4 left-4 z-50 
+		flex items-center space-x-2 
+		transition-all duration-300 transform
+		${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}
+	`);
 </script>
 
 <div class={containerClass}>

@@ -1,6 +1,6 @@
 {
 	"name": "@yrrrrrf/rune-lab",
-	"version": "0.0.1-rc1",
+	"version": "0.0.1-rc2",
 	"license": "MIT",
 	"exports": "./src/lib/mod.ts",
 	"tasks": {
@@ -22,10 +22,7 @@
 		"vite": "npm:vite",
 		"daisyui": "npm:daisyui"
 	},
-	"compilerOptions": {
-		"strict": true,
-		"types": ["./svelte-runes.d.ts"]
-	},
+	"compilerOptions": { "strict": true	},
 	"lint": {
 		"include": ["src/"],
 		"exclude": [
