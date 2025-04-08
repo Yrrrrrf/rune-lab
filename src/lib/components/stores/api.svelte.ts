@@ -19,7 +19,7 @@ class APIStore {
 	// Track retry attempts
 	private retryCount: number = $state(0);
 	private maxRetries: number = 3;
-	private retryTimeout: number = 5000; // 5 seconds
+	private retryTimeout: number = 3000; // * 3 seconds
 	private retryTimerId: number | undefined;
 
 	constructor() {
@@ -56,16 +56,15 @@ class APIStore {
 			});
 
 			if (response.ok) {
-				// Connection successful
 				this.connectionState = ConnectionState.CONNECTED;
 				this.retryCount = 0; // Reset retry counter on success
 				return;
 			}
 
-			// If response not OK, handle retry
 			this.handleRetry();
 		} catch (error) {
-			console.error("API connection error:", error);
+			const errorMessage = (error as Error).message.split(".")[0];
+			console.error(`API connection error: \x1b[90m${errorMessage}\x1b[0m`);
 			this.handleRetry();
 		}
 	}
@@ -78,9 +77,7 @@ class APIStore {
 
 		if (this.retryCount <= this.maxRetries) {
 			console.log(
-				`Connection attempt failed. Retrying (${this.retryCount}/${this.maxRetries}) in ${
-					this.retryTimeout / 1000
-				}s...`,
+				`Connection attempt failed. Retrying (${this.retryCount}/${this.maxRetries})...`,
 			);
 
 			// Clear any existing timers
