@@ -4,6 +4,7 @@
 // export { forge } from './forge.svelte.js'
 // export { themeStore } from "./stores/theme.svelte.ts";
 export { apiStore } from "./components/stores/api.svelte.ts";
+export { appData } from "./components/stores/app.svelte.ts";
 // export { type AppData, appData } from "./stores/app.svelte.ts";
 
 // // * Import the main forge from the ts-forge library...

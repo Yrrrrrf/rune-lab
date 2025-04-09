@@ -6,6 +6,6 @@
 
 <ThemeSelector />
 
-<UrlDisplay />
-
 <Main/>
+
+<UrlDisplay />

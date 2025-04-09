@@ -1,44 +1,46 @@
+<!-- src/routes/+layout.svelte -->
 <script lang="ts">
     import '../app.css';
-
     import { onMount } from 'svelte';
 
-    // import { appData } from '$lib/stores/app.svelte.js';
-    // import { themeStore } from "$lib/mod.js";
-    
-    // import UIShowcase from '$lib/components/ui/showcase/main.svelte';
-    // import UrlDisplay from '$lib/components/layout/URLDisplay.svelte';
-
-    import * as prism_ts from "@yrrrrrf/prism-ts";
+    import { apiStore } from '$lib/mod.js';
+    import { appData } from '$lib/mod.js';
 
     let { children } = $props();
 
     onMount(() => {
-        console.log('App mounted');
-
-        // appData.init({
-        //     name: 'Rune Lab',
-        //     version: '0.1.0',
-        //     description: 'A modern component library built with Svelte 5 Runes',
-        //     author: 'Yrrrrrf'
-        // });
-        // themeStore.init();
+        console.log('🚀 App mounted');
+        
+        // // Initialize app data
+        appData.init({
+            name: 'Rune Lab',
+            version: '0.1.0',
+            description: 'A modern component library built with Svelte 5 Runes',
+            author: 'Yrrrrrf'
+        });
+        
+        // Initialize API store with configuration
+        apiStore.init({
+            url: 'http://3.88.132.195:8000',
+            version: 'v1',
+            maxRetries: 3,
+            retryTimeout: 3000
+        });
     });
 
     const metaTags = [
-        { name: 'description', content: 'SvelteKit app' },
-        { name: 'author', content: 'Yrrrrrf' },
+        { name: 'description', content: appData.description },
+        { name: 'author', content: appData.author },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     ];
-
 </script>
 
 <svelte:head>
-    <!-- <title>{appData.name}</title> -->
+    <title>{appData.name}</title>
     {#each metaTags as meta}
         <meta name={meta.name} content={meta.content} />
     {/each}
 </svelte:head>
 
-<!-- <StyleCollector /> -->
- 
+<!-- Main content -->
 {@render children()}

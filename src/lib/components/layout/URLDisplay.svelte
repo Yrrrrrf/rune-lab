@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Book, Copy, CheckCircle, RefreshCw } from '@lucide/svelte';
-	import { apiStore, ConnectionState } from "./../stores/api.svelte.js";
+	import { apiStore } from "./../stores/api.svelte.js";
+	// Import only the store, not the type
 
 	let copied = $state(false);
 	let isVisible = $state(true);
@@ -49,7 +50,7 @@
 		{/if}
 
 		<!-- API Docs Button when connected, Reload Button when disconnected -->
-		{#if apiStore.connectionState === ConnectionState.CONNECTED}
+		{#if apiStore.connectionState === 'connected'}
 			<button
 				class="btn btn-circle btn-xs btn-primary"
 				onclick={() => window.open(`${apiStore.URL}/docs`, '_blank')}
@@ -62,9 +63,9 @@
 				class="btn btn-circle btn-xs btn-error"
 				onclick={() => apiStore.reconnect()}
 				aria-label="Reconnect to API"
-				disabled={apiStore.connectionState === ConnectionState.CONNECTING}
+				disabled={apiStore.connectionState === 'connecting'}
 			>
-				<RefreshCw size={14} class={apiStore.connectionState === ConnectionState.CONNECTING ? "animate-spin" : ""} />
+				<RefreshCw size={14} class={apiStore.connectionState === 'connecting' ? "animate-spin" : ""} />
 			</button>
 		{/if}
 
