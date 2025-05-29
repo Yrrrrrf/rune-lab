@@ -15,6 +15,7 @@
         resourceName,
         operation,
         columns,
+        resourceType,
         initialId = null, // Optional: for pre-filling ID for PUT/DELETE
         initialDataForPut = {} // Optional: for pre-filling form data for PUT
     } = $props<{
@@ -24,6 +25,7 @@
         resourceName: string;
         operation: APIOperation;
         columns: ColumnMetadata[];
+        resourceType: 'table' | 'view' | 'function';
         initialId?: string | number | null;
         initialDataForPut?: Record<string, any>;
     }>();
@@ -120,7 +122,9 @@
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onclick={onClose}>✕</button>
             </form>
             <h3 class="font-bold text-lg mb-4">
-                {operation} <span class="font-mono badge badge-neutral">{schemaName}.{resourceName}</span>
+                {operation}
+                <span class="badge badge-neutral badge-sm font-mono align-middle">{resourceType}</span>
+                <span class="font-mono badge badge-neutral align-middle">{schemaName}.{resourceName}</span>
             </h3>
 
             {#if error}

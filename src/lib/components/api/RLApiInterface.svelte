@@ -1,30 +1,33 @@
 <!-- src/lib/components/api/RLApiInterface.svelte -->
 <script lang="ts">
     import type { ColumnMetadata } from '@yrrrrrf/prism-ts';
-    // Assuming APIOperation is defined/exported from a common types file or locally
-    // For now, let's define it locally for simplicity if not already in $lib/types/common.ts
-    type APIOperation = 'GET' | 'POST' | 'PUT' | 'DELETE';
-    import RLApiOperationModal from './RLApiOperationModal.svelte';
+
+    // Assuming APIOperation is defined in a shared types file or imported
+    // For example: import type { APIOperation } from '$lib/types/common';
+    type APIOperation = 'GET' | 'POST' | 'PUT' | 'DELETE'; // Keep local if not shared
 
     let {
         schemaName,
         resourceName,
-        resourceType, // 'table' | 'view'
-        columns
+        resourceType, // 'table' | 'view' | 'function' (add function later)
+        columns,
+        // NEW PROP: Callback to open the modal
+        onOpenModal
     } = $props<{
         schemaName: string;
         resourceName: string;
-        resourceType: 'table' | 'view';
+        resourceType: 'table' | 'view'; // Extend for functions later
         columns: ColumnMetadata[];
+        onOpenModal: (params: {
+            operation: APIOperation;
+            // schemaName, resourceName, resourceType, columns are already available via props
+        }) => void;
     }>();
-
-    let showModal = $state(false);
-    let selectedOperation = $state<APIOperation | null>(null);
-    let recordIdForUpdateOrDelete = $state<string | number | null>(null); // For specific record operations
 
     function getAllowedOps(type: 'table' | 'view'): APIOperation[] {
         if (type === 'table') return ['GET', 'POST', 'PUT', 'DELETE'];
         if (type === 'view') return ['GET'];
+        // Add 'function' handling later: if (type === 'function') return ['POST'];
         return [];
     }
 
@@ -36,18 +39,8 @@
     };
 
     function handleOperationClick(operation: APIOperation) {
-        selectedOperation = operation;
-        // For PUT/DELETE, we might need an ID.
-        // This component currently doesn't manage selecting a specific record for PUT/DELETE.
-        // That logic would typically be outside this component (e.g., in a table row action).
-        // For now, let's assume PUT/DELETE will require an ID to be entered in the modal form.
-        recordIdForUpdateOrDelete = null; // Reset
-        showModal = true;
-    }
-
-    function closeModal() {
-        showModal = false;
-        selectedOperation = null;
+        // Call the parent's function to open the modal
+        onOpenModal({ operation });
     }
 
 </script>
@@ -59,19 +52,8 @@
             class="btn btn-sm {detail.class}"
             onclick={() => handleOperationClick(operation)}
         >
-            {detail.label} {resourceName}
+            {detail.label}
+            <!-- <span class="hidden sm:inline ml-1">{resourceName}</span> -->
         </button>
     {/each}
 </div>
-
-{#if showModal && selectedOperation}
-    <RLApiOperationModal
-        isOpen={showModal}
-        onClose={closeModal}
-        {schemaName}
-        {resourceName}
-        operation={selectedOperation}
-        {columns}
-        initialId={recordIdForUpdateOrDelete}
-    />
-{/if}

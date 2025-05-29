@@ -11,7 +11,9 @@
     import { apiStore } from '$lib/components/stores/api.svelte';
     import RLMetadataTable from '$lib/components/dataview/RLMetadataTable.svelte';
     import RLApiInterface from '$lib/components/api/RLApiInterface.svelte';
+    import RLApiOperationModal from '$lib/components/api/RLApiOperationModal.svelte';
 
+    type APIOperation = 'GET' | 'POST' | 'PUT' | 'DELETE';
     type EntityType = 'tables' | 'views' | 'enums' | 'functions' | 'procedures' | 'triggers';
 
     let schemas = $state<SchemaMetadata[] | null>(null);
@@ -20,7 +22,15 @@
     let error = $state<string | null>(null);
     let activeEntityType = $state<EntityType>('tables');
 
-    // --- NEW APPROACH: Use $effect to update $state variables ---
+    // State for the single modal
+    let isModalOpen = $state(false);
+    let modalTargetSchemaName = $state<string>('');
+    let modalTargetResourceName = $state<string>('');
+    let modalTargetResourceType = $state<'table' | 'view' | 'function'>('table');
+    let modalTargetColumns = $state<ColumnMetadata[]>([]);
+    let modalTargetOperation = $state<APIOperation>('GET');
+
+    // --- CORRECTED STATE MANAGEMENT using $state and $effect ---
     let currentSelectedSchemaObject = $state<SchemaMetadata | null>(null);
     let currentEntityItems = $state<Record<string, any> | null>(null);
 
@@ -39,10 +49,12 @@
         if (!currentSelectedSchemaObject || !currentSelectedSchemaObject[activeEntityType]) {
             currentEntityItems = null;
         } else {
-            currentEntityItems = currentSelectedSchemaObject[activeEntityType] as Record<string, any> | null;
+            // Ensure the accessed property exists before casting
+            const entityData = currentSelectedSchemaObject[activeEntityType];
+            currentEntityItems = entityData ? entityData as Record<string, any> : null;
         }
     });
-    // --- END NEW APPROACH ---
+    // --- END CORRECTED STATE MANAGEMENT ---
 
     $effect(() => {
         async function loadSchemas() {
@@ -81,9 +93,30 @@
     function getColumnsForTableOrView(item: TableMetadata | ViewMetadata): ColumnMetadata[] {
         return item.columns || [];
     }
+    
+    function openModalForOperation(
+        params: { operation: APIOperation },
+        currentSchema: string,
+        currentResourceName: string,
+        currentResourceType: 'table' | 'view',
+        currentColumns: ColumnMetadata[]
+    ) {
+        modalTargetOperation = params.operation;
+        modalTargetSchemaName = currentSchema;
+        modalTargetResourceName = currentResourceName;
+        modalTargetResourceType = currentResourceType;
+        modalTargetColumns = currentColumns;
+        isModalOpen = true;
+    }
+
+    function closeModal() {
+        isModalOpen = false;
+    }
 
 </script>
 
+<!-- The template remains the same as the previous correct version for modal handling -->
+<!-- ... (Full template from previous correct response) ... -->
 <div class="container mx-auto p-4">
     {#if isLoading}
         <div class="flex flex-col items-center justify-center h-64">
@@ -101,7 +134,7 @@
     {:else if schemas && schemas.length > 0}
         <!-- Schema Selection Tabs -->
         <div role="tablist" class="tabs tabs-lifted tabs-lg mb-6">
-            {#each schemas as schema}
+             {#each schemas as schema}
                 <button
                     role="tab"
                     class="tab {activeSchemaName === schema.name ? 'tab-active font-semibold' : ''}"
@@ -113,8 +146,8 @@
             {/each}
         </div>
 
-        {#if currentSelectedSchemaObject}
-            {@const activeSchema = currentSelectedSchemaObject}
+        {#if currentSelectedSchemaObject} <!-- Use the $state variable directly -->
+            {@const activeSchema = currentSelectedSchemaObject} 
             <div class="bg-base-200 p-4 rounded-box">
                 <!-- Entity Type Selection Tabs -->
                 <div role="tablist" class="tabs tabs-bordered mb-6">
@@ -140,24 +173,33 @@
                         {#if currentEntityItems && Object.keys(currentEntityItems).length > 0}
                             {#each Object.entries(currentEntityItems) as [name, itemData]}
                                 {@const typedItem = itemData as TableMetadata | ViewMetadata}
+                                {@const itemColumns = getColumnsForTableOrView(typedItem)}
+                                {@const currentItemType = activeEntityType.slice(0, -1) as 'table' | 'view'}
                                 <div class="collapse collapse-arrow bg-base-100 shadow-md">
                                     <input type="checkbox" name="item-accordion-{activeSchema.name}-{name}" />
                                     <div class="collapse-title text-xl font-medium">
                                         {name}
-                                        <span class="badge badge-ghost ml-2">{activeEntityType.slice(0, -1)}</span>
+                                        <span class="badge badge-ghost ml-2">{currentItemType}</span>
                                     </div>
                                     <div class="collapse-content">
                                         <RLMetadataTable
                                             title={name}
-                                            itemType={activeEntityType.slice(0, -1) as 'table' | 'view'}
-                                            columns={getColumnsForTableOrView(typedItem)}
+                                            itemType={currentItemType}
+                                            columns={itemColumns}
                                         />
-                                        <div class="mt-4 p-4 border border-dashed border-base-300 rounded-md">
+                                        <div class="mt-4 p-2 border-t border-base-300">
                                             <RLApiInterface
                                                 schemaName={activeSchema.name}
                                                 resourceName={name}
-                                                resourceType={activeEntityType.slice(0, -1) as 'table' | 'view'}
-                                                columns={getColumnsForTableOrView(typedItem)}
+                                                resourceType={currentItemType}
+                                                columns={itemColumns}
+                                                onOpenModal={(params) => openModalForOperation(
+                                                    params,
+                                                    activeSchema.name,
+                                                    name,
+                                                    currentItemType,
+                                                    itemColumns
+                                                )}
                                             />
                                         </div>
                                     </div>
@@ -229,9 +271,9 @@
                                                 <span class="font-mono text-xs ml-2 badge badge-outline">{typedItem.returnType}</span>
                                             </div>
                                         {/if}
-                                        <div class="mt-4 p-2 border border-dashed border-base-300 rounded-md">
+                                        <div class="mt-4 p-2 border-t border-base-300">
                                             <p class="text-center text-xs text-neutral-content/70">
-                                                RLApiInterface for function '{name}' (POST) will be here.
+                                                API actions for {typedItem.objectType} '{name}' (e.g., POST)
                                             </p>
                                         </div>
                                     </div>
@@ -254,5 +296,18 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span>No schemas found. Ensure the API is running and configured correctly.</span>
         </div>
+    {/if}
+
+    <!-- SINGLE MODAL INSTANCE -->
+    {#if isModalOpen && modalTargetSchemaName && modalTargetResourceName && modalTargetOperation && modalTargetColumns}
+        <RLApiOperationModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            schemaName={modalTargetSchemaName}
+            resourceName={modalTargetResourceName}
+            operation={modalTargetOperation}
+            columns={modalTargetColumns}
+            resourceType={modalTargetResourceType}
+        />
     {/if}
 </div>
