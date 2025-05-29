@@ -3,8 +3,8 @@
     import type { ColumnMetadata } from '@yrrrrrf/prism-ts';
     import type { CrudOperations } from '@yrrrrrf/prism-ts'; // Import CrudOperations
     import { apiStore } from '$lib/components/stores/api.svelte';
-    import RLFilterForm from '$lib/components/froms/RLFilterForm.svelte';
-    import RLResourceForm from '$lib/components/froms/RLResourceForm.svelte';
+    import RLFilterForm from '$lib/components/form/RLFilterForm.svelte';
+    import RLResourceForm from '$lib/components/form/RLResourceForm.svelte';
 
     type APIOperation = 'GET' | 'POST' | 'PUT' | 'DELETE';
 

@@ -1,0 +1,2297 @@
+[
+  {
+    "name": "academic",
+    "tables": {
+      "course": {
+        "name": "course",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "description",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "credits",
+            "type": "NUMERIC(2, 0)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "category",
+            "type": "VARCHAR(8)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "is_active",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "course_prerequisite": {
+        "name": "course_prerequisite",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "prerequisite_course_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "program": {
+        "name": "program",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "description",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "degree_level",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "is_active",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "syllabus": {
+        "name": "syllabus",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "version",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "content",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "approved_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "program_course": {
+        "name": "program_course",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "program_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "course_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "is_required",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "recommended_semester",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "course_topic": {
+        "name": "course_topic",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "topic_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "relevance_level",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "active_programs_with_course_count": {
+        "name": "active_programs_with_course_count",
+        "columns": [
+          {
+            "name": "program_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "program_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "program_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "degree_level",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "total_courses",
+            "type": "BIGINT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "required_courses",
+            "type": "BIGINT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "courses_with_prerequisites": {
+        "name": "courses_with_prerequisites",
+        "columns": [
+          {
+            "name": "course_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "credits",
+            "type": "NUMERIC(2, 0)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "prerequisites",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "program_curriculum": {
+        "name": "program_curriculum",
+        "columns": [
+          {
+            "name": "program_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "program_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "program_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "credits",
+            "type": "NUMERIC(2, 0)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "is_required",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "recommended_semester",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "latest_syllabi": {
+        "name": "latest_syllabi",
+        "columns": [
+          {
+            "name": "syllabus_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "syllabus_version",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "approved_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "agnostic",
+    "tables": {
+      "topic": {
+        "name": "topic",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "description",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "parent_topic_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "tag": {
+        "name": "tag",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "description",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "account",
+    "tables": {
+      "profile": {
+        "name": "profile",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "username",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "email",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "full_name",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "preferences": {
+        "name": "preferences",
+        "columns": [
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          },
+          {
+            "name": "theme",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "language",
+            "type": "VARCHAR(10)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "notifications",
+            "type": "JSONB",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "settings",
+            "type": "JSONB",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "user_roles": {
+        "name": "user_roles",
+        "columns": [
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          },
+          {
+            "name": "role_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          },
+          {
+            "name": "assigned_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "assigned_by",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "roles": {
+        "name": "roles",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "description",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "permissions",
+            "type": "JSONB",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "auth",
+    "tables": {
+      "sessions": {
+        "name": "sessions",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "token",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "expires_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "user_agent",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "last_active_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "credentials": {
+        "name": "credentials",
+        "columns": [
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          },
+          {
+            "name": "password_hash",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "last_password_change",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "force_password_change",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "password_reset_token",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "password_reset_expires",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "login_attempts": {
+        "name": "login_attempts",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "username_or_email",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "success",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "attempt_time",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "two_factor": {
+        "name": "two_factor",
+        "columns": [
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          },
+          {
+            "name": "enabled",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "secret",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "backup_codes",
+            "type": "ARRAY",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "course_offer",
+    "tables": {
+      "course_schedule": {
+        "name": "course_schedule",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_offer_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "day_of_week",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "start_time",
+            "type": "TIME",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "end_time",
+            "type": "TIME",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "location_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "course_offer": {
+        "name": "course_offer",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "term_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "section_number",
+            "type": "VARCHAR(10)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "max_enrollment",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "current_enrollment",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "academic_term": {
+        "name": "academic_term",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "start_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "end_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "is_current",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "instructor_assignment": {
+        "name": "instructor_assignment",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_offer_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "instructor_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "is_primary",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "current_term_courses": {
+        "name": "current_term_courses",
+        "columns": [
+          {
+            "name": "course_offer_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "section_number",
+            "type": "VARCHAR(10)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "max_enrollment",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "current_enrollment",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "term_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "course_schedule_with_location": {
+        "name": "course_schedule_with_location",
+        "columns": [
+          {
+            "name": "schedule_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_offer_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "section_number",
+            "type": "VARCHAR(10)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "day_of_week",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "start_time",
+            "type": "TIME",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "end_time",
+            "type": "TIME",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "room_name",
+            "type": "VARCHAR(32)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "building_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "instructor_course_assignments": {
+        "name": "instructor_course_assignments",
+        "columns": [
+          {
+            "name": "assignment_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "instructor_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "instructor_name",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "section_number",
+            "type": "VARCHAR(10)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "term_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "is_primary",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "infrastruct",
+    "tables": {
+      "room": {
+        "name": "room",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "room_type",
+            "type": "VARCHAR(15)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(32)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "building_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "capacity",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "building": {
+        "name": "building",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "address",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "total_floors",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "accessibility_features",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "facility": {
+        "name": "facility",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "facility_type",
+            "type": "VARCHAR(21)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "building_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "faculty": {
+        "name": "faculty",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "faculty_building": {
+        "name": "faculty_building",
+        "columns": [
+          {
+            "name": "faculty_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          },
+          {
+            "name": "building_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "building_facilities": {
+        "name": "building_facilities",
+        "columns": [
+          {
+            "name": "building_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "building_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "address",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "facility_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "facility_type",
+            "type": "VARCHAR(21)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "faculty_buildings": {
+        "name": "faculty_buildings",
+        "columns": [
+          {
+            "name": "faculty_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "faculty_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "building_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "building_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "address",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "room_utilization": {
+        "name": "room_utilization",
+        "columns": [
+          {
+            "name": "building_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "building_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "room_type",
+            "type": "VARCHAR(15)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "room_count",
+            "type": "BIGINT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "total_capacity",
+            "type": "BIGINT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "faculty_libraries": {
+        "name": "faculty_libraries",
+        "columns": [
+          {
+            "name": "faculty_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "faculty_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "building_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "building_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "library_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "hr",
+    "tables": {
+      "employee": {
+        "name": "employee",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "first_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "last_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "hire_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "job_category",
+            "type": "VARCHAR(18)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "department_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "is_active",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "email",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "department": {
+        "name": "department",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "description",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "head_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "employee_position": {
+        "name": "employee_position",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "employee_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "position_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "start_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "end_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "is_primary",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "position": {
+        "name": "position",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "title",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "description",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "leave": {
+        "name": "leave",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "employee_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "leave_type",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "start_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "end_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "approved_by",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "active_employees_with_position": {
+        "name": "active_employees_with_position",
+        "columns": [
+          {
+            "name": "employee_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "first_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "last_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "email",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "job_category",
+            "type": "VARCHAR(18)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "department_name",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "position_title",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "position_start_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "department_heads": {
+        "name": "department_heads",
+        "columns": [
+          {
+            "name": "department_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "department_name",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "head_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "head_first_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "head_last_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "head_email",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "leave_requests_detailed": {
+        "name": "leave_requests_detailed",
+        "columns": [
+          {
+            "name": "leave_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "employee_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "employee_name",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "employee_email",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "leave_type",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "start_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "end_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "approver_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "approver_name",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "library",
+    "tables": {
+      "book_topic": {
+        "name": "book_topic",
+        "columns": [
+          {
+            "name": "book_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          },
+          {
+            "name": "topic_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "book": {
+        "name": "book",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "publisher_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "isbn",
+            "type": "VARCHAR(13)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "publication_year",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "publisher": {
+        "name": "publisher",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "book_author": {
+        "name": "book_author",
+        "columns": [
+          {
+            "name": "book_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          },
+          {
+            "name": "author_id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": true
+          }
+        ]
+      },
+      "author": {
+        "name": "author",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "book_copy": {
+        "name": "book_copy",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "book_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "library_facility_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "loan": {
+        "name": "loan",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "student_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "book_copy_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "loan_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "due_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "return_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "vw_book_details": {
+        "name": "vw_book_details",
+        "columns": [
+          {
+            "name": "book_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "isbn",
+            "type": "VARCHAR(13)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "publication_year",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "publisher_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "authors",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "vw_overdue_loans": {
+        "name": "vw_overdue_loans",
+        "columns": [
+          {
+            "name": "loan_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "student_name",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "book_title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "loan_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "due_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "days_overdue",
+            "type": "INTEGER",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "vw_popular_books": {
+        "name": "vw_popular_books",
+        "columns": [
+          {
+            "name": "book_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "loan_count",
+            "type": "BIGINT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "student",
+    "tables": {
+      "student": {
+        "name": "student",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "first_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "last_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "email",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "enrollment_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "program_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "is_active",
+            "type": "BOOLEAN",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "enrollment": {
+        "name": "enrollment",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "student_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "course_offer_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "enrollment_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(10)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "grade": {
+        "name": "grade",
+        "columns": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "is_primary_key": true,
+            "is_foreign_key": false
+          },
+          {
+            "name": "enrollment_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": true
+          },
+          {
+            "name": "exam_type",
+            "type": "VARCHAR(14)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "grade",
+            "type": "NUMERIC(4, 2)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "grading_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "comments",
+            "type": "TEXT",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "active_students_with_program": {
+        "name": "active_students_with_program",
+        "columns": [
+          {
+            "name": "student_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "first_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "last_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "email",
+            "type": "VARCHAR(100)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "enrollment_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "program_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "program_name",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "current_enrollments": {
+        "name": "current_enrollments",
+        "columns": [
+          {
+            "name": "enrollment_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "student_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "first_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "last_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "section_number",
+            "type": "VARCHAR(10)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "enrollment_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(10)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      },
+      "student_grades_summary": {
+        "name": "student_grades_summary",
+        "columns": [
+          {
+            "name": "student_id",
+            "type": "UUID",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "first_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "last_name",
+            "type": "VARCHAR(50)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_code",
+            "type": "VARCHAR(20)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "course_title",
+            "type": "VARCHAR(255)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "exam_type",
+            "type": "VARCHAR(14)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "grade",
+            "type": "NUMERIC(4, 2)",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          },
+          {
+            "name": "grading_date",
+            "type": "DATE",
+            "is_primary_key": false,
+            "is_foreign_key": false
+          }
+        ]
+      }
+    }
+  }
+]
