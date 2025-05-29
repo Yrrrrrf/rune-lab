@@ -29,27 +29,27 @@
 		}
 	},
 	"peerDependencies": {
-		"svelte": "5.25.7"
+		"svelte": "5.33.6"
 	},
 	"dependencies": {
-		"@lucide/svelte": "0.487.0",
+		"@lucide/svelte": "0.511.0",
 		"@yrrrrrf/prism-ts": "npm:@jsr/yrrrrrf__prism-ts",
-		"daisyui": "5.0.13"
+		"daisyui": "5.0.40"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "3.0.8",
-		"@sveltejs/kit": "2.20.4",
-		"@sveltejs/package": "2.3.10",
+		"@sveltejs/kit": "2.20",
+		"@sveltejs/package": "2.3.11",
 		"@sveltejs/vite-plugin-svelte": "5.0.3",
 		"@tailwindcss/forms": "0.5.10",
 		"@tailwindcss/typography": "0.5.16",
-		"@tailwindcss/vite": "4.1.3",
-		"publint": "0.3.10",
-		"svelte": "5.25.7",
-		"svelte-check": "4.1.5",
-		"tailwindcss": "4.1.3",
+		"@tailwindcss/vite": "4.1.8",
+		"publint": "0.3.12",
+		"svelte": "5.33.6",
+		"svelte-check": "4.2.1",
+		"tailwindcss": "4.1.8",
 		"typescript": "5.8.3",
-		"vite": "6.2.5"
+		"vite": "6.3.5"
 	},
 	"keywords": [
 		"svelte"

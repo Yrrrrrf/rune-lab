@@ -21,7 +21,8 @@
 		"@tailwindcss/vite": "npm:@tailwindcss/vite",
 		"tailwindcss": "npm:tailwindcss",
 		"vite": "npm:vite",
-		"daisyui": "npm:daisyui"
+		"daisyui": "npm:daisyui",
+		"@yrrrrrf/prism-ts": "jsr:@yrrrrrf/prism-ts"
 	},
 	"compilerOptions": {
 		"strict": true,
@@ -55,5 +56,6 @@
 		"peerDependencies": {
 			"svelte": "5.25.7"
 		}
-	}
+	},
+	"nodeModulesDir": "auto"
 }
