@@ -49,6 +49,7 @@ class APIStore {
 		console.log("🌐 API configured:", {
 			url: this.URL,
 			version: this.VERSION,
+			retryCount: this.retryCount,
 			maxRetries: this.maxRetries,
 			retryTimeout: this.retryTimeout,
 		});

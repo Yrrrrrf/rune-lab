@@ -5,6 +5,7 @@
 
     import { apiStore } from '$lib/mod.js';
     import { appData } from '$lib/mod.js';
+    import UrlDisplay from '$lib/components/layout/URLDisplay.svelte';
 
     let { children } = $props();
 
@@ -44,3 +45,5 @@
 
 <!-- Main content -->
 {@render children()}
+
+<UrlDisplay />
