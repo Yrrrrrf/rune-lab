@@ -1,32 +1,30 @@
 <!-- src/lib/components/explorer/RLSchemaExplorer.svelte -->
 <script lang="ts">
     import type {
-        SchemaMetadata,
-        TableMetadata,
-        ViewMetadata, // Kept for type consistency, though 'views' collection will be empty
-        EnumMetadata,   // Kept for type consistency
-        FunctionMetadata, // Kept for type consistency
-        ColumnMetadata,
-        ColumnReference
-    } from '@yrrrrrf/prism-ts';
+        SchemaMetadata, // from prism-ts
+        TableMetadata,  // from prism-ts
+        ViewMetadata,   // from prism-ts
+        EnumMetadata,   // from prism-ts
+        FunctionMetadata, // from prism-ts (used for functions, procedures, triggers)
+        ColumnMetadata,   // from prism-ts
+        // FunctionParameter // from prism-ts (if needed directly, else part of FunctionMetadata)
+    } from '@yrrrrrf/prism-ts'; // Adjusted import path if mod.ts re-exports these
     import { apiStore } from '$lib/components/stores/api.svelte';
     import RLMetadataTable from '$lib/components/dataview/RLMetadataTable.svelte';
     import RLApiInterface from '$lib/components/api/RLApiInterface.svelte';
     import RLApiOperationModal from '$lib/components/api/RLApiOperationModal.svelte';
 
     type APIOperation = 'GET' | 'POST' | 'PUT' | 'DELETE';
-    // EntityType now reflects what we can *actually* populate based on API
-    // We will have 'tables', and the rest will be empty unless API changes.
     type EntityType = 'tables' | 'views' | 'enums' | 'functions' | 'procedures' | 'triggers';
-    type ModalResourceType = 'table' | 'view' | 'function';
+    type ModalResourceType = 'table' | 'view' | 'function'; // For RLApiOperationModal
 
     let schemas = $state<SchemaMetadata[] | null>(null);
     let activeSchemaName = $state<string | null>(null);
     let isLoading = $state(true);
     let error = $state<string | null>(null);
-    let activeEntityType = $state<EntityType>('tables'); // Default to 'tables'
+    let activeEntityType = $state<EntityType>('tables');
 
-    // Modal state - remains the same
+    // Modal state
     let isModalOpen = $state(false);
     let modalTargetSchemaName = $state<string>('');
     let modalTargetResourceName = $state<string>('');
@@ -38,8 +36,9 @@
     let modalInitialDataForPut = $state<Record<string, any>>({});
 
     let currentSelectedSchemaObject = $state<SchemaMetadata | null>(null);
-    let currentEntityItems = $state<Record<string, any> | null>(null); // Will hold items from schema.tables
+    let currentEntityItems = $state<Record<string, any> | null>(null); // Holds items for the activeEntityType
 
+    // Effect to update currentSelectedSchemaObject when activeSchemaName or schemas change
     $effect(() => {
         if (!activeSchemaName || !schemas) {
             currentSelectedSchemaObject = null;
@@ -48,56 +47,60 @@
         }
     });
 
+    // Effect to update currentEntityItems when currentSelectedSchemaObject or activeEntityType changes
     $effect(() => {
-        if (!currentSelectedSchemaObject) {
+        if (currentSelectedSchemaObject && currentSelectedSchemaObject[activeEntityType]) {
+            const entities = currentSelectedSchemaObject[activeEntityType];
+            // Check if entities is not null/undefined and has keys
+            if (entities && Object.keys(entities).length > 0) {
+                currentEntityItems = entities as Record<string, any>;
+            } else {
+                currentEntityItems = null;
+            }
+        } else {
             currentEntityItems = null;
-            return;
         }
-        const entityData = currentSelectedSchemaObject[activeEntityType];
-        currentEntityItems = entityData && Object.keys(entityData).length > 0 
-            ? entityData as Record<string, any> 
-            : null;
     });
 
-    // In RLSchemaExplorer.svelte - $effect for loading schemas
+    // Effect to load schemas from the API
     $effect(() => {
         async function loadSchemas() {
-            if (apiStore.IS_CONNECTED && apiStore.prism) {
-                try {
-                    isLoading = true;
-                    error = null;
-                    const fetchedSchemas = await apiStore.prism.getSchemas() as any[]; // Cast to any[] to be safe before ensuring structure
-                    
-                    console.log("DEBUG: Raw fetchedSchemas:", JSON.stringify(fetchedSchemas, null, 2));
+            if (!apiStore.IS_CONNECTED || !apiStore.prism) {
+                isLoading = !apiStore.IS_CONNECTED; // Show loading if not connected yet
+                error = apiStore.IS_CONNECTED ? null : "API not connected. Waiting for connection...";
+                schemas = null; // Clear schemas if not connected
+                return;
+            }
 
-                    const ensuredSchemas: SchemaMetadata[] = fetchedSchemas.map(schema => ({
-                        name: schema.name,
-                        tables: schema.tables || {}, // If API omits 'tables' when empty, default to {}
-                        views: schema.views || {},       // If API omits 'views' when empty, default to {}
-                        enums: schema.enums || {},       // etc.
-                        functions: schema.functions || {},
-                        procedures: schema.procedures || {},
-                        triggers: schema.triggers || {},
-                        // Ensure all other properties of SchemaMetadata are here if prism-ts defines them
-                        // and provide defaults if they can be omitted by the API.
-                    }));
-                    
-                    schemas = ensuredSchemas;
-                    // console.log("DEBUG: Ensured Schemas:", JSON.stringify(schemas, null, 2));
+            try {
+                isLoading = true;
+                error = null;
+                // apiStore.prism.getSchemas() should return SchemaMetadata[] from prism-ts
+                const fetchedSchemasFromPrismTs = await apiStore.prism.getSchemas();
 
+                // Ensure all expected top-level entity collections exist on each schema object.
+                // This is a defensive measure. prism-ts should ideally provide complete objects.
+                const ensuredSchemas: SchemaMetadata[] = fetchedSchemasFromPrismTs.map(schema => ({
+                    name: schema.name,
+                    tables: schema.tables || {},
+                    views: schema.views || {},
+                    enums: schema.enums || {},
+                    functions: schema.functions || {},
+                    procedures: schema.procedures || {},
+                    triggers: schema.triggers || {},
+                }));
+                
+                schemas = ensuredSchemas;
 
-                    if (ensuredSchemas && ensuredSchemas.length > 0 && !activeSchemaName) {
-                        activeSchemaName = ensuredSchemas[0].name;
-                    }
-                } catch (e) {
-                    console.error("Error loading schemas:", e);
-                    error = e instanceof Error ? e.message : 'An unknown error occurred while fetching schemas.';
-                    schemas = null;
-                } finally {
-                    isLoading = false;
+                if (ensuredSchemas && ensuredSchemas.length > 0 && !activeSchemaName) {
+                    activeSchemaName = ensuredSchemas[0].name;
                 }
-            } else if (!apiStore.IS_CONNECTED) {
-                // ...
+            } catch (e) {
+                console.error("Error loading schemas:", e);
+                error = e instanceof Error ? e.message : 'An unknown error occurred while fetching schemas.';
+                schemas = null;
+            } finally {
+                isLoading = false;
             }
         }
         loadSchemas();
@@ -109,15 +112,16 @@
         return entities ? Object.keys(entities).length : 0;
     }
 
+    // RLMetadataTable expects ColumnMetadata[] from prism-ts, which should be directly available.
     function getColumnsForTableOrView(item: TableMetadata | ViewMetadata): ColumnMetadata[] {
         return item.columns || [];
     }
     
-    function openModalForOperation( /* ... (this function remains the same as previous correct version) ... */
+    function openModalForOperation(
         params: { operation: APIOperation },
         currentSchema: string,
         currentResourceName: string,
-        currentModalResourceType: ModalResourceType,
+        currentModalResourceType: ModalResourceType, // 'table', 'view', or 'function'
         options: {
             columns?: ColumnMetadata[];
             functionParams?: FunctionMetadata['parameters'] | null;
@@ -136,8 +140,9 @@
         isModalOpen = true;
     }
 
-    function closeModal() { /* ... (this function remains the same) ... */
+    function closeModal() {
         isModalOpen = false;
+        // Reset modal-specific states if necessary
         modalTargetFunctionParams = null;
         modalInitialId = null;
         modalInitialDataForPut = {};
@@ -145,12 +150,7 @@
     }
 </script>
 
-<!-- 
-  TEMPLATE:
-  The template will now only populate the "Tables" tab with content.
-  "Views", "Enums", "Functions", "Procedures", "Triggers" tabs will show 0 counts and "No items found".
-  This accurately reflects the limitations of the API data.
--->
+<!-- src/lib/components/explorer/RLSchemaExplorer.svelte -->
 <div class="container mx-auto p-4">
     {#if isLoading}
         <div class="flex flex-col items-center justify-center h-64">
@@ -161,7 +161,7 @@
         <div role="alert" class="alert alert-error">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <div>
-                <h3 class="font-bold">Error Loading/Preparing Schemas!</h3>
+                <h3 class="font-bold">Error Loading Schemas!</h3>
                 <div class="text-xs">{error}</div>
             </div>
         </div>
@@ -171,7 +171,7 @@
                 <button
                     role="tab"
                     class="tab {activeSchemaName === schema.name ? 'tab-active font-semibold' : ''}"
-                    onclick={() => activeSchemaName = schema.name}
+                    onclick={() => { activeSchemaName = schema.name; activeEntityType = 'tables';}}
                     aria-selected={activeSchemaName === schema.name}
                 >
                     {schema.name}
@@ -180,7 +180,7 @@
         </div>
 
         {#if currentSelectedSchemaObject}
-            {@const activeSchema = currentSelectedSchemaObject} 
+            {@const activeSchema = currentSelectedSchemaObject}
             <div class="bg-base-200 p-4 rounded-box">
                 <div role="tablist" class="tabs tabs-bordered mb-6">
                     {#each ['tables', 'views', 'enums', 'functions', 'procedures', 'triggers'] as typeStr}
@@ -191,7 +191,7 @@
                             class="tab {activeEntityType === entityTypeLoop ? 'tab-active' : ''} [--tab-bg:oklch(var(--b2))] [--tab-border-color:oklch(var(--b3))]"
                             onclick={() => activeEntityType = entityTypeLoop}
                             aria-selected={activeEntityType === entityTypeLoop}
-                            disabled={count === 0}
+                            disabled={count === 0 && activeEntityType !== entityTypeLoop}
                         >
                             {entityTypeLoop.charAt(0).toUpperCase() + entityTypeLoop.slice(1)}
                             <span class="badge badge-sm badge-ghost ml-2">{count}</span>
@@ -200,55 +200,145 @@
                 </div>
 
                 <div class="space-y-6">
-                    <!-- TABLES: This section will now show ALL entities received from the API's "tables" key -->
-                    {#if activeEntityType === 'tables'}
-                        {#if currentEntityItems && Object.keys(currentEntityItems).length > 0}
-                            {#each Object.entries(currentEntityItems) as [name, itemData] (name)}
-                                {@const typedItem = itemData as TableMetadata} <!-- All are treated as TableMetadata now -->
+                    {#if currentEntityItems && Object.keys(currentEntityItems).length > 0}
+                        {#each Object.entries(currentEntityItems) as [name, itemData] (name)}
+                            <!-- Display for Tables and Views -->
+                            {#if activeEntityType === 'tables' || activeEntityType === 'views'}
+                                {@const typedItem = itemData as (TableMetadata | ViewMetadata)}
                                 <div class="collapse collapse-arrow bg-base-100 shadow-md">
-                                    <input type="checkbox" name="item-accordion-table-{activeSchema.name}-{name}" />
+                                    <input type="checkbox" name="item-accordion-{activeSchema.name}-{activeEntityType}-{name}" />
                                     <div class="collapse-title text-xl font-medium">
-                                        {name} 
-                                        <!-- We can't reliably know if it's a table or view, so we'll call it 'data entity' or similar -->
-                                        <span class="badge badge-ghost ml-2">Data Entity</span> 
+                                        {name}
+                                        <span class="badge badge-ghost ml-2 capitalize">{activeEntityType.slice(0, -1)}</span>
                                     </div>
                                     <div class="collapse-content">
-                                        <RLMetadataTable title={name} itemType={'table'} columns={getColumnsForTableOrView(typedItem)} />
+                                        <RLMetadataTable 
+                                            title={name} 
+                                            itemType={activeEntityType === 'tables' ? 'table' : 'view'} 
+                                            columns={getColumnsForTableOrView(typedItem)} 
+                                        />
                                         <div class="mt-4 p-2 border-t border-base-300">
-                                            <!-- API interface will treat it as a table by default -->
-                                            <RLApiInterface schemaName={activeSchema.name} resourceName={name} resourceType={'table'} columns={getColumnsForTableOrView(typedItem)}
-                                                onOpenModal={(opParams) => openModalForOperation(opParams, activeSchema.name, name, 'table', { columns: getColumnsForTableOrView(typedItem) })} />
+                                            <RLApiInterface
+                                                schemaName={activeSchema.name}
+                                                resourceName={name}
+                                                resourceType={activeEntityType === 'tables' ? 'table' : 'view'}
+                                                columns={getColumnsForTableOrView(typedItem)}
+                                                onOpenModal={(opParams) => openModalForOperation(
+                                                    opParams, 
+                                                    activeSchema.name, 
+                                                    name, 
+                                                    activeEntityType === 'tables' ? 'table' : 'view', 
+                                                    { columns: getColumnsForTableOrView(typedItem) }
+                                                )}
+                                            />
                                         </div>
                                     </div>
                                 </div>
-                            {/each}
-                        {:else}
-                            <p class="text-center p-4 text-neutral-content/70">No data entities found in the 'tables' collection from API for this schema.</p>
-                        {/if}
-                    <!-- VIEWS / ENUMS / FUNCTIONS / PROCEDURES / TRIGGERS: These will now show "No ... found" -->
-                    {:else if activeEntityType === 'views'}
-                        <p class="text-center p-4 text-neutral-content/70">No views found (API does not provide a separate 'views' collection).</p>
-                    {:else if activeEntityType === 'enums'}
-                        <p class="text-center p-4 text-neutral-content/70">No enums found (API does not provide a separate 'enums' collection with 'values').</p>
-                    {:else if activeEntityType === 'functions' || activeEntityType === 'procedures' || activeEntityType === 'triggers'}
-                        <p class="text-center p-4 text-neutral-content/70">No {activeEntityType} found (API does not provide a separate '{activeEntityType}' collection with parameters/details).</p>
+                            <!-- Display for Enums -->
+                            {:else if activeEntityType === 'enums'}
+                                {@const typedItem = itemData as EnumMetadata}
+                                <div class="collapse collapse-arrow bg-base-100 shadow-md">
+                                    <input type="checkbox" name="item-accordion-{activeSchema.name}-enum-{name}" />
+                                    <div class="collapse-title text-xl font-medium">
+                                        {name} <span class="badge badge-ghost ml-2">Enum</span>
+                                    </div>
+                                    <div class="collapse-content">
+                                        <p class="font-semibold">Values:</p>
+                                        <ul class="list-disc list-inside pl-4 font-mono text-xs">
+                                            {#each typedItem.values as value}
+                                                <li>{value}</li>
+                                            {/each}
+                                        </ul>
+                                    </div>
+                                </div>
+                            <!-- Display for Functions, Procedures, Triggers -->
+                            {:else if activeEntityType === 'functions' || activeEntityType === 'procedures' || activeEntityType === 'triggers'}
+                                {@const typedItem = itemData as FunctionMetadata}
+                                <div class="collapse collapse-arrow bg-base-100 shadow-md">
+                                    <input type="checkbox" name="item-accordion-{activeSchema.name}-{activeEntityType}-{name}" />
+                                    <div class="collapse-title text-xl font-medium">
+                                        {name} <span class="badge badge-ghost ml-2 capitalize">{typedItem.objectType || activeEntityType.slice(0,-1)}</span>
+                                    </div>
+                                    <div class="collapse-content">
+                                        {#if typedItem.description}
+                                            <p class="mb-2 text-sm opacity-80"><strong>Description:</strong> {typedItem.description}</p>
+                                        {/if}
+                                        <p class="mb-1"><strong>Return Type:</strong> <span class="font-mono text-xs badge badge-outline">{typedItem.returnType || 'void'}</span></p>
+                                        {#if typedItem.parameters && typedItem.parameters.length > 0}
+                                            <p class="font-semibold mt-3 mb-1">Parameters:</p>
+                                            <div class="overflow-x-auto">
+                                                <table class="table table-sm table-zebra w-full text-xs">
+                                                    <thead><tr><th>Name</th><th>Type</th><th>Mode</th><th>Default?</th></tr></thead>
+                                                    <tbody>
+                                                        {#each typedItem.parameters as param}
+                                                        <tr>
+                                                            <td class="font-medium">{param.name}</td>
+                                                            <td class="font-mono">{param.type}</td>
+                                                            <td><span class="badge badge-xs badge-info">{param.mode}</span></td>
+                                                            <td>{param.hasDefault ? '✓' : '✗'}</td>
+                                                        </tr>
+                                                        {/each}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        {:else}
+                                         <p class="text-sm opacity-70 mt-2">No parameters.</p>
+                                        {/if}
+                                        
+                                        {#if activeEntityType === 'functions' || activeEntityType === 'procedures'}
+                                            <div class="mt-4 p-2 border-t border-base-300">
+                                                <RLApiInterface
+                                                    schemaName={activeSchema.name}
+                                                    resourceName={name}
+                                                    resourceType={'function'}
+                                                    columns={[]}
+                                                    onOpenModal={(opParams) => openModalForOperation(
+                                                        opParams, 
+                                                        activeSchema.name, 
+                                                        name, 
+                                                        'function', 
+                                                        { functionParams: typedItem.parameters }
+                                                    )}
+                                                />
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            {/if}
+                        {/each}
+                    {:else}
+                        <div class="text-center p-6 bg-base-100 rounded-md shadow">
+                            <p class="text-lg text-neutral-content/70">No {activeEntityType} found in schema <span class="font-semibold text-primary">{activeSchema.name}</span>.</p>
+                            <p class="text-sm text-neutral-content/50">Ensure the API is providing data for this entity type or select another type.</p>
+                        </div>
                     {/if}
                 </div>
             </div>
-        {:else if !isLoading}
+        {:else if !isLoading} <!-- currentSelectedSchemaObject is null but not loading -->
             <div role="alert" class="alert alert-info">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>Please select a schema, or ensure API connection.</span>
+                <span>Please select a schema to explore its contents.</span>
             </div>
         {/if}
-    {:else if !isLoading && (!schemas || schemas.length === 0)}
+    {:else if !isLoading && (!schemas || schemas.length === 0)} <!-- No schemas loaded at all -->
          <div role="alert" class="alert">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span>No schemas found. Check API configuration and connection.</span>
         </div>
     {/if}
 
-    {#if isModalOpen && modalTargetSchemaName && modalTargetResourceName && modalTargetOperation}
-        <RLApiOperationModal isOpen={isModalOpen} onClose={closeModal} schemaName={modalTargetSchemaName} resourceName={modalTargetResourceName} operation={modalTargetOperation} columns={modalTargetColumns} functionParams={modalTargetFunctionParams} resourceType={modalTargetResourceType} initialId={modalInitialId} initialDataForPut={modalInitialDataForPut} />
+    {#if isModalOpen && modalTargetSchemaName && modalTargetResourceName}
+        <RLApiOperationModal 
+            isOpen={isModalOpen} 
+            onClose={closeModal} 
+            schemaName={modalTargetSchemaName} 
+            resourceName={modalTargetResourceName} 
+            operation={modalTargetOperation} 
+            columns={modalTargetColumns} 
+            functionParams={modalTargetFunctionParams} 
+            resourceType={modalTargetResourceType}
+            initialId={modalInitialId}
+            initialDataForPut={modalInitialDataForPut}
+        />
     {/if}
 </div>
