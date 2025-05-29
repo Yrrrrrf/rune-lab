@@ -33,3 +33,4 @@ vite.config.ts.timestamp-*
 **/pdf.ts
 .vscode/
 old-runes/
+scripts/

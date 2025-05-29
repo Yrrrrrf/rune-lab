@@ -22,7 +22,8 @@
         
         // Initialize API store with configuration
         apiStore.init({
-            url: 'http://3.88.132.195:8000',
+            // url: 'http://3.88.132.195:8000',
+            url: 'http://localhost:8000',
             version: 'v1',
             maxRetries: 3,
             retryTimeout: 3000
