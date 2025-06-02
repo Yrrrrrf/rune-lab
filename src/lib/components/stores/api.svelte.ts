@@ -191,4 +191,4 @@ class APIStore {
 	}
 }
 
-export const apiStore = new APIStore();
+export const apiStore: APIStore = new APIStore();

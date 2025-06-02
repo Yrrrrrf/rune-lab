@@ -6,6 +6,6 @@
 
 <ThemeSelector />
 
-<!-- <Main/> -->
-
 <RlSchemaExplorer />
+
+<Main/>
