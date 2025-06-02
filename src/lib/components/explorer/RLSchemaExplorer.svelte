@@ -1,5 +1,4 @@
 <!-- src/lib/components/explorer/RLSchemaExplorer.svelte -->
-// src/lib/components/explorer/RLSchemaExplorer.svelte
 <script lang="ts">
     import type {
         SchemaMetadata,

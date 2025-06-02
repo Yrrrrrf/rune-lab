@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/Yrrrrrf/rune-lab/main/static/rune.png" alt="Rune Lab Icon" width="128" height="128" description="Some rune that represents the Svelte rune system">
+  <img src="https://raw.githubusercontent.com/Yrrrrrf/rune-lab/main/static/rune.png" alt="Rune Lab Icon" width="128" height="128" description="Icon representing the Svelte Runes system">
   <div align="center">Rune Lab</div>
 </h1>
 
@@ -14,19 +14,28 @@
 
 ## Overview
 
-Rune Lab is a modern component library built with Svelte 5, focused on providing powerful,
-reactive UI components using Svelte's runes system. It offers a comprehensive set of components,
-theming capabilities, and utilities for building modern web applications.
+**Rune Lab** is your modern toolkit for crafting stunning, reactive web applications with **Svelte 5**. Harnessing the power of Svelte's new **Runes** system, Rune Lab offers a suite of elegant UI components designed for seamless data handling and beautiful theming.
 
-## Features
+It's built to integrate effortlessly with your data sources, especially shining when connected to the [prism-py](https://github.com/Yrrrrrf/prism-py) and [prism-ts](https://github.com/Yrrrrrf/prism-ts) ecosystem for end-to-end type-safe API interactions.
 
-- **🧪 Svelte 5 Runes**: Built with Svelte 5's powerful reactivity primitives
-- **🎨 Theme System**: Extensive theming with DaisyUI integration
-- **🔄 Type Safety**: Full TypeScript support with strong typing
-- **📊 Data Visualization**: Components for visualizing complex data
-- **🌐 API Integration**: Tools for type-safe API interactions
-- **📦 Zero Dependencies**: Lightweight core with optional integrations
-- **🦕 Deno & NPM**: Available on both JSR and NPM
+## Key Features
+
+-   **✨ Svelte 5 Runes Core:** Experience fine-grained reactivity and cleaner component logic.
+-   **🎨 Dynamic Theming:** Powered by DaisyUI & Tailwind CSS for extensive customization and out-of-the-box themes.
+-   **🔒 TypeScript First:** Robust type-safety for a confident and productive development workflow.
+-   **📊 Data-Aware Components:** Tools and components built to handle and visualize complex data.
+-   **🛰️ Interactive Schema Explorer:** A standout feature! Visually explore and interact with database schemas exposed by `prism-py` APIs directly within your Svelte application. Test CRUD operations, execute functions, and understand your data structure like never before.
+-   **🌐 Smart API Integration:** Includes `apiStore` (using `prism-ts`) for easy and type-safe connection to backend APIs.
+-   **📦 Lightweight Core:** Designed to be lean, with optional integrations.
+-   **🦕 Universal Access:** Available on JSR (for Deno) and NPM (for Node.js/Bun/Yarn).
+
+## The Prism Ecosystem Advantage
+
+Rune Lab is designed to be a perfect companion to the Prism ecosystem:
+*   **[prism-py](https://github.com/Yrrrrrf/prism-py):** Automatically generates REST APIs from your database schema.
+*   **[prism-ts](https://github.com/Yrrrrrf/prism-ts):** A TypeScript client that consumes these APIs with full type-safety.
+
+When used together, Rune Lab's API integration tools (like the `apiStore` and `RLSchemaExplorer`) provide a remarkably streamlined and type-safe path from your backend data to your frontend UI.
 
 ## Installation
 
@@ -53,9 +62,3 @@ yarn add rune-lab
 ## License
 
 MIT License - See [LICENSE](LICENSE) for details.
-
----
-
-<div align="center">
-  Built with ❤️ using Svelte 5 and Deno
-</div>
