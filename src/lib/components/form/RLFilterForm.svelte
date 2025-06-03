@@ -1,19 +1,7 @@
 <!-- src/lib/components/forms/RLFilterForm.svelte -->
 <script lang="ts">
     import type { ColumnMetadata } from '@yrrrrrf/prism-ts';
-
-    // Same helper as in RLResourceForm, can be moved to a shared utility file
-    function mapSqlTypeToInputType(sqlType: string): string {
-        const lowerSqlType = sqlType.toLowerCase();
-        if (lowerSqlType.includes('bool')) return 'checkbox'; // Or a select with true/false/any
-        if (lowerSqlType.includes('int') || lowerSqlType.includes('serial') || lowerSqlType.includes('numeric') || lowerSqlType.includes('decimal') || lowerSqlType.includes('real') || lowerSqlType.includes('double')) return 'number';
-        if (lowerSqlType.includes('date') && !lowerSqlType.includes('timestamp')) return 'date';
-        if (lowerSqlType.includes('timestamp')) return 'datetime-local';
-        if (lowerSqlType.includes('time') && !lowerSqlType.includes('timestamp')) return 'time';
-        // For filters, textarea is less common unless for full-text search
-        return 'text'; // Default for filters
-    }
-
+    import { mapSqlTypeToInputType } from '$lib/tools/form-helpers.js';
 
     let {
         columns,

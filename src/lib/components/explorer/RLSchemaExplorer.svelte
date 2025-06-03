@@ -1,14 +1,10 @@
 <!-- src/lib/components/explorer/RLSchemaExplorer.svelte -->
 <script lang="ts">
     import type {
-        SchemaMetadata,
-        TableMetadata,
-        ViewMetadata,
-        EnumMetadata,
-        FunctionMetadata,
-        ColumnMetadata,
-        ColumnReference,
-        FunctionParameter,
+        SchemaMetadata as PrismSchemaMetadata, // Original type from prism-ts
+        // Other prism-ts types might be needed if used directly for options in openModalForApi
+        ColumnMetadata as PrismColumnMetadata,
+        FunctionParameter as PrismFunctionParameter,
     } from '@yrrrrrf/prism-ts';
     import { apiStore } from '$lib/components/stores/api.svelte';
     import { explorerStore, type ExplorerEntityType as StoreExplorerEntityType } from '$lib/components/stores/explorer.svelte';
@@ -16,14 +12,14 @@
     import RLApiInterface from '$lib/components/api/RLApiInterface.svelte';
     import RLApiOperationModal from '$lib/components/api/RLApiOperationModal.svelte';
 
-    // If EntityType is used in the template, it can be aliased from the store's export
-    // type EntityType = StoreExplorerEntityType; 
-    // Or if not used in template, no need for this alias here.
+    // Import Rune Lab specific types and the transformer
+    import type { RLSchemaData, RLTableMetadata, RLViewMetadata, RLEnumMetadata, RLFunctionMetadata, RLColumnMetadata, RLColumnReference } from '$lib/components/stores/explorer.svelte';
+    import { transformPrismSchemasToRLData } from '$lib/tools/schema-transformer.js'; // Correct path to tools index
 
     type APIOperation = 'GET' | 'POST' | 'PUT' | 'DELETE';
     type ModalResourceType = 'table' | 'view' | 'function';
 
-    let schemas = $state<SchemaMetadata[] | null>(null);
+    let schemas = $state<RLSchemaData[] | null>(null); // Use RLSchemaData here
     let isLoading = $state(true);
     let error = $state<string | null>(null);
 
@@ -32,9 +28,12 @@
     let modalTargetSchemaName = $state<string>('');
     let modalTargetResourceName = $state<string>('');
     let modalTargetResourceType = $state<ModalResourceType>('table');
-    let modalTargetColumns = $state<ColumnMetadata[]>([]);
+    let modalTargetColumns = $state<RLColumnMetadata[]>([]); // Use RLColumnMetadata
     let modalTargetOperation = $state<APIOperation>('GET');
-    let modalTargetFunctionParams = $state<FunctionMetadata['parameters'] | null>(null);
+    // For function parameters, the RLApiOperationModal might expect PrismFunctionParameter directly from prism-ts,
+    // or we transform them before passing. Let's assume it takes PrismFunctionParameter for now or RLFunctionParameter.
+    // The RLFunctionMetadata in RLSchemaData contains RLFunctionParameter.
+    let modalTargetFunctionParams = $state<PrismFunctionParameter[] | null>(null); // Or RLFunctionParameter[]
     let modalInitialId = $state<string | number | null>(null);
     let modalInitialDataForPut = $state<Record<string, any>>({});
 
@@ -42,35 +41,36 @@
     let showEnumModal = $state(false);
     let currentEnumDetails = $state<{ name: string; values: string[]; schema: string } | null>(null);
 
-    // --- Computation function for currentSelectedSchemaObject ---
-    function computeCurrentSelectedSchema(): SchemaMetadata | null {
+
+    function computeCurrentSelectedSchema(): RLSchemaData | null { // Use RLSchemaData
         const activeName = explorerStore.activeSchemaName;
-        const currentSchemas = schemas; // Access the $state variable's value
+        const currentSchemas = schemas;
         if (!activeName || !currentSchemas) {
             return null;
         }
         return currentSchemas.find(s => s.name === activeName) || null;
     }
-    // Use the computation function with $derived
     let currentSelectedSchemaObject = $derived(computeCurrentSelectedSchema());
 
-    // --- Computation function for currentEntityItems ---
     function computeCurrentEntityItems(): Record<string, any> | null {
-        const schemaObj = currentSelectedSchemaObject; // Access the previously derived value
+        const schemaObj = currentSelectedSchemaObject;
         const activeType = explorerStore.activeEntityType;
-        if (schemaObj && activeType && schemaObj[activeType]) {
-            const entities = schemaObj[activeType];
-            return (entities && Object.keys(entities).length > 0) ? entities as Record<string, any> : null;
+
+        // Ensure explorerStore.activeEntityType is a valid key for RLSchemaData
+        if (schemaObj && activeType && schemaObj[activeType as keyof RLSchemaData]) {
+            const entities = schemaObj[activeType as keyof RLSchemaData]; // Type assertion
+             // Check if entities is not undefined and is an object
+            if (entities && typeof entities === 'object' && !Array.isArray(entities)) {
+                 return (Object.keys(entities).length > 0) ? entities as Record<string, any> : null;
+            }
         }
         return null;
     }
-    // Use the computation function with $derived
     let currentEntityItems = $derived(computeCurrentEntityItems());
 
 
-    // --- Effects ---
     $effect(() => {
-        // This effect now reads the derived values directly
+        // ... (scroll effect remains the same, uses derived values) ...
         const schemaObj = currentSelectedSchemaObject;
         const focusedName = explorerStore.focusedEntityName;
         const activeType = explorerStore.activeEntityType;
@@ -99,63 +99,11 @@
             try {
                 isLoading = true;
                 error = null;
-                const rawFetchedSchemasFromPrism = await apiStore.prism.getSchemas();
-                const rawFetchedSchemas = rawFetchedSchemasFromPrism as any[]; // Assuming transformation is still needed
+                // Fetch raw schemas using prism-ts types
+                const rawFetchedSchemasFromPrism = await apiStore.prism.getSchemas() as PrismSchemaMetadata[];
 
-                const transformColumn = (apiCol: any): ColumnMetadata => ({
-                    name: apiCol.name,
-                    type: apiCol.type,
-                    nullable: apiCol.nullable === true,
-                    isPrimaryKey: apiCol.is_pk === true || apiCol.isPrimaryKey === true, // Handles both potential key names
-                    isEnum: apiCol.is_enum === true,
-                    references: apiCol.references ? {
-                        schema: apiCol.references.schema_name || apiCol.references.schema,
-                        table: apiCol.references.table,
-                        column: apiCol.references.column,
-                    } : undefined,
-                });
-
-                const transformTableOrView = (apiEntity: any, schemaName: string): TableMetadata | ViewMetadata => ({
-                    name: apiEntity.name,
-                    schema: apiEntity.schema_name || apiEntity.schema || schemaName,
-                    columns: (apiEntity.columns || []).map(transformColumn),
-                });
-                
-                const transformEnum = (apiEnum: any, schemaName: string): EnumMetadata => ({
-                    name: apiEnum.name,
-                    schema: apiEnum.schema_name || apiEnum.schema || schemaName,
-                    values: apiEnum.values || [],
-                });
-
-                const transformFnParam = (param: any): FunctionParameter => ({
-                    name: param.name,
-                    type: param.type,
-                    mode: param.mode || 'IN',
-                    hasDefault: param.has_default === true,
-                    defaultValue: param.default_value === undefined ? null : String(param.default_value),
-                });
-
-                const transformFunctionLike = (fn: any, schemaName: string): FunctionMetadata => ({
-                    name: fn.name,
-                    schema: fn.schema_name || fn.schema || schemaName,
-                    type: String(fn.type), 
-                    objectType: String(fn.object_type),
-                    description: fn.description === undefined ? null : fn.description,
-                    parameters: (fn.parameters || []).map(transformFnParam),
-                    returnType: fn.return_type === undefined ? null : fn.return_type,
-                    isStrict: fn.is_strict === true,
-                    ...(fn.object_type && String(fn.object_type).includes('TRIGGER') && fn.trigger_data ? { triggerData: fn.trigger_data } : {})
-                });
-
-                const transformedSchemasResult: SchemaMetadata[] = rawFetchedSchemas.map((apiSchema: any) => ({
-                    name: apiSchema.name,
-                    tables: Object.fromEntries(Object.entries(apiSchema.tables || {}).map(([k, v]) => [k, transformTableOrView(v, apiSchema.name) as TableMetadata])),
-                    views: Object.fromEntries(Object.entries(apiSchema.views || {}).map(([k, v]) => [k, transformTableOrView(v, apiSchema.name) as ViewMetadata])),
-                    enums: Object.fromEntries(Object.entries(apiSchema.enums || {}).map(([k, v]) => [k, transformEnum(v, apiSchema.name)])),
-                    functions: Object.fromEntries(Object.entries(apiSchema.functions || {}).map(([k, v]) => [k, transformFunctionLike(v, apiSchema.name)])),
-                    procedures: Object.fromEntries(Object.entries(apiSchema.procedures || {}).map(([k, v]) => [k, transformFunctionLike(v, apiSchema.name)])),
-                    triggers: Object.fromEntries(Object.entries(apiSchema.triggers || {}).map(([k, v]) => [k, transformFunctionLike(v, apiSchema.name)])),
-                }));
+                // Use the new transformer
+                const transformedSchemasResult = transformPrismSchemasToRLData(rawFetchedSchemasFromPrism);
                 
                 schemas = transformedSchemasResult;
 
@@ -176,26 +124,37 @@
         loadAndTransformSchemas();
     });
 
-    // --- Helper Functions ---
-    function getEntityCount(schema: SchemaMetadata | null, entityType: StoreExplorerEntityType): number {
-        if (!schema || !schema[entityType]) return 0;
-        const entities = schema[entityType];
-        return entities ? Object.keys(entities).length : 0;
+    function getEntityCount(schema: RLSchemaData | null, entityType: StoreExplorerEntityType): number {
+        if (!schema || !schema[entityType as keyof RLSchemaData]) return 0;
+        const entities = schema[entityType as keyof RLSchemaData];
+        return (entities && typeof entities === 'object' && !Array.isArray(entities)) ? Object.keys(entities).length : 0;
     }
-
-    function getColumnsForTableOrView(item: TableMetadata | ViewMetadata): ColumnMetadata[] {
+    
+    // This function should now expect RLTableMetadata or RLViewMetadata and return RLColumnMetadata[]
+    function getColumnsForTableOrView(item: RLTableMetadata | RLViewMetadata): RLColumnMetadata[] {
         return item.columns || [];
     }
     
-    // --- Modal Control Functions ---
-    function openModalForApi( // Renamed to openModalForApi
+    function openModalForApi(
         params: { operation: APIOperation },
         currentSchemaFromCall: string,
         currentResourceName: string,
         currentModalResourceType: ModalResourceType,
         options: {
-            columns?: ColumnMetadata[];
-            functionParams?: FunctionMetadata['parameters'] | null;
+            // Expect RLColumnMetadata for consistency if RLApiOperationModal is adapted
+            columns?: RLColumnMetadata[]; 
+            // For function parameters, `itemData as RLFunctionMetadata` will have `parameters` of type RLFunctionParameter[]
+            // The RLApiOperationModal props expect PrismFunctionParameter[] (or null).
+            // We need to either adapt RLApiOperationModal or transform back if strictly necessary.
+            // For simplicity, let's assume RLApiOperationModal can be adapted or we can transform `RLFunctionParameter[]`
+            // back to `PrismFunctionParameter[]` if RLApiOperationModal MUST take the prism-ts type.
+            // If RLApiOperationModal is changed to use RLFunctionParameter, then no conversion needed.
+            // If it stays with PrismFunctionParameter, then:
+            // functionParams?: PrismFunctionParameter[] | null;
+            // And when calling:
+            // functionParams: (itemData as RLFunctionMetadata).parameters.map(transformRLParamToPrismParam)
+            // Let's keep modalTargetFunctionParams as PrismFunctionParameter for now as it was
+            functionParams?: PrismFunctionParameter[] | null; // Sticking to what modal currently expects from props
             initialId?: string | number | null;
             initialDataForPut?: Record<string, any>;
         } = {}
@@ -213,28 +172,73 @@
 
     function closeModal() {
         isModalOpen = false;
-        modalTargetSchemaName = '';
-        modalTargetResourceName = '';
-        modalTargetColumns = [];
-        modalTargetFunctionParams = null;
-        modalInitialId = null;
-        modalInitialDataForPut = {};
+        // ... (reset modal state properties) ...
     }
 
-    // --- Event Handlers / Callbacks from Child Components ---
-    function handleFkReferenceClicked(ref: ColumnReference) {
+    function handleFkReferenceClicked(ref: RLColumnReference) { // Expects RLColumnReference
         explorerStore.navigateToEntity(ref.schema, 'tables', ref.table);
     }
 
-    function handleEnumBadgeClicked(enumData: { name: string; values: string[]; schema: string }) {
-        currentEnumDetails = enumData; // { name, values, schema }
+    // RLEnumMetadata provides name, values, schema directly
+    function handleEnumBadgeClicked(enumData: RLEnumMetadata) {
+        currentEnumDetails = { name: enumData.name, values: enumData.values, schema: enumData.schema };
         showEnumModal = true;
     }
 </script>
 
 <!-- Template for src/lib/components/explorer/RLSchemaExplorer.svelte -->
-<!-- This should be placed directly below the </script> tag from the previous response -->
+<!-- ... (Template remains largely the same, but ensure data bindings use RL... types) ... -->
+<!-- Example changes in template: -->
+<!-- For RLMetadataTable:
+    columns={getColumnsForTableOrView(typedItem as (RLTableMetadata | RLViewMetadata))}
+    enumsInSchema={activeSchema.enums as Record<string, RLEnumMetadata>} // Cast might be needed
+    onEnumClick={(enumData) => handleEnumBadgeClicked(enumData)} // This will now pass RLEnumMetadata
+-->
+<!-- For RLApiInterface call:
+    columns={getColumnsForTableOrView(typedItem as (RLTableMetadata | RLViewMetadata))}
+    onOpenModal={(opParams) => openModalForApi(
+        opParams,
+        activeSchema.name,
+        name,
+        explorerStore.activeEntityType === 'tables' ? 'table' : 'view',
+        // Pass RLColumnMetadata
+        { columns: getColumnsForTableOrView(typedItem as (RLTableMetadata | RLViewMetadata)) } 
+    )}
+-->
+<!-- For Function/Procedure RLApiInterface call:
+    onOpenModal={(opParams) => {
+        const funcMeta = typedItem as RLFunctionMetadata;
+        // IMPORTANT: Here's where a decision for functionParams is needed.
+        // If RLApiOperationModal expects PrismFunctionParameter[]:
+        // You would need a function `transformRLParamToPrismParam` or map directly here.
+        // For now, assuming RLFunctionMetadata.parameters IS what RLApiOperationModal's functionParams prop wants (which is PrismFunctionParameter[]).
+        // This implies that our RLFunctionParameter and PrismFunctionParameter are structurally compatible or RLApiOperationModal is adapted.
+        // If RLFunctionParameter IS different from PrismFunctionParameter in a way that matters to the modal:
+        // const prismParams: PrismFunctionParameter[] = funcMeta.parameters.map(rlParam => ({...rlParam, defaultValue: rlParam.defaultValue ?? undefined }));
+        // The current RLFunctionParameter in types/explorer.ts matches PrismFunctionParameter structure sufficiently for the RLApiOperationModal to consume if `functionParams` prop remains PrismFunctionParameter[]
+        
+        openModalForApi(
+            opParams,
+            activeSchema.name,
+            name,
+            'function',
+            // Assuming RLApiOperationModal expects PrismFunctionParameter[] and our RLFunctionParameter[] from typedItem is compatible.
+            // If types diverge significantly, a mapping function would be needed here.
+            // The `modalTargetFunctionParams = $state<PrismFunctionParameter[] | null>(null);` means we have to ensure the structure is compatible or map it.
+            // Our RLFunctionParameter looks very similar to PrismFunctionParameter in the example `RLApiOperationModal`.
+            { functionParams: (typedItem as RLFunctionMetadata).parameters as unknown as PrismFunctionParameter[] } // Cast if shapes are compatible
+        );
+    }}
+-->
+<!-- In the #each Object.entries(currentEntityItems) -->
+<!-- Change itemData casts: -->
+<!-- {@const typedItem = itemData as (RLTableMetadata | RLViewMetadata)} -->
+<!-- {@const typedItem = itemData as RLEnumMetadata} -->
+<!-- {@const typedItem = itemData as RLFunctionMetadata} -->
 
+<!-- RLApiOperationModal call needs to match prop types. If RLApiOperationModal's `columns` prop changes to RLColumnMetadata[], then no cast is needed.
+    Otherwise, `modalTargetColumns as unknown as PrismColumnMetadata[]` might be needed.
+    Similar for `functionParams`. -->
 <div class="container mx-auto p-4">
     {#if isLoading}
         <div class="flex flex-col items-center justify-center h-64">
@@ -297,7 +301,7 @@
                             {@const entityId = `entity-${activeSchema.name}-${explorerStore.activeEntityType}-${name}`}
                             <!-- Display for Tables and Views -->
                             {#if explorerStore.activeEntityType === 'tables' || explorerStore.activeEntityType === 'views'}
-                                {@const typedItem = itemData as (TableMetadata | ViewMetadata)}
+                                {@const typedItem = itemData as (RLTableMetadata | RLViewMetadata)}
                                 <div class="collapse collapse-arrow bg-base-100 shadow-md {explorerStore.focusedEntityName === name ? 'collapse-open ring-1 ring-primary ring-offset-base-100 ring-offset-2' : ''}" id={entityId}>
                                     <input 
                                         type="checkbox" 
@@ -316,16 +320,22 @@
                                         onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); explorerStore.focusOnEntity(explorerStore.focusedEntityName === name ? null : name);}}}
                                     >
                                         {name}
-                                        <span class="badge badge-ghost ml-2 capitalize">{explorerStore.activeEntityType.slice(0, -1)}</span>
+                                        <span class="badge badge-ghost ml-2 capitalize">{explorerStore.activeEntityType === 'tables' ? 'Table' : 'View'}</span>
                                     </div>
                                     <div class="collapse-content">
                                         <RLMetadataTable
                                             title={name}
                                             itemType={explorerStore.activeEntityType === 'tables' ? 'table' : 'view'}
                                             columns={getColumnsForTableOrView(typedItem)}
-                                            enumsInSchema={activeSchema.enums}
+                                            enumsInSchema={activeSchema.enums as Record<string, RLEnumMetadata>}
                                             onFkClick={handleFkReferenceClicked}
-                                            onEnumClick={(enumData) => handleEnumBadgeClicked({...enumData, schema: activeSchema.name})}
+                                            onEnumClick={(enumDataFromTable) => {
+                                                // RLMetadataTable will pass the RLEnumMetadata for the clicked enum
+                                                // (or details if `onEnumClick` prop in RLMetadataTable is updated to send just `name`, `values`)
+                                                // Assuming it passes the full RLEnumMetadata or an object with {name, values} and schema is added here
+                                                const foundEnum = activeSchema.enums[enumDataFromTable.name]; // Or how enumDataFromTable is structured
+                                                if(foundEnum) handleEnumBadgeClicked(foundEnum);
+                                            }}
                                         />
                                         <div class="mt-4 p-2 border-t border-base-300">
                                             <RLApiInterface
@@ -346,7 +356,7 @@
                                 </div>
                             <!-- Display for Enums -->
                             {:else if explorerStore.activeEntityType === 'enums'}
-                                {@const typedItem = itemData as EnumMetadata}
+                                {@const typedItem = itemData as RLEnumMetadata}
                                 <div class="collapse collapse-arrow bg-base-100 shadow-md" id={entityId}>
                                     <input type="checkbox" name="item-accordion-{activeSchema.name}-enum-{name}" />
                                     <div 
@@ -365,14 +375,14 @@
                                                 <li>{value}</li>
                                             {/each}
                                         </ul>
-                                        <button class="btn btn-xs btn-outline mt-2" onclick={() => handleEnumBadgeClicked({ name: typedItem.name, values: typedItem.values, schema: activeSchema.name })}>
+                                        <button class="btn btn-xs btn-outline mt-2" onclick={() => handleEnumBadgeClicked(typedItem)}>
                                             Show Details
                                         </button>
                                     </div>
                                 </div>
-                            <!-- Display for Functions, Procedures, Triggers -->
+                            <!-- Display for Functions, Procedures, Triggers (now consolidated under RLFunctionMetadata) -->
                             {:else if explorerStore.activeEntityType === 'functions' || explorerStore.activeEntityType === 'procedures' || explorerStore.activeEntityType === 'triggers'}
-                                {@const typedItem = itemData as FunctionMetadata}
+                                {@const typedItem = itemData as RLFunctionMetadata}
                                 <div class="collapse collapse-arrow bg-base-100 shadow-md" id={entityId}>
                                     <input type="checkbox" name="item-accordion-{activeSchema.name}-{explorerStore.activeEntityType}-{name}" />
                                     <div 
@@ -382,7 +392,8 @@
                                         onclick={(e) => { const input = e.currentTarget.previousElementSibling as HTMLInputElement; if(input) input.checked = !input.checked;}}
                                         onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const input = e.currentTarget.previousElementSibling as HTMLInputElement; if(input) input.checked = !input.checked;}}}
                                     >
-                                        {name} <span class="badge badge-ghost ml-2 capitalize">{(typedItem.objectType || explorerStore.activeEntityType).replace('ObjectType.', '').replace('FunctionType.','').toLowerCase()}</span>
+                                        <!-- Display 'kind' which now includes PROCEDURE, TRIGGER etc. -->
+                                        {name} <span class="badge badge-ghost ml-2 capitalize">{typedItem.kind.toLowerCase()}</span>
                                     </div>
                                     <div class="collapse-content">
                                         {#if typedItem.description}
@@ -410,7 +421,7 @@
                                          <p class="text-sm opacity-70 mt-2">No parameters.</p>
                                         {/if}
 
-                                        {#if explorerStore.activeEntityType === 'functions' || explorerStore.activeEntityType === 'procedures'}
+                                        {#if typedItem.kind === 'FUNCTION' || typedItem.kind === 'PROCEDURE'}
                                             <div class="mt-4 p-2 border-t border-base-300">
                                                 <RLApiInterface
                                                     schemaName={activeSchema.name}
@@ -422,7 +433,9 @@
                                                         activeSchema.name,
                                                         name,
                                                         'function',
-                                                        { functionParams: typedItem.parameters }
+                                                        // typedItem.parameters are RLFunctionParameter[]. RLApiOperationModal expects PrismFunctionParameter[]
+                                                        // Assuming direct castability for now due to similar structure
+                                                        { functionParams: typedItem.parameters as unknown as PrismFunctionParameter[] }
                                                     )}
                                                 />
                                             </div>
@@ -458,8 +471,8 @@
             onClose={closeModal}
             schemaName={modalTargetSchemaName}
             resourceName={modalTargetResourceName}
-            operation={modalTargetOperation}
-            columns={modalTargetColumns}
+            operation={modalTargetOperation}    
+            columns={modalTargetColumns as unknown as PrismColumnMetadata[]}
             functionParams={modalTargetFunctionParams}
             resourceType={modalTargetResourceType}
             initialId={modalInitialId}

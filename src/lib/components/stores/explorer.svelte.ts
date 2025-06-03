@@ -152,3 +152,89 @@ class ExplorerStore {
 }
 
 export const explorerStore = new ExplorerStore();
+
+// Some...
+// Some...
+// Some...
+
+// --- Column & Reference Types ---
+export interface RLColumnReference {
+	schema: string;
+	table: string;
+	column: string;
+}
+
+export interface RLColumnMetadata {
+	name: string;
+	type: string; // SQL data type string
+	nullable: boolean;
+	isPrimaryKey: boolean;
+	isEnum: boolean;
+	references?: RLColumnReference;
+}
+
+// --- Entity Types (Tables, Views) ---
+export interface RLBaseEntityMetadata {
+	name: string;
+	schema: string;
+}
+
+export interface RLTableMetadata extends RLBaseEntityMetadata {
+	columns: RLColumnMetadata[];
+}
+
+export interface RLViewMetadata extends RLBaseEntityMetadata {
+	columns: RLColumnMetadata[];
+}
+
+// --- Enum Type ---
+export interface RLEnumMetadata extends RLBaseEntityMetadata {
+	values: string[];
+}
+
+// --- Function & Parameter Types ---
+export interface RLFunctionParameter {
+	name: string;
+	type: string; // SQL data type string
+	mode: "IN" | "OUT" | "INOUT" | "VARIADIC";
+	hasDefault: boolean;
+	defaultValue?: string | null;
+}
+
+// File: src/lib/types/explorer.ts
+export type RLFunctionKind =
+	| "SCALAR"
+	| "TABLE"
+	| "SET_RETURNING"
+	| "AGGREGATE"
+	| "WINDOW"
+	| "PROCEDURE"
+	| "TRIGGER"
+	| "FUNCTION"
+	| "UNKNOWN";
+
+export interface RLFunctionMetadata extends RLBaseEntityMetadata {
+	kind: RLFunctionKind; // Combines prism-ts's 'type' and 'objectType' for simpler UI logic
+	description?: string | null;
+	parameters: RLFunctionParameter[];
+	returnType?: string | null;
+	isStrict: boolean;
+	// Add trigger-specific data if needed for future UI features for triggers
+	triggerData?: {
+		timing: string; // BEFORE, AFTER, INSTEAD OF
+		events: string[]; // INSERT, UPDATE, DELETE, TRUNCATE
+		targetTableSchema: string;
+		targetTableName: string;
+	};
+}
+
+// --- Full Schema ---
+export interface RLSchemaData {
+	name: string;
+	tables: Record<string, RLTableMetadata>;
+	views: Record<string, RLViewMetadata>;
+	enums: Record<string, RLEnumMetadata>;
+	functions: Record<string, RLFunctionMetadata>; // Includes procedures and triggers as function-like objects
+	procedures: Record<string, RLFunctionMetadata>; // If you want to keep procedures separate
+	triggers: Record<string, RLFunctionMetadata>; // If you want to keep triggers separate
+}

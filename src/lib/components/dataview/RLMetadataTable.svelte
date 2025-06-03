@@ -1,6 +1,7 @@
 <!-- src/lib/components/dataview/RLMetadataTable.svelte -->
 <script lang="ts">
     import type { ColumnMetadata, ColumnReference, EnumMetadata } from '@yrrrrrf/prism-ts';
+        import { formatReferenceText } from '$lib/tools/form-helpers.js';
 
     let {
         title,
@@ -18,10 +19,6 @@
         onEnumClick?: (enumData: { name: string; values: string[] }) => void; // Make optional
     }>();
 
-    function formatReferenceText(ref: ColumnReference | undefined): string {
-        if (!ref) return '';
-        return `${ref.schema}.${ref.table}.${ref.column}`;
-    }
 
     function handleFkButtonClick(ref: ColumnReference | undefined) {
         if (ref && onFkClick) {

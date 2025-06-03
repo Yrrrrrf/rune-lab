@@ -1,20 +1,8 @@
 <!-- src/lib/components/forms/RLResourceForm.svelte -->
 <script lang="ts">
     import type { ColumnMetadata } from '@yrrrrrf/prism-ts';
+    import { mapSqlTypeToInputType } from '$lib/tools/form-helpers.js';
 
-    // Helper to map SQL types to HTML input types
-    function mapSqlTypeToInputType(sqlType: string, columnName: string): string {
-        const lowerSqlType = sqlType.toLowerCase();
-        if (lowerSqlType.includes('bool')) return 'checkbox';
-        if (lowerSqlType.includes('int') || lowerSqlType.includes('serial') || lowerSqlType.includes('numeric') || lowerSqlType.includes('decimal') || lowerSqlType.includes('real') || lowerSqlType.includes('double')) return 'number';
-        if (lowerSqlType.includes('date') && !lowerSqlType.includes('timestamp')) return 'date';
-        if (lowerSqlType.includes('timestamp')) return 'datetime-local';
-        if (lowerSqlType.includes('time') && !lowerSqlType.includes('timestamp')) return 'time';
-        if (lowerSqlType.includes('text') || columnName.includes('description')) return 'textarea'; // Heuristic for textarea
-        if (lowerSqlType.includes('json')) return 'textarea'; // JSON often edited as text
-        // Add more mappings as needed (e.g., for enums to select, bytea to file (later))
-        return 'text'; // Default
-    }
 
     let {
         columns,

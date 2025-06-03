@@ -7,6 +7,9 @@ export { apiStore } from "./components/stores/api.svelte.ts";
 export { appData } from "./components/stores/app.svelte.ts";
 // export { type AppData, appData } from "./stores/app.svelte.ts";
 
+export * from "./tools/schema-transformer.ts";
+export * from "./tools/form-helpers.ts";
+
 // // * Import the main forge from the ts-forge library...
 // export {
 // 	type FooterConfig,

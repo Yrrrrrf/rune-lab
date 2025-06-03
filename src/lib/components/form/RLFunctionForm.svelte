@@ -1,19 +1,8 @@
 <!-- src/lib/components/forms/RLFunctionForm.svelte -->
 <script lang="ts">
     import type { FunctionParameter } from '@yrrrrrf/prism-ts';
-
-    // Helper, can be shared
-    function mapSqlTypeToInputType(sqlType: string): string {
-        const lowerSqlType = sqlType.toLowerCase();
-        if (lowerSqlType.includes('bool')) return 'checkbox';
-        if (lowerSqlType.includes('int') || lowerSqlType.includes('serial') || lowerSqlType.includes('numeric')) return 'number';
-        if (lowerSqlType.includes('date') && !lowerSqlType.includes('timestamp')) return 'date';
-        if (lowerSqlType.includes('timestamp')) return 'datetime-local';
-        if (lowerSqlType.includes('time') && !lowerSqlType.includes('timestamp')) return 'time';
-        if (lowerSqlType.includes('text')) return 'textarea';
-        if (lowerSqlType.includes('json')) return 'textarea';
-        return 'text';
-    }
+    import { mapSqlTypeToInputType } from '$lib/tools/form-helpers.js';
+    
 
     let {
         params, // FunctionParameter[]
