@@ -44,6 +44,7 @@ export function transformPrismColumn(prismCol: PrismColumnMetadata): RLColumnMet
 		nullable: prismCol.nullable,
 		// Adapting from prism-ts field `isPrimaryKey` to `isPrimaryKey`
 		// And `isEnum` to `isEnum`
+		// todo: CHange this on prism-ts!!!
 		isPrimaryKey: prismCol.isPrimaryKey === true,
 		isEnum: prismCol.isEnum === true,
 		references: transformPrismColumnReference(prismCol.references),
