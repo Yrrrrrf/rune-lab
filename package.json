@@ -1,6 +1,7 @@
 {
 	"name": "rune-lab",
 	"version": "0.0.9",
+	"description": "Rune Lab is your modern toolkit for crafting stunning, reactive web applications with Svelte 5.",
 	"license": "MIT",
 	"scripts": {
 		"dev": "vite dev",
