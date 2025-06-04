@@ -27,7 +27,7 @@
     }
 
     function getEnumForColumn(column: ColumnMetadata): EnumMetadata | undefined {
-        if (!column.isEnum || !enumsInSchema || Object.keys(enumsInSchema).length === 0) {
+        if (!column.is_enum || !enumsInSchema || Object.keys(enumsInSchema).length === 0) {
             return undefined;
         }
         

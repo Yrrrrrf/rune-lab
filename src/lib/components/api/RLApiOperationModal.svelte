@@ -1,51 +1,59 @@
 <!-- src/lib/components/api/RLApiOperationModal.svelte -->
 <script lang="ts">
-    import type { ColumnMetadata, FunctionMetadata as PrismFunctionMetadata, CrudOperations } from '@yrrrrrf/prism-ts';
+    // Import Prism types if columns are directly from prism-ts
+    import type {
+        ColumnMetadata as PrismColumnMetadata, // Using Prism's type for columns
+        FunctionParameter as PrismFunctionParameter, // Using Prism's type for functionParams
+        CrudOperations
+    } from '@yrrrrrf/prism-ts';
     import { apiStore } from '$lib/components/stores/api.svelte';
     import RLResourceForm from '$lib/components/form/RLResourceForm.svelte';
     import RLFilterForm from '$lib/components/form/RLFilterForm.svelte';
     import RLFunctionForm from '$lib/components/form/RLFunctionForm.svelte';
+    import type { RLEnumMetadata } from '$lib/components/stores/explorer.svelte'; // For enumsInSchema prop
 
     type APIOperation = 'GET' | 'POST' | 'PUT' | 'DELETE';
-    type ModalResourceType = 'table' | 'view' | 'function'; // Specific for modal context
+    type ModalResourceType = 'table' | 'view' | 'function';
 
     let {
         isOpen,
         onClose,
         schemaName,
-        resourceName,
+        resourceName, // This is the currentResourceName for RLFilterForm
         operation,
-        columns = [], // Default to empty array if not a table/view
-        functionParams = null, // <-- ACCEPT THIS PROP
+        columns = [], // Default to empty array; expecting PrismColumnMetadata[]
+        functionParams = null, // Expecting PrismFunctionParameter[]
         resourceType,
         initialId = null,
-        initialDataForPut = {}
+        initialDataForPut = {},
+        enumsInSchema = {} // Propagated from RLSchemaExplorer
     } = $props<{
         isOpen: boolean;
         onClose: () => void;
         schemaName: string;
-        resourceName: string;
+        resourceName: string; // Name of the table, view, or function
         operation: APIOperation;
-        columns?: ColumnMetadata[]; // Optional as functions won't have it
-        functionParams?: PrismFunctionMetadata['parameters'] | null; // <-- TYPE FOR PROP
+        columns?: PrismColumnMetadata[]; // Explicitly PrismColumnMetadata
+        functionParams?: PrismFunctionParameter[] | null; // Explicitly PrismFunctionParameter
         resourceType: ModalResourceType;
         initialId?: string | number | null;
         initialDataForPut?: Record<string, any>;
+        enumsInSchema?: Record<string, RLEnumMetadata>;
     }>();
 
-    // ... (rest of your existing script block for RLApiOperationModal) ...
-    // No structural changes needed in the rest of the script for this specific error,
-    // as the logic for handling resourceType === 'function' and using functionParams
-    // was already present. The issue was just the prop declaration.
     let loading = $state(false);
     let error = $state<string | null>(null);
     let apiResponse = $state<any>(null);
     let crudOps = $state<CrudOperations<any> | null>(null);
     let recordIdForAction = $state<string | number | undefined>(initialId ?? undefined);
 
-     let combinedInitialDataForPut = $derived({
+    // Corrected: Use `c.is_pk` for PrismColumnMetadata
+    let primaryKeyColumn = $derived(columns?.find((c: PrismColumnMetadata) => c.is_pk === true));
+    let primaryKeyName = $derived(primaryKeyColumn?.name || 'id');
+
+    let combinedInitialDataForPut = $derived({
         ...initialDataForPut,
-        ...(recordIdForAction && columns && columns.find((c: ColumnMetadata) => c.isPrimaryKey) ? { [columns.find((c: ColumnMetadata) => c.isPrimaryKey)!.name]: recordIdForAction } : {})
+        ...(recordIdForAction && primaryKeyColumn ? { [primaryKeyColumn.name]: recordIdForAction } : {})
     });
 
     $effect(() => {
@@ -59,7 +67,7 @@
             } else {
                 crudOps = null;
             }
-             if (isOpen) {
+            if (isOpen) {
                 recordIdForAction = initialId ?? undefined;
                 apiResponse = null;
                 error = null;
@@ -82,19 +90,23 @@
                     loading = false; return;
                 }
                 switch (operation) {
-                    case 'GET': result = await crudOps.findMany(data); break;
-                    case 'POST': result = await crudOps.create(data); break;
+                    case 'GET':
+                        result = await crudOps.findMany(data); // findMany used for GET with filters
+                        break;
+                    case 'POST':
+                        result = await crudOps.create(data);
+                        break;
                     case 'PUT':
-                        const pkColumnPut = columns?.find((c: ColumnMetadata) => c.isPrimaryKey); // Added optional chaining
-                        const idToUpdate = recordIdForAction ?? data[pkColumnPut?.name || 'id'];
+                        // Corrected: Use primaryKeyColumn directly
+                        const idToUpdate = recordIdForAction ?? data[primaryKeyName];
                         if (!idToUpdate) throw new Error("Primary key value is required for PUT.");
                         const payloadPut = { ...data };
-                        if (pkColumnPut) delete payloadPut[pkColumnPut.name];
+                        if (primaryKeyColumn) delete payloadPut[primaryKeyColumn.name]; // Remove PK from payload if it exists
                         result = await crudOps.update(idToUpdate, payloadPut);
                         break;
                     case 'DELETE':
-                        const pkColumnDelete = columns?.find((c: ColumnMetadata) => c.isPrimaryKey); // Added optional chaining
-                        const idToDelete = recordIdForAction ?? data[pkColumnDelete?.name || 'id'];
+                        // Corrected: Use primaryKeyColumn directly
+                        const idToDelete = recordIdForAction ?? data[primaryKeyName];
                         if (!idToDelete) throw new Error("Primary key value is required for DELETE.");
                         await crudOps.delete(idToDelete);
                         result = { message: `Record ${idToDelete} deleted successfully.` };
@@ -108,7 +120,7 @@
                 }
             }
             apiResponse = result;
-            if (operation !== 'GET' || resourceType === 'function') {
+            if (operation !== 'GET' || resourceType === 'function') { // Close modal on success for non-GET or function exec
                 setTimeout(() => onClose(), 1500);
             }
         } catch (e) {
@@ -118,7 +130,6 @@
             loading = false;
         }
     }
-    let primaryKeyName = $derived(columns?.find((c: ColumnMetadata) => c.isPrimaryKey)?.name || 'id'); // Added optional chaining
 </script>
 
 {#if isOpen}
@@ -133,10 +144,12 @@
                 <span class="font-mono badge badge-neutral align-middle">{schemaName}.{resourceName}</span>
             </h3>
 
-            {#if error} <div role="alert" class="alert alert-error mb-4"> <!-- error display --> 
-                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <span>Error: {error}</span>
-            </div> {/if}
+            {#if error}
+                <div role="alert" class="alert alert-error mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>Error: {error}</span>
+                </div>
+            {/if}
 
             {#if resourceType === 'function'}
                 {#if operation === 'POST' && functionParams}
@@ -145,21 +158,47 @@
                     <p class="text-error">Configuration error: Operation {operation} not set up for functions or parameters missing.</p>
                 {/if}
             {:else if operation === 'GET'}
-                <RLFilterForm columns={columns || []} onSubmit={handleFormSubmit} {loading} />
+                <RLFilterForm
+                    columns={columns}
+                    onSubmit={handleFormSubmit}
+                    {loading}
+                    {enumsInSchema}
+                    currentResourceName={resourceName}
+                />
             {:else if operation === 'POST'}
-                <RLResourceForm columns={columns || []} {operation} onSubmit={handleFormSubmit} {loading} />
+                <!-- RLResourceForm needs to handle PrismColumnMetadata or columns need transformation -->
+                <RLResourceForm
+                    columns={columns}
+                    {operation}
+                    onSubmit={handleFormSubmit}
+                    {loading}
+                    {enumsInSchema}
+                    currentResourceName={resourceName}
+                />
             {:else if operation === 'PUT'}
                 {#if !initialId && resourceType !== 'function'}
                     <div class="form-control mb-4">
-                        <label class="label" for="put-record-id"><span class="label-text">Record {primaryKeyName} to Update <span class="text-error">*</span></span></label>
+                        <label class="label" for="put-record-id">
+                            <span class="label-text">Record {primaryKeyName} to Update <span class="text-error">*</span></span>
+                        </label>
                         <input type="text" id="put-record-id" class="input input-bordered" bind:value={recordIdForAction} placeholder="Enter {primaryKeyName}" />
                     </div>
                 {/if}
-                <RLResourceForm columns={columns || []} {operation} onSubmit={handleFormSubmit} {loading} initialData={combinedInitialDataForPut} />
+                <RLResourceForm
+                    columns={columns}
+                    {operation}
+                    onSubmit={handleFormSubmit}
+                    {loading}
+                    initialData={combinedInitialDataForPut}
+                    {enumsInSchema}
+                    currentResourceName={resourceName}
+                />
             {:else if operation === 'DELETE'}
                  {#if !initialId && resourceType !== 'function'}
                     <div class="form-control mb-4">
-                        <label class="label" for="delete-record-id"><span class="label-text">Record {primaryKeyName} to Delete <span class="text-error">*</span></span></label>
+                        <label class="label" for="delete-record-id">
+                            <span class="label-text">Record {primaryKeyName} to Delete <span class="text-error">*</span></span>
+                        </label>
                         <input type="text" id="delete-record-id" class="input input-bordered" bind:value={recordIdForAction} placeholder="Enter {primaryKeyName}" />
                     </div>
                 {/if}
@@ -181,10 +220,14 @@
                 </div>
             {/if}
 
-            {#if (operation !== 'DELETE' || resourceType === 'function' && operation === 'POST')} <!-- Simplified close button logic -->
-                <div class="modal-action mt-4"> <button class="btn" onclick={onClose}>Close</button> </div>
+            {#if (operation !== 'DELETE' || (resourceType === 'function' && operation === 'POST')) && (operation !== 'GET' || apiResponse)}
+                <div class="modal-action mt-4">
+                    <button class="btn" onclick={onClose}>Close</button>
+                </div>
             {/if}
         </div>
-         <form method="dialog" class="modal-backdrop"> <button onclick={onClose}>close</button> </form>
+         <form method="dialog" class="modal-backdrop">
+            <button onclick={onClose}>close</button>
+        </form>
     </dialog>
 {/if}
