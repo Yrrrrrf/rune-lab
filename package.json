@@ -1,6 +1,6 @@
 {
 	"name": "rune-lab",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"description": "Rune Lab is your modern toolkit for crafting stunning, reactive web applications with Svelte 5.",
 	"license": "MIT",
 	"scripts": {
@@ -33,7 +33,7 @@
 		"svelte": "5.33.6"
 	},
 	"dependencies": {
-		"@lucide/svelte": "0.511.0",
+		"@lucide/svelte": "0.513.0",
 		"@yrrrrrf/prism-ts": "npm:@jsr/yrrrrrf__prism-ts",
 		"daisyui": "5.0.40"
 	},

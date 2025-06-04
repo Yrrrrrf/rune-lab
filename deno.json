@@ -1,6 +1,6 @@
 {
 	"name": "@yrrrrrf/rune-lab",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"license": "MIT",
 	"exports": "./src/lib/mod.ts",
 	"tasks": {
@@ -22,7 +22,7 @@
 		"tailwindcss": "npm:tailwindcss",
 		"vite": "npm:vite",
 		"daisyui": "npm:daisyui",
-		"@yrrrrrf/prism-ts": "jsr:@yrrrrrf/prism-ts@^0.0.2"
+		"@yrrrrrf/prism-ts": "jsr:@yrrrrrf/prism-ts@^0.0.4"
 	},
 	"compilerOptions": {
 		"strict": true,

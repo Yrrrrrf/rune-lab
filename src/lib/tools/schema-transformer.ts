@@ -1,19 +1,18 @@
 // File: src/lib/tools/schema-transformer.ts
 
 import type {
-	ColumnMetadata as PrismColumnMetadata, // This is prism-ts's ColumnMetadata
-	ColumnReference as PrismColumnReference,
-	EnumMetadata as PrismEnumMetadata,
-	FunctionMetadata as PrismFunctionMetadata,
-	FunctionParameter as PrismFunctionParameter,
-	SchemaMetadata as PrismSchemaMetadata,
-	TableMetadata as PrismTableMetadata,
-	ViewMetadata as PrismViewMetadata,
+	ColumnMetadata,
+	ColumnReference,
+	EnumMetadata,
+	FunctionMetadata,
+	FunctionParameter,
+	SchemaMetadata,
+	TableMetadata,
+	ViewMetadata,
 } from "@yrrrrrf/prism-ts";
 
-// CORRECTED IMPORT PATH HERE:
 import type {
-	RLColumnMetadata, // This is Rune Lab's RLColumnMetadata
+	RLColumnMetadata,
 	RLColumnReference,
 	RLEnumMetadata,
 	RLFunctionKind,
@@ -27,108 +26,108 @@ import type {
 // --- Helper Functions ---
 
 function transformPrismColumnReference(
-	ref?: PrismColumnReference,
+	ref?: ColumnReference | null, // Updated to accept null
 ): RLColumnReference | undefined {
-	if (!ref) return undefined;
+	if (!ref) return undefined; // Handles both null and undefined
 	return {
-		schema: ref.schema, // prism-ts seems to use 'schema' directly
+		schema: ref.schema,
 		table: ref.table,
 		column: ref.column,
 	};
 }
 
-export function transformPrismColumn(prismCol: PrismColumnMetadata): RLColumnMetadata {
+export function transformPrismColumn(prismCol: ColumnMetadata): RLColumnMetadata {
 	return {
 		name: prismCol.name,
 		type: prismCol.type,
 		nullable: prismCol.nullable,
-		// Adapting from prism-ts field `isPrimaryKey` to `isPrimaryKey`
-		// And `isEnum` to `isEnum`
-		// todo: CHange this on prism-ts!!!
-		isPrimaryKey: prismCol.isPrimaryKey === true,
-		isEnum: prismCol.isEnum === true,
-		references: transformPrismColumnReference(prismCol.references),
+		// Corrected to use snake_case properties from prism-ts types
+		isPrimaryKey: prismCol.is_pk === true,
+		isEnum: prismCol.is_enum === true,
+		references: transformPrismColumnReference(prismCol.references), // Pass directly
 	};
 }
 
 function transformPrismTableOrView(
-	prismEntity: PrismTableMetadata | PrismViewMetadata,
+	prismEntity: TableMetadata | ViewMetadata,
 	schema: string,
 ): RLTableMetadata | RLViewMetadata {
 	return {
 		name: prismEntity.name,
-		schema: schema, // prism-ts's TableMetadata includes schema
+		schema: schema,
 		columns: (prismEntity.columns || []).map(transformPrismColumn),
 	};
 }
 
-function transformPrismEnum(prismEnum: PrismEnumMetadata, schema: string): RLEnumMetadata {
+function transformPrismEnum(prismEnum: EnumMetadata, schema: string): RLEnumMetadata {
 	return {
 		name: prismEnum.name,
-		schema: schema, // prism-ts's EnumMetadata includes schema
+		schema: schema,
 		values: prismEnum.values || [],
 	};
 }
 
-function transformPrismFunctionParameter(param: PrismFunctionParameter): RLFunctionParameter {
+function transformPrismFunctionParameter(param: FunctionParameter): RLFunctionParameter {
 	return {
 		name: param.name,
 		type: param.type,
-		mode: param.mode as RLFunctionParameter["mode"] || "IN", // prism-ts uses string
-		hasDefault: param.hasDefault === true,
-		defaultValue: param.defaultValue === undefined ? null : String(param.defaultValue),
+		mode: param.mode as RLFunctionParameter["mode"] || "IN",
+		// Corrected to use snake_case properties
+		hasDefault: param.has_default === true,
+		defaultValue: param.default_value === undefined ? null : String(param.default_value),
 	};
 }
 
-function determineRLFunctionKind(prismFn: PrismFunctionMetadata): RLFunctionKind {
-	const objectType = (prismFn.objectType || "").toUpperCase();
-	const fnType = (prismFn.type || "").toUpperCase(); // e.g., SCALAR, TABLE, SET
+function determineRLFunctionKind(prismFn: FunctionMetadata): RLFunctionKind {
+	// Corrected to use snake_case property
+	const objectType = (prismFn.object_type || "").toUpperCase();
+	const fnType = (prismFn.type || "").toUpperCase();
 
 	if (objectType === "PROCEDURE") return "PROCEDURE";
 	if (objectType === "TRIGGER") return "TRIGGER";
-	if (objectType === "FUNCTION" || objectType === "") { // Default to FUNCTION if objectType is missing
+	if (objectType === "FUNCTION" || objectType === "") {
 		if (fnType === "SCALAR") return "SCALAR";
 		if (fnType === "TABLE") return "TABLE";
-		if (fnType === "SET") return "SET_RETURNING"; // prism-ts calls it 'set'
+		if (fnType === "SET") return "SET_RETURNING";
 		if (fnType === "AGGREGATE") return "AGGREGATE";
 		if (fnType === "WINDOW") return "WINDOW";
-		// todo: Check if prism-ts has other specific function types
-		// todo: If prism-ts has a 'FUNCTION' type, we can return it here
-		// todo: Check if we need to handle 'FUNCTION' as a generic type...
-		return "FUNCTION"; // Generic function if type is not more specific
-		// todo: (probably not needed, as we can use 'FUNCTION' for generic functions)
-		// todo: (probably not needed, as we can use 'FUNCTION' for generic functions)
-		// todo: (probably not needed, as we can use 'FUNCTION' for generic functions)
+		return "FUNCTION";
 	}
 	return "UNKNOWN";
 }
 
 export function transformPrismFunction(
-	prismFn: PrismFunctionMetadata,
+	prismFn: FunctionMetadata,
 	schema: string,
 ): RLFunctionMetadata {
 	const kind = determineRLFunctionKind(prismFn);
 
 	const transformed: RLFunctionMetadata = {
 		name: prismFn.name,
-		schema: schema, // prism-ts's FunctionMetadata includes schema
+		schema: schema,
 		kind: kind,
 		description: prismFn.description === undefined ? null : prismFn.description,
 		parameters: (prismFn.parameters || []).map(transformPrismFunctionParameter),
-		returnType: prismFn.returnType === undefined ? null : prismFn.returnType,
-		isStrict: prismFn.isStrict === true,
+		// Corrected to use snake_case properties
+		returnType: prismFn.return_type === undefined ? null : prismFn.return_type,
+		isStrict: prismFn.is_strict === true,
 	};
 
-	// Example: If prism-ts provides trigger-specific data on its FunctionMetadata when objectType is 'trigger'
-	// We would map it here to transformed.triggerData
-	// if (kind === 'TRIGGER' && (prismFn as any).triggerData) {
-	//     transformed.triggerData = {
-	//         timing: (prismFn as any).triggerData.timing,
-	//         events: (prismFn as any).triggerData.events,
-	//         targetTableSchema: (prismFn as any).triggerData.table_schema,
-	//         targetTableName: (prismFn as any).triggerData.table_name,
-	//     };
-	// }
+	// If prism-py ever adds detailed trigger data directly to FunctionMetadata for triggers,
+	// you would map it here. The dt-schemas.json shows `trigger_data` on the top-level trigger object,
+	// which prism-ts's TriggerMetadata should capture.
+	// If you need to transform prismFn.trigger_data (assuming it exists on PrismFunctionMetadata if it's a trigger)
+	// to RLFunctionMetadata.triggerData:
+	if (kind === "TRIGGER" && (prismFn as any).trigger_data) { // Cast to any if trigger_data is not on PrismFunctionMetadata
+		const prismTriggerData = (prismFn as any).trigger_data;
+		transformed.triggerData = {
+			timing: prismTriggerData.timing,
+			events: prismTriggerData.events,
+			// The dt-schemas.json shows table_schema and table_name on trigger_data.
+			targetTableSchema: prismTriggerData.table_schema,
+			targetTableName: prismTriggerData.table_name,
+		};
+	}
 
 	return transformed;
 }
@@ -136,7 +135,7 @@ export function transformPrismFunction(
 // --- Main Transformation Function ---
 
 export function transformPrismSchemasToRLData(
-	prismSchemas: PrismSchemaMetadata[],
+	prismSchemas: SchemaMetadata[],
 ): RLSchemaData[] {
 	return prismSchemas.map((prismSchema) => {
 		const rlSchema: RLSchemaData = {
@@ -164,13 +163,21 @@ export function transformPrismSchemasToRLData(
 		Object.entries(prismSchema.enums || {}).forEach(([name, enumData]) => {
 			rlSchema.enums[name] = transformPrismEnum(enumData, prismSchema.name);
 		});
+		// The 'functions', 'procedures', and 'triggers' from prism-ts SchemaMetadata
+		// are all of type Record<string, FunctionMetadata> or Record<string, TriggerMetadata>.
+		// TriggerMetadata extends FunctionMetadata.
 		Object.entries(prismSchema.functions || {}).forEach(([name, func]) => {
 			rlSchema.functions[name] = transformPrismFunction(func, prismSchema.name);
 		});
 		Object.entries(prismSchema.procedures || {}).forEach(([name, proc]) => {
+			// Procedures are also FunctionMetadata in prism-ts
 			rlSchema.procedures[name] = transformPrismFunction(proc, prismSchema.name);
 		});
 		Object.entries(prismSchema.triggers || {}).forEach(([name, trig]) => {
+			// Triggers are TriggerMetadata in prism-ts, which extends FunctionMetadata.
+			// transformPrismFunction should be able to handle it if TriggerMetadata fields
+			// are a superset or compatible. If specific trigger_data needs transformation,
+			// ensure transformPrismFunction handles it.
 			rlSchema.triggers[name] = transformPrismFunction(trig, prismSchema.name);
 		});
 

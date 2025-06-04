@@ -239,7 +239,6 @@ export interface RLSchemaData {
 	triggers: Record<string, RLFunctionMetadata>; // If you want to keep triggers separate
 }
 
-
 export interface RLApiInterfaceActionParams {
-    operation: 'GET' | 'POST' | 'PUT' | 'DELETE';
+	operation: "GET" | "POST" | "PUT" | "DELETE";
 }

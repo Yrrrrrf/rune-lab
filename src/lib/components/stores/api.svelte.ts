@@ -176,7 +176,11 @@ class APIStore {
 	 * Get table operations with automatic connection check
 	 * Type-safe wrapper around Prism client
 	 */
-	async getTableOperations<T = Record<string, unknown>>(
+	async getTableOperations<
+		T extends Record<string, unknown> = { // <<<< CONSTRAINT IS HERE
+			id?: string | number | null | undefined;
+		} & Record<string, unknown>,
+	>(
 		schemaName: string,
 		tableName: string,
 	): Promise<CrudOperations<T>> {

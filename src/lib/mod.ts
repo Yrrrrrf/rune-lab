@@ -24,7 +24,7 @@ export * from "./tools/form-helpers.ts";
 // todo: JSR don't support exporting anything else than '.ts' files
 
 export function getVersion(): string {
-	return "0.0.1";
+	return "0.0.5";
 }
 
 export function init() {
