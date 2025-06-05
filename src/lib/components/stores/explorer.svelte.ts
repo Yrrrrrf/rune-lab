@@ -242,3 +242,17 @@ export interface RLSchemaData {
 export interface RLApiInterfaceActionParams {
 	operation: "GET" | "POST" | "PUT" | "DELETE";
 }
+
+// --- Property Item Types ---
+export interface RLPropertyItem<TRaw = unknown> { // TRaw defaults to unknown
+	name: string;
+	type?: string;
+	nullable?: boolean;
+	isPrimaryKey?: boolean;
+	references?: RLColumnReference;
+	isEnum?: boolean;
+	mode?: string;
+	hasDefault?: boolean;
+	defaultValue?: string | null;
+	_rawItem?: TRaw;
+}
