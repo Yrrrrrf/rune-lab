@@ -9,6 +9,7 @@
 		"preview": "deno run --allow-all npm:vite preview"
 	},
 	"imports": {
+		"@yrrrrrf/prism-ts": "jsr:@yrrrrrf/prism-ts@^0.0.4",
 		"svelte": "npm:svelte",
 		"@sveltejs/kit": "npm:@sveltejs/kit",
 		"@lucide/svelte": "npm:@lucide/svelte",
@@ -21,8 +22,7 @@
 		"@tailwindcss/vite": "npm:@tailwindcss/vite",
 		"tailwindcss": "npm:tailwindcss",
 		"vite": "npm:vite",
-		"daisyui": "npm:daisyui",
-		"@yrrrrrf/prism-ts": "jsr:@yrrrrrf/prism-ts@^0.0.4"
+		"daisyui": "npm:daisyui"
 	},
 	"compilerOptions": {
 		"strict": true,
@@ -31,8 +31,9 @@
 	"lint": {
 		"include": ["src/"],
 		"exclude": [
-			"node_modules/",
 			".svelte-kit/",
+			"node_modules/",
+			"scripts/",
 			"src/lib/index.ts"
 		],
 		"rules": {

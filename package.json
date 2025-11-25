@@ -30,27 +30,27 @@
 		}
 	},
 	"peerDependencies": {
-		"svelte": "5.33.6"
+		"svelte": "5.43.15"
 	},
 	"dependencies": {
-		"@lucide/svelte": "0.513.0",
+		"@lucide/svelte": "0.554.0",
 		"@yrrrrrf/prism-ts": "npm:@jsr/yrrrrrf__prism-ts",
-		"daisyui": "5.0.40"
+		"daisyui": "5.5.5"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-static": "3.0.8",
-		"@sveltejs/kit": "2.20",
-		"@sveltejs/package": "2.3.11",
-		"@sveltejs/vite-plugin-svelte": "5.0.3",
+		"@sveltejs/adapter-static": "3.0.10",
+		"@sveltejs/kit": "2.49.0",
+		"@sveltejs/package": "2.5.6",
+		"@sveltejs/vite-plugin-svelte": "6.2.1",
 		"@tailwindcss/forms": "0.5.10",
-		"@tailwindcss/typography": "0.5.16",
-		"@tailwindcss/vite": "4.1.8",
-		"publint": "0.3.12",
-		"svelte": "5.33.6",
-		"svelte-check": "4.2.1",
-		"tailwindcss": "4.1.8",
-		"typescript": "5.8.3",
-		"vite": "6.3.5"
+		"@tailwindcss/typography": "0.5.19",
+		"@tailwindcss/vite": "4.1.17",
+		"publint": "0.3.15",
+		"svelte": "5.43.15",
+		"svelte-check": "4.3.4",
+		"tailwindcss": "4.1.17",
+		"typescript": "5.9.3",
+		"vite": "7.2.4"
 	},
 	"keywords": [
 		"svelte"

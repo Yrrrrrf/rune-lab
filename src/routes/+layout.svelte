@@ -33,12 +33,13 @@
     const metaTags = [
         { name: 'description', content: appData.description },
         { name: 'author', content: appData.author },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     ];
 </script>
 
+
 <svelte:head>
     <title>{appData.name}</title>
+    <link rel="icon" href={'/img/rune.png'} />
     {#each metaTags as meta}
         <meta name={meta.name} content={meta.content} />
     {/each}
