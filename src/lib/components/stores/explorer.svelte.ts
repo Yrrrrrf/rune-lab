@@ -243,8 +243,21 @@ export interface RLApiInterfaceActionParams {
 	operation: "GET" | "POST" | "PUT" | "DELETE";
 }
 
-// --- Property Item Types ---
-export interface RLPropertyItem<TRaw = unknown> { // TRaw defaults to unknown
+// // --- Property Item Types ---
+// export interface RLPropertyItem<TRaw = unknown> { // TRaw defaults to unknown
+// 	name: string;
+// 	type?: string;
+// 	nullable?: boolean;
+// 	isPrimaryKey?: boolean;
+// 	references?: RLColumnReference;
+// 	isEnum?: boolean;
+// 	mode?: string;
+// 	hasDefault?: boolean;
+// 	defaultValue?: string | null;
+// 	_rawItem?: TRaw;
+// }
+
+export interface RLPropertyItem {
 	name: string;
 	type?: string;
 	nullable?: boolean;
@@ -254,5 +267,5 @@ export interface RLPropertyItem<TRaw = unknown> { // TRaw defaults to unknown
 	mode?: string;
 	hasDefault?: boolean;
 	defaultValue?: string | null;
-	_rawItem?: TRaw;
+	_rawItem?: unknown; // Changed from any to unknown
 }
