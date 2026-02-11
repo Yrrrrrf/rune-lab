@@ -1,11 +1,15 @@
 <script>
-    import RlSchemaExplorer from "$lib/components/explorer/RLSchemaExplorer.svelte";
-    import ThemeSelector from "$lib/components/layout/ThemeSelector.svelte";
-    import Main from "$lib/components/ui/showcase/main.svelte";
+    import {
+        CurrencySelector,
+        LanguageSelector,
+        ThemeSelector,
+    } from "./src/lib/features/mod.ts";
+
+    import * as m from "$lib/paraglide/messages.js";
 </script>
 
 <ThemeSelector />
+<CurrencySelector />
+<LanguageSelector />
 
-<RlSchemaExplorer />
-
-<Main/>
+{m.hello_world({ name: "Yusepe" })}

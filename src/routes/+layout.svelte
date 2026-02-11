@@ -1,51 +1,15 @@
-<!-- src/routes/+layout.svelte -->
-<script lang="ts">
-    import '../app.css';
-    import { onMount } from 'svelte';
+<script>
+	import {
+		CurrencySelector,
+		LanguageSelector,
+		ThemeSelector,
+	} from "$lib/features/config";
 
-    import { apiStore } from '$lib/mod.js';
-    import { appData } from '$lib/mod.js';
-    import UrlDisplay from '$lib/components/layout/URLDisplay.svelte';
-
-    let { children } = $props();
-
-    onMount(() => {
-        console.log('🚀 App mounted');
-        
-        // // Initialize app data
-        appData.init({
-            name: 'Rune Lab',
-            version: '0.1.0',
-            description: 'A modern component library built with Svelte 5 Runes',
-            author: 'Yrrrrrf'
-        });
-        
-        // Initialize API store with configuration
-        apiStore.init({
-            // url: 'http://3.88.132.195:8000',
-            url: 'http://localhost:8000',
-            version: 'v1',
-            maxRetries: 3,
-            retryTimeout: 3000
-        });
-    });
-
-    const metaTags = [
-        { name: 'description', content: appData.description },
-        { name: 'author', content: appData.author },
-    ];
+	import * as m from "../lib/paraglide/messages.js";
 </script>
 
+<ThemeSelector />
+<CurrencySelector />
+<LanguageSelector />
 
-<svelte:head>
-    <title>{appData.name}</title>
-    <link rel="icon" href={'/img/rune.png'} />
-    {#each metaTags as meta}
-        <meta name={meta.name} content={meta.content} />
-    {/each}
-</svelte:head>
-
-<!-- Main content -->
-{@render children()}
-
-<UrlDisplay />
+{m.hello_world({ name: "Yusepe" })}
