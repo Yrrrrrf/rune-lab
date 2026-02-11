@@ -1,4 +1,5 @@
 // sdk/devtools/src/patterns/message-resolver.ts
+import { DEV } from 'esm-env';
 
 /**
  * Dynamic i18n Message Resolver Pattern
@@ -48,7 +49,7 @@ export function createMessageResolver<T>(
     const messageFn = messages[transformedKey];
 
     if (!messageFn || typeof messageFn !== "function") {
-      if (import.meta.env.DEV) {
+      if (DEV) {
         console.warn(
           `[MessageResolver] Missing translation for key: "${transformedKey}"`,
         );

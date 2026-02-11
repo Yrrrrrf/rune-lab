@@ -1,15 +1,16 @@
-<script>
-	import {
-		CurrencySelector,
-		LanguageSelector,
-		ThemeSelector,
-	} from "$lib/features/config";
+<script lang="ts">
+	import { page } from "$app/state";
+	import { locales, localizeHref } from "$lib/paraglide/runtime";
+	import "./layout.css";
 
-	import * as m from "../lib/paraglide/messages.js";
+	const { children } = $props();
 </script>
 
-<ThemeSelector />
-<CurrencySelector />
-<LanguageSelector />
-
-{m.hello_world({ name: "Yusepe" })}
+{@render children()}
+<div style="display:none">
+	{#each locales as locale}
+		<a href={localizeHref(page.url.pathname, { locale })}>
+			{locale}
+		</a>
+	{/each}
+</div>

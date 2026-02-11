@@ -3,62 +3,52 @@
   "version": "0.0.6",
   "description": "Rune Lab is your modern toolkit for crafting stunning, reactive web applications with Svelte 5.",
   "license": "MIT",
-  "exports": "./src/mod.ts",
+  "exports": "./src/lib/mod.ts",
   "tasks": {
-    "dev": "deno run -A npm:vite dev",
-    "build": "deno run -A npm:vite build && deno task prepack",
-    "preview": "deno run -A npm:vite preview",
-    "prepare": "deno run -A npm:svelte-kit sync || echo ''",
-    "prepack": "deno run -A npm:svelte-kit sync && deno run -A npm:svelte-package && deno run -A npm:publint",
-    "check": "deno run -A npm:svelte-kit sync && deno run -A npm:svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "deno run -A npm:svelte-kit sync && deno run -A npm:svelte-check --tsconfig ./tsconfig.json --watch"
+    "dev": "vite dev",
+    "build": "vite build && deno task prepack",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "prepack": "svelte-kit sync && svelte-package && publint"
   },
   "imports": {
-    // build
+    "$lib/": "./src/lib/",
+    "$lib/paraglide/": "./src/lib/paraglide/",
+    "svelte": "npm:svelte@^5.50.0",
+    "daisyui": "npm:daisyui@^5.5.18",
+    "tailwindcss": "npm:tailwindcss@^4.1.18",
+    "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.9.0",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.18",
+    "@tailwindcss/forms": "npm:@tailwindcss/forms@^0.5.11",
+    "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.19",
     "vite": "npm:vite@^7.3.1",
     "typescript": "npm:typescript@^5.9.3",
-    // svelte
-    "svelte": "npm:svelte@^5.50.0",
+    "publint": "npm:publint@^0.3.2",
     "svelte-check": "npm:svelte-check@^4.3.6",
     "@sveltejs/kit": "npm:@sveltejs/kit@^2.50.2",
     "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static@^3.0.10",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte@^6.2.4",
-    // tailwindcss
-    "tailwindcss": "npm:tailwindcss@^4.1.18",
-    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.18",
-    "@tailwindcss/forms": "npm:@tailwindcss/forms@^0.5.11",
-    "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.19",
-    // daisyui
-    "daisyui": "npm:daisyui@^5.5.18",
-    // i18n
-    "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.9.0"
-  },
-  "compilerOptions": {
-    // ignore in compiling
-    "extends": "./.svelte-kit/tsconfig.json",
-    "verbatimModuleSyntax": false,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": true,
-    "lib": [
-      "deno.window",
-      "dom",
-      "dom.iterable"
-    ],
-    "types": [
-      "svelte"
-    ]
+    "@sveltejs/package": "npm:@sveltejs/package@^2.5.7"
   },
   "nodeModulesDir": "auto",
   "publish": {
     "include": [
-      "dist/**/*",
+      "src/lib",
       "README.md",
-      "LICENSE"
+      "LICENSE",
+      "messages"
     ],
     "exclude": [
-      "dist/**/*.test.*",
-      "dist/**/*.spec.*"
+      ".github/",
+      ".svelte-kit/",
+      ".vite/",
+      "dist/",
+      "node_modules/"
     ]
+  },
+  "jsr": {
+    "peerDependencies": {
+      "svelte": "^5.50.2"
+    }
   }
 }

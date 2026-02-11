@@ -1,6 +1,4 @@
 // src/lib/features/config/mod.ts
-// Central export point for all config-related modules
-
 // Stores
 export { type Theme, themeStore } from "./theme.svelte.ts";
 export { type Currency, currencyStore } from "./currency.svelte.ts";
