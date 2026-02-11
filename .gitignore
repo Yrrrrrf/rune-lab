@@ -2,18 +2,10 @@
 .*
 !.gitignore
 
-# Web-generated files
+# lock files (from various package managers)
+*.lock
+
+# web-generated files
 node_modules
-/build
-
-# lock files
-**.lock
-
-# Vite
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-
-# project specific ignores
-scripts/
-old-runes/
-**/pdf.ts
+build
+dist
