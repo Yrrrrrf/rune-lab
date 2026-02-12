@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.0.11",
+  "version": "0.0.12-rc.1",
   "description": "Rune Lab: Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
@@ -12,6 +12,7 @@
   "files": [
     "dist"
   ],
+  "svelte": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

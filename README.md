@@ -74,6 +74,29 @@ bun add rune-lab
 yarn add rune-lab
 ```
 
+## Project Configuration
+
+### Deno / SSR projects
+
+Because Deno's Vite SSR module runner externalizes `node_modules` by default,
+`.svelte` files from this package would be loaded as raw ES modules, bypassing
+the Svelte compiler. To prevent this, you need to tell Vite to process
+`rune-lab` through its plugin pipeline.
+
+Add the following to your consuming project's `vite.config.ts`:
+
+```ts
+export default defineConfig({
+  plugins: [sveltekit()],
+  ssr: {
+    noExternal: ["rune-lab"],
+  },
+});
+```
+
+This ensures the Svelte plugin transforms the components correctly during SSR,
+just as it would for your own source files.
+
 ## License
 
 MIT License - See [LICENSE](LICENSE) for details.
