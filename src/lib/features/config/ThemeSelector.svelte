@@ -1,7 +1,6 @@
-<!-- src/client/sdk/ui/src/features/config/ThemeSelector.svelte -->
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
-    import { themeStore, type Theme } from "./mod";
+    import { themeStore, type Theme } from "./theme.svelte";
     import * as m from "$lib/paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 

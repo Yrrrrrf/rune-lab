@@ -1,4 +1,3 @@
-<!-- src/client/sdk/ui/src/features/config/AppSettingSelector.svelte -->
 <script lang="ts">
     import { type Snippet } from "svelte";
 

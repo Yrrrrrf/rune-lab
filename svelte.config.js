@@ -7,10 +7,10 @@ const config = {
   kit: {
     adapter: adapter({
       // This allows the client-side router to take over
-      fallback: 'index.html',
+      fallback: "index.html",
       // Tells SvelteKit not to panic about the hooks
-      strict: false
-    })
+      strict: false,
+    }),
   },
 };
 

@@ -1,53 +1,57 @@
 {
-    "name": "rune-lab",
-    "version": "0.0.10-rc.1",
-    "description": "Rune Lab: Modern toolkit for Svelte 5 Runes applications.",
-    "type": "module",
-    "license": "MIT",
-    "author": "Fernando Bryan Reza Campos",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
+  "name": "rune-lab",
+  "version": "0.0.11",
+  "description": "Rune Lab: Modern toolkit for Svelte 5 Runes applications.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Fernando Bryan Reza Campos",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
     },
-    "files": [
-        "dist",
-        "messages"
-    ],
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "svelte": "./dist/index.js",
-            "default": "./dist/index.js"
-        },
-        "./package.json": "./package.json"
+    "./paraglide/*": {
+      "types": "./dist/paraglide/*.d.ts",
+      "default": "./dist/paraglide/*.js"
     },
-    "scripts": {
-        "dev": "vite dev",
-        "build": "vite build && bun run prepack",
-        "preview": "vite preview",
-        "prepare": "svelte-kit sync || echo ''",
-        "prepack": "bunx svelte-kit sync && bunx svelte-package && bunx publint"
-    },
-    "peerDependencies": {
-        "svelte": "^5.50.2",
-        "@sveltejs/kit": "^2.50.2"
-    },
-    "devDependencies": {
-        "@sveltejs/package": "^2.5.7",
-        "@sveltejs/adapter-static": "^3.0.10",
-        "@sveltejs/vite-plugin-svelte": "^6.2.4",
-        "svelte-check": "^4.3.6",
-        "@tailwindcss/typography": "^0.5.19",
-        "@tailwindcss/forms": "^0.5.11",
-        "@tailwindcss/vite": "^4.1.18",
-        "publint": "^0.3.17"
-    },
-    "dependencies": {
-        "@inlang/paraglide-js": "^2.11.0",
-        "daisyui": "^5.5.18",
-        "esm-env": "^1.2.2",
-        "tailwindcss": "^4.1.18",
-        "typescript": "^5.9.3",
-        "vite": "^7.3.1"
-    }
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build && bun run prepack",
+    "preview": "vite preview",
+    "compile": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide",
+    "prepare": "svelte-kit sync || echo ''",
+    "prepack": "bun run compile && bunx svelte-kit sync && bunx svelte-package && rm -f dist/paraglide/.gitignore dist/paraglide/.prettierignore && bunx publint"
+  },
+  "peerDependencies": {
+    "svelte": "^5.50.2",
+    "@sveltejs/kit": "^2.50.2"
+  },
+  "devDependencies": {
+    "@sveltejs/package": "^2.5.7",
+    "@sveltejs/adapter-static": "^3.0.10",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "svelte-check": "^4.3.6",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/vite": "^4.1.18",
+    "publint": "^0.3.17"
+  },
+  "dependencies": {
+    "@inlang/paraglide-js": "^2.11.0",
+    "daisyui": "^5.5.18",
+    "esm-env": "^1.2.2",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
 }

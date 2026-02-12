@@ -1,5 +1,5 @@
 // sdk/devtools/src/patterns/message-resolver.ts
-import { DEV } from 'esm-env';
+import { DEV } from "esm-env";
 
 /**
  * Dynamic i18n Message Resolver Pattern
