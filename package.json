@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.0.12-rc.1",
+  "version": "0.0.12",
   "description": "Rune Lab: Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
@@ -12,11 +12,9 @@
   "files": [
     "dist"
   ],
-  "svelte": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "svelte": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./paraglide/*": {
@@ -45,9 +43,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/vite": "^4.1.18",
-    "publint": "^0.3.17"
-  },
-  "dependencies": {
+    "publint": "^0.3.17",
     "@inlang/paraglide-js": "^2.11.0",
     "daisyui": "^5.5.18",
     "esm-env": "^1.2.2",
