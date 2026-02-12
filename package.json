@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.0.12",
+  "version": "0.0.13-rc.2",
   "description": "Rune Lab: Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
@@ -15,6 +15,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./paraglide/*": {
@@ -27,7 +28,7 @@
     "dev": "vite dev",
     "build": "vite build && bun run prepack",
     "preview": "vite preview",
-    "compile": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide",
+    "compile": "paraglide-js compile --project ./src/i18n/project.inlang --outdir ./src/lib/paraglide",
     "prepare": "svelte-kit sync || echo ''",
     "prepack": "bun run compile && bunx svelte-kit sync && bunx svelte-package && rm -f dist/paraglide/.gitignore dist/paraglide/.prettierignore && bunx publint"
   },

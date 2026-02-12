@@ -30,15 +30,15 @@ find apps -type d \( -name ".svelte-kit" -o -name ".vite" \) -prune -exec echo -
 
 echo -e "${CYAN}-------------------------------------------------${NC}"
 
-# 3. Deno Install
-echo -e "${BLUE} Starting Deno Install...${NC}"
-deno install
+# 3. Bun Install
+echo -e "${BLUE} Starting Bun Install...${NC}"
+bun install
 
 if [ $? -eq 0 ]; then
     echo -e "${PURPLE}=================================================${NC}"
     echo -e "${GREEN}✨ SUCCESS: Project is clean and dependencies reinstalled!${NC}"
     echo -e "${PURPLE}=================================================${NC}"
 else
-    echo -e "${RED}❌ ERROR: Deno install failed.${NC}"
+    echo -e "${RED}❌ ERROR: Bun install failed.${NC}"
     exit 1
 fi

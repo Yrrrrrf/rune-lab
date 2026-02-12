@@ -1,8 +1,7 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
     import { currencyStore, type Currency } from "./currency.svelte";
-    import { setLocale, locales } from "$lib/paraglide/runtime";
-    import * as m from "$lib/paraglide/messages.js";
+    import * as m from "../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
     const getLabel = createMessageResolver<Currency>(m as any, {

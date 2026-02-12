@@ -2,7 +2,7 @@
     import AppSettingSelector from "./AppSettingSelector.svelte";
     import { languageStore, type Language } from "./language.svelte";
     import { setLocale, locales } from "$lib/paraglide/runtime";
-    import * as m from "$lib/paraglide/messages.js";
+    import * as m from "../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
     const getLabel = createMessageResolver<Language>(m as any, {
@@ -12,9 +12,13 @@
     let active = $derived(
         languageStore.get(languageStore.current) ?? languageStore.available[0],
     );
+
+    let available = $derived(
+        languageStore.available.filter((l) => locales.includes(l.code as any)),
+    );
 </script>
 
-<AppSettingSelector value={active} options={languageStore.available}>
+<AppSettingSelector value={active} options={available}>
     {#snippet triggerLabel(l)}
         <span class="text-lg">{l?.flag ?? active.flag}</span>
         <span class="uppercase font-medium text-xs tracking-wide"

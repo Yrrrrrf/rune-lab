@@ -3,7 +3,7 @@
         CurrencySelector,
         LanguageSelector,
         ThemeSelector,
-    } from "$lib/mod.ts";
+    } from "$lib/index.ts";
 
     import * as m from "$lib/paraglide/messages.js";
 </script>
