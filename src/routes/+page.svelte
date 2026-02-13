@@ -1,9 +1,17 @@
 <script lang="ts">
-    import { ApiMonitor, appStore, apiStore } from "$lib/index.ts";
+    import {
+        ApiMonitor,
+        appStore,
+        apiStore,
+        Toaster,
+        commandStore,
+        toastStore,
+        themeStore,
+        CommandPalette
+    } from "$lib/index.ts";
     import AppSettingsManager from "$lib/showcase/AppSettingsManager.svelte";
     import * as m from "$lib/paraglide/messages.js";
     import { onMount } from "svelte";
-    import CommandPalette from "$lib/features/CommandPalette.svelte";
 
     onMount(() => {
         appStore.init({
@@ -13,25 +21,39 @@
         });
 
         apiStore.init("https://api.example.com", "v1");
-    });
-</script>
 
-<CommandPalette
-    commands={[
-        {
-            id: "theme",
+        // Register testing commands
+        commandStore.register({
+            id: 'send-toast',
+            title: 'Send Success Toast',
+            category: 'System',
+            icon: '✨',
+            action: () => toastStore.success('Toast sent from Command Palette!')
+        });
+
+        commandStore.register({
+            id: 'toggle-theme',
+            title: 'Toggle Dark Mode',
+            category: 'Appearance',
+            icon: '🌓',
+            action: () => themeStore.set(themeStore.current === 'dark' ? 'light' : 'dark')
+        });
+
+        commandStore.register({
+            id: "log-app",
             title: "Console log app values",
             category: "Settings",
-            icon: "theme",
+            icon: "📋",
             action: () => {
-                console.log(appStore.name);
-                console.log(appStore.author);
-                console.log(appStore.description);
-                console.log(appStore.version);
+                console.log(appStore.info);
             },
-        },
-    ]}
-/>
+        });
+    });
+
+    const openKey = "k";
+</script>
+
+<CommandPalette shortcutKey={openKey} />
 
 <main
     class="min-h-screen bg-base-100 p-8 flex flex-col items-center justify-center gap-16 overflow-hidden"
@@ -52,6 +74,9 @@
             class="badge badge-lg badge-outline border-base-content/20 font-mono"
         >
             {appStore.info.version}
+        </div>
+        <div class="mt-4 text-xs opacity-50">
+             <kbd class="kbd kbd-sm">CMD</kbd> + <kbd class="kbd kbd-sm">{openKey.toUpperCase()}</kbd> to explore commands
         </div>
     </header>
 
@@ -79,6 +104,9 @@
 
     <!-- The new API Monitor -->
     <ApiMonitor />
+
+    <!-- Global Toaster -->
+    <Toaster />
 </main>
 
 <style>

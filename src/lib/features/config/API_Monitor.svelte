@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Book, Copy, CheckCircle, RefreshCw } from "lucide-svelte";
     import { apiStore } from "./api.svelte";
+    import { toastStore } from "./toast.svelte";
 
     let copied = $state(false);
     let isVisible = $state(true);
@@ -8,6 +9,7 @@
     function copyToClipboard() {
         navigator.clipboard.writeText(apiStore.URL);
         copied = true;
+        toastStore.success("API URL copied to clipboard!");
         setTimeout(() => (copied = false), 2000);
     }
 

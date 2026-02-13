@@ -1,29 +1,16 @@
 <!-- src/client/sdk/ui/src/features/config/CommandPalette.svelte -->
 <script lang="ts">
     import { onMount } from "svelte";
+    import { commandStore } from "./config/commands.svelte";
 
-    interface Command {
-        id: string;
-        title: string;
-        category?: string;
-        icon?: string;
-        action: () => void;
-    }
-
-    let { commands = [] }: { commands: Command[] } = $props();
+    let { shortcutKey = "k" } = $props<{ shortcutKey?: string }>();
 
     let dialog: HTMLDialogElement;
     let query = $state("");
     let isOpen = $state(false);
 
     // Filter commands based on query
-    let filtered = $derived(
-        query === ""
-            ? commands
-            : commands.filter((c) =>
-                  c.title.toLowerCase().includes(query.toLowerCase()),
-              ),
-    );
+    let filtered = $derived(commandStore.search(query));
 
     function toggle() {
         isOpen = !isOpen;
@@ -38,7 +25,7 @@
     // Global keyboard listener
     onMount(() => {
         function handleKeydown(e: KeyboardEvent) {
-            if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === shortcutKey.toLowerCase()) {
                 e.preventDefault();
                 toggle();
             }
