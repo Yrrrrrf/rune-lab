@@ -5,6 +5,13 @@
     import * as m from "../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
+    let { languages: allowedLocales = locales }: { languages?: string[] } =
+        $props();
+    // what the line above does:
+    // it allows the component to be used in two ways:
+    // 1. <LanguageSelector /> - this will use all available locales
+    // 2. <LanguageSelector languages={["en", "es"]} /> - this will only use the specified locales
+
     const getLabel = createMessageResolver<Language>(m as any, {
         keyExtractor: (l) => l.code,
     });
@@ -14,7 +21,9 @@
     );
 
     let available = $derived(
-        languageStore.available.filter((l) => locales.includes(l.code as any)),
+        languageStore.available.filter((l) =>
+            allowedLocales.includes(l.code as any),
+        ),
     );
 </script>
 

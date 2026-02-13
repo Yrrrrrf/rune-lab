@@ -17,44 +17,25 @@ export interface AppData {
 /**
  * App Store
  * Manages application metadata and identity
- *
- * Features:
- * - App name, version, description
- * - Author and repository information
- * - Initialization with partial updates
- * - Console branding on init
  */
 class AppStore {
   // State
-  name: string = $state("My Application");
-  version: string = $state("0.1.0");
-  description: string = $state("A modern application");
-  author: string = $state("Unknown");
-  repository?: string = $state(undefined);
-  license?: string = $state(undefined);
-  homepage?: string = $state(undefined);
+  name = $state("Rune Lab");
+  version = $state("0.0.1");
+  description = $state("Modern toolkit for Svelte 5 Runes");
+  author = $state("Yrrrrrf");
+  repository = $state("https://github.com/Yrrrrrf/rune-lab");
+  license = $state("MIT");
+  homepage = $state("https://jsr.io/@yrrrrrf/rune-lab");
 
-  private initialized: boolean = false;
+  private initialized = false;
 
   /**
    * Initialize app store with metadata
-   *
-   * @param data - Application metadata (partial update)
-   * @param data.name - Application name
-   * @param data.version - Application version (semver recommended)
-   * @param data.description - Application description
-   * @param data.author - Application author
-   * @param data.repository - Repository URL (optional)
-   * @param data.license - License identifier (optional)
-   * @param data.homepage - Homepage URL (optional)
    */
   init(data: Partial<AppData>): void {
-    if (this.initialized) {
-      console.warn("⚠️ AppStore already initialized");
-      return;
-    }
+    if (this.initialized) return;
 
-    // Update only provided values
     if (data.name) this.name = data.name;
     if (data.version) this.version = data.version;
     if (data.description) this.description = data.description;
@@ -64,9 +45,6 @@ class AppStore {
     if (data.homepage) this.homepage = data.homepage;
 
     this.initialized = true;
-
-    // Pretty console output
-    this._logAppInit();
   }
 
   /**
@@ -82,86 +60,6 @@ class AppStore {
       license: this.license,
       homepage: this.homepage,
     };
-  }
-
-  /**
-   * Get formatted version string
-   * Useful for display purposes
-   */
-  get versionString(): string {
-    return `v${this.version}`;
-  }
-
-  /**
-   * Get app title with version
-   */
-  get titleWithVersion(): string {
-    return `${this.name} v${this.version}`;
-  }
-
-  /**
-   * Check if repository is available
-   */
-  get hasRepository(): boolean {
-    return !!this.repository;
-  }
-
-  /**
-   * Check if homepage is available
-   */
-  get hasHomepage(): boolean {
-    return !!this.homepage;
-  }
-
-  /**
-   * Update app version
-   * Useful for version management during development
-   */
-  updateVersion(version: string): void {
-    this.version = version;
-    console.log(`📦 Version updated to: v${version}`);
-  }
-
-  // Private methods
-
-  /**
-   * Log app initialization to console with styling
-   */
-  private _logAppInit(): void {
-    console.clear();
-
-    // Banner style
-    console.log(
-      "%c╔══════════════════════════════════════════════╗",
-      "color: #00d9ff; font-weight: bold;",
-    );
-    console.log(
-      `%c║  ${this.name.padEnd(42)}  ║`,
-      "color: #00d9ff; font-weight: bold;",
-    );
-    console.log(
-      "%c╚══════════════════════════════════════════════╝",
-      "color: #00d9ff; font-weight: bold;",
-    );
-
-    // App details
-    console.log("\n📦 Application Details:");
-    console.log(`   Name:        ${this.name}`);
-    console.log(`   Version:     v${this.version}`);
-    console.log(`   Author:      ${this.author}`);
-    console.log(`   Description: ${this.description}`);
-
-    if (this.repository) {
-      console.log(`   Repository:  ${this.repository}`);
-    }
-    if (this.license) {
-      console.log(`   License:     ${this.license}`);
-    }
-    if (this.homepage) {
-      console.log(`   Homepage:    ${this.homepage}`);
-    }
-
-    console.log("\n✨ Application initialized successfully!\n");
   }
 }
 

@@ -16,6 +16,7 @@
     "$lib/paraglide/": "./src/lib/paraglide/",
     "svelte": "npm:svelte@^5.50.0",
     "daisyui": "npm:daisyui@^5.5.18",
+    "lucide-svelte": "npm:lucide-svelte@^0.563.0",
     "tailwindcss": "npm:tailwindcss@^4.1.18",
     "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.9.0",
     "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.18",
