@@ -3,6 +3,7 @@
     import AppSettingsManager from "$lib/showcase/AppSettingsManager.svelte";
     import * as m from "$lib/paraglide/messages.js";
     import { onMount } from "svelte";
+    import CommandPalette from "$lib/features/CommandPalette.svelte";
 
     onMount(() => {
         appStore.init({
@@ -14,6 +15,23 @@
         apiStore.init("https://api.example.com", "v1");
     });
 </script>
+
+<CommandPalette
+    commands={[
+        {
+            id: "theme",
+            title: "Console log app values",
+            category: "Settings",
+            icon: "theme",
+            action: () => {
+                console.log(appStore.name);
+                console.log(appStore.author);
+                console.log(appStore.description);
+                console.log(appStore.version);
+            },
+        },
+    ]}
+/>
 
 <main
     class="min-h-screen bg-base-100 p-8 flex flex-col items-center justify-center gap-16 overflow-hidden"
