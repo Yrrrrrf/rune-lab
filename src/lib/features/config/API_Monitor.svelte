@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Book, Copy, CheckCircle, RefreshCw } from "lucide-svelte";
+    import { Book, Copy, CircleCheckBig, RefreshCw } from "lucide-svelte";
     import { apiStore } from "./api.svelte";
     import { toastStore } from "./toast.svelte";
 
@@ -90,7 +90,7 @@
                 )}/{apiStore.VERSION}</span
             >
             {#if copied}
-                <CheckCircle size={14} class="text-success" />
+                <CircleCheckBig size={14} class="text-success" />
             {:else}
                 <Copy
                     size={14}
