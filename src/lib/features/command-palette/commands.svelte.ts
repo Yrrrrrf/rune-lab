@@ -6,7 +6,8 @@ export interface Command {
   title: string;
   category?: string;
   icon?: string;
-  action: () => void;
+  action?: () => void;
+  children?: Command[];
 }
 
 class CommandStore {
@@ -30,13 +31,29 @@ class CommandStore {
   /**
    * Search commands
    */
-  search(query: string): Command[] {
-    if (!query) return this.commands;
+  search(query: string, parentId?: string): Command[] {
+    const targetList = parentId
+      ? this.findCommandById(parentId, this.commands)?.children ?? []
+      : this.commands;
+
+    if (!query) return targetList;
+
     const q = query.toLowerCase();
-    return this.commands.filter((c) =>
+    return targetList.filter((c) =>
       c.title.toLowerCase().includes(q) ||
       c.category?.toLowerCase().includes(q)
     );
+  }
+
+  private findCommandById(id: string, list: Command[]): Command | undefined {
+    for (const cmd of list) {
+      if (cmd.id === id) return cmd;
+      if (cmd.children) {
+        const found = this.findCommandById(id, cmd.children);
+        if (found) return found;
+      }
+    }
+    return undefined;
   }
 }
 

@@ -1,12 +1,8 @@
 <script lang="ts">
     import {
         ApiMonitor,
-        appStore,
-        apiStore,
+        appConfig,
         Toaster,
-        commandStore,
-        toastStore,
-        themeStore,
         CommandPalette
     } from "$lib/index.ts";
     import AppSettingsManager from "$lib/showcase/AppSettingsManager.svelte";
@@ -14,38 +10,63 @@
     import { onMount } from "svelte";
 
     onMount(() => {
-        appStore.init({
+        appConfig.app.init({
             name: "Rune Lab Explorer",
             description: "Testing Svelte 5 Runes abstractions",
             version: "1.0.0-beta",
         });
 
-        apiStore.init("https://api.example.com", "v1");
+        appConfig.api.init("https://api.example.com", "v1");
 
         // Register testing commands
-        commandStore.register({
+        appConfig.commands.register({
             id: 'send-toast',
-            title: 'Send Success Toast',
+            title: 'Send Toast Notification',
             category: 'System',
-            icon: '✨',
-            action: () => toastStore.success('Toast sent from Command Palette!')
+            icon: '🔔',
+            children: [
+                {
+                    id: 'toast-success',
+                    title: 'Success Toast',
+                    icon: '✨',
+                    action: () => appConfig.toast.success('Operation completed successfully!')
+                },
+                {
+                    id: 'toast-info',
+                    title: 'Info Toast',
+                    icon: 'ℹ️',
+                    action: () => appConfig.toast.info('Here is some information.')
+                },
+                {
+                    id: 'toast-warning',
+                    title: 'Warning Toast',
+                    icon: '⚠️',
+                    action: () => appConfig.toast.warning('Please be careful.')
+                },
+                {
+                    id: 'toast-error',
+                    title: 'Error Toast',
+                    icon: '🚫',
+                    action: () => appConfig.toast.error('Something went wrong!')
+                }
+            ]
         });
 
-        commandStore.register({
+        appConfig.commands.register({
             id: 'toggle-theme',
             title: 'Toggle Dark Mode',
             category: 'Appearance',
             icon: '🌓',
-            action: () => themeStore.set(themeStore.current === 'dark' ? 'light' : 'dark')
+            action: () => appConfig.theme.set(appConfig.theme.current === 'dark' ? 'light' : 'dark')
         });
 
-        commandStore.register({
+        appConfig.commands.register({
             id: "log-app",
             title: "Console log app values",
             category: "Settings",
             icon: "📋",
             action: () => {
-                console.log(appStore.info);
+                console.log(appConfig.app.info);
             },
         });
     });
@@ -65,15 +86,15 @@
         <h1
             class="text-6xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-primary to-secondary"
         >
-            {appStore.name}
+            {appConfig.app.name}
         </h1>
         <p class="text-xl opacity-60 font-medium max-w-md mx-auto">
-            {appStore.description}
+            {appConfig.app.description}
         </p>
         <div
             class="badge badge-lg badge-outline border-base-content/20 font-mono"
         >
-            {appStore.info.version}
+            {appConfig.app.info.version}
         </div>
         <div class="mt-4 text-xs opacity-50">
              <kbd class="kbd kbd-sm">CMD</kbd> + <kbd class="kbd kbd-sm">{openKey.toUpperCase()}</kbd> to explore commands

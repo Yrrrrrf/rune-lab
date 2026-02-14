@@ -1,8 +1,8 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
-    import { languageStore, type Language } from "./language.svelte";
+    import { languageStore, type Language } from "../stores/language.svelte";
     import { setLocale, locales } from "$lib/paraglide/runtime";
-    import * as m from "../../paraglide/messages.js";
+    import * as m from "../../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
     let { languages: allowedLocales = locales }: { languages?: string[] } =

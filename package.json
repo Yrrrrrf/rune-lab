@@ -30,7 +30,7 @@
     "preview": "vite preview",
     "compile": "paraglide-js compile --project ./src/i18n/project.inlang --outdir ./src/lib/paraglide",
     "prepare": "svelte-kit sync || echo ''",
-    "prepack": "deno run -A npm:@inlang/paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide && svelte-kit sync && svelte-package && publint"
+    "prepack": "bun run compile && bunx svelte-kit sync && bunx svelte-package && rm -f dist/paraglide/.gitignore dist/paraglide/.prettierignore && bunx publint"
   },
   "peerDependencies": {
     "svelte": "^5.51.0",
