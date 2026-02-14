@@ -14,4 +14,23 @@ export default defineConfig({
       outdir: "./src/lib/paraglide",
     }),
   ],
+
+  build: {
+    lib: {
+      entry: "src/lib/index.ts",
+      formats: ["es"],
+      fileName: "index",
+    },
+    outDir: "dist/compiled",
+    rollupOptions: {
+      // Keep ALL these external — don't bundle them
+      external: [
+        "svelte",
+        /^svelte\//,
+        "@sveltejs/kit",
+        /^lucide-svelte/,
+        /^@inlang/,
+      ],
+    },
+  },
 });
