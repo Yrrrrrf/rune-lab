@@ -9,11 +9,13 @@
     } from "$lib/index.ts";
     import AppStateInspector from "$lib/showcase/AppStateInspector.svelte";
 
-    import { appConfig } from "$lib/config.ts";
-    import * as m from "$lib/paraglide/messages.js";
+    import { appConfig } from "$lib/config";
+
     import { onMount } from "svelte";
     import { locales } from "$lib/paraglide/runtime";
     import Showcase from "$lib/showcase/Showcase.svelte";
+
+    import * as m from "$lib/paraglide/messages.js";
 
     onMount(() => {
         appConfig.app.init({

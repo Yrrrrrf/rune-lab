@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { appConfig } from "$lib/config.ts";
+    import { appConfig } from "$lib/config";
     import * as m from "$lib/paraglide/messages.js";
     import StoreDetailCard from "./StoreDetailCard.svelte";
 
