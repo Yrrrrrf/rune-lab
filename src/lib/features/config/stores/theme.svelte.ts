@@ -1,54 +1,57 @@
 // client/packages/ui/src/state/theme-config.svelte.ts
 
 import { createConfigStore } from "$lib/devtools/createConfigStore.svelte";
+import themeOrder from "daisyui/functions/themeOrder.js"; // has its own .d.ts
 
-/**
- * Theme configuration
- * Represents a visual theme for the application
- */
 export interface Theme {
   name: string;
   icon: string;
 }
 
-const THEMES = [
-  { name: "light", icon: "🌞" },
-  { name: "dark", icon: "🌙" },
-  { name: "system", icon: "🖥️" },
-  { name: "cupcake", icon: "🧁" },
-  { name: "bumblebee", icon: "🐝" },
-  { name: "emerald", icon: "💚" },
-  { name: "corporate", icon: "🏢" },
-  { name: "synthwave", icon: "🌆" },
-  { name: "retro", icon: "📺" },
-  { name: "cyberpunk", icon: "🤖" },
-  { name: "valentine", icon: "💝" },
-  { name: "halloween", icon: "🎃" },
-  { name: "garden", icon: "🌷" },
-  { name: "forest", icon: "🌲" },
-  { name: "aqua", icon: "💧" },
-  { name: "lofi", icon: "🎵" },
-  { name: "pastel", icon: "🎨" },
-  { name: "fantasy", icon: "🔮" },
-  { name: "wireframe", icon: "📝" },
-  { name: "black", icon: "⚫" },
-  { name: "luxury", icon: "👑" },
-  { name: "dracula", icon: "🧛" },
-  { name: "cmyk", icon: "🖨️" },
-  { name: "autumn", icon: "🍂" },
-  { name: "business", icon: "💼" },
-  { name: "acid", icon: "🧪" },
-  { name: "lemonade", icon: "🍋" },
-  { name: "night", icon: "🌃" },
-  { name: "coffee", icon: "☕" },
-  { name: "winter", icon: "❄️" },
-  { name: "dim", icon: "🔅" },
-  { name: "nord", icon: "🧊" },
-  { name: "sunset", icon: "🌅" },
-  { name: "caramellatte", icon: "🍮" },
-  { name: "abyss", icon: "🌌" },
-  { name: "silk", icon: "🎀" },
-] as const;
+// Icon map for known themes - unknown ones fall back to 🎨
+const THEME_ICONS: Record<string, string> = {
+  light: "🌞",
+  dark: "🌙",
+  cupcake: "🧁",
+  bumblebee: "🐝",
+  emerald: "💚",
+  corporate: "🏢",
+  synthwave: "🌆",
+  retro: "📺",
+  cyberpunk: "🤖",
+  valentine: "💝",
+  halloween: "🎃",
+  garden: "🌷",
+  forest: "🌲",
+  aqua: "💧",
+  lofi: "🎵",
+  pastel: "🎨",
+  fantasy: "🔮",
+  wireframe: "📝",
+  black: "⚫",
+  luxury: "👑",
+  dracula: "🧛",
+  cmyk: "🖨️",
+  autumn: "🍂",
+  business: "💼",
+  acid: "🧪",
+  lemonade: "🍋",
+  night: "🌃",
+  coffee: "☕",
+  winter: "❄️",
+  dim: "🔅",
+  nord: "🧊",
+  sunset: "🌅",
+  caramellatte: "🍮",
+  abyss: "🌌",
+  silk: "🎀",
+};
+
+// Derived from daisyUI directly — stays in sync automatically
+const THEMES: Theme[] = themeOrder.map((name: string) => ({
+  name,
+  icon: THEME_ICONS[name] ?? "🎨",
+}));
 
 export const themeStore = createConfigStore<Theme>({
   items: THEMES,

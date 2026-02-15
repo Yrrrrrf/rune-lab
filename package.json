@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Rune Lab: Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
@@ -17,6 +17,10 @@
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "default": "./dist/config.js"
     },
     "./paraglide/*": {
       "types": "./dist/paraglide/*.d.ts",

@@ -12,7 +12,9 @@
     let selectedIndex = $state(0);
     let navigationStack = $state<string[]>([]);
 
-    const currentParentId = $derived(navigationStack[navigationStack.length - 1]);
+    const currentParentId = $derived(
+        navigationStack[navigationStack.length - 1],
+    );
     const filtered = $derived(commandStore.search(query, currentParentId));
 
     $effect(() => {
@@ -25,8 +27,10 @@
     $effect(() => {
         // Ensure selected item is visible
         if (isOpen && filtered.length > 0) {
-            const selectedElement = dialog.querySelector('.menu li button.active');
-            selectedElement?.scrollIntoView({ block: 'nearest' });
+            const selectedElement = dialog.querySelector(
+                ".menu li button.active",
+            );
+            selectedElement?.scrollIntoView({ block: "nearest" });
         }
     });
 
@@ -68,13 +72,18 @@
             selectedIndex = (selectedIndex + 1) % filtered.length;
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
-            selectedIndex = (selectedIndex - 1 + filtered.length) % filtered.length;
+            selectedIndex =
+                (selectedIndex - 1 + filtered.length) % filtered.length;
         } else if (e.key === "Enter") {
             e.preventDefault();
             if (filtered[selectedIndex]) {
                 handleAction(filtered[selectedIndex]);
             }
-        } else if (e.key === "Backspace" && query === "" && navigationStack.length > 0) {
+        } else if (
+            e.key === "Backspace" &&
+            query === "" &&
+            navigationStack.length > 0
+        ) {
             e.preventDefault();
             goBack();
         }
@@ -82,7 +91,10 @@
 
     onMount(() => {
         function handleGlobalKeydown(e: KeyboardEvent) {
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === shortcutKey.toLowerCase()) {
+            if (
+                (e.metaKey || e.ctrlKey) &&
+                e.key.toLowerCase() === shortcutKey.toLowerCase()
+            ) {
                 e.preventDefault();
                 toggle();
             }
@@ -129,7 +141,9 @@
                 bind:this={input}
                 type="text"
                 class="bg-transparent outline-none w-full text-lg"
-                placeholder={navigationStack.length > 0 ? "Search in subcommands..." : "What do you need?"}
+                placeholder={navigationStack.length > 0
+                    ? "Search in subcommands..."
+                    : "What do you need?"}
                 bind:value={query}
                 onkeydown={handleKeyDown}
             />
@@ -151,7 +165,10 @@
                         <li>
                             <button
                                 onclick={() => handleAction(cmd)}
-                                class="flex justify-between items-center py-3 {i === selectedIndex ? 'active bg-primary text-primary-content' : ''}"
+                                class="flex justify-between items-center py-3 {i ===
+                                selectedIndex
+                                    ? 'active bg-primary text-primary-content'
+                                    : ''}"
                             >
                                 <div class="flex items-center gap-3">
                                     {#if cmd.icon}
@@ -170,10 +187,15 @@
                                 </div>
                                 <div class="flex items-center gap-2">
                                     {#if cmd.children && cmd.children.length > 0}
-                                        <span class="badge badge-sm badge-outline opacity-50">{cmd.children.length}</span>
-                                        <span class="text-xs opacity-40">→</span>
+                                        <span
+                                            class="badge badge-sm badge-outline opacity-50"
+                                            >{cmd.children.length}</span
+                                        >
+                                        <span class="text-xs opacity-40">→</span
+                                        >
                                     {:else}
-                                        <span class="text-xs opacity-40">↵</span>
+                                        <span class="text-xs opacity-40">↵</span
+                                        >
                                     {/if}
                                 </div>
                             </button>
@@ -186,10 +208,20 @@
         <div
             class="bg-base-200 p-2 text-[10px] uppercase tracking-widest text-center text-base-content/40 border-t border-base-200"
         >
-            {navigationStack.length > 0 ? "Backspace to go back" : "Search actions, pages, or settings"}
+            {navigationStack.length > 0
+                ? "Backspace to go back"
+                : "Search actions, pages, or settings"}
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">
         <button>close</button>
     </form>
 </dialog>
+
+<style>
+    @import "daisyui/components/modal.css";
+    @import "daisyui/components/menu.css";
+    @import "daisyui/components/input.css";
+    @import "daisyui/components/kbd.css";
+    @import "daisyui/components/badge.css";
+</style>

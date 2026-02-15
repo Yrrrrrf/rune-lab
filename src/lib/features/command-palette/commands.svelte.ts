@@ -22,34 +22,36 @@ class CommandStore {
   }
 
   /**
-   * Remove a command
+   * Remove a command by id
    */
   unregister(id: string) {
     this.commands = this.commands.filter((c) => c.id !== id);
   }
 
   /**
-   * Search commands
+   * Search commands, optionally scoped to a parent's children
    */
   search(query: string, parentId?: string): Command[] {
     const targetList = parentId
-      ? this.findCommandById(parentId, this.commands)?.children ?? []
+      ? this.#findById(parentId, this.commands)?.children ?? []
       : this.commands;
 
     if (!query) return targetList;
 
     const q = query.toLowerCase();
-    return targetList.filter((c) =>
-      c.title.toLowerCase().includes(q) ||
-      c.category?.toLowerCase().includes(q)
+    return targetList.filter(
+      (c) =>
+        c.title.toLowerCase().includes(q) ||
+        c.category?.toLowerCase().includes(q),
     );
   }
 
-  private findCommandById(id: string, list: Command[]): Command | undefined {
+  // Native JS private field — TypeScript CAN emit .d.ts for this, unlike `private`
+  #findById(id: string, list: Command[]): Command | undefined {
     for (const cmd of list) {
       if (cmd.id === id) return cmd;
       if (cmd.children) {
-        const found = this.findCommandById(id, cmd.children);
+        const found = this.#findById(id, cmd.children);
         if (found) return found;
       }
     }
