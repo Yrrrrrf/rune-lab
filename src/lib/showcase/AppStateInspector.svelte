@@ -94,7 +94,6 @@
         class="stats stats-vertical lg:stats-horizontal shadow-sm bg-base-200/50 border border-base-300 w-full backdrop-blur-md"
     >
         <div class="stat">
-            <div class="stat-figure text-primary text-3xl">🔌</div>
             <div
                 class="stat-title uppercase text-[10px] font-bold tracking-widest opacity-60"
             >
@@ -115,7 +114,6 @@
         </div>
 
         <div class="stat">
-            <div class="stat-figure text-secondary text-3xl">🔔</div>
             <div
                 class="stat-title uppercase text-[10px] font-bold tracking-widest opacity-60"
             >
@@ -130,7 +128,6 @@
         </div>
 
         <div class="stat">
-            <div class="stat-figure text-accent text-3xl">⌨️</div>
             <div
                 class="stat-title uppercase text-[10px] font-bold tracking-widest opacity-60"
             >

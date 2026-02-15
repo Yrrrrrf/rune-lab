@@ -1,16 +1,23 @@
 <script lang="ts">
-	import { page } from "$app/state";
-	import { locales, localizeHref } from "$lib/paraglide/runtime";
 	import "./layout.css";
 
 	const { children } = $props();
+
+	// use the app config to set the title and icon
+	import { appConfig } from "$lib/config";
+
+	const metaTags = [
+		{ name: "description", content: appConfig.app.description },
+		{ name: "author", content: appConfig.app.author },
+	];
 </script>
 
-{@render children()}
-<div style="display:none">
-	{#each locales as locale}
-		<a href={localizeHref(page.url.pathname, { locale })}>
-			{locale}
-		</a>
+<svelte:head>
+	<title>{appConfig.app.name}</title>
+	<link rel="icon" href={"/img/rune.png"} />
+	{#each metaTags as meta}
+		<meta name={meta.name} content={meta.content} />
 	{/each}
-</div>
+</svelte:head>
+
+{@render children()}
