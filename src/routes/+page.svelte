@@ -13,7 +13,7 @@
     import * as m from "$lib/paraglide/messages.js";
     import { onMount } from "svelte";
     import { locales } from "$lib/paraglide/runtime";
-    import StyleCollector from "$lib/showcase/StyleCollector.svelte";
+    import Showcase from "$lib/showcase/Showcase.svelte";
 
     onMount(() => {
         appConfig.app.init({
@@ -35,45 +35,37 @@
 >
     <!-- Branding Header -->
     <header
-        class="text-center space-y-4 animate-in fade-in slide-in-from-top duration-700"
+        class="text-center space-y-4 animate-in fade-in slide-in-from-top duration-700 w-full"
     >
-        <h1
-            class="text-6xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-primary to-secondary"
-        >
-            {appConfig.app.name}
-        </h1>
-        <p class="text-xl opacity-60 font-medium max-w-md mx-auto">
-            {appConfig.app.description}
-        </p>
         <div
-            class="badge badge-lg badge-outline border-base-content/20 font-mono"
+            class="flex flex-col md:flex-row items-center justify-between gap-4 bg-base-200/50 p-6 rounded-3xl border border-base-content/5"
         >
-            {appConfig.app.info.version}
+            <div class="flex items-center gap-4">
+                <img src="/img/rune.png" alt="Rune Lab" class="w-16 h-16" />
+                <div class="text-left">
+                    <h1
+                        class="text-3xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-primary to-secondary"
+                    >
+                        {appConfig.app.name}
+                    </h1>
+                    <div
+                        class="badge badge-sm badge-outline border-base-content/20 font-mono"
+                    >
+                        {appConfig.app.info.version}
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <LanguageSelector languages={[...locales]} />
+                <ThemeSelector />
+                <CurrencySelector />
+            </div>
         </div>
 
-        <div class="divider">
-            <LanguageSelector languages={[...locales]} />
-            <ThemeSelector />
-            <CurrencySelector />
-        </div>
         <AppStateInspector />
-        <StyleCollector />
+        <Showcase />
     </header>
-
-    <!-- Message Card -->
-    <div class="card-body items-center text-center p-10">
-        <div
-            class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4"
-        >
-            <span class="text-3xl">🧪</span>
-        </div>
-        <h2 class="card-title text-3xl font-black">
-            {m.hello_world({ name: "Yusepe" })}
-        </h2>
-        <p class="opacity-70">
-            Svelte 5 Runes are powering this modular architecture.
-        </p>
-    </div>
 
     <!-- The new API Monitor -->
     <ApiMonitor />

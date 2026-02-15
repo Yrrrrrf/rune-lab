@@ -33,6 +33,8 @@ export { currencyStore } from "./features/config/stores/currency.svelte";
 // ^ Showcase
 // ^ Showcase
 export { default as AppStateInspector } from "./showcase/AppStateInspector.svelte";
+export { default as ShowcaseMain } from "./showcase/Showcase.svelte";
+export { default as ShowcaseCard } from "./showcase/ShowcaseCard.svelte";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 export type { AppData } from "./features/config/stores/app.svelte";
