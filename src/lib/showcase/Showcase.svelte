@@ -1,20 +1,20 @@
 <script lang="ts">
-  import Tab1Actions from "./tab1-Actions.svelte";
-  import Tab2DataInput from "./tab2-DataInput.svelte";
-  import Tab3Display from "./tab3-Display.svelte";
-  import Tab4Navigation from "./tab4-Navigation.svelte";
-  import Tab5Feedback from "./tab5-Feedback.svelte";
-  import Tab6Visual from "./tab6-Visual.svelte";
+  import Actions from "./tabs/Actions.svelte";
+  import DataInput from "./tabs/DataInput.svelte";
+  import Display from "./tabs/Display.svelte";
+  import Navigation from "./tabs/Navigation.svelte";
+  import Feedback from "./tabs/Feedback.svelte";
+  import Visual from "./tabs/Visual.svelte";
 
   let activeTab = $state(0);
 
   const tabs = [
-    { label: "Actions", icon: "⚡", component: Tab1Actions },
-    { label: "Data Input", icon: "📥", component: Tab2DataInput },
-    { label: "Display", icon: "📊", component: Tab3Display },
-    { label: "Navigation", icon: "🧭", component: Tab4Navigation },
-    { label: "Feedback", icon: "💬", component: Tab5Feedback },
-    { label: "Visual", icon: "🎨", component: Tab6Visual },
+    { label: "Actions", icon: "⚡", component: Actions },
+    { label: "Data Input", icon: "📥", component: DataInput },
+    { label: "Display", icon: "📊", component: Display },
+    { label: "Navigation", icon: "🧭", component: Navigation },
+    { label: "Feedback", icon: "💬", component: Feedback },
+    { label: "Visual", icon: "🎨", component: Visual },
   ];
 </script>
 
