@@ -29,6 +29,11 @@ export { themeStore } from "./features/config/stores/theme.svelte";
 export { languageStore } from "./features/config/stores/language.svelte";
 export { currencyStore } from "./features/config/stores/currency.svelte";
 
+// ^ Showcase
+// ^ Showcase
+// ^ Showcase
+export { default as AppStateInspector } from "./showcase/AppStateInspector.svelte";
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 export type { AppData } from "./features/config/stores/app.svelte";
 export type { Command } from "./features/command-palette/commands.svelte";
