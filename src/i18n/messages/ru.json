@@ -64,5 +64,22 @@
   "sunset": "Закат",
   "caramellatte": "Карамельный латте",
   "abyss": "Бездна",
-  "silk": "Шелк"
+  "silk": "Шелк",
+  "live_store_dashboard": "Панель управления живым магазином",
+  "real_time_monitor_desc": "Монитор реактивного состояния в реальном времени для магазинов Rune Lab",
+  "api_status": "Статус API",
+  "active_toasts": "Активные уведомления",
+  "commands_label": "Команды",
+  "app_info": "Информация о приложении",
+  "appearance": "Внешний вид",
+  "localization": "Локализация",
+  "name_label": "Имя",
+  "version_label": "Версия",
+  "current_theme": "Тема",
+  "current_language": "Язык",
+  "current_currency": "Валюта",
+  "state_label": "Состояние",
+  "url_label": "URL-адрес",
+  "currently_in_queue": "В очереди",
+  "registered_in_registry": "Зарегистрировано в реестре"
 }

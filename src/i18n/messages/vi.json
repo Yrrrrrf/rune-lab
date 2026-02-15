@@ -64,5 +64,22 @@
   "sunset": "Hoàng hôn",
   "caramellatte": "Caramel Latte",
   "abyss": "Vực thẳm",
-  "silk": "Lụa"
+  "silk": "Lụa",
+  "live_store_dashboard": "Bảng điều khiển cửa hàng trực tiếp",
+  "real_time_monitor_desc": "Màn hình trạng thái phản ứng thời gian thực cho Rune Lab stores",
+  "api_status": "Trạng thái API",
+  "active_toasts": "Thông báo đang hoạt động",
+  "commands_label": "Lệnh",
+  "app_info": "Thông tin ứng dụng",
+  "appearance": "Giao diện",
+  "localization": "Bản địa hóa",
+  "name_label": "Tên",
+  "version_label": "Phiên bản",
+  "current_theme": "Chủ đề",
+  "current_language": "Ngôn ngữ",
+  "current_currency": "Tiền tệ",
+  "state_label": "Trạng thái",
+  "url_label": "URL",
+  "currently_in_queue": "Hiện đang trong hàng đợi",
+  "registered_in_registry": "Đã đăng ký trong sổ đăng ký"
 }

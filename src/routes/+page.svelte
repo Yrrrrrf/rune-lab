@@ -7,8 +7,9 @@
         ThemeSelector,
         CurrencySelector,
     } from "$lib/index.ts";
+    import AppStateInspector from "$lib/showcase/AppStateInspector.svelte";
+
     import { appConfig } from "$lib/config.ts";
-    import AppSettingsManager from "$lib/showcase/AppSettingsManager.svelte";
     import * as m from "$lib/paraglide/messages.js";
     import { onMount } from "svelte";
     import { locales } from "$lib/paraglide/runtime";
@@ -22,66 +23,6 @@
         });
 
         appConfig.api.init("https://api.example.com", "v1");
-
-        // Register testing commands
-        appConfig.commands.register({
-            id: "send-toast",
-            title: "Send Toast Notification",
-            category: "System",
-            icon: "🔔",
-            children: [
-                {
-                    id: "toast-success",
-                    title: "Success Toast",
-                    icon: "✨",
-                    action: () =>
-                        appConfig.toast.success(
-                            "Operation completed successfully!",
-                        ),
-                },
-                {
-                    id: "toast-info",
-                    title: "Info Toast",
-                    icon: "ℹ️",
-                    action: () =>
-                        appConfig.toast.info("Here is some information."),
-                },
-                {
-                    id: "toast-warning",
-                    title: "Warning Toast",
-                    icon: "⚠️",
-                    action: () => appConfig.toast.warn("Please be careful."),
-                },
-                {
-                    id: "toast-error",
-                    title: "Error Toast",
-                    icon: "🚫",
-                    action: () =>
-                        appConfig.toast.error("Something went wrong!"),
-                },
-            ],
-        });
-
-        appConfig.commands.register({
-            id: "toggle-theme",
-            title: "Toggle Dark Mode",
-            category: "Appearance",
-            icon: "🌓",
-            action: () =>
-                appConfig.theme.set(
-                    appConfig.theme.current === "dark" ? "light" : "dark",
-                ),
-        });
-
-        appConfig.commands.register({
-            id: "log-app",
-            title: "Console log app values",
-            category: "Settings",
-            icon: "📋",
-            action: () => {
-                console.log(appConfig.app.info);
-            },
-        });
     });
 
     const openKey = "k";
@@ -115,12 +56,9 @@
             <ThemeSelector />
             <CurrencySelector />
         </div>
-        <div class="divider">
-            <StyleCollector />
-        </div>
+        <AppStateInspector />
+        <StyleCollector />
     </header>
-
-    <AppSettingsManager />
 
     <!-- Message Card -->
     <div class="card-body items-center text-center p-10">

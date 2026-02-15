@@ -64,5 +64,22 @@
   "sunset": "サンセット",
   "caramellatte": "キャラメルラテ",
   "abyss": "アビス",
-  "silk": "シルク"
+  "silk": "シルク",
+  "live_store_dashboard": "ライブストアダッシュボード",
+  "real_time_monitor_desc": "Rune Labストアのリアルタイムリアクティブ状態モニター",
+  "api_status": "APIステータス",
+  "active_toasts": "アクティブトースト",
+  "commands_label": "コマンド",
+  "app_info": "アプリ情報",
+  "appearance": "外観",
+  "localization": "ローカリゼーション",
+  "name_label": "名前",
+  "version_label": "バージョン",
+  "current_theme": "テーマ",
+  "current_language": "言語",
+  "current_currency": "通貨",
+  "state_label": "状態",
+  "url_label": "URL",
+  "currently_in_queue": "現在キュー内",
+  "registered_in_registry": "レジストリに登録済み"
 }

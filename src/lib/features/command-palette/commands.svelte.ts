@@ -1,3 +1,10 @@
+import { appStore } from "../config/stores/app.svelte";
+import { apiStore } from "../config/stores/api.svelte";
+import { themeStore } from "../config/stores/theme.svelte";
+import { languageStore } from "../config/stores/language.svelte";
+import { currencyStore } from "../config/stores/currency.svelte";
+import { toastStore } from "../config/stores/toast.svelte";
+
 /**
  * Command Palette Store
  */
@@ -11,7 +18,103 @@ export interface Command {
 }
 
 class CommandStore {
-  commands = $state<Command[]>([]);
+  commands = $state<Command[]>([
+    {
+      id: "send-toast",
+      title: "Send Toast Notification",
+      category: "System",
+      icon: "🔔",
+      children: [
+        {
+          id: "toast-success",
+          title: "Success Toast",
+          icon: "✨",
+          action: () => toastStore.success("Operation completed successfully!"),
+        },
+        {
+          id: "toast-info",
+          title: "Info Toast",
+          icon: "ℹ️",
+          action: () => toastStore.info("Here is some information."),
+        },
+        {
+          id: "toast-warning",
+          title: "Warning Toast",
+          icon: "⚠️",
+          action: () => toastStore.warn("Please be careful."),
+        },
+        {
+          id: "toast-error",
+          title: "Error Toast",
+          icon: "🚫",
+          action: () => toastStore.error("Something went wrong!"),
+        },
+      ],
+    },
+    {
+      id: "log-app",
+      title: "Log Current App State",
+      category: "Debug",
+      icon: "📋",
+      action: () => {
+        console.group("🚀 Rune Lab — Current State");
+        console.table(appStore.info);
+        console.log(
+          "🎨 Theme:",
+          themeStore.current,
+          themeStore.getProp("icon"),
+        );
+        console.log(
+          "🌐 Language:",
+          languageStore.current,
+          languageStore.getProp("flag"),
+        );
+        console.log(
+          "💰 Currency:",
+          currencyStore.current,
+          currencyStore.getProp("symbol"),
+        );
+        console.log("🔌 API:", apiStore.connectionState, apiStore.URL);
+        console.groupEnd();
+      },
+    },
+    {
+      id: "log-all-stores",
+      title: "Log All Stores (Full Dump)",
+      category: "Debug",
+      icon: "🗃️",
+      action: () => {
+        const stores = {
+          app: appStore,
+          api: apiStore,
+          theme: themeStore,
+          language: languageStore,
+          currency: currencyStore,
+          toast: toastStore,
+          commands: commandStore,
+        };
+        console.group("📚 Rune Lab — Full Store Dump");
+        Object.entries(stores).forEach(([name, store]) => {
+          console.group(`Store: ${name}`);
+          console.log("Reactive Instance:", store);
+          if ("available" in (store as any)) {
+            console.log("Available:", (store as any).available);
+          }
+          if ("current" in (store as any)) {
+            console.log("Current:", (store as any).current);
+          }
+          if ("toasts" in (store as any)) {
+            console.log("Queue:", (store as any).toasts);
+          }
+          if ("commands" in (store as any)) {
+            console.log("Registry:", (store as any).commands);
+          }
+          console.groupEnd();
+        });
+        console.groupEnd();
+      },
+    },
+  ]);
 
   /**
    * Register a new command

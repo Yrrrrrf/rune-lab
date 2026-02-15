@@ -21,20 +21,22 @@
     );
 </script>
 
-<AppSettingSelector value={active} options={available}>
+<AppSettingSelector 
+    value={active} 
+    options={available}
+    tooltip={getLabel(active)}
+>
     {#snippet triggerLabel(c)}
         <span class="font-bold">{c.symbol}</span>
-        <span class="uppercase font-medium text-xs tracking-wide">{c.code}</span
-        >
     {/snippet}
 
     {#snippet item(c)}
         <button
-            class="flex justify-between items-center w-full"
+            class="flex items-center gap-3 w-full"
             onclick={() => currencyStore.set(c.code)}
         >
+            <span class="badge badge-sm badge-ghost w-8">{c.symbol}</span>
             <span>{getLabel(c)}</span>
-            <span class="badge badge-sm badge-ghost">{c.symbol}</span>
         </button>
     {/snippet}
 </AppSettingSelector>

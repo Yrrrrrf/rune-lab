@@ -64,5 +64,22 @@
   "sunset": "日落",
   "caramellatte": "焦糖拿铁",
   "abyss": "深渊",
-  "silk": "丝绸"
+  "silk": "丝绸",
+  "live_store_dashboard": "实时商店仪表板",
+  "real_time_monitor_desc": "Rune Lab 商店的实时反应状态监视器",
+  "api_status": "API 状态",
+  "active_toasts": "活动提示",
+  "commands_label": "命令",
+  "app_info": "应用信息",
+  "appearance": "外观",
+  "localization": "本地化",
+  "name_label": "名称",
+  "version_label": "版本",
+  "current_theme": "主题",
+  "current_language": "语言",
+  "current_currency": "货币",
+  "state_label": "状态",
+  "url_label": "网址",
+  "currently_in_queue": "当前在队列中",
+  "registered_in_registry": "已在注册表中注册"
 }

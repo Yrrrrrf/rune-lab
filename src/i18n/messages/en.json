@@ -64,5 +64,22 @@
   "sunset": "Sunset",
   "caramellatte": "Caramel Latte",
   "abyss": "Abyss",
-  "silk": "Silk"
+  "silk": "Silk",
+  "live_store_dashboard": "Live Store Dashboard",
+  "real_time_monitor_desc": "Real-time reactive state monitor for Rune Lab stores",
+  "api_status": "API Status",
+  "active_toasts": "Active Toasts",
+  "commands_label": "Commands",
+  "app_info": "App Info",
+  "appearance": "Appearance",
+  "localization": "Localization",
+  "name_label": "Name",
+  "version_label": "Version",
+  "current_theme": "Theme",
+  "current_language": "Language",
+  "current_currency": "Currency",
+  "state_label": "State",
+  "url_label": "URL",
+  "currently_in_queue": "Currently in queue",
+  "registered_in_registry": "Registered in registry"
 }

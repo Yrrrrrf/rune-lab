@@ -64,5 +64,22 @@
   "sunset": "غروب",
   "caramellatte": "كراميل لاتيه",
   "abyss": "هاوية",
-  "silk": "حرير"
+  "silk": "حرير",
+  "live_store_dashboard": "لوحة تحكم المتجر المباشر",
+  "real_time_monitor_desc": "مراقب الحالة التفاعلية في الوقت الفعلي لمتاجر Rune Lab",
+  "api_status": "حالة API",
+  "active_toasts": "الإشعارات النشطة",
+  "commands_label": "الأوامر",
+  "app_info": "معلومات التطبيق",
+  "appearance": "المظهر",
+  "localization": "التوطين",
+  "name_label": "الاسم",
+  "version_label": "الإصدار",
+  "current_theme": "السمة",
+  "current_language": "اللغة",
+  "current_currency": "العملة",
+  "state_label": "الحالة",
+  "url_label": "عنوان URL",
+  "currently_in_queue": "حاليا في قائمة الانتظار",
+  "registered_in_registry": "مسجل في السجل"
 }

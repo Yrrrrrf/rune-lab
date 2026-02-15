@@ -28,13 +28,13 @@ class AppStore {
   license = $state("MIT");
   homepage = $state("https://jsr.io/@yrrrrrf/rune-lab");
 
-  private initialized = false;
+  #initialized = false;
 
   /**
    * Initialize app store with metadata
    */
   init(data: Partial<AppData>): void {
-    if (this.initialized) return;
+    if (this.#initialized) return;
 
     if (data.name) this.name = data.name;
     if (data.version) this.version = data.version;
@@ -44,7 +44,7 @@ class AppStore {
     if (data.license) this.license = data.license;
     if (data.homepage) this.homepage = data.homepage;
 
-    this.initialized = true;
+    this.#initialized = true;
   }
 
   /**

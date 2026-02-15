@@ -64,5 +64,22 @@
   "sunset": "Tramonto",
   "caramellatte": "Caramello Latte",
   "abyss": "Abisso",
-  "silk": "Seta"
+  "silk": "Seta",
+  "live_store_dashboard": "Dashboard dei store in tempo reale",
+  "real_time_monitor_desc": "Monitor di stato reattivo in tempo reale per i store Rune Lab",
+  "api_status": "Stato dell’API",
+  "active_toasts": "Notifiche attive",
+  "commands_label": "Comandi",
+  "app_info": "Informazioni app",
+  "appearance": "Aspetto",
+  "localization": "Localizzazione",
+  "name_label": "Nome",
+  "version_label": "Versione",
+  "current_theme": "Tema",
+  "current_language": "Lingua",
+  "current_currency": "Valuta",
+  "state_label": "Stato",
+  "url_label": "URL",
+  "currently_in_queue": "Attualmente in coda",
+  "registered_in_registry": "Registrato nel registro"
 }

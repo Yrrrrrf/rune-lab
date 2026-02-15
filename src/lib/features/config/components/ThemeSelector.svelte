@@ -21,24 +21,31 @@
     );
 </script>
 
-<AppSettingSelector value={activeTheme} options={available}>
+<AppSettingSelector 
+    value={activeTheme} 
+    options={available} 
+    tooltip={getThemeLabel(activeTheme)}
+>
     {#snippet triggerLabel(t)}
         <span class="text-lg">{t?.icon ?? activeTheme.icon}</span>
-        <!-- Translate the name in the button -->
-        <span class="capitalize hidden sm:inline">
-            {getThemeLabel(t ?? activeTheme)}
-        </span>
     {/snippet}
 
     {#snippet item(t)}
-        <input
-            type="radio"
-            name="theme-dropdown"
-            class="theme-controller btn btn-sm btn-ghost justify-start content-center"
-            aria-label="{t.icon} {getThemeLabel(t)}"
-            value={t.name}
-            bind:group={themeStore.current}
+        <button
+            class="flex items-center gap-3 w-full"
             onclick={() => themeStore.set(t.name)}
-        />
+        >
+            <input
+                type="radio"
+                name="theme-dropdown"
+                class="theme-controller radio radio-xs"
+                value={t.name}
+                bind:group={themeStore.current}
+            />
+            <span class="text-lg">{t.icon}</span>
+            <span class="capitalize">
+                {getThemeLabel(t)}
+            </span>
+        </button>
     {/snippet}
 </AppSettingSelector>

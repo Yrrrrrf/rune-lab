@@ -1,16 +1,22 @@
 <script lang="ts">
     import { type Snippet } from "svelte";
 
-    let { options, value, item, triggerLabel } = $props<{
+    let { options, value, item, triggerLabel, tooltip } = $props<{
         options: any[];
         value: any;
         item: Snippet<[any]>;
         triggerLabel: Snippet<[any]>;
+        tooltip?: string;
     }>();
 </script>
 
 <div class="dropdown dropdown-end">
-    <div tabindex="0" role="button" class="btn btn-ghost btn-sm m-1">
+    <div 
+        tabindex="0" 
+        role="button" 
+        class="btn btn-ghost btn-sm m-1 {tooltip ? 'tooltip tooltip-bottom' : ''}"
+        data-tip={tooltip}
+    >
         <span class="flex items-center gap-2">
             {@render triggerLabel(value)}
         </span>

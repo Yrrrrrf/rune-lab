@@ -23,24 +23,25 @@
     );
 </script>
 
-<AppSettingSelector value={active} options={available}>
+<AppSettingSelector 
+    value={active} 
+    options={available}
+    tooltip={getLabel(active)}
+>
     {#snippet triggerLabel(l)}
         <span class="text-lg">{l?.flag ?? active.flag}</span>
-        <span class="uppercase font-medium text-xs tracking-wide"
-            >{l?.code ?? active.code}</span
-        >
     {/snippet}
 
     {#snippet item(l)}
         <button
-            class="flex justify-between items-center w-full"
+            class="flex items-center gap-3 w-full"
             onclick={() => {
                 languageStore.set(l.code);
                 setLocale(l.code);
             }}
         >
-            <span>{getLabel(l)}</span>
             <span class="text-lg">{l.flag}</span>
+            <span>{getLabel(l)}</span>
         </button>
     {/snippet}
 </AppSettingSelector>

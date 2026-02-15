@@ -64,5 +64,22 @@
   "sunset": "Sonnenuntergang",
   "caramellatte": "Karamell-Latte",
   "abyss": "Abgrund",
-  "silk": "Seide"
+  "silk": "Seide",
+  "live_store_dashboard": "Live-Store-Dashboard",
+  "real_time_monitor_desc": "Reaktiver Echtzeit-Statusmonitor für Rune Lab Stores",
+  "api_status": "API-Status",
+  "active_toasts": "Aktive Benachrichtigungen",
+  "commands_label": "Befehle",
+  "app_info": "App-Informationen",
+  "appearance": "Aussehen",
+  "localization": "Lokalisierung",
+  "name_label": "Name",
+  "version_label": "Version",
+  "current_theme": "Design",
+  "current_language": "Sprache",
+  "current_currency": "Währung",
+  "state_label": "Status",
+  "url_label": "URL",
+  "currently_in_queue": "Derzeit in der Warteschlange",
+  "registered_in_registry": "Im Register eingetragen"
 }
