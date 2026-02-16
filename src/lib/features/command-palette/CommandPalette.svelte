@@ -1,9 +1,10 @@
 <!-- src/client/sdk/ui/src/features/config/CommandPalette.svelte -->
 <script lang="ts">
     import { onMount, tick } from "svelte";
-    import { commandStore, type Command } from "./commands.svelte";
+    import { commandStore, type Command } from "$lib/state/commands.svelte";
+    import { shortcutStore } from "$lib/state/shortcuts.svelte";
 
-    let { shortcutKey = "k" } = $props<{ shortcutKey?: string }>();
+    let { shortcutKey = "shift+k" } = $props<{ shortcutKey?: string }>();
 
     let dialog: HTMLDialogElement;
     let input: HTMLInputElement;
@@ -16,6 +17,23 @@
         navigationStack[navigationStack.length - 1],
     );
     const filtered = $derived(commandStore.search(query, currentParentId));
+
+    $effect(() => {
+        // Register shortcut
+        shortcutStore.register({
+            id: "rl:cmd:open",
+            keys: `cmd+${shortcutKey},ctrl+${shortcutKey}`,
+            label: "Open Command Palette",
+            category: "General",
+            scope: "global",
+            handler: (e) => {
+                e.preventDefault();
+                toggle();
+            },
+        });
+
+        return () => shortcutStore.unregister("rl:cmd:open");
+    });
 
     $effect(() => {
         // Reset selection when query or navigation changes
@@ -88,20 +106,6 @@
             goBack();
         }
     }
-
-    onMount(() => {
-        function handleGlobalKeydown(e: KeyboardEvent) {
-            if (
-                (e.metaKey || e.ctrlKey) &&
-                e.key.toLowerCase() === shortcutKey.toLowerCase()
-            ) {
-                e.preventDefault();
-                toggle();
-            }
-        }
-        window.addEventListener("keydown", handleGlobalKeydown);
-        return () => window.removeEventListener("keydown", handleGlobalKeydown);
-    });
 </script>
 
 <dialog
@@ -217,11 +221,11 @@
         <button>close</button>
     </form>
 </dialog>
-
+<!-- 
 <style>
     @import "daisyui/components/modal.css";
     @import "daisyui/components/menu.css";
     @import "daisyui/components/input.css";
     @import "daisyui/components/kbd.css";
     @import "daisyui/components/badge.css";
-</style>
+</style> -->

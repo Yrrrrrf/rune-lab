@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { apiStore } from "../features/config/stores/api.svelte";
-    import { toastStore } from "../features/config/stores/toast.svelte";
+    import { apiStore } from "$lib/state/api.svelte";
+    import { toastStore } from "$lib/state/toast.svelte";
 
     let copied = $state(false);
     let isVisible = $state(true);
@@ -157,9 +157,9 @@
         </button>
     </div>
 </div>
-
+<!-- 
 <style>
     @import "daisyui/components/status.css";
     @import "daisyui/components/badge.css";
     @import "daisyui/components/button.css";
-</style>
+</style> -->

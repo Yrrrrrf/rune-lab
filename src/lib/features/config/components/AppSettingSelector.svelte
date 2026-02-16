@@ -11,10 +11,12 @@
 </script>
 
 <div class="dropdown dropdown-end">
-    <div 
-        tabindex="0" 
-        role="button" 
-        class="btn btn-ghost btn-sm m-1 {tooltip ? 'tooltip tooltip-bottom' : ''}"
+    <div
+        tabindex="0"
+        role="button"
+        class="btn btn-ghost btn-sm m-1 {tooltip
+            ? 'tooltip tooltip-bottom'
+            : ''}"
         data-tip={tooltip}
     >
         <span class="flex items-center gap-2">
@@ -33,8 +35,8 @@
     </ul>
 </div>
 
-<style>
+<!-- <style>
     @import "daisyui/components/dropdown.css";
     @import "daisyui/components/menu.css";
     @import "daisyui/components/button.css";
-</style>
+</style> -->

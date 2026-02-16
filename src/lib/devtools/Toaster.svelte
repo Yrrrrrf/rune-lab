@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { toastStore } from "../features/config/stores/toast.svelte";
+  import { toastStore } from "$lib/state/toast.svelte";
   import { flip } from "svelte/animate";
   import { fade, fly } from "svelte/transition";
 
@@ -54,9 +54,9 @@
     {/each}
   </div>
 </svelte:element>
-
+<!-- 
 <style>
   @import "daisyui/components/toast.css";
   @import "daisyui/components/alert.css";
   @import "daisyui/components/button.css";
-</style>
+</style> -->

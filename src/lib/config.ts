@@ -2,13 +2,15 @@
 // Unified facade over all app-level stores.
 // Import this instead of wiring each store individually.
 
-import { appStore } from "./features/config/stores/app.svelte";
-import { apiStore } from "./features/config/stores/api.svelte";
-import { toastStore } from "./features/config/stores/toast.svelte";
-import { commandStore } from "./features/command-palette/commands.svelte";
-import { themeStore } from "./features/config/stores/theme.svelte";
-import { languageStore } from "./features/config/stores/language.svelte";
-import { currencyStore } from "./features/config/stores/currency.svelte";
+import {
+  apiStore,
+  appStore,
+  commandStore,
+  currencyStore,
+  languageStore,
+  themeStore,
+  toastStore,
+} from "./state/index";
 
 /**
  * `appConfig` — single entry-point to configure and control the entire app.

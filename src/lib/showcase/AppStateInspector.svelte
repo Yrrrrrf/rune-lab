@@ -149,7 +149,7 @@
         {/each}
     </div>
 </div>
-
+<!-- 
 <style>
     @import "daisyui/components/stat.css";
-</style>
+</style> -->

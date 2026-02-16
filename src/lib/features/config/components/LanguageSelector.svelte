@@ -1,6 +1,6 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
-    import { languageStore, type Language } from "../stores/language.svelte";
+    import { languageStore, type Language } from "$lib/state/language.svelte";
     import { setLocale, locales } from "$lib/paraglide/runtime";
     import * as m from "../../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";

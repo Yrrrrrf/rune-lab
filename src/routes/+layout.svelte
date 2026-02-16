@@ -5,12 +5,16 @@
 
 	// use the app config to set the title and icon
 	import { appConfig } from "$lib/config";
+	import { CommandPalette, ShortcutPalette } from "$lib/index.ts";
 
 	const metaTags = [
 		{ name: "description", content: appConfig.app.description },
 		{ name: "author", content: appConfig.app.author },
 	];
 </script>
+
+<CommandPalette />
+<ShortcutPalette />
 
 <svelte:head>
 	<title>{appConfig.app.name}</title>

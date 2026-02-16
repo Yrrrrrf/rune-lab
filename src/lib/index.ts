@@ -13,6 +13,10 @@ export { createMessageResolver } from "./devtools/message-resolver";
 export { default as Toaster } from "./devtools/Toaster.svelte";
 export { default as ApiMonitor } from "./devtools/API_Monitor.svelte";
 export { default as CommandPalette } from "./features/command-palette/CommandPalette.svelte";
+export { default as ShortcutPalette } from "./features/shortcuts/ShortcutPalette.svelte";
+
+// Layout
+export * from "./layout/index";
 
 // Setting selectors
 export { default as AppSettingSelector } from "./features/config/components/AppSettingSelector.svelte";
@@ -21,13 +25,17 @@ export { default as LanguageSelector } from "./features/config/components/Langua
 export { default as CurrencySelector } from "./features/config/components/CurrencySelector.svelte";
 
 // ── Stores (individual, for fine-grained imports) ─────────────────────────────
-export { appStore } from "./features/config/stores/app.svelte";
-export { apiStore } from "./features/config/stores/api.svelte";
-export { toastStore } from "./features/config/stores/toast.svelte";
-export { commandStore } from "./features/command-palette/commands.svelte";
-export { themeStore } from "./features/config/stores/theme.svelte";
-export { languageStore } from "./features/config/stores/language.svelte";
-export { currencyStore } from "./features/config/stores/currency.svelte";
+export {
+  apiStore,
+  appStore,
+  commandStore,
+  currencyStore,
+  languageStore,
+  layoutStore,
+  shortcutStore,
+  themeStore,
+  toastStore,
+} from "./state/index";
 
 // ^ Showcase
 // ^ Showcase
@@ -37,11 +45,17 @@ export { default as ShowcaseMain } from "./showcase/Showcase.svelte";
 export { default as ShowcaseCard } from "./showcase/ShowcaseCard.svelte";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
-export type { AppData } from "./features/config/stores/app.svelte";
-export type { Command } from "./features/command-palette/commands.svelte";
-export type { Currency } from "./features/config/stores/currency.svelte";
-export type { Language } from "./features/config/stores/language.svelte";
-export type { Theme } from "./features/config/stores/theme.svelte";
+export type {
+  AppData,
+  Command,
+  Currency,
+  Language,
+  NavigationItem,
+  NavigationSection,
+  ShortcutEntry,
+  Theme,
+  WorkspaceItem,
+} from "./state/index";
 
 // ── Paraglide compiled messages (re-exported for convenience) ─────────────────
 export * as sdkMessages from "./paraglide/messages.js";

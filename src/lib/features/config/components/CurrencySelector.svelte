@@ -1,6 +1,6 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
-    import { currencyStore, type Currency } from "../stores/currency.svelte";
+    import { currencyStore, type Currency } from "$lib/state/currency.svelte";
     import * as m from "../../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
