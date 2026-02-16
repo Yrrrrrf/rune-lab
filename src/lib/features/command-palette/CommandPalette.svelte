@@ -38,18 +38,22 @@
 
     $effect(() => {
         // Reset selection when query or navigation changes
-        if (query || navigationStack.length >= 0) {
-            selectedIndex = 0;
-        }
+        // Accessing these ensures the effect re-runs when they change
+        query;
+        navigationStack.length;
+        selectedIndex = 0;
     });
 
     $effect(() => {
         // Ensure selected item is visible
         if (isOpen && filtered.length > 0) {
-            const selectedElement = dialog?.querySelector(
-                ".menu li button.active",
-            );
-            selectedElement?.scrollIntoView({ block: "nearest" });
+            // Use a small delay to ensure the DOM has updated
+            tick().then(() => {
+                const selectedElement = dialog?.querySelector(
+                    ".menu li button.active",
+                );
+                selectedElement?.scrollIntoView({ block: "nearest" });
+            });
         }
     });
 
@@ -83,6 +87,8 @@
     }
 
     function handleKeyDown(e: KeyboardEvent) {
+        if (filtered.length === 0) return;
+
         if (e.key === "ArrowDown") {
             e.preventDefault();
             selectedIndex = (selectedIndex + 1) % filtered.length;
@@ -140,7 +146,6 @@
                     ? "Search in subcommands..."
                     : "What do you need?"}
                 bind:value={query}
-                onkeydown={handleKeyDown}
             />
             <div class="flex gap-1">
                 <kbd class="kbd kbd-sm">↑↓</kbd>
