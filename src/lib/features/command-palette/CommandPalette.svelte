@@ -3,6 +3,7 @@
     import { onMount, tick } from "svelte";
     import { commandStore, type Command } from "$lib/state/commands.svelte";
     import { shortcutStore } from "$lib/state/shortcuts.svelte";
+    import { Icon } from "$lib/index";
 
     let { shortcutKey = "shift+k" } = $props<{ shortcutKey?: string }>();
 
@@ -45,7 +46,7 @@
     $effect(() => {
         // Ensure selected item is visible
         if (isOpen && filtered.length > 0) {
-            const selectedElement = dialog.querySelector(
+            const selectedElement = dialog?.querySelector(
                 ".menu li button.active",
             );
             selectedElement?.scrollIntoView({ block: "nearest" });
@@ -55,13 +56,10 @@
     function toggle() {
         isOpen = !isOpen;
         if (isOpen) {
-            dialog.showModal();
             query = "";
             navigationStack = [];
             selectedIndex = 0;
             tick().then(() => input?.focus());
-        } else {
-            dialog.close();
         }
     }
 
@@ -72,7 +70,7 @@
             selectedIndex = 0;
         } else if (cmd.action) {
             cmd.action();
-            toggle();
+            isOpen = false;
         }
     }
 
@@ -104,6 +102,8 @@
         ) {
             e.preventDefault();
             goBack();
+        } else if (e.key === "Escape") {
+            isOpen = false;
         }
     }
 </script>
@@ -111,36 +111,27 @@
 <dialog
     bind:this={dialog}
     class="modal items-start pt-[10vh] backdrop-blur-sm"
-    onclose={() => (isOpen = false)}
+    class:modal-open={isOpen}
+    onkeydown={handleKeyDown}
 >
     <div
         class="modal-box p-0 overflow-hidden border border-base-300 shadow-2xl max-w-2xl w-full flex flex-col"
     >
         <!-- Breadcrumbs for Navigation -->
         {#if navigationStack.length > 0}
-            <div class="px-4 pt-4 flex items-center gap-2 text-xs opacity-50">
-                <button onclick={goBack} class="hover:underline">Root</button>
-                {#each navigationStack as id}
-                    <span>/</span>
-                    <span class="font-bold">{id}</span>
-                {/each}
+            <div class="breadcrumbs text-xs px-4 pt-4 opacity-50">
+                <ul>
+                    <li><button onclick={goBack}>Root</button></li>
+                    {#each navigationStack as id}
+                        <li><span class="font-bold">{id}</span></li>
+                    {/each}
+                </ul>
             </div>
         {/if}
 
         <!-- Search Input -->
         <div class="border-b border-base-200 p-4 flex items-center gap-3">
-            <svg
-                class="w-5 h-5 opacity-50"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"
-                ></path></svg
-            >
+            <Icon name="search" class="opacity-50" />
             <input
                 bind:this={input}
                 type="text"
@@ -218,14 +209,6 @@
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-        <button>close</button>
+        <button onclick={(e) => { e.preventDefault(); isOpen = false; }}>close</button>
     </form>
 </dialog>
-<!-- 
-<style>
-    @import "daisyui/components/modal.css";
-    @import "daisyui/components/menu.css";
-    @import "daisyui/components/input.css";
-    @import "daisyui/components/kbd.css";
-    @import "daisyui/components/badge.css";
-</style> -->

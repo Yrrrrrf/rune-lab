@@ -3,8 +3,10 @@
     import { onMount, tick } from "svelte";
     import {
         shortcutStore,
+        LAYOUT_SHORTCUTS,
         type ShortcutEntry,
     } from "$lib/state/shortcuts.svelte";
+    import { Icon } from "$lib/index";
 
     let dialog = $state<HTMLDialogElement>();
     let input = $state<HTMLInputElement>();
@@ -23,44 +25,52 @@
         );
     });
 
-    // Grouping logic
+    // Grouping logic - simplified by using store's grouping
     const groups = $derived.by(() => {
-        const result: Record<string, Record<string, ShortcutEntry[]>> = {};
+        if (!query) return shortcutStore.byScopeAndCategory;
 
+        const result: Record<string, Record<string, ShortcutEntry[]>> = {};
         for (const entry of filtered) {
             const scope = entry.scope;
             const category = entry.category;
-
             if (!result[scope]) result[scope] = {};
             if (!result[scope][category]) result[scope][category] = [];
-
             result[scope][category].push(entry);
         }
-
         return result;
     });
 
-    // Sort scopes: global first, then layout, then others
-    const sortedScopes = $derived.by(() => {
-        return Object.keys(groups).sort((a, b) => {
-            if (a === "global") return -1;
-            if (b === "global") return 1;
-            if (a === "layout") return -1;
-            if (b === "layout") return 1;
-            return a.localeCompare(b);
-        });
-    });
+    // Scopes are now provided by the store
+    const sortedScopes = $derived(
+        query
+            ? Object.keys(groups).sort((a, b) => {
+                  if (a === "global") return -1;
+                  if (b === "global") return 1;
+                  if (a === "layout") return -1;
+                  if (b === "layout") return 1;
+                  return a.localeCompare(b);
+              })
+            : shortcutStore.sortedScopes,
+    );
 
     export function open() {
         isOpen = true;
-        dialog?.showModal();
+        shortcutStore.showPalette = true;
         tick().then(() => input?.focus());
     }
 
     export function close() {
         isOpen = false;
-        dialog?.close();
+        shortcutStore.showPalette = false;
     }
+
+    $effect(() => {
+        if (shortcutStore.showPalette && !isOpen) {
+            open();
+        } else if (!shortcutStore.showPalette && isOpen) {
+            close();
+        }
+    });
 
     function handleKeydown(e: KeyboardEvent) {
         if (e.key === "Escape") {
@@ -74,12 +84,7 @@
 
     $effect(() => {
         shortcutStore.register({
-            ...(shortcutStore.findConflicts("?", "global")[0] || {}), // Try to inherit if already there? No, let's just use LAYOUT_SHORTCUTS values
-            id: "rl:shortcuts:open",
-            keys: "?",
-            label: "Show Shortcut Palette",
-            category: "Help",
-            scope: "global",
+            ...LAYOUT_SHORTCUTS.OPEN_SHORTCUTS,
             handler: (e) => {
                 // If we are already in an input, don't open
                 const target = e.target as HTMLElement;
@@ -91,14 +96,15 @@
             },
         });
 
-        return () => shortcutStore.unregister("rl:shortcuts:open");
+        return () =>
+            shortcutStore.unregister(LAYOUT_SHORTCUTS.OPEN_SHORTCUTS.id);
     });
 </script>
 
 <dialog
     bind:this={dialog}
     class="modal items-start pt-[10vh] backdrop-blur-sm"
-    onclose={close}
+    class:modal-open={isOpen}
     onkeydown={handleKeydown}
 >
     <div
@@ -109,24 +115,7 @@
             class="border-b border-base-200 p-6 flex items-center gap-4 bg-base-200/30"
         >
             <div class="p-2 bg-primary/10 rounded-lg text-primary">
-                <svg
-                    class="w-6 h-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    ><rect
-                        width="18"
-                        height="11"
-                        x="3"
-                        y="11"
-                        rx="2"
-                        ry="2"
-                    /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg
-                >
+                <Icon name="shortcut" class="w-6 h-6" />
             </div>
             <div class="flex-1">
                 <h2 class="text-xl font-bold tracking-tight">
@@ -231,19 +220,16 @@
         >
             <div class="flex gap-4">
                 <span><kbd class="kbd kbd-xs">ESC</kbd> to close</span>
-                <span><kbd class="kbd kbd-xs">?</kbd> to open help</span>
+                <span
+                    ><kbd class="kbd kbd-xs">ctrl</kbd> + <kbd
+                        class="kbd kbd-xs">/</kbd
+                    > to open help</span
+                >
             </div>
             <div>rune-lab v0.0.19</div>
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-        <button>close</button>
+        <button onclick={(e) => { e.preventDefault(); close(); }}>close</button>
     </form>
 </dialog>
-<!-- 
-<style>
-    @import "daisyui/components/modal.css";
-    @import "daisyui/components/input.css";
-    @import "daisyui/components/kbd.css";
-    @import "daisyui/components/badge.css";
-</style> -->

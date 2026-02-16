@@ -164,11 +164,19 @@
                         >
                     </div>
                     <div class="flex items-center gap-4">
-                        <div
-                            class="flex items-center gap-1 opacity-40 text-[10px] font-mono"
+                        <button
+                            onclick={() => (shortcutStore.showPalette = true)}
+                            class="btn btn-ghost btn-xs opacity-40 hover:opacity-100 flex items-center gap-1.5"
+                            title="Keyboard Shortcuts"
                         >
-                            <kbd class="kbd kbd-xs">?</kbd> for help
-                        </div>
+                            <span class="text-xs">❓</span>
+                            <div
+                                class="flex items-center gap-1 text-[10px] font-mono"
+                            >
+                                <kbd class="kbd kbd-xs">ctrl</kbd> +
+                                <kbd class="kbd kbd-xs">/</kbd>
+                            </div>
+                        </button>
                     </div>
                 </div>
             {/snippet}

@@ -7,7 +7,13 @@
 export { createConfigStore } from "./devtools/createConfigStore.svelte";
 export { createMessageResolver } from "./devtools/message-resolver";
 
+// ── Actions ───────────────────────────────────────────────────────────────────
+export { portal } from "./actions/portal";
+
 // ── UI Components ─────────────────────────────────────────────────────────────
+
+// Core primitives
+export { default as Icon } from "./components/Icon.svelte";
 
 // Core overlays
 export { default as Toaster } from "./devtools/Toaster.svelte";
@@ -37,8 +43,6 @@ export {
   toastStore,
 } from "./state/index";
 
-// ^ Showcase
-// ^ Showcase
 // ^ Showcase
 export { default as AppStateInspector } from "./showcase/AppStateInspector.svelte";
 export { default as ShowcaseMain } from "./showcase/Showcase.svelte";

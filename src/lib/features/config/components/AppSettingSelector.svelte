@@ -34,9 +34,3 @@
         {/each}
     </ul>
 </div>
-
-<!-- <style>
-    @import "daisyui/components/dropdown.css";
-    @import "daisyui/components/menu.css";
-    @import "daisyui/components/button.css";
-</style> -->

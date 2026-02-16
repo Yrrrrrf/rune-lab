@@ -3,9 +3,9 @@ import hotkeys from "hotkeys-js";
 import { untrack } from "svelte";
 
 /**
- * Descriptor for a keyboard shortcut
+ * Metadata for a keyboard shortcut
  */
-export interface ShortcutEntry {
+export interface ShortcutMeta {
   /** Unique dot-namespaced identifier (e.g. "rl:layout:toggle-nav") */
   id: string;
   /** Hotkeys.js-compatible key string (e.g. "ctrl+\\", "alt+down") */
@@ -16,8 +16,6 @@ export interface ShortcutEntry {
   category: string;
   /** When the shortcut is eligible to fire */
   scope: "global" | "layout" | `panel:${string}`;
-  /** The function to execute when the shortcut is triggered */
-  handler: (event: KeyboardEvent) => void;
   /** Whether the shortcut is currently active in the execution engine */
   enabled?: boolean;
   /** Whether to hide the shortcut from the Shortcut Palette */
@@ -25,9 +23,17 @@ export interface ShortcutEntry {
 }
 
 /**
+ * Descriptor for a keyboard shortcut with handler
+ */
+export interface ShortcutEntry extends ShortcutMeta {
+  /** The function to execute when the shortcut is triggered */
+  handler: (event: KeyboardEvent) => void;
+}
+
+/**
  * Built-in layout shortcuts (Work Item B §2.8)
  */
-export const LAYOUT_SHORTCUTS = {
+export const LAYOUT_SHORTCUTS: Record<string, ShortcutMeta> = {
   TOGGLE_NAV: {
     id: "rl:layout:toggle-nav",
     keys: "ctrl+\\",
@@ -107,7 +113,7 @@ export const LAYOUT_SHORTCUTS = {
   },
   OPEN_SHORTCUTS: {
     id: "rl:shortcuts:open",
-    keys: "?",
+    keys: "ctrl+/",
     label: "Show Shortcut Palette",
     category: "Help",
     scope: "global",
@@ -146,20 +152,36 @@ class ShortcutStore {
   /** All registered shortcuts */
   entries = $state<ShortcutEntry[]>([]);
 
+  /** Whether the shortcut palette is currently visible */
+  showPalette = $state(false);
+
   /** Subset of shortcuts that should be displayed in the palette */
   active = $derived(
     this.entries.filter((e) => e.enabled !== false && !e.hidden),
   );
 
-  /** Grouped entries for display */
-  byScope = $derived.by(() => {
-    const groups: Record<string, ShortcutEntry[]> = {};
+  /** Grouped entries for display (scope -> category -> entries) */
+  byScopeAndCategory = $derived.by(() => {
+    const groups: Record<string, Record<string, ShortcutEntry[]>> = {};
     for (const entry of this.active) {
       const scope = entry.scope;
-      if (!groups[scope]) groups[scope] = [];
-      groups[scope].push(entry);
+      const category = entry.category;
+      if (!groups[scope]) groups[scope] = {};
+      if (!groups[scope][category]) groups[scope][category] = [];
+      groups[scope][category].push(entry);
     }
     return groups;
+  });
+
+  /** Scopes sorted by importance (global first, then layout, then alphabetical) */
+  sortedScopes = $derived.by(() => {
+    return Object.keys(this.byScopeAndCategory).sort((a, b) => {
+      if (a === "global") return -1;
+      if (b === "global") return 1;
+      if (a === "layout") return -1;
+      if (b === "layout") return 1;
+      return a.localeCompare(b);
+    });
   });
 
   /**

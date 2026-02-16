@@ -66,7 +66,3 @@
         </div>
     </div>
 </div>
-<!-- 
-<style>
-    @import "daisyui/components/card.css";
-</style> -->

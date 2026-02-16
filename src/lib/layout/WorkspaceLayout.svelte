@@ -24,12 +24,18 @@
 
         // Register default layout shortcuts
         const shortcuts = [
-            { ...LAYOUT_SHORTCUTS.TOGGLE_NAV, handler: () => layoutStore.toggleNav() },
-            { ...LAYOUT_SHORTCUTS.TOGGLE_DETAIL, handler: () => layoutStore.toggleDetail() },
+            {
+                ...LAYOUT_SHORTCUTS.TOGGLE_NAV,
+                handler: () => layoutStore.toggleNav(),
+            },
+            {
+                ...LAYOUT_SHORTCUTS.TOGGLE_DETAIL,
+                handler: () => layoutStore.toggleDetail(),
+            },
         ];
 
         for (const s of shortcuts) {
-            shortcutStore.register(s as any);
+            shortcutStore.register(s);
         }
 
         return () => {

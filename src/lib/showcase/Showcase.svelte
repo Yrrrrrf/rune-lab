@@ -21,10 +21,6 @@
 <section
   class="w-full max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom duration-1000"
 >
-  <div class="text-center space-y-2">
-    <h2 class="text-4xl font-black tracking-tight">DaisyUI 5 Showcase</h2>
-  </div>
-
   <div role="tablist" class="tabs tabs-box tabs-lg bg-base-200 p-2 rounded-2xl">
     {#each tabs as tab, i (tab.label)}
       <button

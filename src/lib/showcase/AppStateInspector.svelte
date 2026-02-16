@@ -79,11 +79,11 @@
     <div class="flex flex-col gap-2 px-4">
         <h2 class="text-3xl font-black tracking-tight flex items-center gap-3">
             <span class="p-2 bg-primary/10 rounded-xl">🔍</span>
-            {t(m.live_store_dashboard(), "Live Store Dashboard")}
+            {t(m.live_store_dashboard, "Live Store Dashboard")}
         </h2>
         <p class="text-base-content/50 font-medium">
             {t(
-                m.real_time_monitor_desc(),
+                m.real_time_monitor_desc,
                 "Real-time reactive state monitor for Rune Lab stores",
             )}
         </p>
@@ -97,7 +97,7 @@
             <div
                 class="stat-title uppercase text-[10px] font-bold tracking-widest opacity-60"
             >
-                {(m.api_status(), "API Status")}
+                {t(m.api_status, "API Status")}
             </div>
             <div
                 class="stat-value capitalize {getStatusClass(
@@ -117,13 +117,13 @@
             <div
                 class="stat-title uppercase text-[10px] font-bold tracking-widest opacity-60"
             >
-                {t(m.active_toasts(), "Active Toasts")}
+                {t(m.active_toasts, "Active Toasts")}
             </div>
             <div class="stat-value text-2xl">
                 {appConfig.toast.toasts.length}
             </div>
             <div class="stat-desc font-mono text-[10px] opacity-50">
-                {t(m.currently_in_queue(), "Currently in queue")}
+                {t(m.currently_in_queue, "Currently in queue")}
             </div>
         </div>
 
@@ -131,13 +131,13 @@
             <div
                 class="stat-title uppercase text-[10px] font-bold tracking-widest opacity-60"
             >
-                {t(m.commands_label(), "Commands")}
+                {t(m.commands_label, "Commands")}
             </div>
             <div class="stat-value text-2xl">
                 {appConfig.commands.commands.length}
             </div>
             <div class="stat-desc font-mono text-[10px] opacity-50">
-                {t(m.registered_in_registry(), "Registered in registry")}
+                {t(m.registered_in_registry, "Registered in registry")}
             </div>
         </div>
     </div>
@@ -149,7 +149,3 @@
         {/each}
     </div>
 </div>
-<!-- 
-<style>
-    @import "daisyui/components/stat.css";
-</style> -->

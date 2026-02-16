@@ -65,8 +65,3 @@
         </div>
     {/if}
 </div>
-<!-- 
-<style>
-    @import "daisyui/components/divider.css";
-    @import "daisyui/components/badge.css";
-</style> -->

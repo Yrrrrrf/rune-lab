@@ -157,9 +157,3 @@
         </button>
     </div>
 </div>
-<!-- 
-<style>
-    @import "daisyui/components/status.css";
-    @import "daisyui/components/badge.css";
-    @import "daisyui/components/button.css";
-</style> -->
