@@ -6,6 +6,7 @@
         LAYOUT_SHORTCUTS,
         type ShortcutEntry,
     } from "$lib/state/shortcuts.svelte";
+    import { appStore } from "$lib/state/app.svelte";
     import { Icon } from "$lib/index";
 
     let dialog = $state<HTMLDialogElement>();
@@ -225,7 +226,7 @@
                     <kbd class="kbd kbd-xs">/</kbd> to open help</span
                 >
             </div>
-            <div>rune-lab v0.0.19</div>
+            <div>rune-lab v{appStore.version}</div>
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">

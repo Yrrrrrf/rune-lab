@@ -32,6 +32,11 @@
                 ...LAYOUT_SHORTCUTS.TOGGLE_DETAIL,
                 handler: () => layoutStore.toggleDetail(),
             },
+            // Workspace shortcuts (ctrl+1 to ctrl+9)
+            ...Array.from({ length: 9 }, (_, i) => ({
+                ...(LAYOUT_SHORTCUTS as any)[`WORKSPACE_${i + 1}`],
+                handler: () => layoutStore.activateWorkspaceByIndex(i),
+            })),
         ];
 
         for (const s of shortcuts) {
@@ -41,6 +46,9 @@
         return () => {
             shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_NAV.id);
             shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_DETAIL.id);
+            for (let i = 1; i <= 9; i++) {
+                shortcutStore.unregister((LAYOUT_SHORTCUTS as any)[`WORKSPACE_${i}`].id);
+            }
         };
     });
 </script>

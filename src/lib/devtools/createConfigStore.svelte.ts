@@ -45,9 +45,12 @@ export function createConfigStore<T extends ConfigItem>(
           this.current = saved as T[typeof idKey];
         }
       }
-      console.log(`${icon} ${displayName} configured:`, {
-        current: this.current,
-      });
+
+      if (import.meta.env?.DEV) {
+        console.log(`${icon} ${displayName} configured:`, {
+          current: this.current,
+        });
+      }
     }
 
     /**

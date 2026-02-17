@@ -176,7 +176,7 @@
                                     {/if}
                                     <div class="flex flex-col items-start">
                                         <span class="font-medium"
-                                            >{cmd.title}</span
+                                            >{cmd.label}</span
                                         >
                                         {#if cmd.category}
                                             <span class="text-xs opacity-70"

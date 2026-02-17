@@ -31,9 +31,9 @@ export interface ShortcutEntry extends ShortcutMeta {
 }
 
 /**
- * Built-in layout shortcuts (Work Item B §2.8)
+ * Built-in layout shortcuts
  */
-export const LAYOUT_SHORTCUTS: Record<string, ShortcutMeta> = {
+export const LAYOUT_SHORTCUTS = {
   TOGGLE_NAV: {
     id: "rl:layout:toggle-nav",
     keys: "ctrl+\\",
@@ -48,69 +48,18 @@ export const LAYOUT_SHORTCUTS: Record<string, ShortcutMeta> = {
     category: "Layout",
     scope: "global",
   },
-  WORKSPACE_1: {
-    id: "rl:layout:workspace-1",
-    keys: "ctrl+1",
-    label: "Jump to Workspace 1",
-    category: "Navigation",
-    scope: "global",
-  },
-  WORKSPACE_2: {
-    id: "rl:layout:workspace-2",
-    keys: "ctrl+2",
-    label: "Jump to Workspace 2",
-    category: "Navigation",
-    scope: "global",
-  },
-  WORKSPACE_3: {
-    id: "rl:layout:workspace-3",
-    keys: "ctrl+3",
-    label: "Jump to Workspace 3",
-    category: "Navigation",
-    scope: "global",
-  },
-  WORKSPACE_4: {
-    id: "rl:layout:workspace-4",
-    keys: "ctrl+4",
-    label: "Jump to Workspace 4",
-    category: "Navigation",
-    scope: "global",
-  },
-  WORKSPACE_5: {
-    id: "rl:layout:workspace-5",
-    keys: "ctrl+5",
-    label: "Jump to Workspace 5",
-    category: "Navigation",
-    scope: "global",
-  },
-  WORKSPACE_6: {
-    id: "rl:layout:workspace-6",
-    keys: "ctrl+6",
-    label: "Jump to Workspace 6",
-    category: "Navigation",
-    scope: "global",
-  },
-  WORKSPACE_7: {
-    id: "rl:layout:workspace-7",
-    keys: "ctrl+7",
-    label: "Jump to Workspace 7",
-    category: "Navigation",
-    scope: "global",
-  },
-  WORKSPACE_8: {
-    id: "rl:layout:workspace-8",
-    keys: "ctrl+8",
-    label: "Jump to Workspace 8",
-    category: "Navigation",
-    scope: "global",
-  },
-  WORKSPACE_9: {
-    id: "rl:layout:workspace-9",
-    keys: "ctrl+9",
-    label: "Jump to Workspace 9",
-    category: "Navigation",
-    scope: "global",
-  },
+  ...Object.fromEntries(
+    Array.from({ length: 9 }, (_, i) => [
+      `WORKSPACE_${i + 1}`,
+      {
+        id: `rl:layout:workspace-${i + 1}`,
+        keys: `ctrl+${i + 1}`,
+        label: `Jump to Workspace ${i + 1}`,
+        category: "Navigation",
+        scope: "global",
+      },
+    ]),
+  ),
   OPEN_SHORTCUTS: {
     id: "rl:shortcuts:open",
     keys: "ctrl+/",

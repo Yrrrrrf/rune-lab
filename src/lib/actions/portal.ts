@@ -6,6 +6,7 @@ export function portal(
   target: string | HTMLElement = "body",
 ) {
   let targetNode: HTMLElement | null;
+  let isTeleported = false;
 
   function update(newTarget: string | HTMLElement) {
     if (typeof newTarget === "string") {
@@ -16,6 +17,7 @@ export function portal(
 
     if (targetNode) {
       targetNode.appendChild(node);
+      isTeleported = true;
     }
   }
 
@@ -24,7 +26,7 @@ export function portal(
   return {
     update,
     destroy() {
-      if (node.parentNode) {
+      if (isTeleported && node.parentNode) {
         node.parentNode.removeChild(node);
       }
     },

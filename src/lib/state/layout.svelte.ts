@@ -27,6 +27,7 @@ export interface NavigationSection {
 }
 
 class LayoutStore {
+  workspaces = $state<WorkspaceItem[]>([]);
   activeWorkspaceId = $state<string | null>(null);
   activeNavItemId = $state<string | null>(null);
   activeShowcaseTab = $state<number>(0);
@@ -81,8 +82,27 @@ class LayoutStore {
     });
   }
 
+  setWorkspaces(items: WorkspaceItem[]) {
+    this.workspaces = items;
+    if (items.length > 0 && !this.activeWorkspaceId) {
+      this.activeWorkspaceId = items[0].id;
+    }
+  }
+
   activateWorkspace(id: string) {
     this.activeWorkspaceId = id;
+  }
+
+  activateWorkspaceByIndex(index: number) {
+    const ws = this.workspaces[index];
+    if (ws) {
+      this.activateWorkspace(ws.id);
+      ws.onClick?.();
+    }
+  }
+
+  navigate(id: string) {
+    this.activeNavItemId = id;
   }
 
   setShowcaseTab(index: number) {

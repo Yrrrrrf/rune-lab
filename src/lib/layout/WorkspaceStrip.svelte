@@ -8,6 +8,10 @@
         globalActions?: Snippet;
     }>();
 
+    $effect(() => {
+        layoutStore.setWorkspaces(items);
+    });
+
     function handleWorkspaceClick(item: WorkspaceItem) {
         layoutStore.activateWorkspace(item.id);
         item.onClick?.();
@@ -23,8 +27,7 @@
                 class:h-10={layoutStore.activeWorkspaceId === item.id}
                 class:h-2={layoutStore.activeWorkspaceId !== item.id}
                 class:opacity-100={layoutStore.activeWorkspaceId === item.id}
-                class:opacity-0={layoutStore.activeWorkspaceId !== item.id &&
-                    !items.find((i: WorkspaceItem) => i.id === item.id)}
+                class:opacity-0={layoutStore.activeWorkspaceId !== item.id}
             ></div>
 
             <button

@@ -1,6 +1,7 @@
 // client/sdk/state/src/config/language.svelte.ts
 
 import { createConfigStore } from "$lib/devtools/createConfigStore.svelte";
+import { setLocale } from "$lib/paraglide/runtime.js";
 
 /**
  * Language configuration
@@ -39,3 +40,13 @@ export const languageStore = createConfigStore<Language>({
   idKey: "code",
   icon: "🌍",
 });
+
+// Sync Paraglide locale with languageStore
+if (typeof window !== "undefined") {
+  $effect.root(() => {
+    $effect(() => {
+      const currentCode = languageStore.current as string;
+      setLocale(currentCode as any);
+    });
+  });
+}
