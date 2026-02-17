@@ -24,7 +24,8 @@
     {#each tabs as tab, i (tab.label)}
       <button
         role="tab"
-        class="tab gap-2 transition-all duration-300 {layoutStore.activeShowcaseTab === i
+        class="tab gap-2 transition-all duration-300 {layoutStore.activeShowcaseTab ===
+        i
           ? 'tab-active shadow-lg'
           : ''}"
         onclick={() => layoutStore.setShowcaseTab(i)}
