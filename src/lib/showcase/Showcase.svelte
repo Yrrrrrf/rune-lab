@@ -1,12 +1,11 @@
 <script lang="ts">
+  import { layoutStore } from "$lib/state/layout.svelte";
   import Actions from "./tabs/Actions.svelte";
   import DataInput from "./tabs/DataInput.svelte";
   import Display from "./tabs/Display.svelte";
   import Navigation from "./tabs/Navigation.svelte";
   import Feedback from "./tabs/Feedback.svelte";
   import Visual from "./tabs/Visual.svelte";
-
-  let activeTab = $state(0);
 
   const tabs = [
     { label: "Actions", icon: "⚡", component: Actions },
@@ -25,10 +24,10 @@
     {#each tabs as tab, i (tab.label)}
       <button
         role="tab"
-        class="tab gap-2 transition-all duration-300 {activeTab === i
+        class="tab gap-2 transition-all duration-300 {layoutStore.activeShowcaseTab === i
           ? 'tab-active shadow-lg'
           : ''}"
-        onclick={() => (activeTab = i)}
+        onclick={() => layoutStore.setShowcaseTab(i)}
       >
         <span class="text-xl">{tab.icon}</span>
         <span class="hidden md:inline font-bold">{tab.label}</span>
@@ -40,7 +39,7 @@
     class="min-h-[600px] bg-base-200/50 rounded-3xl border border-base-content/5 overflow-hidden"
   >
     {#each tabs as tab, i (tab.label)}
-      {#if activeTab === i}
+      {#if layoutStore.activeShowcaseTab === i}
         <div class="animate-in fade-in zoom-in-95 duration-500">
           <tab.component />
         </div>

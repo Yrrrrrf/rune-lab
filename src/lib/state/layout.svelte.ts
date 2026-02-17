@@ -29,6 +29,7 @@ export interface NavigationSection {
 class LayoutStore {
   activeWorkspaceId = $state<string | null>(null);
   activeNavItemId = $state<string | null>(null);
+  activeShowcaseTab = $state<number>(0);
   navOpen = $state(true);
   detailOpen = $state(false);
   collapsedSections = $state<Set<string>>(new Set());
@@ -82,6 +83,10 @@ class LayoutStore {
 
   activateWorkspace(id: string) {
     this.activeWorkspaceId = id;
+  }
+
+  setShowcaseTab(index: number) {
+    this.activeShowcaseTab = index;
   }
 
   toggleNav() {

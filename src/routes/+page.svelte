@@ -18,6 +18,9 @@
 
     import AppStateInspector from "$lib/showcase/AppStateInspector.svelte";
     import Showcase from "$lib/showcase/Showcase.svelte";
+    import DashboardPanel from "$lib/features/detail-panels/DashboardPanel.svelte";
+    import ShowcasePanel from "$lib/features/detail-panels/ShowcasePanel.svelte";
+    import ShortcutsPanel from "$lib/features/detail-panels/ShortcutsPanel.svelte";
 
     import { onMount } from "svelte";
     import { locales } from "$lib/paraglide/runtime";
@@ -273,44 +276,44 @@
 
     {#snippet detailPanel()}
         <DetailPanel>
-            <div class="space-y-6">
-                <h3 class="text-lg font-bold">Contextual Info</h3>
-                <div class="p-4 bg-base-200 rounded-xl space-y-2">
-                    <p class="text-sm font-medium">Layout Stats</p>
-                    <ul class="text-xs space-y-1 opacity-70">
-                        <li>
-                            Nav Panel: {layoutStore.navOpen ? "Open" : "Closed"}
-                        </li>
-                        <li>
-                            Detail Panel: {layoutStore.detailOpen
-                                ? "Open"
-                                : "Closed"}
-                        </li>
-                        <li>
-                            Active Workspace: {layoutStore.activeWorkspaceId ||
-                                "None"}
-                        </li>
-                        <li>
-                            Active View: {layoutStore.activeNavItemId || "None"}
-                        </li>
-                        <li>
-                            Collapsed Sections: {layoutStore.collapsedSections
-                                .size}
-                        </li>
-                    </ul>
-                </div>
-
-                <div
-                    class="p-4 border border-base-content/5 rounded-xl space-y-2"
-                >
-                    <p class="text-sm font-medium">Keyboard Shortcuts</p>
-                    <div class="flex flex-wrap gap-2">
-                        <kbd class="kbd kbd-sm">?</kbd>
-                        <kbd class="kbd kbd-sm">ctrl + \</kbd>
-                        <kbd class="kbd kbd-sm">ctrl + k</kbd>
+            {#if layoutStore.activeNavItemId === "dashboard"}
+                <DashboardPanel />
+            {:else if layoutStore.activeNavItemId === "showcase"}
+                <ShowcasePanel />
+            {:else if layoutStore.activeNavItemId === "shortcuts-demo"}
+                <ShortcutsPanel />
+            {:else}
+                <div class="space-y-6">
+                    <h3 class="text-lg font-bold">Contextual Info</h3>
+                    <div class="p-4 bg-base-200 rounded-xl space-y-2">
+                        <p class="text-sm font-medium">Layout Stats</p>
+                        <ul class="text-xs space-y-1 opacity-70">
+                            <li>
+                                Nav Panel: {layoutStore.navOpen
+                                    ? "Open"
+                                    : "Closed"}
+                            </li>
+                            <li>
+                                Detail Panel: {layoutStore.detailOpen
+                                    ? "Open"
+                                    : "Closed"}
+                            </li>
+                            <li>
+                                Active Workspace: {layoutStore.activeWorkspaceId ||
+                                    "None"}
+                            </li>
+                            <li>
+                                Active View: {layoutStore.activeNavItemId ||
+                                    "None"}
+                            </li>
+                            <li>
+                                Collapsed Sections: {layoutStore.collapsedSections
+                                    .size}
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
+            {/if}
         </DetailPanel>
     {/snippet}
 </WorkspaceLayout>
