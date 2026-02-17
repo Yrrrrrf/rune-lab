@@ -221,15 +221,19 @@
             <div class="flex gap-4">
                 <span><kbd class="kbd kbd-xs">ESC</kbd> to close</span>
                 <span
-                    ><kbd class="kbd kbd-xs">ctrl</kbd> + <kbd
-                        class="kbd kbd-xs">/</kbd
-                    > to open help</span
+                    ><kbd class="kbd kbd-xs">ctrl</kbd> +
+                    <kbd class="kbd kbd-xs">/</kbd> to open help</span
                 >
             </div>
             <div>rune-lab v0.0.19</div>
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-        <button onclick={(e) => { e.preventDefault(); close(); }}>close</button>
+        <button
+            onclick={(e) => {
+                e.preventDefault();
+                close();
+            }}>close</button
+        >
     </form>
 </dialog>

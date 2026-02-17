@@ -60,16 +60,18 @@ bun install rune-lab
 
 ## Project Configuration
 
-### Deno / SSR projects
+After installing, two configuration steps are required to ensure components are
+compiled and styled correctly in your consuming project.
 
-Because Deno's Vite SSR module runner externalizes `node_modules` by default,
+### Step 1 — Vite: process `rune-lab` through the Svelte compiler
+
+Vite's SSR module runner externalizes `node_modules` by default, which means
 `.svelte` files from this package would be loaded as raw ES modules, bypassing
-the Svelte compiler. To prevent this, you need to tell Vite to process
-`rune-lab` through its plugin pipeline.
-
-Add the following to your consuming project's `vite.config.ts`:
+the Svelte compiler entirely. Add the following to your `vite.config.ts` to
+force Vite to process `rune-lab` through its plugin pipeline:
 
 ```ts
+// vite.config.ts
 export default defineConfig({
   plugins: [sveltekit()],
   ssr: {
@@ -80,6 +82,26 @@ export default defineConfig({
 
 This ensures the Svelte plugin transforms the components correctly during SSR,
 just as it would for your own source files.
+
+### Step 2 — Tailwind CSS: scan `rune-lab` for utility classes
+
+Tailwind only generates CSS for the classes it can find by scanning your source
+files. Because `rune-lab` lives in `node_modules`, its DaisyUI classes are not
+scanned by default and the components will appear unstyled.
+
+Add a `@source` directive to your project's main CSS file to tell Tailwind to
+also scan the `rune-lab` dist output:
+
+```css
+/* app.css / layout.css / global.css — wherever you import Tailwind */
+@import "tailwindcss";
+@source "../node_modules/rune-lab/dist"; /* 👈 add this */
+```
+
+> **Note:** Adjust the relative path to `node_modules` if your CSS file lives at
+> a different depth in your project tree. With both steps in place, all DaisyUI
+> component classes used by `rune-lab` will be included in your build and theme
+> switching will work across library components and your own code alike.
 
 ## License
 
