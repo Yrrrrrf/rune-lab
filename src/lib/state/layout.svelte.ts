@@ -1,4 +1,5 @@
 // src/lib/state/layout.svelte.ts
+import { getContext } from "svelte";
 
 export interface WorkspaceItem {
   id: string;
@@ -26,7 +27,7 @@ export interface NavigationSection {
   items: NavigationItem[];
 }
 
-class LayoutStore {
+export class LayoutStore {
   workspaces = $state<WorkspaceItem[]>([]);
   activeWorkspaceId = $state<string | null>(null);
   activeNavItemId = $state<string | null>(null);
@@ -134,4 +135,10 @@ class LayoutStore {
   }
 }
 
-export const layoutStore = new LayoutStore();
+export function createLayoutStore() {
+  return new LayoutStore();
+}
+
+export function getLayoutStore() {
+  return getContext<LayoutStore>("rl:layout");
+}

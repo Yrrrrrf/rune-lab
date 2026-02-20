@@ -1,5 +1,8 @@
 <script lang="ts">
-    import { layoutStore } from "$lib/state/layout.svelte";
+    import { getLayoutStore } from "$lib/state/layout.svelte";
+
+    const layoutStore = getLayoutStore();
+
     import { toastStore } from "$lib/state/toast.svelte";
     import {
         SHOWCASE_COMPONENTS,
@@ -31,7 +34,9 @@
 
 <div class="space-y-8 animate-in fade-in duration-500">
     <header>
-        <h3 class="text-lg font-bold capitalize">{currentTabId.replace("-", " ")}</h3>
+        <h3 class="text-lg font-bold capitalize">
+            {currentTabId.replace("-", " ")}
+        </h3>
         <p class="text-xs opacity-50">Component reference</p>
     </header>
 
@@ -71,8 +76,12 @@
                 <tbody>
                     {#each components as comp}
                         <tr>
-                            <td class="font-mono text-primary">.{comp.className}</td>
-                            <td class="text-[10px] opacity-70">{comp.description}</td>
+                            <td class="font-mono text-primary"
+                                >.{comp.className}</td
+                            >
+                            <td class="text-[10px] opacity-70"
+                                >{comp.description}</td
+                            >
                         </tr>
                     {/each}
                 </tbody>
@@ -83,7 +92,9 @@
     <!-- Section 3: Snippet Generator -->
     <section class="space-y-3">
         <div class="flex items-center justify-between">
-            <h4 class="text-[10px] font-black uppercase tracking-widest opacity-40">
+            <h4
+                class="text-[10px] font-black uppercase tracking-widest opacity-40"
+            >
                 Markup
             </h4>
             <button

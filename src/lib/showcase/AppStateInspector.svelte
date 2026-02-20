@@ -1,7 +1,17 @@
 <script lang="ts">
-    import { appConfig } from "$lib/config";
     import * as m from "$lib/paraglide/messages.js";
     import StoreDetailCard from "./StoreDetailCard.svelte";
+    import { getAppStore } from "$lib/state/app.svelte";
+    import { apiStore } from "$lib/state/api.svelte";
+    import { themeStore } from "$lib/state/theme.svelte";
+    import { languageStore } from "$lib/state/language.svelte";
+    import { currencyStore } from "$lib/state/currency.svelte";
+    import { toastStore } from "$lib/state/toast.svelte";
+    import { getCommandStore } from "$lib/state/commands.svelte";
+
+    // Inject context stores
+    const appStore = getAppStore();
+    const commandStore = getCommandStore();
 
     const storeState = $derived([
         {
@@ -13,12 +23,12 @@
                 {
                     key: "Name",
                     labelKey: "name_label",
-                    value: appConfig.app.name,
+                    value: appStore.name,
                 },
                 {
                     key: "Version",
                     labelKey: "version_label",
-                    value: appConfig.app.version,
+                    value: appStore.version,
                 },
             ],
         },
@@ -31,7 +41,7 @@
                 {
                     key: "Theme",
                     labelKey: "current_theme",
-                    value: `${appConfig.theme.getProp("icon") || ""} ${appConfig.theme.current}`,
+                    value: `${themeStore.getProp("icon") || ""} ${themeStore.current}`,
                 },
             ],
         },
@@ -44,12 +54,12 @@
                 {
                     key: "Language",
                     labelKey: "current_language",
-                    value: `${appConfig.language.getProp("flag") || ""} ${appConfig.language.current}`,
+                    value: `${languageStore.getProp("flag") || ""} ${languageStore.current}`,
                 },
                 {
                     key: "Currency",
                     labelKey: "current_currency",
-                    value: `${appConfig.currency.getProp("symbol") || ""} ${appConfig.currency.current}`,
+                    value: `${currencyStore.getProp("symbol") || ""} ${currencyStore.current}`,
                 },
             ],
         },
@@ -101,15 +111,15 @@
             </div>
             <div
                 class="stat-value capitalize {getStatusClass(
-                    appConfig.api.connectionState,
+                    apiStore.connectionState,
                 )} text-2xl"
             >
-                {appConfig.api.connectionState}
+                {apiStore.connectionState}
             </div>
             <div
                 class="stat-desc font-mono text-[10px] opacity-50 truncate max-w-[200px]"
             >
-                {appConfig.api.URL}
+                {apiStore.URL}
             </div>
         </div>
 
@@ -120,7 +130,7 @@
                 {t(m.active_toasts, "Active Toasts")}
             </div>
             <div class="stat-value text-2xl">
-                {appConfig.toast.toasts.length}
+                {toastStore.toasts.length}
             </div>
             <div class="stat-desc font-mono text-[10px] opacity-50">
                 {t(m.currently_in_queue, "Currently in queue")}
@@ -134,7 +144,7 @@
                 {t(m.commands_label, "Commands")}
             </div>
             <div class="stat-value text-2xl">
-                {appConfig.commands.commands.length}
+                {commandStore.commands.length}
             </div>
             <div class="stat-desc font-mono text-[10px] opacity-50">
                 {t(m.registered_in_registry, "Registered in registry")}

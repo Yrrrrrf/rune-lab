@@ -1,7 +1,12 @@
 <!-- src/lib/layout/WorkspaceStrip.svelte -->
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import { layoutStore, type WorkspaceItem } from "$lib/state/layout.svelte";
+    import {
+        getLayoutStore,
+        type WorkspaceItem,
+    } from "$lib/state/layout.svelte";
+
+    const layoutStore = getLayoutStore();
 
     let { items = [], globalActions } = $props<{
         items: WorkspaceItem[];

@@ -1,7 +1,5 @@
 // src/lib/index.ts
 // Public surface of rune-lab.
-// Components, devtools utilities, and store types — but NOT appConfig.
-// For the unified config facade see: rune-lab/config  (src/lib/config.ts)
 
 // ── Devtools utilities ────────────────────────────────────────────────────────
 export { createConfigStore } from "./devtools/createConfigStore.svelte";
@@ -30,20 +28,23 @@ export { default as ThemeSelector } from "./features/config/components/ThemeSele
 export { default as LanguageSelector } from "./features/config/components/LanguageSelector.svelte";
 export { default as CurrencySelector } from "./features/config/components/CurrencySelector.svelte";
 
-// ── Stores (individual, for fine-grained imports) ─────────────────────────────
+// ── Stores ────────────────────────────────────────────────────────────────────
 export {
   apiStore,
-  appStore,
-  commandStore,
+  createAppStore,
+  createCommandStore,
+  createLayoutStore,
   currencyStore,
+  getAppStore,
+  getCommandStore,
+  getLayoutStore,
   languageStore,
-  layoutStore,
   shortcutStore,
   themeStore,
   toastStore,
 } from "./state/index";
 
-// ^ Showcase
+// ── Showcase ──────────────────────────────────────────────────────────────────
 export { default as AppStateInspector } from "./showcase/AppStateInspector.svelte";
 export { default as ShowcaseMain } from "./showcase/Showcase.svelte";
 export { default as ShowcaseCard } from "./showcase/ShowcaseCard.svelte";
@@ -61,5 +62,5 @@ export type {
   WorkspaceItem,
 } from "./state/index";
 
-// ── Paraglide compiled messages (re-exported for convenience) ─────────────────
+// ── Paraglide compiled messages ───────────────────────────────────────────────
 export * as sdkMessages from "./paraglide/messages.js";

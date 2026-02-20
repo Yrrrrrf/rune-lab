@@ -6,7 +6,7 @@ export { default as NavigationPanel } from "./NavigationPanel.svelte";
 export { default as ContentArea } from "./ContentArea.svelte";
 export { default as DetailPanel } from "./DetailPanel.svelte";
 
-export { layoutStore } from "$lib/state/layout.svelte";
+export { createLayoutStore, getLayoutStore } from "$lib/state/layout.svelte";
 export type {
   NavigationItem,
   NavigationSection,

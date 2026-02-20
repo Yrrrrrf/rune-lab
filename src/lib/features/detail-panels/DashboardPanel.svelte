@@ -1,13 +1,15 @@
 <script lang="ts">
-    import { appConfig } from "$lib/config";
     import { toastStore } from "$lib/state/toast.svelte";
     import { apiStore } from "$lib/state/api.svelte";
     import { themeStore } from "$lib/state/theme.svelte";
     import { shortcutStore } from "$lib/state/shortcuts.svelte";
-    import { commandStore } from "$lib/state/commands.svelte";
-    import { appStore } from "$lib/state/app.svelte";
+    import { getCommandStore } from "$lib/state/commands.svelte";
+    import { getAppStore } from "$lib/state/app.svelte";
     import { languageStore } from "$lib/state/language.svelte";
     import { currencyStore } from "$lib/state/currency.svelte";
+
+    const appStore = getAppStore();
+    // const commandStore = getCommandStore(); // Unused but available
 
     let beat = $state(false);
     let logs = $state<{ time: string; what: string }[]>([]);
@@ -24,7 +26,7 @@
     );
 
     $effect(() => {
-        stateHash;
+        stateHash; // Subscribe
         beat = true;
         const timer = setTimeout(() => (beat = false), 300);
 
@@ -44,7 +46,9 @@
     // Section 3: Quick-fire actions
     function cycleTheme() {
         const themes = themeStore.available;
-        const currentIndex = themes.findIndex((t) => t.name === themeStore.current);
+        const currentIndex = themes.findIndex(
+            (t) => t.name === themeStore.current,
+        );
         const nextIndex = (currentIndex + 1) % themes.length;
         themeStore.set(themes[nextIndex].name);
     }
@@ -92,8 +96,7 @@
                     </tr>
                     <tr>
                         <td class="opacity-50">Shortcuts</td>
-                        <td class="font-mono"
-                            >{shortcutStore.entries.length}</td
+                        <td class="font-mono">{shortcutStore.entries.length}</td
                         >
                     </tr>
                 </tbody>
@@ -137,16 +140,24 @@
             {#each logs as log, i}
                 <li>
                     {#if i !== 0}<hr class="bg-base-content/10" />{/if}
-                    <div class="timeline-start font-mono text-[10px] opacity-40">
+                    <div
+                        class="timeline-start font-mono text-[10px] opacity-40"
+                    >
                         {log.time}
                     </div>
                     <div class="timeline-middle">
-                        <div class="w-1.5 h-1.5 rounded-full bg-primary/50"></div>
+                        <div
+                            class="w-1.5 h-1.5 rounded-full bg-primary/50"
+                        ></div>
                     </div>
-                    <div class="timeline-end text-[10px] truncate max-w-[160px]">
+                    <div
+                        class="timeline-end text-[10px] truncate max-w-[160px]"
+                    >
                         {log.what}
                     </div>
-                    {#if i !== logs.length - 1}<hr class="bg-base-content/10" />{/if}
+                    {#if i !== logs.length - 1}<hr
+                            class="bg-base-content/10"
+                        />{/if}
                 </li>
             {/each}
         </ul>

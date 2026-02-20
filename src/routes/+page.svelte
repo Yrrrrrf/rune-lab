@@ -10,11 +10,15 @@
         NavigationPanel,
         ContentArea,
         DetailPanel,
-        layoutStore,
+        getLayoutStore,
         shortcutStore,
+        getAppStore,
+        apiStore,
+        toastStore,
     } from "$lib/index.ts";
 
-    import { appConfig } from "$lib/config";
+    const layoutStore = getLayoutStore();
+    const appStore = getAppStore();
 
     import AppStateInspector from "$lib/showcase/AppStateInspector.svelte";
     import Showcase from "$lib/showcase/Showcase.svelte";
@@ -26,13 +30,14 @@
     import { locales } from "$lib/paraglide/runtime";
 
     onMount(() => {
-        appConfig.app.init({
+        appStore.init({
             name: "Rune Lab Explorer",
+
             description: "Testing Svelte 5 Runes abstractions",
             version: "0.0.19",
         });
 
-        appConfig.api.init("https://api.example.com", "v1");
+        apiStore.init("https://api.example.com", "v1");
 
         // Initialize layout state
         if (!layoutStore.activeWorkspaceId)
@@ -47,7 +52,7 @@
             label: "Say Hello",
             category: "Demo",
             scope: "global",
-            handler: () => appConfig.toast.info("Hello from Rune Lab!"),
+            handler: () => toastStore.info("Hello from Rune Lab!"),
         });
     });
 
@@ -197,12 +202,12 @@
                                 <h1
                                     class="text-5xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-primary to-secondary"
                                 >
-                                    {appConfig.app.name}
+                                    {appStore.name}
                                 </h1>
                                 <div class="flex items-center gap-2 mt-2">
                                     <span
                                         class="badge badge-outline border-base-content/20 font-mono text-xs"
-                                        >v{appConfig.app.info.version}</span
+                                        >v{appStore.info.version}</span
                                     >
                                     <span class="badge badge-secondary badge-sm"
                                         >Dashboard</span
@@ -257,7 +262,7 @@
                                         category: "Demo",
                                         scope: "global",
                                         handler: () =>
-                                            appConfig.toast.success(
+                                            toastStore.success(
                                                 "Dynamic shortcut fired!",
                                             ),
                                     })}
@@ -307,8 +312,8 @@
                                     "None"}
                             </li>
                             <li>
-                                Collapsed Sections: {layoutStore.collapsedSections
-                                    .size}
+                                Collapsed Sections: {layoutStore
+                                    .collapsedSections.size}
                             </li>
                         </ul>
                     </div>

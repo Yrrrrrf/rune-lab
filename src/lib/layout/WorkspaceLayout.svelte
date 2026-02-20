@@ -1,24 +1,33 @@
 <!-- src/lib/layout/WorkspaceLayout.svelte -->
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import { layoutStore } from "$lib/state/layout.svelte";
-    import { shortcutStore, shortcutListener, LAYOUT_SHORTCUTS } from "$lib/state/shortcuts.svelte";
-    import { onMount } from "svelte";
+    import { createLayoutStore } from "$lib/state/layout.svelte";
+    import {
+        shortcutStore,
+        shortcutListener,
+        LAYOUT_SHORTCUTS,
+    } from "$lib/state/shortcuts.svelte";
+    import { onMount, setContext } from "svelte";
 
-    let { 
-        workspaceStrip, 
-        navigationPanel, 
-        content, 
+    let {
+        workspaceStrip,
+        navigationPanel,
+        content,
         detailPanel,
-        namespace = "default"
+        namespace = "default",
     } = $props<{
-        workspaceStrip: Snippet;
-        navigationPanel: Snippet;
+        workspaceStrip?: Snippet;
+        navigationPanel?: Snippet;
         content: Snippet;
         detailPanel?: Snippet;
         namespace?: string;
     }>();
 
+    // Initialize layout store for this context
+    const layoutStore = createLayoutStore();
+    setContext("rl:layout", layoutStore);
+
+    // Initial configuration based on props
     onMount(() => {
         layoutStore.init({ namespace });
 
@@ -47,48 +56,70 @@
             shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_NAV.id);
             shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_DETAIL.id);
             for (let i = 1; i <= 9; i++) {
-                shortcutStore.unregister((LAYOUT_SHORTCUTS as any)[`WORKSPACE_${i}`].id);
+                shortcutStore.unregister(
+                    (LAYOUT_SHORTCUTS as any)[`WORKSPACE_${i}`].id,
+                );
             }
         };
     });
 </script>
 
-<div 
-    class="rl-layout h-screen w-screen flex overflow-hidden bg-base-100 text-base-content font-sans"
+<div
+    class="rl-layout h-screen w-screen grid overflow-hidden bg-base-100 text-base-content font-sans"
+    style="
+        grid-template-columns: 
+            {workspaceStrip ? 'var(--rl-strip-width, 72px)' : '0px'} 
+            {navigationPanel && layoutStore.navOpen
+        ? 'var(--rl-nav-width, 240px)'
+        : '0px'} 
+            1fr 
+            {detailPanel && layoutStore.detailOpen
+        ? 'var(--rl-detail-width, 320px)'
+        : '0px'};
+        grid-template-rows: 100%;
+        transition: grid-template-columns 300ms ease-in-out;
+    "
     use:shortcutListener
     data-rl-layout
 >
     <!-- Zone 1: Workspace Strip -->
-    <aside class="rl-strip h-full flex-none overflow-y-auto overflow-x-hidden bg-base-300 flex flex-col items-center py-3 gap-2" style="width: var(--rl-strip-width, 72px)">
-        {@render workspaceStrip()}
+    <aside
+        class="rl-strip h-full overflow-y-auto overflow-x-hidden bg-base-300 flex flex-col items-center py-3 gap-2"
+        class:hidden={!workspaceStrip}
+    >
+        {#if workspaceStrip}
+            {@render workspaceStrip()}
+        {/if}
     </aside>
 
     <!-- Zone 2: Navigation Panel -->
-    <aside 
-        class="rl-nav h-full flex-none bg-base-200 border-r border-base-content/5 transition-all duration-300 ease-in-out overflow-hidden flex flex-col"
-        class:w-0={!layoutStore.navOpen}
-        class:opacity-0={!layoutStore.navOpen}
-        style="width: {layoutStore.navOpen ? 'var(--rl-nav-width, 240px)' : '0'}"
+    <aside
+        class="rl-nav h-full bg-base-200 border-r border-base-content/5 overflow-hidden flex flex-col"
+        class:hidden={!navigationPanel || !layoutStore.navOpen}
         data-rl-panel="navigation"
     >
-        {@render navigationPanel()}
+        {#if navigationPanel}
+            {@render navigationPanel()}
+        {/if}
     </aside>
 
     <!-- Zone 3: Main Content Area -->
-    <main class="rl-content flex-1 h-full min-w-0 bg-base-100 flex flex-col overflow-hidden">
+    <main
+        class="rl-content h-full min-w-0 bg-base-100 flex flex-col overflow-hidden relative"
+    >
         {@render content()}
     </main>
 
     <!-- Zone 4: Detail Panel -->
-    {#if detailPanel && layoutStore.detailOpen}
-        <aside 
-            class="rl-detail h-full flex-none bg-base-100 border-l border-base-content/5 transition-all duration-300 ease-in-out overflow-y-auto"
-            style="width: var(--rl-detail-width, 320px)"
-            data-rl-panel="detail"
-        >
+    <aside
+        class="rl-detail h-full bg-base-100 border-l border-base-content/5 overflow-y-auto"
+        class:hidden={!detailPanel || !layoutStore.detailOpen}
+        data-rl-panel="detail"
+    >
+        {#if detailPanel}
             {@render detailPanel()}
-        </aside>
-    {/if}
+        {/if}
+    </aside>
 </div>
 
 <style>

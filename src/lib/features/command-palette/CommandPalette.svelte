@@ -1,11 +1,13 @@
 <!-- src/client/sdk/ui/src/features/config/CommandPalette.svelte -->
 <script lang="ts">
     import { onMount, tick } from "svelte";
-    import { commandStore, type Command } from "$lib/state/commands.svelte";
+    import { getCommandStore, type Command } from "$lib/state/commands.svelte";
     import { shortcutStore } from "$lib/state/shortcuts.svelte";
     import { Icon } from "$lib/index";
 
     let { shortcutKey = "shift+k" } = $props<{ shortcutKey?: string }>();
+
+    const commandStore = getCommandStore();
 
     let dialog: HTMLDialogElement;
     let input: HTMLInputElement;
@@ -214,6 +216,11 @@
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-        <button onclick={(e) => { e.preventDefault(); isOpen = false; }}>close</button>
+        <button
+            onclick={(e) => {
+                e.preventDefault();
+                isOpen = false;
+            }}>close</button
+        >
     </form>
 </dialog>

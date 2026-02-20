@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { layoutStore } from "$lib/state/layout.svelte";
+  import { getLayoutStore } from "$lib/state/layout.svelte";
+
+  const layoutStore = getLayoutStore();
+
   import Actions from "./tabs/Actions.svelte";
   import DataInput from "./tabs/DataInput.svelte";
   import Display from "./tabs/Display.svelte";

@@ -1,4 +1,6 @@
 // src/lib/stores/app-config.svelte.ts
+import { getContext } from "svelte";
+
 // SDK Package - Application Metadata Management
 
 /**
@@ -18,7 +20,7 @@ export interface AppData {
  * App Store
  * Manages application metadata and identity
  */
-class AppStore {
+export class AppStore {
   // State
   name = $state("Rune Lab");
   version = $state("0.0.1");
@@ -64,4 +66,11 @@ class AppStore {
 }
 
 // Export singleton instance
-export const appStore = new AppStore();
+
+export function createAppStore() {
+  return new AppStore();
+}
+
+export function getAppStore() {
+  return getContext<AppStore>("rl:app");
+}

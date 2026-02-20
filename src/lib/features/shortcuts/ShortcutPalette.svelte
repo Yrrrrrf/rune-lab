@@ -6,8 +6,10 @@
         LAYOUT_SHORTCUTS,
         type ShortcutEntry,
     } from "$lib/state/shortcuts.svelte";
-    import { appStore } from "$lib/state/app.svelte";
+    import { getAppStore } from "$lib/state/app.svelte";
     import { Icon } from "$lib/index";
+
+    const appStore = getAppStore();
 
     let dialog = $state<HTMLDialogElement>();
     let input = $state<HTMLInputElement>();
