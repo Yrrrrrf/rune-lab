@@ -1,4 +1,7 @@
-import { createConfigStore, type ConfigStore } from "$lib/devtools/createConfigStore.svelte";
+import {
+  type ConfigStore,
+  createConfigStore,
+} from "$lib/devtools/createConfigStore.svelte";
 import { getContext } from "svelte";
 
 /**
@@ -34,7 +37,6 @@ export function createCurrencyStore() {
 export function getCurrencyStore() {
   return getContext<ConfigStore<Currency>>("rl:currency");
 }
-
 
 // Usage:
 // currencyStore.set("USD")

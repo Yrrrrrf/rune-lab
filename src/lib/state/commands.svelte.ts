@@ -7,7 +7,6 @@ import type { Theme } from "./theme.svelte";
 import type { Language } from "./language.svelte";
 import type { Currency } from "./currency.svelte";
 
-
 /**
  * Command Palette Store
  */
@@ -37,7 +36,6 @@ export class CommandStore {
     this.#services = services;
     this.refreshDefaultCommands();
   }
-
 
   commands = $state<Command[]>([]);
 
@@ -142,7 +140,6 @@ export class CommandStore {
     ];
   }
 
-
   /**
    * Register a new command
    */
@@ -192,7 +189,6 @@ export class CommandStore {
 export function createCommandStore(services: CommandServices) {
   return new CommandStore(services);
 }
-
 
 export function getCommandStore() {
   return getContext<CommandStore>("rl:commands");

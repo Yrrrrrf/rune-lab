@@ -4,7 +4,6 @@
 export type ToastType = "info" | "success" | "warning" | "error";
 import { getContext } from "svelte";
 
-
 export interface Toast {
   id: string;
   message: string;
@@ -12,9 +11,7 @@ export interface Toast {
   duration?: number;
 }
 
-
 export class ToastStore {
-
   toasts = $state<Toast[]>([]);
 
   /**
@@ -62,4 +59,3 @@ export function createToastStore() {
 export function getToastStore() {
   return getContext<ToastStore>("rl:toast");
 }
-

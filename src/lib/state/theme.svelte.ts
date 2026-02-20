@@ -1,6 +1,9 @@
 // client/packages/ui/src/state/theme-config.svelte.ts
 
-import { createConfigStore, type ConfigStore } from "$lib/devtools/createConfigStore.svelte";
+import {
+  type ConfigStore,
+  createConfigStore,
+} from "$lib/devtools/createConfigStore.svelte";
 import { getContext } from "svelte";
 
 import themeOrder from "daisyui/functions/themeOrder.js"; // has its own .d.ts
@@ -68,7 +71,6 @@ export function createThemeStore() {
 export function getThemeStore() {
   return getContext<ConfigStore<Theme>>("rl:theme");
 }
-
 
 // Usage:
 // themeStore.set("dark")

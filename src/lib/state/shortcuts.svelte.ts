@@ -1,7 +1,5 @@
 import hotkeys from "hotkeys-js";
-import { untrack, getContext } from "svelte";
-
-
+import { getContext, untrack } from "svelte";
 
 /**
  * Metadata for a keyboard shortcut
@@ -99,7 +97,6 @@ export const LAYOUT_SHORTCUTS = {
 } as const;
 
 export class ShortcutStore {
-
   /** All registered shortcuts */
   entries = $state<ShortcutEntry[]>([]);
 
@@ -163,7 +160,7 @@ export class ShortcutStore {
       if (collision && import.meta.env?.DEV) {
         console.warn(
           `[ShortcutStore] Collision detected for keys "${entry.keys}" in scope "${entry.scope}". ` +
-          `ID "${entry.id}" will displace "${collision.id}".`,
+            `ID "${entry.id}" will displace "${collision.id}".`,
         );
       }
 
@@ -227,7 +224,6 @@ export function shortcutListener(
       // We read entries here, so this effect re-runs when entries change.
       // That's exactly what we want.
       for (const entry of shortcutStore.entries) {
-
         if (entry.enabled === false) continue;
 
         hotkeys(entry.keys, "all", (event, handler) => {
@@ -286,4 +282,3 @@ export function createShortcutStore() {
 export function getShortcutStore() {
   return getContext<ShortcutStore>("rl:shortcut");
 }
-

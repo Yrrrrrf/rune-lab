@@ -4,10 +4,7 @@
 export type ConnectionState = "connected" | "connecting" | "disconnected";
 import { getContext } from "svelte";
 
-
-
 export class ApiStore {
-
   // State
   url = $state("http://localhost:8000");
   version = $state("v1");
@@ -63,4 +60,3 @@ export function createApiStore() {
 export function getApiStore() {
   return getContext<ApiStore>("rl:api");
 }
-

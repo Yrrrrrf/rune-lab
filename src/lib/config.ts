@@ -20,16 +20,15 @@ export {
 // These stores are factories now
 export {
   createApiStore,
-  getApiStore,
   createCurrencyStore,
-  getCurrencyStore,
   createLanguageStore,
-  getLanguageStore,
-  createThemeStore,
-  getThemeStore,
-  createToastStore,
-  getToastStore,
   createShortcutStore,
+  createThemeStore,
+  createToastStore,
+  getApiStore,
+  getCurrencyStore,
+  getLanguageStore,
   getShortcutStore,
+  getThemeStore,
+  getToastStore,
 } from "./state/index";
-

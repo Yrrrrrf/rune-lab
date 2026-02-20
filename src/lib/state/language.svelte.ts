@@ -1,9 +1,11 @@
 // client/sdk/state/src/config/language.svelte.ts
 
-import { createConfigStore, type ConfigStore } from "$lib/devtools/createConfigStore.svelte";
+import {
+  type ConfigStore,
+  createConfigStore,
+} from "$lib/devtools/createConfigStore.svelte";
 import { setLocale } from "$lib/paraglide/runtime.js";
 import { getContext } from "svelte";
-
 
 /**
  * Language configuration
@@ -60,4 +62,3 @@ export function createLanguageStore() {
 export function getLanguageStore() {
   return getContext<ConfigStore<Language>>("rl:language");
 }
-

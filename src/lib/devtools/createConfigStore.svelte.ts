@@ -8,7 +8,6 @@ export type ConfigStore<T extends ConfigItem> = {
   getProp: <K extends keyof T>(prop: K, id?: T[keyof T]) => T[K] | undefined;
 };
 
-
 /**
  * Generic configuration store factory
  * Creates type-safe stores for theme, language, currency, etc.
@@ -96,4 +95,3 @@ export function createConfigStore<T extends ConfigItem>(
 
   return new ConfigStore();
 }
-
