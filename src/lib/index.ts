@@ -11,7 +11,9 @@ export { portal } from "./actions/portal";
 // ── UI Components ─────────────────────────────────────────────────────────────
 
 // Core primitives
+export { default as RuneProvider } from "./components/RuneProvider.svelte";
 export { default as Icon } from "./components/Icon.svelte";
+
 
 // Core overlays
 export { default as Toaster } from "./devtools/Toaster.svelte";
@@ -30,18 +32,24 @@ export { default as CurrencySelector } from "./features/config/components/Curren
 
 // ── Stores ────────────────────────────────────────────────────────────────────
 export {
-  apiStore,
+  createApiStore,
+  getApiStore,
   createAppStore,
-  createCommandStore,
-  createLayoutStore,
-  currencyStore,
   getAppStore,
+  createCommandStore,
   getCommandStore,
+  createCurrencyStore,
+  getCurrencyStore,
+  createLanguageStore,
+  getLanguageStore,
+  createLayoutStore,
   getLayoutStore,
-  languageStore,
-  shortcutStore,
-  themeStore,
-  toastStore,
+  createShortcutStore,
+  getShortcutStore,
+  createThemeStore,
+  getThemeStore,
+  createToastStore,
+  getToastStore,
 } from "./state/index";
 
 // ── Showcase ──────────────────────────────────────────────────────────────────

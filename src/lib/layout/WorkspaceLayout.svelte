@@ -1,9 +1,12 @@
 <!-- src/lib/layout/WorkspaceLayout.svelte -->
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import { createLayoutStore } from "$lib/state/layout.svelte";
     import {
-        shortcutStore,
+        createLayoutStore,
+        getLayoutStore,
+    } from "$lib/state/layout.svelte";
+    import {
+        getShortcutStore,
         shortcutListener,
         LAYOUT_SHORTCUTS,
     } from "$lib/state/shortcuts.svelte";
@@ -23,9 +26,9 @@
         namespace?: string;
     }>();
 
-    // Initialize layout store for this context
-    const layoutStore = createLayoutStore();
-    setContext("rl:layout", layoutStore);
+    // Consume layout store from context (provided by RuneProvider)
+    const layoutStore = getLayoutStore();
+    const shortcutStore = getShortcutStore();
 
     // Initial configuration based on props
     onMount(() => {
@@ -79,7 +82,7 @@
         grid-template-rows: 100%;
         transition: grid-template-columns 300ms ease-in-out;
     "
-    use:shortcutListener
+    use:shortcutListener={shortcutStore}
     data-rl-layout
 >
     <!-- Zone 1: Workspace Strip -->

@@ -1,5 +1,14 @@
 // client/sdk/devtools/src/patterns/createConfigStore.svelte.ts
 
+export type ConfigStore<T extends ConfigItem> = {
+  current: T[keyof T];
+  available: T[];
+  set: (id: T[keyof T]) => void;
+  get: (id: T[keyof T]) => T | undefined;
+  getProp: <K extends keyof T>(prop: K, id?: T[keyof T]) => T[K] | undefined;
+};
+
+
 /**
  * Generic configuration store factory
  * Creates type-safe stores for theme, language, currency, etc.
@@ -87,3 +96,4 @@ export function createConfigStore<T extends ConfigItem>(
 
   return new ConfigStore();
 }
+

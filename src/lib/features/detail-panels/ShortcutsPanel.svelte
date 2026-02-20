@@ -1,6 +1,8 @@
 <script lang="ts">
-    import { shortcutStore } from "$lib/state/shortcuts.svelte";
+    import { getShortcutStore } from "$lib/state/shortcuts.svelte";
     import { Icon } from "$lib/index";
+
+    const shortcutStore = getShortcutStore();
 
     // Section 2: Conflict detector
     const conflicts = $derived.by(() => {

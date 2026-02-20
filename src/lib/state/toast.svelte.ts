@@ -2,6 +2,8 @@
  * Toast notification store
  */
 export type ToastType = "info" | "success" | "warning" | "error";
+import { getContext } from "svelte";
+
 
 export interface Toast {
   id: string;
@@ -10,7 +12,9 @@ export interface Toast {
   duration?: number;
 }
 
-class ToastStore {
+
+export class ToastStore {
+
   toasts = $state<Toast[]>([]);
 
   /**
@@ -51,4 +55,11 @@ class ToastStore {
   }
 }
 
-export const toastStore = new ToastStore();
+export function createToastStore() {
+  return new ToastStore();
+}
+
+export function getToastStore() {
+  return getContext<ToastStore>("rl:toast");
+}
+

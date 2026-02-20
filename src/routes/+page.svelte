@@ -11,14 +11,17 @@
         ContentArea,
         DetailPanel,
         getLayoutStore,
-        shortcutStore,
         getAppStore,
-        apiStore,
-        toastStore,
+        getApiStore,
+        getToastStore,
+        getShortcutStore,
     } from "$lib/index.ts";
 
     const layoutStore = getLayoutStore();
     const appStore = getAppStore();
+    const apiStore = getApiStore();
+    const toastStore = getToastStore();
+    const shortcutStore = getShortcutStore();
 
     import AppStateInspector from "$lib/showcase/AppStateInspector.svelte";
     import Showcase from "$lib/showcase/Showcase.svelte";
@@ -324,4 +327,3 @@
 </WorkspaceLayout>
 
 <ApiMonitor />
-<Toaster />

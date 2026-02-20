@@ -2,7 +2,7 @@
 <script lang="ts">
     import { onMount, tick } from "svelte";
     import {
-        shortcutStore,
+        getShortcutStore,
         LAYOUT_SHORTCUTS,
         type ShortcutEntry,
     } from "$lib/state/shortcuts.svelte";
@@ -10,6 +10,7 @@
     import { Icon } from "$lib/index";
 
     const appStore = getAppStore();
+    const shortcutStore = getShortcutStore();
 
     let dialog = $state<HTMLDialogElement>();
     let input = $state<HTMLInputElement>();

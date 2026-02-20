@@ -1,6 +1,12 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
-    import { currencyStore, type Currency } from "$lib/state/currency.svelte";
+    import {
+        getCurrencyStore,
+        type Currency,
+    } from "$lib/state/currency.svelte";
+
+    const currencyStore = getCurrencyStore();
+
     import * as m from "../../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
@@ -15,14 +21,14 @@
     );
 
     let available = $derived(
-        codes.length > 0 
-            ? currencyStore.available.filter(c => codes.includes(c.code))
-            : currencyStore.available
+        codes.length > 0
+            ? currencyStore.available.filter((c) => codes.includes(c.code))
+            : currencyStore.available,
     );
 </script>
 
-<AppSettingSelector 
-    value={active} 
+<AppSettingSelector
+    value={active}
     options={available}
     tooltip={getLabel(active)}
 >

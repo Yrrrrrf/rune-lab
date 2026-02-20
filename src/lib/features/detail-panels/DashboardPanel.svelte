@@ -1,15 +1,21 @@
 <script lang="ts">
-    import { toastStore } from "$lib/state/toast.svelte";
-    import { apiStore } from "$lib/state/api.svelte";
-    import { themeStore } from "$lib/state/theme.svelte";
-    import { shortcutStore } from "$lib/state/shortcuts.svelte";
-    import { getCommandStore } from "$lib/state/commands.svelte";
+    import { getToastStore } from "$lib/state/toast.svelte";
+
+    import { getApiStore } from "$lib/state/api.svelte";
+    import { getThemeStore } from "$lib/state/theme.svelte";
+    import { getShortcutStore } from "$lib/state/shortcuts.svelte";
+    // import { getCommandStore } from "$lib/state/commands.svelte";
     import { getAppStore } from "$lib/state/app.svelte";
-    import { languageStore } from "$lib/state/language.svelte";
-    import { currencyStore } from "$lib/state/currency.svelte";
+    import { getLanguageStore } from "$lib/state/language.svelte";
+    import { getCurrencyStore } from "$lib/state/currency.svelte";
 
     const appStore = getAppStore();
-    // const commandStore = getCommandStore(); // Unused but available
+    const apiStore = getApiStore();
+    const themeStore = getThemeStore();
+    const shortcutStore = getShortcutStore();
+    const toastStore = getToastStore();
+    const languageStore = getLanguageStore();
+    // const currencyStore = getCurrencyStore();
 
     let beat = $state(false);
     let logs = $state<{ time: string; what: string }[]>([]);

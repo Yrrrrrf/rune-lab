@@ -2,12 +2,13 @@
 <script lang="ts">
     import { onMount, tick } from "svelte";
     import { getCommandStore, type Command } from "$lib/state/commands.svelte";
-    import { shortcutStore } from "$lib/state/shortcuts.svelte";
+    import { getShortcutStore } from "$lib/state/shortcuts.svelte";
     import { Icon } from "$lib/index";
 
     let { shortcutKey = "shift+k" } = $props<{ shortcutKey?: string }>();
 
     const commandStore = getCommandStore();
+    const shortcutStore = getShortcutStore();
 
     let dialog: HTMLDialogElement;
     let input: HTMLInputElement;

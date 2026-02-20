@@ -3,11 +3,14 @@
 
     const layoutStore = getLayoutStore();
 
-    import { toastStore } from "$lib/state/toast.svelte";
+    import { getToastStore } from "$lib/state/toast.svelte";
+
     import {
         SHOWCASE_COMPONENTS,
         SHOWCASE_SNIPPETS,
     } from "./showcase-components";
+
+    const toastStore = getToastStore();
 
     const tabs = [
         "actions",

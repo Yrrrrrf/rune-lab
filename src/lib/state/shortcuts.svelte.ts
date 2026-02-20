@@ -1,6 +1,7 @@
-// src/lib/state/shortcuts.svelte.ts
 import hotkeys from "hotkeys-js";
-import { untrack } from "svelte";
+import { untrack, getContext } from "svelte";
+
+
 
 /**
  * Metadata for a keyboard shortcut
@@ -97,7 +98,8 @@ export const LAYOUT_SHORTCUTS = {
   },
 } as const;
 
-class ShortcutStore {
+export class ShortcutStore {
+
   /** All registered shortcuts */
   entries = $state<ShortcutEntry[]>([]);
 
@@ -161,7 +163,7 @@ class ShortcutStore {
       if (collision && import.meta.env?.DEV) {
         console.warn(
           `[ShortcutStore] Collision detected for keys "${entry.keys}" in scope "${entry.scope}". ` +
-            `ID "${entry.id}" will displace "${collision.id}".`,
+          `ID "${entry.id}" will displace "${collision.id}".`,
         );
       }
 
@@ -212,7 +214,10 @@ class ShortcutStore {
  * Svelte Action to listen for shortcuts registered in shortcutStore.
  * Applied to the root element of the layout.
  */
-export function shortcutListener(node: HTMLElement) {
+export function shortcutListener(
+  node: HTMLElement,
+  shortcutStore: ShortcutStore,
+) {
   // Use $effect to reactively sync shortcuts
   const cleanup = $effect.root(() => {
     $effect(() => {
@@ -222,6 +227,7 @@ export function shortcutListener(node: HTMLElement) {
       // We read entries here, so this effect re-runs when entries change.
       // That's exactly what we want.
       for (const entry of shortcutStore.entries) {
+
         if (entry.enabled === false) continue;
 
         hotkeys(entry.keys, "all", (event, handler) => {
@@ -273,4 +279,11 @@ export function shortcutListener(node: HTMLElement) {
   };
 }
 
-export const shortcutStore = new ShortcutStore();
+export function createShortcutStore() {
+  return new ShortcutStore();
+}
+
+export function getShortcutStore() {
+  return getContext<ShortcutStore>("rl:shortcut");
+}
+

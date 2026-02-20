@@ -1,12 +1,19 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
-    import { languageStore, type Language } from "$lib/state/language.svelte";
+    import {
+        getLanguageStore,
+        type Language,
+    } from "$lib/state/language.svelte";
+
+    const languageStore = getLanguageStore();
+
     import { setLocale, locales } from "$lib/paraglide/runtime";
     import * as m from "../../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
-
-    let { languages: allowedLocales = locales }: { languages?: ReadonlyArray<string> } = $props();
+    let {
+        languages: allowedLocales = locales,
+    }: { languages?: ReadonlyArray<string> } = $props();
 
     const getLabel = createMessageResolver<Language>(m as any, {
         keyExtractor: (l) => l.code,
@@ -23,8 +30,8 @@
     );
 </script>
 
-<AppSettingSelector 
-    value={active} 
+<AppSettingSelector
+    value={active}
     options={available}
     tooltip={getLabel(active)}
 >

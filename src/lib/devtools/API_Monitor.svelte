@@ -1,6 +1,9 @@
 <script lang="ts">
-    import { apiStore } from "$lib/state/api.svelte";
-    import { toastStore } from "$lib/state/toast.svelte";
+    import { getApiStore } from "$lib/state/api.svelte";
+    import { getToastStore } from "$lib/state/toast.svelte";
+
+    const apiStore = getApiStore();
+    const toastStore = getToastStore();
 
     let copied = $state(false);
     let isVisible = $state(true);

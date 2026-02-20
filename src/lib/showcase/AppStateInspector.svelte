@@ -2,15 +2,20 @@
     import * as m from "$lib/paraglide/messages.js";
     import StoreDetailCard from "./StoreDetailCard.svelte";
     import { getAppStore } from "$lib/state/app.svelte";
-    import { apiStore } from "$lib/state/api.svelte";
-    import { themeStore } from "$lib/state/theme.svelte";
-    import { languageStore } from "$lib/state/language.svelte";
-    import { currencyStore } from "$lib/state/currency.svelte";
-    import { toastStore } from "$lib/state/toast.svelte";
+    import { getApiStore } from "$lib/state/api.svelte";
+    import { getThemeStore } from "$lib/state/theme.svelte";
+    import { getLanguageStore } from "$lib/state/language.svelte";
+    import { getCurrencyStore } from "$lib/state/currency.svelte";
+    import { getToastStore } from "$lib/state/toast.svelte";
     import { getCommandStore } from "$lib/state/commands.svelte";
 
     // Inject context stores
     const appStore = getAppStore();
+    const apiStore = getApiStore();
+    const themeStore = getThemeStore();
+    const languageStore = getLanguageStore();
+    const currencyStore = getCurrencyStore();
+    const toastStore = getToastStore();
     const commandStore = getCommandStore();
 
     const storeState = $derived([

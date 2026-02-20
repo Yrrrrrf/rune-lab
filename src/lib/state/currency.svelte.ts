@@ -1,4 +1,6 @@
-import { createConfigStore } from "$lib/devtools/createConfigStore.svelte";
+import { createConfigStore, type ConfigStore } from "$lib/devtools/createConfigStore.svelte";
+import { getContext } from "svelte";
+
 /**
  * Currency configuration
  * Based on ISO 4217 currency codes
@@ -19,13 +21,20 @@ const CURRENCIES: Currency[] = [
   { code: "AED", symbol: "د.إ", decimals: 2 },
 ] as const;
 
-export const currencyStore = createConfigStore({
-  items: CURRENCIES,
-  storageKey: "currency",
-  displayName: "Currency",
-  idKey: "code",
-  icon: "💰",
-});
+export function createCurrencyStore() {
+  return createConfigStore({
+    items: CURRENCIES,
+    storageKey: "currency",
+    displayName: "Currency",
+    idKey: "code",
+    icon: "💰",
+  });
+}
+
+export function getCurrencyStore() {
+  return getContext<ConfigStore<Currency>>("rl:currency");
+}
+
 
 // Usage:
 // currencyStore.set("USD")

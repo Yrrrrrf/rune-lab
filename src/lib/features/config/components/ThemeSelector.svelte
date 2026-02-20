@@ -1,6 +1,9 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
-    import { themeStore, type Theme } from "$lib/state/theme.svelte";
+    import { getThemeStore, type Theme } from "$lib/state/theme.svelte";
+
+    const themeStore = getThemeStore();
+
     import * as m from "../../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
@@ -16,14 +19,14 @@
 
     let available = $derived(
         themes.length > 0
-            ? themeStore.available.filter(t => themes.includes(t.name))
-            : themeStore.available
+            ? themeStore.available.filter((t) => themes.includes(t.name))
+            : themeStore.available,
     );
 </script>
 
-<AppSettingSelector 
-    value={activeTheme} 
-    options={available} 
+<AppSettingSelector
+    value={activeTheme}
+    options={available}
     tooltip={getThemeLabel(activeTheme)}
 >
     {#snippet triggerLabel(t)}

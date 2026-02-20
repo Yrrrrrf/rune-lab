@@ -17,11 +17,19 @@ export {
   getCommandStore,
 } from "./state/commands.svelte";
 
-// These stores are still singletons/consts for now, re-exported for convenience
+// These stores are factories now
 export {
-  apiStore,
-  currencyStore,
-  languageStore,
-  themeStore,
-  toastStore,
+  createApiStore,
+  getApiStore,
+  createCurrencyStore,
+  getCurrencyStore,
+  createLanguageStore,
+  getLanguageStore,
+  createThemeStore,
+  getThemeStore,
+  createToastStore,
+  getToastStore,
+  createShortcutStore,
+  getShortcutStore,
 } from "./state/index";
+
