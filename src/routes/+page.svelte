@@ -15,6 +15,7 @@
         getApiStore,
         getToastStore,
         getShortcutStore,
+        getCommandStore,
     } from "$lib/index.ts";
 
     const layoutStore = getLayoutStore();
@@ -22,6 +23,7 @@
     const apiStore = getApiStore();
     const toastStore = getToastStore();
     const shortcutStore = getShortcutStore();
+    const commandStore = getCommandStore();
 
     import AppStateInspector from "$lib/showcase/AppStateInspector.svelte";
     import Showcase from "$lib/showcase/Showcase.svelte";
@@ -57,6 +59,54 @@
             scope: "global",
             handler: () => toastStore.info("Hello from Rune Lab!"),
         });
+
+        // Register demo commands
+        commandStore.register({
+            id: "send-toast",
+            label: "Send Toast Notification",
+            category: "System",
+            icon: "🔔",
+            children: [
+                {
+                    id: "toast-success",
+                    label: "Success Toast",
+                    icon: "✨",
+                    action: () =>
+                        toastStore.success("Operation completed successfully!"),
+                },
+                {
+                    id: "toast-info",
+                    label: "Info Toast",
+                    icon: "ℹ️",
+                    action: () => toastStore.info("Here is some information."),
+                },
+                {
+                    id: "toast-warning",
+                    label: "Warning Toast",
+                    icon: "⚠️",
+                    action: () => toastStore.warn("Please be careful."),
+                },
+                {
+                    id: "toast-error",
+                    label: "Error Toast",
+                    icon: "🚫",
+                    action: () => toastStore.error("Something went wrong!"),
+                },
+            ],
+        });
+
+        commandStore.register({
+            id: "log-app",
+            label: "Log Current App State",
+            category: "Debug",
+            icon: "📋",
+            action: () => {
+                console.group("🚀 Rune Lab — Current State");
+                console.table(appStore.info);
+                console.log("🔌 API:", apiStore.connectionState, apiStore.URL);
+                console.groupEnd();
+            },
+        });
     });
 
     const workspaces = [
@@ -87,8 +137,7 @@
         },
     ];
 
-    // Derived sections to handle isActive state
-    const sections = $derived([
+    const sections = [
         {
             id: "overview",
             title: "Overview",
@@ -97,7 +146,6 @@
                     id: "dashboard",
                     label: "Dashboard",
                     icon: "📊",
-                    isActive: layoutStore.activeNavItemId === "dashboard",
                     onClick: () => (layoutStore.activeNavItemId = "dashboard"),
                 },
             ],
@@ -110,7 +158,6 @@
                     id: "showcase",
                     label: "Showcase",
                     icon: "🎨",
-                    isActive: layoutStore.activeNavItemId === "showcase",
                     onClick: () => (layoutStore.activeNavItemId = "showcase"),
                 },
                 {
@@ -118,13 +165,12 @@
                     label: "Shortcuts",
                     icon: "⌨️",
                     badge: "New",
-                    isActive: layoutStore.activeNavItemId === "shortcuts-demo",
                     onClick: () =>
                         (layoutStore.activeNavItemId = "shortcuts-demo"),
                 },
             ],
         },
-    ]);
+    ];
 </script>
 
 <WorkspaceLayout>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { setContext, type Snippet } from "svelte";
+    import { setContext, untrack, type Snippet } from "svelte";
     import {
         createAppStore,
         createLayoutStore,
@@ -25,15 +25,17 @@
     const appStore = createAppStore();
     const apiStore = createApiStore();
     const toastStore = createToastStore();
-    // We use a closure approach (`() => persistence`) as supported by the updated config definitions,
-    // to strictly respect Svelte 5 state capturing validations without disabling them globally.
-    const themeStore = createThemeStore(() => persistence);
-    const languageStore = createLanguageStore(() => persistence);
-    const currencyStore = createCurrencyStore(() => persistence);
+
+    // Capture the initial persistence prop to avoid Svelte 5 reactive capture warnings
+    const initialPersistence = untrack(() => persistence);
+
+    const themeStore = createThemeStore(initialPersistence);
+    const languageStore = createLanguageStore(initialPersistence);
+    const currencyStore = createCurrencyStore(initialPersistence);
     const shortcutStore = createShortcutStore();
 
     // 2. Initialize Complex Stores (Dependency Injection)
-    const layoutStore = createLayoutStore(() => persistence);
+    const layoutStore = createLayoutStore(initialPersistence);
     const commandStore = createCommandStore({
         appStore,
         apiStore,
@@ -53,6 +55,7 @@
     setContext(RUNE_LAB_CONTEXT.shortcut, shortcutStore);
     setContext(RUNE_LAB_CONTEXT.layout, layoutStore);
     setContext(RUNE_LAB_CONTEXT.commands, commandStore);
+    setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
 
     // Meta tags derived from app store state
     const metaTags = $derived([

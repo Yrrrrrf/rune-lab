@@ -10,4 +10,5 @@ export const RUNE_LAB_CONTEXT = {
   shortcut: Symbol("rl:shortcut"),
   layout: Symbol("rl:layout"),
   commands: Symbol("rl:commands"),
+  persistence: Symbol("rl:persistence"),
 } as const satisfies Record<string, symbol>;

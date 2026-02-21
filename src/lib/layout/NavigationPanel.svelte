@@ -56,8 +56,11 @@
                                 <!-- Recursive Render? Or simple list? Current structure suggests mostly 1 level deep inside section -->
                                 <li>
                                     <button
-                                        class:active={layoutStore.activeNavItemId ===
-                                            item.id}
+                                        class:active={item.isActive !==
+                                        undefined
+                                            ? item.isActive
+                                            : layoutStore.activeNavItemId ===
+                                              item.id}
                                         onclick={() => handleItemClick(item)}
                                     >
                                         {#if item.icon}

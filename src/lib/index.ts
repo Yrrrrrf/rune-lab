@@ -14,8 +14,8 @@ export {
 } from "./persistence/drivers";
 
 // ── Composables ───────────────────────────────────────────────────────────────
-export { useRuneLab } from "./composables/useRuneLab";
-export type { RuneLabContext } from "./composables/useRuneLab";
+export { type RuneLabContext, useRuneLab } from "./composables/useRuneLab.js";
+export { usePersistence } from "./composables/usePersistence.js";
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 export { portal } from "./actions/portal";
