@@ -1,16 +1,13 @@
 <!-- src/lib/layout/WorkspaceLayout.svelte -->
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import {
-        createLayoutStore,
-        getLayoutStore,
-    } from "$lib/state/layout.svelte";
+    import { getLayoutStore } from "$lib/state/layout.svelte";
     import {
         getShortcutStore,
         shortcutListener,
         LAYOUT_SHORTCUTS,
     } from "$lib/state/shortcuts.svelte";
-    import { onMount, setContext } from "svelte";
+    import { onMount } from "svelte";
 
     let {
         workspaceStrip,

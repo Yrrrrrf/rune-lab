@@ -30,12 +30,18 @@ export { default as Icon } from "./components/Icon.svelte";
 export { default as Toaster } from "./devtools/Toaster.svelte";
 export { default as ApiMonitor } from "./devtools/API_Monitor.svelte";
 export { default as CommandPalette } from "./features/command-palette/CommandPalette.svelte";
-export { default as ConnectedNavigationPanel } from "./features/layout/smart/ConnectedNavigationPanel.svelte";
-export { default as ConnectedWorkspaceStrip } from "./features/layout/smart/ConnectedWorkspaceStrip.svelte";
 export { default as ShortcutPalette } from "./features/shortcuts/ShortcutPalette.svelte";
 
-// Layout
-export * from "./layout/index";
+// Layout - Dumb Primitives
+export { default as WorkspaceLayout } from "./layout/WorkspaceLayout.svelte";
+export { default as WorkspaceStrip } from "./layout/WorkspaceStrip.svelte";
+export { default as NavigationPanel } from "./layout/NavigationPanel.svelte";
+export { default as ContentArea } from "./layout/ContentArea.svelte";
+export { default as DetailPanel } from "./layout/DetailPanel.svelte";
+
+// Layout - Smart Connected Components
+export { default as ConnectedNavigationPanel } from "./features/layout/smart/ConnectedNavigationPanel.svelte";
+export { default as ConnectedWorkspaceStrip } from "./features/layout/smart/ConnectedWorkspaceStrip.svelte";
 
 // Setting selectors
 export { default as AppSettingSelector } from "./features/config/components/AppSettingSelector.svelte";

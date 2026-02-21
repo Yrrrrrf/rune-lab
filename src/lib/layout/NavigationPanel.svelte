@@ -26,9 +26,56 @@
 
     function handleItemClick(item: NavigationItem) {
         onSelect?.(item);
+        // Only trigger click handler, don't auto-navigate here (let parent handle it)
         item.onClick?.();
     }
 </script>
+
+{#snippet navItem(item: NavigationItem)}
+    <li>
+        {#if item.children && item.children.length > 0}
+            <!-- Folder Item (Recursive) -->
+            <details
+                open={/* You might want a way to track open state for sub-folders too */ false}
+            >
+                <summary>
+                    {#if item.icon}<span class="text-lg">{item.icon}</span>{/if}
+                    <span class="flex-1">{item.label}</span>
+                </summary>
+                <ul>
+                    {#each item.children as child (child.id)}
+                        {@render navItem(child)}
+                        <!-- ♻️ RECURSION HAPPENS HERE -->
+                    {/each}
+                </ul>
+            </details>
+        {:else}
+            <!-- Leaf Item -->
+            <button
+                class:active={item.isActive !== undefined
+                    ? item.isActive
+                    : activeId === item.id}
+                onclick={() => handleItemClick(item)}
+            >
+                {#if item.icon}
+                    {#if typeof item.icon === "string" && (item.icon.startsWith("http") || item.icon.length > 2)}
+                        <!-- Image or SVG string -->
+                        <span class="text-lg">{item.icon}</span>
+                    {:else}
+                        <!-- Emoji or simple char -->
+                        <span class="text-lg">{item.icon}</span>
+                    {/if}
+                {/if}
+
+                <span class="flex-1">{item.label}</span>
+
+                {#if item.badge}
+                    <span class="badge badge-sm badge-ghost">{item.badge}</span>
+                {/if}
+            </button>
+        {/if}
+    </li>
+{/snippet}
 
 <div class="flex flex-col h-full bg-base-200 text-base-content">
     {#if header}
@@ -56,29 +103,7 @@
                         </summary>
                         <ul>
                             {#each section.items as item (item.id)}
-                                <!-- Recursive Render? Or simple list? Current structure suggests mostly 1 level deep inside section -->
-                                <li>
-                                    <button
-                                        class:active={item.isActive !==
-                                        undefined
-                                            ? item.isActive
-                                            : activeId === item.id}
-                                        onclick={() => handleItemClick(item)}
-                                    >
-                                        {#if item.icon}
-                                            <span class="text-lg"
-                                                >{item.icon}</span
-                                            >
-                                        {/if}
-                                        <span class="flex-1">{item.label}</span>
-                                        {#if item.badge}
-                                            <span
-                                                class="badge badge-sm badge-ghost"
-                                                >{item.badge}</span
-                                            >
-                                        {/if}
-                                    </button>
-                                </li>
+                                {@render navItem(item)}
                             {/each}
                         </ul>
                     </details>
