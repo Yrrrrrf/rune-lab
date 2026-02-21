@@ -1,5 +1,6 @@
 import hotkeys from "hotkeys-js";
 import { getContext, untrack } from "svelte";
+import { RUNE_LAB_CONTEXT } from "$lib/context";
 
 /**
  * Metadata for a keyboard shortcut
@@ -280,5 +281,5 @@ export function createShortcutStore() {
 }
 
 export function getShortcutStore() {
-  return getContext<ShortcutStore>("rl:shortcut");
+  return getContext<ShortcutStore>(RUNE_LAB_CONTEXT.shortcut);
 }

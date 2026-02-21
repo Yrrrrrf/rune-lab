@@ -13,7 +13,13 @@
 
     let {
         languages: allowedLocales = locales,
-    }: { languages?: ReadonlyArray<string> } = $props();
+        current = $bindable(languageStore.current),
+        onchange,
+    }: {
+        languages?: ReadonlyArray<string>;
+        current?: string;
+        onchange?: (value: string) => void;
+    } = $props();
 
     const getLabel = createMessageResolver<Language>(m as any, {
         keyExtractor: (l) => l.code,
@@ -44,7 +50,9 @@
             class="flex items-center gap-3 w-full"
             onclick={() => {
                 languageStore.set(l.code);
-                setLocale(l.code);
+                setLocale(l.code as any);
+                current = l.code;
+                onchange?.(l.code);
             }}
         >
             <span class="text-lg">{l.flag}</span>

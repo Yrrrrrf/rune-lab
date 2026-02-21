@@ -5,6 +5,7 @@ import {
   createConfigStore,
 } from "$lib/devtools/createConfigStore.svelte";
 import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "$lib/context";
 
 import themeOrder from "daisyui/functions/themeOrder.js"; // has its own .d.ts
 
@@ -58,18 +59,23 @@ const THEMES: Theme[] = themeOrder.map((name: string) => ({
   icon: THEME_ICONS[name] ?? "🎨",
 }));
 
-export function createThemeStore() {
+import type { PersistenceDriver } from "$lib/persistence/types";
+
+export function createThemeStore(
+  driver?: PersistenceDriver | (() => PersistenceDriver | undefined),
+) {
   return createConfigStore<Theme>({
     items: THEMES,
     storageKey: "theme",
     displayName: "Theme",
     idKey: "name",
     icon: "🎨",
+    driver: typeof driver === "function" ? driver() : driver,
   });
 }
 
 export function getThemeStore() {
-  return getContext<ConfigStore<Theme>>("rl:theme");
+  return getContext<ConfigStore<Theme>>(RUNE_LAB_CONTEXT.theme);
 }
 
 // Usage:

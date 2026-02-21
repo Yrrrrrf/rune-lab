@@ -6,6 +6,7 @@ import {
 } from "$lib/devtools/createConfigStore.svelte";
 import { setLocale } from "$lib/paraglide/runtime.js";
 import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "$lib/context";
 
 /**
  * Language configuration
@@ -37,13 +38,18 @@ export const LANGUAGES = [
   { code: "vi", flag: "🇻🇳" },
 ] as const;
 
-export function createLanguageStore() {
+import type { PersistenceDriver } from "$lib/persistence/types";
+
+export function createLanguageStore(
+  driver?: PersistenceDriver | (() => PersistenceDriver | undefined),
+) {
   const store = createConfigStore<Language>({
     items: LANGUAGES,
     storageKey: "language",
     displayName: "Language",
     idKey: "code",
     icon: "🌍",
+    driver: typeof driver === "function" ? driver() : driver,
   });
 
   // Sync Paraglide locale with languageStore
@@ -60,5 +66,5 @@ export function createLanguageStore() {
 }
 
 export function getLanguageStore() {
-  return getContext<ConfigStore<Language>>("rl:language");
+  return getContext<ConfigStore<Language>>(RUNE_LAB_CONTEXT.language);
 }

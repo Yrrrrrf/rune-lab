@@ -1,5 +1,8 @@
 // client/sdk/devtools/src/patterns/createConfigStore.svelte.ts
 
+import { type PersistenceDriver } from "$lib/persistence/types";
+import { createInMemoryDriver } from "$lib/persistence/drivers";
+
 export type ConfigStore<T extends ConfigItem> = {
   current: T[keyof T];
   available: T[];
@@ -21,7 +24,7 @@ interface ConfigItem {
 interface ConfigStoreOptions<T extends ConfigItem> {
   /** Array of available items */
   items: readonly T[];
-  /** LocalStorage key */
+  /** Storage key used by the persistence driver */
   storageKey: string;
   /** Display name for logging (e.g., "Theme", "Language") */
   displayName: string;
@@ -29,6 +32,8 @@ interface ConfigStoreOptions<T extends ConfigItem> {
   idKey: keyof T;
   /** Icon for logs */
   icon?: string;
+  /** Persistence driver */
+  driver?: PersistenceDriver;
 }
 
 /**
@@ -37,7 +42,14 @@ interface ConfigStoreOptions<T extends ConfigItem> {
 export function createConfigStore<T extends ConfigItem>(
   options: ConfigStoreOptions<T>,
 ) {
-  const { items, storageKey, displayName, idKey, icon = "⚙️" } = options;
+  const {
+    items,
+    storageKey,
+    displayName,
+    idKey,
+    icon = "⚙️",
+    driver = createInMemoryDriver(),
+  } = options;
 
   class ConfigStore {
     current: T[typeof idKey] = $state(
@@ -46,12 +58,10 @@ export function createConfigStore<T extends ConfigItem>(
     available: T[] = $state([...items] as T[]);
 
     constructor() {
-      if (typeof window !== "undefined") {
-        const saved = localStorage.getItem(storageKey);
-        // Only load saved if it actually exists in our available items
-        if (saved && this.get(saved as T[typeof idKey])) {
-          this.current = saved as T[typeof idKey];
-        }
+      const saved = driver.get(storageKey);
+      // Only load saved if it actually exists in our available items
+      if (saved && this.get(saved as T[typeof idKey])) {
+        this.current = saved as T[typeof idKey];
       }
 
       if (import.meta.env?.DEV) {
@@ -71,7 +81,7 @@ export function createConfigStore<T extends ConfigItem>(
         return;
       }
       this.current = id;
-      localStorage.setItem(storageKey, String(id));
+      driver.set(storageKey, String(id));
     }
 
     /**

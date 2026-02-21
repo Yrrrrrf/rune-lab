@@ -3,6 +3,7 @@
  */
 export type ConnectionState = "connected" | "connecting" | "disconnected";
 import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "$lib/context";
 
 export class ApiStore {
   // State
@@ -58,5 +59,5 @@ export function createApiStore() {
 }
 
 export function getApiStore() {
-  return getContext<ApiStore>("rl:api");
+  return getContext<ApiStore>(RUNE_LAB_CONTEXT.api);
 }

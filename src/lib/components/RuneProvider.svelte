@@ -13,19 +13,27 @@
     } from "$lib/state/index";
     import { Toaster, CommandPalette, ShortcutPalette } from "$lib/index";
 
-    let { children } = $props<{ children: Snippet }>();
+    import type { PersistenceDriver } from "$lib/persistence/types";
+    import { RUNE_LAB_CONTEXT } from "$lib/context";
+
+    let { children, persistence } = $props<{
+        children: Snippet;
+        persistence?: PersistenceDriver;
+    }>();
 
     // 1. Initialize Base Configuration Stores
     const appStore = createAppStore();
     const apiStore = createApiStore();
     const toastStore = createToastStore();
-    const themeStore = createThemeStore();
-    const languageStore = createLanguageStore();
-    const currencyStore = createCurrencyStore();
+    // We use a closure approach (`() => persistence`) as supported by the updated config definitions,
+    // to strictly respect Svelte 5 state capturing validations without disabling them globally.
+    const themeStore = createThemeStore(() => persistence);
+    const languageStore = createLanguageStore(() => persistence);
+    const currencyStore = createCurrencyStore(() => persistence);
     const shortcutStore = createShortcutStore();
 
     // 2. Initialize Complex Stores (Dependency Injection)
-    const layoutStore = createLayoutStore();
+    const layoutStore = createLayoutStore(() => persistence);
     const commandStore = createCommandStore({
         appStore,
         apiStore,
@@ -36,15 +44,15 @@
     });
 
     // 3. Provide Contexts
-    setContext("rl:app", appStore);
-    setContext("rl:api", apiStore);
-    setContext("rl:toast", toastStore);
-    setContext("rl:theme", themeStore);
-    setContext("rl:language", languageStore);
-    setContext("rl:currency", currencyStore);
-    setContext("rl:shortcut", shortcutStore);
-    setContext("rl:layout", layoutStore);
-    setContext("rl:commands", commandStore);
+    setContext(RUNE_LAB_CONTEXT.app, appStore);
+    setContext(RUNE_LAB_CONTEXT.api, apiStore);
+    setContext(RUNE_LAB_CONTEXT.toast, toastStore);
+    setContext(RUNE_LAB_CONTEXT.theme, themeStore);
+    setContext(RUNE_LAB_CONTEXT.language, languageStore);
+    setContext(RUNE_LAB_CONTEXT.currency, currencyStore);
+    setContext(RUNE_LAB_CONTEXT.shortcut, shortcutStore);
+    setContext(RUNE_LAB_CONTEXT.layout, layoutStore);
+    setContext(RUNE_LAB_CONTEXT.commands, commandStore);
 
     // Meta tags derived from app store state
     const metaTags = $derived([

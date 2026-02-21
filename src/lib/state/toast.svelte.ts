@@ -3,6 +3,7 @@
  */
 export type ToastType = "info" | "success" | "warning" | "error";
 import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "$lib/context";
 
 export interface Toast {
   id: string;
@@ -57,5 +58,5 @@ export function createToastStore() {
 }
 
 export function getToastStore() {
-  return getContext<ToastStore>("rl:toast");
+  return getContext<ToastStore>(RUNE_LAB_CONTEXT.toast);
 }

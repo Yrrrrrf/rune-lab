@@ -11,6 +11,11 @@ export function portal(
   function update(newTarget: string | HTMLElement) {
     if (typeof newTarget === "string") {
       targetNode = document.querySelector(newTarget);
+      if (!targetNode && import.meta.env?.DEV) {
+        console.warn(
+          `portal target selector "${newTarget}" not found in document.`,
+        );
+      }
     } else {
       targetNode = newTarget;
     }

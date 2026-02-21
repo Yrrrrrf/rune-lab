@@ -10,10 +10,18 @@
     import * as m from "../../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
-    let { codes = [] }: { codes?: string[] } = $props();
+    let {
+        codes = [],
+        current = $bindable(String(currencyStore.current)),
+        onchange,
+    }: {
+        codes?: string[];
+        current?: string;
+        onchange?: (value: string) => void;
+    } = $props();
 
     const getLabel = createMessageResolver<Currency>(m as any, {
-        keyExtractor: (c) => c.code,
+        keyExtractor: (c) => String(c.code),
     });
 
     let active = $derived(
@@ -39,7 +47,11 @@
     {#snippet item(c)}
         <button
             class="flex items-center gap-3 w-full"
-            onclick={() => currencyStore.set(c.code)}
+            onclick={() => {
+                currencyStore.set(c.code);
+                current = c.code;
+                onchange?.(c.code);
+            }}
         >
             <span class="badge badge-sm badge-ghost w-8">{c.symbol}</span>
             <span>{getLabel(c)}</span>

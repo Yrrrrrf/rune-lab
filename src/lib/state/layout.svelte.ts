@@ -1,5 +1,7 @@
 // src/lib/state/layout.svelte.ts
 import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "$lib/context";
+import type { PersistenceDriver } from "$lib/persistence/types";
 
 export interface WorkspaceItem {
   id: string;
@@ -38,18 +40,39 @@ export class LayoutStore {
 
   #storageNamespace = "default";
   #initialized = false;
+  #driver: PersistenceDriver | undefined;
 
-  init(options?: { namespace?: string }) {
+  constructor(
+    driver?: PersistenceDriver | (() => PersistenceDriver | undefined),
+  ) {
+    // We import locally here or at top-level. We can just fallback to window if undefined,
+    // but better to expect it via inject. The app supplies it in createLayoutStore.
+    this.#driver = (typeof driver === "function" ? driver() : driver) as
+      | PersistenceDriver
+      | undefined;
+  }
+
+  init(options?: { namespace?: string; driver?: PersistenceDriver }) {
     if (this.#initialized) return;
     if (options?.namespace) this.#storageNamespace = options.namespace;
+    if (options?.driver) this.#driver = options.driver;
 
-    if (typeof window !== "undefined") {
-      const savedWorkspace = localStorage.getItem(
+    // If no driver was injected and no window (SSR), we just do nothing
+    if (!this.#driver && typeof window !== "undefined") {
+      this.#driver = {
+        get: (key: string) => localStorage.getItem(key),
+        set: (key: string, val: string) => localStorage.setItem(key, val),
+        remove: (key: string) => localStorage.removeItem(key),
+      };
+    }
+
+    if (this.#driver) {
+      const savedWorkspace = this.#driver.get(
         `rl:layout:${this.#storageNamespace}:workspace`,
       );
       if (savedWorkspace) this.activeWorkspaceId = savedWorkspace;
 
-      const savedSections = localStorage.getItem(
+      const savedSections = this.#driver.get(
         `rl:layout:${this.#storageNamespace}:sections`,
       );
       if (savedSections) {
@@ -64,23 +87,25 @@ export class LayoutStore {
     this.#initialized = true;
 
     // Set up persistence effects
-    $effect.root(() => {
-      $effect(() => {
-        if (this.activeWorkspaceId) {
-          localStorage.setItem(
-            `rl:layout:${this.#storageNamespace}:workspace`,
-            this.activeWorkspaceId,
-          );
-        }
-      });
+    if (this.#driver) {
+      $effect.root(() => {
+        $effect(() => {
+          if (this.activeWorkspaceId) {
+            this.#driver?.set(
+              `rl:layout:${this.#storageNamespace}:workspace`,
+              this.activeWorkspaceId,
+            );
+          }
+        });
 
-      $effect(() => {
-        localStorage.setItem(
-          `rl:layout:${this.#storageNamespace}:sections`,
-          JSON.stringify([...this.collapsedSections]),
-        );
+        $effect(() => {
+          this.#driver?.set(
+            `rl:layout:${this.#storageNamespace}:sections`,
+            JSON.stringify([...this.collapsedSections]),
+          );
+        });
       });
-    });
+    }
   }
 
   setWorkspaces(items: WorkspaceItem[]) {
@@ -135,10 +160,12 @@ export class LayoutStore {
   }
 }
 
-export function createLayoutStore() {
-  return new LayoutStore();
+export function createLayoutStore(
+  driver?: PersistenceDriver | (() => PersistenceDriver | undefined),
+) {
+  return new LayoutStore(driver);
 }
 
 export function getLayoutStore() {
-  return getContext<LayoutStore>("rl:layout");
+  return getContext<LayoutStore>(RUNE_LAB_CONTEXT.layout);
 }

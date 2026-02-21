@@ -3,6 +3,7 @@ import {
   createConfigStore,
 } from "$lib/devtools/createConfigStore.svelte";
 import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "$lib/context";
 
 /**
  * Currency configuration
@@ -24,18 +25,23 @@ const CURRENCIES: Currency[] = [
   { code: "AED", symbol: "د.إ", decimals: 2 },
 ] as const;
 
-export function createCurrencyStore() {
+import type { PersistenceDriver } from "$lib/persistence/types";
+
+export function createCurrencyStore(
+  driver?: PersistenceDriver | (() => PersistenceDriver | undefined),
+) {
   return createConfigStore({
     items: CURRENCIES,
     storageKey: "currency",
     displayName: "Currency",
     idKey: "code",
     icon: "💰",
+    driver: typeof driver === "function" ? driver() : driver,
   });
 }
 
 export function getCurrencyStore() {
-  return getContext<ConfigStore<Currency>>("rl:currency");
+  return getContext<ConfigStore<Currency>>(RUNE_LAB_CONTEXT.currency);
 }
 
 // Usage:

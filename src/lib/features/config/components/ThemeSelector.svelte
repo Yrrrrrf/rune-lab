@@ -7,7 +7,15 @@
     import * as m from "../../../paraglide/messages.js";
     import { createMessageResolver } from "$lib/devtools/message-resolver";
 
-    let { themes = [] }: { themes?: string[] } = $props();
+    let {
+        themes = [],
+        current = $bindable(themeStore.current),
+        onchange,
+    }: {
+        themes?: string[];
+        current?: string;
+        onchange?: (value: string) => void;
+    } = $props();
 
     const getThemeLabel = createMessageResolver<Theme>(m as any, {
         keyExtractor: (t) => t.name,
@@ -36,7 +44,11 @@
     {#snippet item(t)}
         <button
             class="flex items-center gap-3 w-full"
-            onclick={() => themeStore.set(t.name)}
+            onclick={() => {
+                themeStore.set(t.name);
+                current = t.name;
+                onchange?.(t.name);
+            }}
         >
             <input
                 type="radio"

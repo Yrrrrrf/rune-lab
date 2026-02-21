@@ -1,4 +1,5 @@
 import { getContext, untrack } from "svelte";
+import { RUNE_LAB_CONTEXT } from "$lib/context";
 import type { AppStore } from "./app.svelte";
 import type { ApiStore } from "./api.svelte";
 import type { ConfigStore } from "$lib/devtools/createConfigStore.svelte";
@@ -191,5 +192,5 @@ export function createCommandStore(services: CommandServices) {
 }
 
 export function getCommandStore() {
-  return getContext<CommandStore>("rl:commands");
+  return getContext<CommandStore>(RUNE_LAB_CONTEXT.commands);
 }

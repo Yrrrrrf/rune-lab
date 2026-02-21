@@ -1,5 +1,6 @@
 // src/lib/stores/app-config.svelte.ts
 import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "$lib/context";
 
 // SDK Package - Application Metadata Management
 
@@ -36,7 +37,16 @@ export class AppStore {
    * Initialize app store with metadata
    */
   init(data: Partial<AppData>): void {
-    if (this.#initialized) return;
+    if (this.#initialized) {
+      if (import.meta.env?.DEV) {
+        console.warn(
+          "AppStore.init() called multiple times. Ignoring subsequent calls.",
+          "Overwritten properties would have been:",
+          data,
+        );
+      }
+      return;
+    }
 
     if (data.name) this.name = data.name;
     if (data.version) this.version = data.version;
@@ -72,5 +82,5 @@ export function createAppStore() {
 }
 
 export function getAppStore() {
-  return getContext<AppStore>("rl:app");
+  return getContext<AppStore>(RUNE_LAB_CONTEXT.app);
 }

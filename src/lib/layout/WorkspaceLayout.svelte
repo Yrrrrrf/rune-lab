@@ -97,8 +97,9 @@
 
     <!-- Zone 2: Navigation Panel -->
     <aside
-        class="rl-nav h-full bg-base-200 border-r border-base-content/5 overflow-hidden flex flex-col"
-        class:hidden={!navigationPanel || !layoutStore.navOpen}
+        class="rl-nav h-full bg-base-200 border-base-content/5 overflow-hidden flex flex-col"
+        class:hidden={!navigationPanel}
+        class:border-r={layoutStore.navOpen}
         data-rl-panel="navigation"
     >
         {#if navigationPanel}
@@ -115,8 +116,9 @@
 
     <!-- Zone 4: Detail Panel -->
     <aside
-        class="rl-detail h-full bg-base-100 border-l border-base-content/5 overflow-y-auto"
-        class:hidden={!detailPanel || !layoutStore.detailOpen}
+        class="rl-detail h-full bg-base-100 border-base-content/5 overflow-y-auto"
+        class:hidden={!detailPanel}
+        class:border-l={layoutStore.detailOpen}
         data-rl-panel="detail"
     >
         {#if detailPanel}

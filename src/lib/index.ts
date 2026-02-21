@@ -4,6 +4,18 @@
 // ── Devtools utilities ────────────────────────────────────────────────────────
 export { createConfigStore } from "./devtools/createConfigStore.svelte";
 export { createMessageResolver } from "./devtools/message-resolver";
+export { RUNE_LAB_CONTEXT } from "./context";
+export type { PersistenceDriver } from "./persistence/types";
+export {
+  cookieDriver,
+  inMemoryDriver,
+  localStorageDriver,
+  sessionStorageDriver,
+} from "./persistence/drivers";
+
+// ── Composables ───────────────────────────────────────────────────────────────
+export { useRuneLab } from "./composables/useRuneLab";
+export type { RuneLabContext } from "./composables/useRuneLab";
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 export { portal } from "./actions/portal";
