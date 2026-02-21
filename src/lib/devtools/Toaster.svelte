@@ -48,10 +48,7 @@
     {@const styles = typeDetails[toast.type] || typeDetails.info}
 
     <div
-      animate:flip={{ duration: 300 }}
-      in:fly={{ y: 20, duration: 300 }}
-      out:fade={{ duration: 200 }}
-      class="pointer-events-auto relative flex w-full max-w-sm items-start gap-4 overflow-hidden rounded-xl border p-4 shadow-lg backdrop-blur-xl transition-all sm:min-w-[320px] {styles.colors}"
+      class="pointer-events-auto relative flex w-full max-w-sm items-start gap-4 overflow-hidden rounded-xl border p-4 shadow-lg backdrop-blur-xl transition-all duration-300 sm:min-w-[320px] {styles.colors} animate-in fade-in slide-in-from-bottom-4 zoom-in-95 ease-out data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:slide-out-to-right-full"
       role="alert"
     >
       <!-- Icon -->

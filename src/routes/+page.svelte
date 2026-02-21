@@ -6,8 +6,8 @@
         ThemeSelector,
         CurrencySelector,
         WorkspaceLayout,
-        WorkspaceStrip,
-        NavigationPanel,
+        ConnectedNavigationPanel,
+        ConnectedWorkspaceStrip,
         ContentArea,
         DetailPanel,
         getLayoutStore,
@@ -49,6 +49,9 @@
             layoutStore.activeWorkspaceId = "home";
         if (!layoutStore.activeNavItemId)
             layoutStore.activeNavItemId = "dashboard";
+
+        // Provide workspaces to the store so shortcuts know about them
+        layoutStore.setWorkspaces(workspaces);
 
         // Custom shortcut for demo
         shortcutStore.register({
@@ -175,7 +178,7 @@
 
 <WorkspaceLayout>
     {#snippet workspaceStrip()}
-        <WorkspaceStrip items={workspaces}>
+        <ConnectedWorkspaceStrip items={workspaces}>
             {#snippet globalActions()}
                 <button
                     onclick={() => layoutStore.toggleDetail()}
@@ -185,11 +188,11 @@
                     <span class="text-xl">ℹ️</span>
                 </button>
             {/snippet}
-        </WorkspaceStrip>
+        </ConnectedWorkspaceStrip>
     {/snippet}
 
     {#snippet navigationPanel()}
-        <NavigationPanel {sections}>
+        <ConnectedNavigationPanel {sections}>
             {#snippet header()}
                 <div class="flex items-center gap-2">
                     <img src="/img/rune.png" alt="Rune Lab" class="w-8 h-8" />
@@ -206,7 +209,7 @@
                     <CurrencySelector />
                 </div>
             {/snippet}
-        </NavigationPanel>
+        </ConnectedNavigationPanel>
     {/snippet}
 
     {#snippet content()}

@@ -1,27 +1,31 @@
 <!-- src/lib/layout/NavigationPanel.svelte -->
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import {
-        getLayoutStore,
-        type NavigationItem,
-        type NavigationSection,
+    import type {
+        NavigationItem,
+        NavigationSection,
     } from "$lib/state/layout.svelte";
-    import { page } from "$app/stores"; // Check if this is needed, or use layoutStore for active item
 
     let {
         header,
         sections = [],
         footer,
+        activeId,
+        collapsedIds = new Set(),
+        onSelect,
+        onToggle,
     } = $props<{
         header?: Snippet;
         sections: NavigationSection[];
         footer?: Snippet;
+        activeId?: string | null;
+        collapsedIds?: Set<string>;
+        onSelect?: (item: NavigationItem) => void;
+        onToggle?: (id: string, isOpen: boolean) => void;
     }>();
 
-    const layoutStore = getLayoutStore();
-
     function handleItemClick(item: NavigationItem) {
-        if (item.id) layoutStore.navigate(item.id);
+        onSelect?.(item);
         item.onClick?.();
     }
 </script>
@@ -38,12 +42,11 @@
             {#each sections as section (section.id)}
                 <li>
                     <details
-                        open={!layoutStore.collapsedSections.has(section.id)}
+                        open={!collapsedIds.has(section.id)}
                         ontoggle={(e) => {
                             const open = (e.currentTarget as HTMLDetailsElement)
                                 .open;
-                            if (open) layoutStore.expandSection(section.id);
-                            else layoutStore.collapseSection(section.id);
+                            onToggle?.(section.id, open);
                         }}
                     >
                         <summary
@@ -59,8 +62,7 @@
                                         class:active={item.isActive !==
                                         undefined
                                             ? item.isActive
-                                            : layoutStore.activeNavItemId ===
-                                              item.id}
+                                            : activeId === item.id}
                                         onclick={() => handleItemClick(item)}
                                     >
                                         {#if item.icon}

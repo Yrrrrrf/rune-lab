@@ -1,24 +1,22 @@
 <!-- src/lib/layout/WorkspaceStrip.svelte -->
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import {
-        getLayoutStore,
-        type WorkspaceItem,
-    } from "$lib/state/layout.svelte";
+    import type { WorkspaceItem } from "$lib/state/layout.svelte";
 
-    const layoutStore = getLayoutStore();
-
-    let { items = [], globalActions } = $props<{
+    let {
+        items = [],
+        globalActions,
+        activeId,
+        onSelect,
+    } = $props<{
         items: WorkspaceItem[];
         globalActions?: Snippet;
+        activeId?: string | null;
+        onSelect?: (id: string, item: WorkspaceItem) => void;
     }>();
 
-    $effect(() => {
-        layoutStore.setWorkspaces(items);
-    });
-
     function handleWorkspaceClick(item: WorkspaceItem) {
-        layoutStore.activateWorkspace(item.id);
+        onSelect?.(item.id, item);
         item.onClick?.();
     }
 </script>
@@ -29,19 +27,18 @@
             <!-- Discord-style active indicator -->
             <div
                 class="absolute left-0 w-1 bg-base-content rounded-r-full transition-all duration-200"
-                class:h-10={layoutStore.activeWorkspaceId === item.id}
-                class:h-2={layoutStore.activeWorkspaceId !== item.id}
-                class:opacity-100={layoutStore.activeWorkspaceId === item.id}
-                class:opacity-0={layoutStore.activeWorkspaceId !== item.id}
+                class:h-10={activeId === item.id}
+                class:h-2={activeId !== item.id}
+                class:opacity-100={activeId === item.id}
+                class:opacity-0={activeId !== item.id}
             ></div>
 
             <button
                 onclick={() => handleWorkspaceClick(item)}
                 class="w-12 h-12 flex items-center justify-center rounded-[24px] hover:rounded-[16px] transition-all duration-200 bg-base-100 group-hover:bg-primary group-hover:text-primary-content shadow-sm overflow-hidden"
-                class:rounded-[16px]={layoutStore.activeWorkspaceId === item.id}
-                class:bg-primary={layoutStore.activeWorkspaceId === item.id}
-                class:text-primary-content={layoutStore.activeWorkspaceId ===
-                    item.id}
+                class:rounded-[16px]={activeId === item.id}
+                class:bg-primary={activeId === item.id}
+                class:text-primary-content={activeId === item.id}
                 title={item.label}
             >
                 {#if item.icon.startsWith("http") || item.icon.startsWith("/")}
