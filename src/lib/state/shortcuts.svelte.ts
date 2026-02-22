@@ -150,7 +150,7 @@ export class ShortcutStore {
       if (collision && import.meta.env?.DEV) {
         console.warn(
           `[ShortcutStore] Collision detected for keys "${entry.keys}" in scope "${entry.scope}". ` +
-          `ID "${entry.id}" will displace "${collision.id}".`,
+            `ID "${entry.id}" will displace "${collision.id}".`,
         );
       }
 
