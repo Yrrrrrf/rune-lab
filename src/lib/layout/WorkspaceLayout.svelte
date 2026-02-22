@@ -76,17 +76,18 @@
         const shortcuts = [
             {
                 ...LAYOUT_SHORTCUTS.TOGGLE_NAV,
-                handler: () => layoutStore.toggleNav(),
+                handler: (e: KeyboardEvent) => {
+                    e.preventDefault();
+                    navOpen = !navOpen;
+                },
             },
             {
                 ...LAYOUT_SHORTCUTS.TOGGLE_DETAIL,
-                handler: () => layoutStore.toggleDetail(),
+                handler: (e: KeyboardEvent) => {
+                    e.preventDefault();
+                    detailOpen = !detailOpen;
+                },
             },
-            // Workspace shortcuts (ctrl+1 to ctrl+9)
-            ...Array.from({ length: 9 }, (_, i) => ({
-                ...(LAYOUT_SHORTCUTS as any)[`WORKSPACE_${i + 1}`],
-                handler: () => layoutStore.activateWorkspaceByIndex(i),
-            })),
         ];
 
         for (const s of shortcuts) {
@@ -96,11 +97,6 @@
         return () => {
             shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_NAV.id);
             shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_DETAIL.id);
-            for (let i = 1; i <= 9; i++) {
-                shortcutStore.unregister(
-                    (LAYOUT_SHORTCUTS as any)[`WORKSPACE_${i}`].id,
-                );
-            }
         };
     });
 </script>

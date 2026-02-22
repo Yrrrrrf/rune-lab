@@ -1,9 +1,9 @@
 import type { ToastStore, ToastType } from "./toast.svelte";
 
 interface QueuedToast {
-    message: string;
-    type: ToastType;
-    duration?: number;
+  message: string;
+  type: ToastType;
+  duration?: number;
 }
 
 const queue: QueuedToast[] = [];
@@ -13,21 +13,21 @@ let activeStore: ToastStore | null = null;
  * Notifies the global toast system.
  * If called before the ToastStore is initialized (e.g., in a module-level store),
  * it queues the toast and flushes it once wired.
- * 
+ *
  * @clientOnly — Not safe for use in SSR contexts. Module-level state persists across requests.
  */
 export function notify(
-    message: string,
-    type: ToastType = "info",
-    duration?: number
+  message: string,
+  type: ToastType = "info",
+  duration?: number,
 ) {
-    if (typeof window === "undefined") return; // No-op on server
+  if (typeof window === "undefined") return; // No-op on server
 
-    if (activeStore) {
-        activeStore.send(message, type, duration ?? 3000);
-    } else {
-        queue.push({ message, type, duration });
-    }
+  if (activeStore) {
+    activeStore.send(message, type, duration ?? 3000);
+  } else {
+    queue.push({ message, type, duration });
+  }
 }
 
 /**
@@ -35,11 +35,11 @@ export function notify(
  * Automatically flushes any queued toasts.
  */
 export function wire(store: ToastStore) {
-    activeStore = store;
-    while (queue.length > 0) {
-        const next = queue.shift();
-        if (next) store.send(next.message, next.type, next.duration ?? 3000);
-    }
+  activeStore = store;
+  while (queue.length > 0) {
+    const next = queue.shift();
+    if (next) store.send(next.message, next.type, next.duration ?? 3000);
+  }
 }
 
 /**

@@ -33,7 +33,10 @@ export { default as CommandPalette } from "./features/command-palette/CommandPal
 export { default as ShortcutPalette } from "./features/shortcuts/ShortcutPalette.svelte";
 
 // Layout - Dumb Primitives
-export { default as WorkspaceLayout, type WorkspaceLayoutProps } from "./layout/WorkspaceLayout.svelte";
+export {
+  default as WorkspaceLayout,
+  type WorkspaceLayoutProps,
+} from "./layout/WorkspaceLayout.svelte";
 export { default as WorkspaceStrip } from "./layout/WorkspaceStrip.svelte";
 export { default as NavigationPanel } from "./layout/NavigationPanel.svelte";
 export { default as ContentArea } from "./layout/ContentArea.svelte";

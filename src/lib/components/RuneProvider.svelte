@@ -22,6 +22,7 @@
         persistence?: PersistenceDriver;
         app?: Partial<AppData>;
         apiUrl?: string;
+        apiHealthCheck?: () => Promise<boolean>;
         favicon?: string;
         manageHead?: boolean;
         dictionary?: Record<string, any>;
@@ -84,7 +85,7 @@
     });
 
     $effect(() => {
-        if (config.apiUrl) apiStore.init(config.apiUrl);
+        if (config.apiUrl) apiStore.init(config.apiUrl, "v1", config.apiHealthCheck);
     });
 
     onMount(() => {

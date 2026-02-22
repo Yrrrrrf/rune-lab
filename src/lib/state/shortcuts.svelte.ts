@@ -48,18 +48,7 @@ export const LAYOUT_SHORTCUTS = {
     category: "Layout",
     scope: "global",
   },
-  ...Object.fromEntries(
-    Array.from({ length: 9 }, (_, i) => [
-      `WORKSPACE_${i + 1}`,
-      {
-        id: `rl:layout:workspace-${i + 1}`,
-        keys: `ctrl+${i + 1}`,
-        label: `Jump to Workspace ${i + 1}`,
-        category: "Navigation",
-        scope: "global",
-      },
-    ]),
-  ),
+
   OPEN_SHORTCUTS: {
     id: "rl:shortcuts:open",
     keys: "ctrl+/",
@@ -161,7 +150,7 @@ export class ShortcutStore {
       if (collision && import.meta.env?.DEV) {
         console.warn(
           `[ShortcutStore] Collision detected for keys "${entry.keys}" in scope "${entry.scope}". ` +
-            `ID "${entry.id}" will displace "${collision.id}".`,
+          `ID "${entry.id}" will displace "${collision.id}".`,
         );
       }
 

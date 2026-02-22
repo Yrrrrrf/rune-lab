@@ -46,8 +46,9 @@ export interface LanguageStoreOptions {
 }
 
 export function createLanguageStore(options?: LanguageStoreOptions) {
-  const driver =
-    typeof options?.driver === "function" ? options.driver() : options?.driver;
+  const driver = typeof options?.driver === "function"
+    ? options.driver()
+    : options?.driver;
   const store = createConfigStore<Language>({
     items: LANGUAGES,
     storageKey: "language",

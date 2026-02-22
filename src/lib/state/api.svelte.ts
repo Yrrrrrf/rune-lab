@@ -43,7 +43,9 @@ export class ApiStore {
       } else {
         // Simulate connection if no health check provided
         if (import.meta.env.DEV) {
-          console.warn("[rune-lab] ApiStore: No healthCheck provided to init(). Using simulated connection delay.");
+          console.warn(
+            "[rune-lab] ApiStore: No healthCheck provided to init(). Using simulated connection delay.",
+          );
         }
         await new Promise((resolve) => setTimeout(resolve, 1500));
         this.connectionState = "connected";
@@ -59,7 +61,7 @@ export class ApiStore {
   init(
     url: string,
     version: string = "v1",
-    healthCheck?: () => Promise<boolean>
+    healthCheck?: () => Promise<boolean>,
   ) {
     this.url = url;
     this.version = version;

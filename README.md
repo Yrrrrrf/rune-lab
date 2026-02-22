@@ -59,7 +59,9 @@ bun install rune-lab
 ```
 
 ## Quick Start
-Get your application shell running in less than 20 lines. Inside your `+layout.svelte`:
+
+Get your application shell running in less than 20 lines. Inside your
+`+layout.svelte`:
 
 ```svelte
 <script lang="ts">
@@ -90,7 +92,8 @@ Get your application shell running in less than 20 lines. Inside your `+layout.s
 </RuneProvider>
 ```
 
-You now have a fully functional reactive layout, keyboard command palette, toast notification system, and theme switcher ready to go.
+You now have a fully functional reactive layout, keyboard command palette, toast
+notification system, and theme switcher ready to go.
 
 ## Project Configuration
 
@@ -139,11 +142,16 @@ also scan the `rune-lab` dist output:
 
 ## Persistence Drivers
 
-Rune Lab provides built-in drivers to remember user preferences (like theme, layout state, or language) across reloads. Pass one of these to the `persistence` prop on `<RuneProvider>`:
+Rune Lab provides built-in drivers to remember user preferences (like theme,
+layout state, or language) across reloads. Pass one of these to the
+`persistence` prop on `<RuneProvider>`:
 
-- `cookieDriver`: Best for SSR applications (like SvelteKit) because the server can read the cookie and prevent a "theme flash" on initial load.
-- `localStorageDriver`: Best for client-only applications (SPA) looking for long-term persistence.
-- `sessionStorageDriver`: For preferences that should clear when the browser tab closes.
+- `cookieDriver`: Best for SSR applications (like SvelteKit) because the server
+  can read the cookie and prevent a "theme flash" on initial load.
+- `localStorageDriver`: Best for client-only applications (SPA) looking for
+  long-term persistence.
+- `sessionStorageDriver`: For preferences that should clear when the browser tab
+  closes.
 
 ```svelte
 <script lang="ts">
@@ -155,7 +163,9 @@ Rune Lab provides built-in drivers to remember user preferences (like theme, lay
 ## Advanced Patterns
 
 ### SvelteKit Route Syncing
-To keep your layout's active navigation state synchronized with the SvelteKit router, use an `$effect` inside your `+layout.svelte` right after the provider:
+
+To keep your layout's active navigation state synchronized with the SvelteKit
+router, use an `$effect` inside your `+layout.svelte` right after the provider:
 
 ```svelte
 <script lang="ts">
@@ -171,10 +181,14 @@ To keep your layout's active navigation state synchronized with the SvelteKit ro
     });
 </script>
 ```
-*(Note: Use `$app/state`, not the older Svelte 4 `$app/stores`)*
+
+_(Note: Use `$app/state`, not the older Svelte 4 `$app/stores`)_
 
 ### Keyboard Shortcuts
-Any component deep in your tree can register its own keyboard shortcuts dynamically. To ensure they clean up when the component unmounts, **always register them inside an `$effect` returning a cleanup function**:
+
+Any component deep in your tree can register its own keyboard shortcuts
+dynamically. To ensure they clean up when the component unmounts, **always
+register them inside an `$effect` returning a cleanup function**:
 
 ```svelte
 <script lang="ts">

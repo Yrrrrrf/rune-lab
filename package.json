@@ -49,8 +49,8 @@
     "prepack": "bun run compile && bunx svelte-kit sync && bunx svelte-package && rm -f dist/paraglide/.gitignore dist/paraglide/.prettierignore && bunx publint"
   },
   "peerDependencies": {
-    "@sveltejs/kit": "^2.52.2",
-    "svelte": "^5.53.0"
+    "@sveltejs/kit": "^2.53.0",
+    "svelte": "^5.53.2"
   },
   "devDependencies": {
     "@inlang/paraglide-js": "^2.12.0",
@@ -61,11 +61,11 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.0",
     "@types/node": "^25.3.0",
-    "daisyui": "^5.5.18",
+    "daisyui": "^5.5.19",
     "esm-env": "^1.2.2",
     "hotkeys-js": "^4.0.0",
     "publint": "^0.3.17",
-    "svelte-check": "^4.4.1",
+    "svelte-check": "^4.4.3",
     "tailwindcss": "^4.2.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
