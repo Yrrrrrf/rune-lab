@@ -7,8 +7,10 @@
 </script>
 
 <RuneProvider
-	app={{ name: "Rune Lab Explorer", version: "0.0.21" }}
-	apiUrl="https://api.example.com"
+	config={{
+		app: { name: "Rune Lab Explorer", version: "0.0.21" },
+		apiUrl: "https://api.example.com",
+	}}
 >
 	{@render children()}
 </RuneProvider>

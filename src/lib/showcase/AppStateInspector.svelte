@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { getContext } from "svelte";
+
     /**
      * @devOnly Renders a live debug view of all Rune Lab store state.
      * Should only be rendered in development:
@@ -92,8 +94,15 @@
         }
     }
 
-    function t(fn: any, fallback: string) {
-        return typeof fn === "function" ? fn() : fallback;
+    const dictionary = getContext<Record<string, any>>("rl:dictionary") || {};
+
+    function t(key: string, fallback: string) {
+        if (dictionary[key]) {
+            return typeof dictionary[key] === "function"
+                ? dictionary[key]()
+                : dictionary[key];
+        }
+        return fallback;
     }
 </script>
 
@@ -103,11 +112,11 @@
     <div class="flex flex-col gap-2 px-4">
         <h2 class="text-3xl font-black tracking-tight flex items-center gap-3">
             <span class="p-2 bg-primary/10 rounded-xl">🔍</span>
-            {t(m.live_store_dashboard, "Live Store Dashboard")}
+            {t("live_store_dashboard", "Live Store Dashboard")}
         </h2>
         <p class="text-base-content/50 font-medium">
             {t(
-                m.real_time_monitor_desc,
+                "real_time_monitor_desc",
                 "Real-time reactive state monitor for Rune Lab stores",
             )}
         </p>
@@ -121,7 +130,7 @@
             <div
                 class="stat-title uppercase text-[10px] font-bold tracking-widest opacity-60"
             >
-                {t(m.api_status, "API Status")}
+                {t("api_status", "API Status")}
             </div>
             <div
                 class="stat-value capitalize {getStatusClass(
@@ -141,13 +150,13 @@
             <div
                 class="stat-title uppercase text-[10px] font-bold tracking-widest opacity-60"
             >
-                {t(m.active_toasts, "Active Toasts")}
+                {t("active_toasts", "Active Toasts")}
             </div>
             <div class="stat-value text-2xl">
                 {toastStore.toasts.length}
             </div>
             <div class="stat-desc font-mono text-[10px] opacity-50">
-                {t(m.currently_in_queue, "Currently in queue")}
+                {t("currently_in_queue", "Currently in queue")}
             </div>
         </div>
 
@@ -155,13 +164,13 @@
             <div
                 class="stat-title uppercase text-[10px] font-bold tracking-widest opacity-60"
             >
-                {t(m.commands_label, "Commands")}
+                {t("commands_label", "Commands")}
             </div>
             <div class="stat-value text-2xl">
                 {commandStore.commands.length}
             </div>
             <div class="stat-desc font-mono text-[10px] opacity-50">
-                {t(m.registered_in_registry, "Registered in registry")}
+                {t("registered_in_registry", "Registered in registry")}
             </div>
         </div>
     </div>

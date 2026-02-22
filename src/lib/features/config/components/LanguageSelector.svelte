@@ -7,12 +7,11 @@
 
     const languageStore = getLanguageStore();
 
-    import { setLocale, locales } from "$lib/paraglide/runtime";
-    import * as m from "../../../paraglide/messages.js";
+    import { getContext } from "svelte";
     import { createMessageResolver } from "$lib/internal/message-resolver";
 
     let {
-        languages: allowedLocales = locales,
+        languages: allowedLocales = languageStore.available.map((l) => l.code),
         current = $bindable(languageStore.current),
         onchange,
     }: {
@@ -21,7 +20,9 @@
         onchange?: (value: string) => void;
     } = $props();
 
-    const getLabel = createMessageResolver<Language>(m as any, {
+    const dictionary = getContext<Record<string, any>>("rl:dictionary") || {};
+
+    const getLabel = createMessageResolver<Language>(dictionary as any, {
         keyExtractor: (l) => l.code,
     });
 
@@ -50,7 +51,6 @@
             class="flex items-center gap-3 w-full"
             onclick={() => {
                 languageStore.set(l.code);
-                setLocale(l.code as any);
                 current = l.code;
                 onchange?.(l.code);
             }}

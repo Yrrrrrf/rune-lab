@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { getAppStore } from "$lib/state/app.svelte";
+
   /**
    * Simple Icon component for Rune Lab
    * Centralizes SVG paths to reduce boilerplate
@@ -14,6 +16,13 @@
     class?: string;
     icons?: Record<string, string>;
   }>();
+
+  let appStore: ReturnType<typeof getAppStore> | undefined;
+  try {
+    appStore = getAppStore();
+  } catch {
+    // Graceful fallback if Icon is used outside RuneProvider
+  }
 
   const paths: Record<string, string> = {
     search:
@@ -51,6 +60,7 @@
 
   const path = $derived.by(() => {
     if (icons[name]) return icons[name];
+    if (appStore?.customIcons?.[name]) return appStore.customIcons[name];
     if (paths[name]) return paths[name];
 
     if (import.meta.env?.DEV) {

@@ -9,18 +9,36 @@
     } from "$lib/state/shortcuts.svelte";
     import { onMount } from "svelte";
 
+    /**
+     * @component WorkspaceLayout
+     * The main application shell managing navigational zones.
+     */
     let {
+        /** Content for the far-left vertical strip */
         workspaceStrip,
+        /** Main navigation tree panel */
         navigationPanel,
+        /** The primary application view */
         content,
+        /** Right-side contextual detail panel */
         detailPanel,
         namespace = "default",
+
+        /** Width of the left workspace strip */
+        stripWidth = "72px",
+        /** Width of the navigation tree panel */
+        navWidth = "240px",
+        /** Width of the contextual detail panel */
+        detailWidth = "320px",
     } = $props<{
         workspaceStrip?: Snippet;
         navigationPanel?: Snippet;
         content?: Snippet;
         detailPanel?: Snippet;
         namespace?: string;
+        stripWidth?: string;
+        navWidth?: string;
+        detailWidth?: string;
     }>();
 
     // Consume layout store from context (provided by RuneProvider)

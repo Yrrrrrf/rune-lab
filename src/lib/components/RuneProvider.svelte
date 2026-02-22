@@ -18,20 +18,18 @@
     import { RUNE_LAB_CONTEXT } from "$lib/context";
     import type { AppData } from "$lib/state/app.svelte";
 
-    let {
-        children,
-        persistence,
-        app,
-        apiUrl,
-        favicon,
-        manageHead = true,
-    } = $props<{
-        children: Snippet;
+    export interface RuneLabConfig {
         persistence?: PersistenceDriver;
         app?: Partial<AppData>;
         apiUrl?: string;
         favicon?: string;
         manageHead?: boolean;
+        dictionary?: Record<string, any>;
+    }
+
+    let { children, config = {} } = $props<{
+        children: Snippet;
+        config?: RuneLabConfig;
     }>();
 
     // 1. Initialize Base Configuration Stores
@@ -43,7 +41,7 @@
     wire(toastStore);
 
     // Capture the initial persistence prop to avoid Svelte 5 reactive capture warnings
-    const initialPersistence = untrack(() => persistence);
+    const initialPersistence = untrack(() => config.persistence);
 
     const themeStore = createThemeStore(initialPersistence);
     const languageStore = createLanguageStore({
@@ -75,13 +73,18 @@
     setContext(RUNE_LAB_CONTEXT.commands, commandStore);
     setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
 
+    const initialDictionary = untrack(() => config.dictionary);
+    if (initialDictionary) {
+        setContext("rl:dictionary", initialDictionary);
+    }
+
     // Track config changes dynamically
     $effect(() => {
-        if (app) appStore.init(app);
+        if (config.app) appStore.init(config.app);
     });
 
     $effect(() => {
-        if (apiUrl) apiStore.init(apiUrl);
+        if (config.apiUrl) apiStore.init(config.apiUrl);
     });
 
     onMount(() => {
@@ -96,10 +99,10 @@
 </script>
 
 <svelte:head>
-    {#if manageHead}
+    {#if config.manageHead !== false}
         <title>{appStore.name}</title>
-        {#if favicon}
-            <link rel="icon" href={favicon} />
+        {#if config.favicon}
+            <link rel="icon" href={config.favicon} />
         {/if}
         {#each metaTags as meta}
             <meta name={meta.name} content={meta.content} />

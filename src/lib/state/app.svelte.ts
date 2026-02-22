@@ -30,6 +30,7 @@ export class AppStore {
   repository = $state("https://github.com/Yrrrrrf/rune-lab");
   license = $state("MIT");
   homepage = $state("https://jsr.io/@yrrrrrf/rune-lab");
+  customIcons = $state<Record<string, string>>({});
 
   #initialized = false;
 
@@ -72,6 +73,13 @@ export class AppStore {
       license: this.license,
       homepage: this.homepage,
     };
+  }
+
+  /**
+   * Registers custom SVG icons to be available globally in the Icon component
+   */
+  registerIcons(icons: Record<string, string>) {
+    this.customIcons = { ...this.customIcons, ...icons };
   }
 }
 

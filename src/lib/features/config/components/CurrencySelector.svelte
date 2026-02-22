@@ -7,7 +7,7 @@
 
     const currencyStore = getCurrencyStore();
 
-    import * as m from "../../../paraglide/messages.js";
+    import { getContext } from "svelte";
     import { createMessageResolver } from "$lib/internal/message-resolver";
 
     let {
@@ -20,7 +20,9 @@
         onchange?: (value: string) => void;
     } = $props();
 
-    const getLabel = createMessageResolver<Currency>(m as any, {
+    const dictionary = getContext<Record<string, any>>("rl:dictionary") || {};
+
+    const getLabel = createMessageResolver<Currency>(dictionary as any, {
         keyExtractor: (c) => String(c.code),
     });
 
