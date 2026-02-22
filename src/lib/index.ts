@@ -47,10 +47,10 @@ export { default as ConnectedNavigationPanel } from "./features/layout/smart/Con
 export { default as ConnectedWorkspaceStrip } from "./features/layout/smart/ConnectedWorkspaceStrip.svelte";
 
 // Setting selectors
-export { default as AppSettingSelector } from "./features/config/components/AppSettingSelector.svelte";
-export { default as ThemeSelector } from "./features/config/components/ThemeSelector.svelte";
-export { default as LanguageSelector } from "./features/config/components/LanguageSelector.svelte";
-export { default as CurrencySelector } from "./features/config/components/CurrencySelector.svelte";
+export { default as AppSettingSelector } from "./features/config/AppSettingSelector.svelte";
+export { default as ThemeSelector } from "./features/config/ThemeSelector.svelte";
+export { default as LanguageSelector } from "./features/config/LanguageSelector.svelte";
+export { default as CurrencySelector } from "./features/config/CurrencySelector.svelte";
 
 // ── Stores ────────────────────────────────────────────────────────────────────
 export {
