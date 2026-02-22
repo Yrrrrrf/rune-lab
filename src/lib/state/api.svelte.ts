@@ -10,6 +10,7 @@ export class ApiStore {
   url = $state("http://localhost:8000");
   version = $state("v1");
   connectionState = $state<ConnectionState>("disconnected");
+  #healthCheck: (() => Promise<boolean>) | undefined;
 
   // Derived
   isConnected = $derived(this.connectionState === "connected");
@@ -35,10 +36,18 @@ export class ApiStore {
   async reconnect() {
     this.connectionState = "connecting";
 
-    // Simulate connection
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      this.connectionState = "connected";
+      if (this.#healthCheck) {
+        const isHealthy = await this.#healthCheck();
+        this.connectionState = isHealthy ? "connected" : "disconnected";
+      } else {
+        // Simulate connection if no health check provided
+        if (import.meta.env.DEV) {
+          console.warn("[rune-lab] ApiStore: No healthCheck provided to init(). Using simulated connection delay.");
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        this.connectionState = "connected";
+      }
     } catch (e) {
       this.connectionState = "disconnected";
     }
@@ -47,9 +56,14 @@ export class ApiStore {
   /**
    * Initialize API settings
    */
-  init(url: string, version: string = "v1") {
+  init(
+    url: string,
+    version: string = "v1",
+    healthCheck?: () => Promise<boolean>
+  ) {
     this.url = url;
     this.version = version;
+    if (healthCheck) this.#healthCheck = healthCheck;
     this.reconnect();
   }
 }

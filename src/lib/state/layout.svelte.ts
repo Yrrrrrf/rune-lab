@@ -33,7 +33,6 @@ export class LayoutStore {
   workspaces = $state<WorkspaceItem[]>([]);
   activeWorkspaceId = $state<string | null>(null);
   activeNavItemId = $state<string | null>(null);
-  activeShowcaseTab = $state<number>(0);
   navOpen = $state(true);
   detailOpen = $state(false);
   collapsedSections = $state<Set<string>>(new Set());
@@ -129,10 +128,6 @@ export class LayoutStore {
 
   navigate(id: string) {
     this.activeNavItemId = id;
-  }
-
-  setShowcaseTab(index: number) {
-    this.activeShowcaseTab = index;
   }
 
   toggleNav() {

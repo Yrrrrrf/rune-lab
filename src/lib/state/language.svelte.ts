@@ -3,7 +3,7 @@
 import {
   type ConfigStore,
   createConfigStore,
-} from "$lib/devtools/createConfigStore.svelte";
+} from "$lib/state/createConfigStore.svelte";
 import { setLocale } from "$lib/paraglide/runtime.js";
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "$lib/context";
@@ -40,16 +40,21 @@ export const LANGUAGES = [
 
 import type { PersistenceDriver } from "$lib/persistence/types";
 
-export function createLanguageStore(
-  driver?: PersistenceDriver | (() => PersistenceDriver | undefined),
-) {
+export interface LanguageStoreOptions {
+  driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
+  onLocaleChange?: (code: string) => void;
+}
+
+export function createLanguageStore(options?: LanguageStoreOptions) {
+  const driver =
+    typeof options?.driver === "function" ? options.driver() : options?.driver;
   const store = createConfigStore<Language>({
     items: LANGUAGES,
     storageKey: "language",
     displayName: "Language",
     idKey: "code",
     icon: "🌍",
-    driver: typeof driver === "function" ? driver() : driver,
+    driver,
   });
 
   // Sync Paraglide locale with languageStore
@@ -57,7 +62,11 @@ export function createLanguageStore(
     $effect.root(() => {
       $effect(() => {
         const currentCode = store.current as string;
-        setLocale(currentCode as any);
+        if (options?.onLocaleChange) {
+          options.onLocaleChange(currentCode);
+        } else {
+          setLocale(currentCode as any);
+        }
       });
     });
   }

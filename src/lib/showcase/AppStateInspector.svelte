@@ -1,4 +1,13 @@
 <script lang="ts">
+    /**
+     * @devOnly Renders a live debug view of all Rune Lab store state.
+     * Should only be rendered in development:
+     * ```svelte
+     * {#if import.meta.env.DEV}
+     *     <AppStateInspector />
+     * {/if}
+     * ```
+     */
     import * as m from "$lib/paraglide/messages.js";
     import StoreDetailCard from "./StoreDetailCard.svelte";
     import { getAppStore } from "$lib/state/app.svelte";

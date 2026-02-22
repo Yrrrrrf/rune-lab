@@ -35,15 +35,6 @@
     import { locales } from "$lib/paraglide/runtime";
 
     onMount(() => {
-        appStore.init({
-            name: "Rune Lab Explorer",
-
-            description: "Testing Svelte 5 Runes abstractions",
-            version: "0.0.19",
-        });
-
-        apiStore.init("https://api.example.com", "v1");
-
         // Initialize layout state
         if (!layoutStore.activeWorkspaceId)
             layoutStore.activeWorkspaceId = "home";
@@ -52,16 +43,6 @@
 
         // Provide workspaces to the store so shortcuts know about them
         layoutStore.setWorkspaces(workspaces);
-
-        // Custom shortcut for demo
-        shortcutStore.register({
-            id: "demo:hello",
-            keys: "h",
-            label: "Say Hello",
-            category: "Demo",
-            scope: "global",
-            handler: () => toastStore.info("Hello from Rune Lab!"),
-        });
 
         // Register demo commands
         commandStore.register({
@@ -112,24 +93,38 @@
         });
     });
 
+    $effect(() => {
+        // Custom shortcut for demo
+        shortcutStore.register({
+            id: "demo:hello",
+            keys: "h",
+            label: "Say Hello",
+            category: "Demo",
+            scope: "global",
+            handler: () => toastStore.info("Hello from Rune Lab!"),
+        });
+
+        return () => shortcutStore.unregister("demo:hello");
+    });
+
     const workspaces = [
         {
             id: "home",
             icon: "🏠",
             label: "Home",
-            onClick: () => (layoutStore.activeNavItemId = "dashboard"),
+            onClick: () => layoutStore.navigate("dashboard"),
         },
         {
             id: "docs",
             icon: "📚",
             label: "Documentation",
-            onClick: () => (layoutStore.activeNavItemId = "showcase"),
+            onClick: () => layoutStore.navigate("showcase"),
         },
         {
             id: "settings",
             icon: "⚙️",
             label: "Settings",
-            onClick: () => (layoutStore.activeNavItemId = "dashboard"),
+            onClick: () => layoutStore.navigate("dashboard"),
         },
         {
             id: "github",
@@ -149,7 +144,7 @@
                     id: "dashboard",
                     label: "Dashboard",
                     icon: "📊",
-                    onClick: () => (layoutStore.activeNavItemId = "dashboard"),
+                    onClick: () => layoutStore.navigate("dashboard"),
                 },
             ],
         },
@@ -161,15 +156,14 @@
                     id: "showcase",
                     label: "Showcase",
                     icon: "🎨",
-                    onClick: () => (layoutStore.activeNavItemId = "showcase"),
+                    onClick: () => layoutStore.navigate("showcase"),
                 },
                 {
                     id: "shortcuts-demo",
                     label: "Shortcuts",
                     icon: "⌨️",
                     badge: "New",
-                    onClick: () =>
-                        (layoutStore.activeNavItemId = "shortcuts-demo"),
+                    onClick: () => layoutStore.navigate("shortcuts-demo"),
                 },
             ],
         },

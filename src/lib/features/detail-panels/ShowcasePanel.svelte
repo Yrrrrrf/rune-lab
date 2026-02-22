@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { getLayoutStore } from "$lib/state/layout.svelte";
-
-    const layoutStore = getLayoutStore();
+    import { showcaseState } from "../../showcase/state.svelte";
 
     import { getToastStore } from "$lib/state/toast.svelte";
 
@@ -21,7 +19,7 @@
         "visual",
     ];
 
-    const currentTabId = $derived(tabs[layoutStore.activeShowcaseTab]);
+    const currentTabId = $derived(tabs[showcaseState.activeTab]);
     const components = $derived(SHOWCASE_COMPONENTS[currentTabId] || []);
     const snippet = $derived(SHOWCASE_SNIPPETS[currentTabId] || "");
 
@@ -52,8 +50,8 @@
             {#each tabs as tab, i}
                 <li>
                     <button
-                        class:active={layoutStore.activeShowcaseTab === i}
-                        onclick={() => layoutStore.setShowcaseTab(i)}
+                        class:active={showcaseState.activeTab === i}
+                        onclick={() => (showcaseState.activeTab = i)}
                         class="capitalize"
                     >
                         {tab.replace("-", " ")}

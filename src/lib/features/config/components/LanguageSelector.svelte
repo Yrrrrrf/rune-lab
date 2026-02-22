@@ -9,7 +9,7 @@
 
     import { setLocale, locales } from "$lib/paraglide/runtime";
     import * as m from "../../../paraglide/messages.js";
-    import { createMessageResolver } from "$lib/devtools/message-resolver";
+    import { createMessageResolver } from "$lib/internal/message-resolver";
 
     let {
         languages: allowedLocales = locales,

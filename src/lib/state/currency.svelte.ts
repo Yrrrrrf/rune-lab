@@ -1,7 +1,7 @@
 import {
   type ConfigStore,
   createConfigStore,
-} from "$lib/devtools/createConfigStore.svelte";
+} from "$lib/state/createConfigStore.svelte";
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "$lib/context";
 

@@ -18,7 +18,7 @@
     } = $props<{
         workspaceStrip?: Snippet;
         navigationPanel?: Snippet;
-        content: Snippet;
+        content?: Snippet;
         detailPanel?: Snippet;
         namespace?: string;
     }>();
@@ -115,7 +115,11 @@
     <main
         class="rl-content h-full flex-1 min-w-0 bg-base-100 flex flex-col overflow-hidden relative"
     >
-        {@render content()}
+        {#if content}
+            {@render content()}
+        {:else}
+            <div></div>
+        {/if}
     </main>
 
     <!-- Mobile Detail Backdrop -->

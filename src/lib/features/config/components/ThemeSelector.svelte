@@ -5,7 +5,7 @@
     const themeStore = getThemeStore();
 
     import * as m from "../../../paraglide/messages.js";
-    import { createMessageResolver } from "$lib/devtools/message-resolver";
+    import { createMessageResolver } from "$lib/internal/message-resolver";
 
     let {
         themes = [],

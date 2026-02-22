@@ -14,10 +14,11 @@
     { label: "Actions", icon: "⚡", component: Actions },
     { label: "Data Input", icon: "📥", component: DataInput },
     { label: "Display", icon: "📊", component: Display },
-    { label: "Navigation", icon: "🧭", component: Navigation },
     { label: "Feedback", icon: "💬", component: Feedback },
     { label: "Visual", icon: "🎨", component: Visual },
   ];
+
+  import { showcaseState } from "./state.svelte";
 </script>
 
 <section
@@ -27,11 +28,11 @@
     {#each tabs as tab, i (tab.label)}
       <button
         role="tab"
-        class="tab gap-2 transition-all duration-300 {layoutStore.activeShowcaseTab ===
+        class="tab gap-2 transition-all duration-300 {showcaseState.activeTab ===
         i
           ? 'tab-active shadow-lg'
           : ''}"
-        onclick={() => layoutStore.setShowcaseTab(i)}
+        onclick={() => (showcaseState.activeTab = i)}
       >
         <span class="text-xl">{tab.icon}</span>
         <span class="hidden md:inline font-bold">{tab.label}</span>
@@ -43,7 +44,7 @@
     class="min-h-[600px] bg-base-200/50 rounded-3xl border border-base-content/5 overflow-hidden"
   >
     {#each tabs as tab, i (tab.label)}
-      {#if layoutStore.activeShowcaseTab === i}
+      {#if showcaseState.activeTab === i}
         <div class="animate-in fade-in zoom-in-95 duration-500">
           <tab.component />
         </div>

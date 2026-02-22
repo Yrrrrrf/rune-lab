@@ -2,7 +2,7 @@ import { getContext, untrack } from "svelte";
 import { RUNE_LAB_CONTEXT } from "$lib/context";
 import type { AppStore } from "./app.svelte";
 import type { ApiStore } from "./api.svelte";
-import type { ConfigStore } from "$lib/devtools/createConfigStore.svelte";
+import type { ConfigStore } from "$lib/state/createConfigStore.svelte";
 import type { ToastStore } from "./toast.svelte";
 import type { Theme } from "./theme.svelte";
 import type { Language } from "./language.svelte";

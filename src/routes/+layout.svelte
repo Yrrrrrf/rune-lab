@@ -6,6 +6,9 @@
 	let { children } = $props();
 </script>
 
-<RuneProvider>
+<RuneProvider
+	app={{ name: "Rune Lab Explorer", version: "0.0.21" }}
+	apiUrl="https://api.example.com"
+>
 	{@render children()}
 </RuneProvider>

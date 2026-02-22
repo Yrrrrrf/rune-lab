@@ -58,6 +58,40 @@ npm install rune-lab
 bun install rune-lab
 ```
 
+## Quick Start
+Get your application shell running in less than 20 lines. Inside your `+layout.svelte`:
+
+```svelte
+<script lang="ts">
+  import { RuneProvider, WorkspaceLayout, ConnectedNavigationPanel } from "rune-lab";
+  import { cookieDriver } from "rune-lab";
+
+  let { children } = $props();
+  
+  // Example navigation
+  const sections = [{ id: "main", title: "Main", items: [{ id: "home", label: "Home" }] }];
+</script>
+
+<RuneProvider 
+  app={{ name: "My App", version: "1.0.0" }}
+  persistence={cookieDriver}
+>
+  <WorkspaceLayout>
+    {#snippet navigationPanel()}
+      <ConnectedNavigationPanel {sections} />
+    {/snippet}
+
+    {#snippet content()}
+      <div class="p-8">
+        {@render children()}
+      </div>
+    {/snippet}
+  </WorkspaceLayout>
+</RuneProvider>
+```
+
+You now have a fully functional reactive layout, keyboard command palette, toast notification system, and theme switcher ready to go.
+
 ## Project Configuration
 
 After installing, two configuration steps are required to ensure components are
@@ -102,6 +136,65 @@ also scan the `rune-lab` dist output:
 > a different depth in your project tree. With both steps in place, all DaisyUI
 > component classes used by `rune-lab` will be included in your build and theme
 > switching will work across library components and your own code alike.
+
+## Persistence Drivers
+
+Rune Lab provides built-in drivers to remember user preferences (like theme, layout state, or language) across reloads. Pass one of these to the `persistence` prop on `<RuneProvider>`:
+
+- `cookieDriver`: Best for SSR applications (like SvelteKit) because the server can read the cookie and prevent a "theme flash" on initial load.
+- `localStorageDriver`: Best for client-only applications (SPA) looking for long-term persistence.
+- `sessionStorageDriver`: For preferences that should clear when the browser tab closes.
+
+```svelte
+<script lang="ts">
+  import { cookieDriver } from "rune-lab";
+  // Then pass directly: <RuneProvider persistence={cookieDriver}>
+</script>
+```
+
+## Advanced Patterns
+
+### SvelteKit Route Syncing
+To keep your layout's active navigation state synchronized with the SvelteKit router, use an `$effect` inside your `+layout.svelte` right after the provider:
+
+```svelte
+<script lang="ts">
+    import { page } from "$app/state";
+    import { getLayoutStore } from "rune-lab";
+
+    const layoutStore = getLayoutStore();
+
+    $effect(() => {
+        // Example: Use the first path segment as the active nav item
+        const segment = page.url.pathname.split("/")[1] || "home";
+        layoutStore.navigate(segment);
+    });
+</script>
+```
+*(Note: Use `$app/state`, not the older Svelte 4 `$app/stores`)*
+
+### Keyboard Shortcuts
+Any component deep in your tree can register its own keyboard shortcuts dynamically. To ensure they clean up when the component unmounts, **always register them inside an `$effect` returning a cleanup function**:
+
+```svelte
+<script lang="ts">
+  import { getShortcutStore, getToastStore } from "rune-lab";
+  
+  const shortcuts = getShortcutStore();
+  const toasts = getToastStore();
+
+  $effect(() => {
+    shortcuts.register({
+      id: "feature.save",
+      keys: "ctrl s",
+      label: "Save Document",
+      handler: () => toasts.success("Document Saved!")
+    });
+
+    return () => shortcuts.unregister("feature.save"); // Important!
+  });
+</script>
+```
 
 ## License
 

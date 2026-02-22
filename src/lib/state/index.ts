@@ -17,7 +17,7 @@ export {
   type NavigationSection,
   type WorkspaceItem,
 } from "./layout.svelte";
-export { ApiStore, createApiStore, getApiStore } from "./api.svelte";
+export { ApiStore, createApiStore, getApiStore, type ConnectionState } from "./api.svelte";
 export {
   createLanguageStore,
   getLanguageStore,
@@ -45,3 +45,5 @@ export {
   ShortcutStore,
 } from "./shortcuts.svelte";
 export { createThemeStore, getThemeStore, type Theme } from "./theme.svelte";
+export { createConfigStore, type ConfigStore } from "./createConfigStore.svelte";
+export { notify, createToastBridge } from "./toast-bridge";

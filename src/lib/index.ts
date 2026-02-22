@@ -2,8 +2,8 @@
 // Public surface of rune-lab.
 
 // ── Devtools utilities ────────────────────────────────────────────────────────
-export { createConfigStore } from "./devtools/createConfigStore.svelte";
-export { createMessageResolver } from "./devtools/message-resolver";
+export { createConfigStore } from "./state/createConfigStore.svelte";
+export { createMessageResolver } from "./internal/message-resolver";
 export { RUNE_LAB_CONTEXT } from "./context";
 export type { PersistenceDriver } from "./persistence/types";
 export {
@@ -27,8 +27,8 @@ export { default as RuneProvider } from "./components/RuneProvider.svelte";
 export { default as Icon } from "./components/Icon.svelte";
 
 // Core overlays
-export { default as Toaster } from "./devtools/Toaster.svelte";
-export { default as ApiMonitor } from "./devtools/API_Monitor.svelte";
+export { default as Toaster } from "./components/Toaster.svelte";
+export { default as ApiMonitor } from "./components/ApiMonitor.svelte";
 export { default as CommandPalette } from "./features/command-palette/CommandPalette.svelte";
 export { default as ShortcutPalette } from "./features/shortcuts/ShortcutPalette.svelte";
 
@@ -59,6 +59,7 @@ export {
   createLayoutStore,
   createShortcutStore,
   createThemeStore,
+  createToastBridge,
   createToastStore,
   getApiStore,
   getAppStore,
@@ -69,17 +70,16 @@ export {
   getShortcutStore,
   getThemeStore,
   getToastStore,
+  notify,
 } from "./state/index";
 
-// ── Showcase ──────────────────────────────────────────────────────────────────
 export { default as AppStateInspector } from "./showcase/AppStateInspector.svelte";
-export { default as ShowcaseMain } from "./showcase/Showcase.svelte";
-export { default as ShowcaseCard } from "./showcase/ShowcaseCard.svelte";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 export type {
   AppData,
   Command,
+  ConfigStore,
   Currency,
   Language,
   NavigationItem,
@@ -88,6 +88,8 @@ export type {
   Theme,
   WorkspaceItem,
 } from "./state/index";
+
+export type { ConnectionState } from "./state/api.svelte";
 
 // ── Paraglide compiled messages ───────────────────────────────────────────────
 export * as sdkMessages from "./paraglide/messages.js";
