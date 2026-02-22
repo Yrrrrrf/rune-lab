@@ -1,5 +1,6 @@
 // src/lib/persistence/drivers.ts
 import type { PersistenceDriver } from "./types";
+import { browser } from "$app/environment";
 
 export function createInMemoryDriver(): PersistenceDriver {
   const store = new Map<string, string>();
@@ -14,30 +15,30 @@ export const inMemoryDriver: PersistenceDriver = createInMemoryDriver();
 
 export const localStorageDriver: PersistenceDriver = {
   get: (key) => {
-    if (typeof window === "undefined") return null;
+    if (!browser) return null;
     return window.localStorage.getItem(key);
   },
   set: (key, value) => {
-    if (typeof window === "undefined") return;
+    if (!browser) return;
     window.localStorage.setItem(key, value);
   },
   remove: (key) => {
-    if (typeof window === "undefined") return;
+    if (!browser) return;
     window.localStorage.removeItem(key);
   },
 };
 
 export const sessionStorageDriver: PersistenceDriver = {
   get: (key) => {
-    if (typeof window === "undefined") return null;
+    if (!browser) return null;
     return window.sessionStorage.getItem(key);
   },
   set: (key, value) => {
-    if (typeof window === "undefined") return;
+    if (!browser) return;
     window.sessionStorage.setItem(key, value);
   },
   remove: (key) => {
-    if (typeof window === "undefined") return;
+    if (!browser) return;
     window.sessionStorage.removeItem(key);
   },
 };
@@ -50,16 +51,12 @@ export const cookieDriver = (
   } = {},
 ): PersistenceDriver => ({
   get: (key) => {
-    if (typeof window === "undefined" || typeof document === "undefined") {
-      return null;
-    }
+    if (!browser) return null;
     const match = document.cookie.match(new RegExp(`(^| )${key}=([^;]+)`));
     return match ? decodeURIComponent(match[2]) : null;
   },
   set: (key, value) => {
-    if (typeof window === "undefined" || typeof document === "undefined") {
-      return;
-    }
+    if (!browser) return;
     let cookie = `${key}=${encodeURIComponent(value)}`;
     if (options.path) cookie += `; path=${options.path}`;
     if (options.maxAge) cookie += `; max-age=${options.maxAge}`;
@@ -67,9 +64,7 @@ export const cookieDriver = (
     document.cookie = cookie;
   },
   remove: (key) => {
-    if (typeof window === "undefined" || typeof document === "undefined") {
-      return;
-    }
+    if (!browser) return;
     document.cookie = `${key}=; max-age=0; path=${options.path || "/"}`;
   },
 });

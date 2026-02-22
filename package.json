@@ -30,6 +30,10 @@
       "types": "./dist/layout/index.d.ts",
       "default": "./dist/layout/index.js"
     },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "default": "./dist/server/index.js"
+    },
     "./paraglide/*": {
       "types": "./dist/paraglide/*.d.ts",
       "default": "./dist/paraglide/*.js"

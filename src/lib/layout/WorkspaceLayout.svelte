@@ -1,6 +1,33 @@
 <!-- src/lib/layout/WorkspaceLayout.svelte -->
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from "svelte";
+
+    export interface WorkspaceLayoutProps {
+        /** Content for the far-left vertical strip */
+        workspaceStrip?: Snippet;
+        /** Main navigation tree panel */
+        navigationPanel?: Snippet;
+        /** The primary application view */
+        content?: Snippet;
+        /** Right-side contextual detail panel */
+        detailPanel?: Snippet;
+        namespace?: string;
+
+        /** Width of the left workspace strip */
+        stripWidth?: string;
+        /** Width of the navigation tree panel */
+        navWidth?: string;
+        /** Width of the contextual detail panel */
+        detailWidth?: string;
+
+        /** Controlled override for navigation panel visibility */
+        navOpen?: boolean;
+        /** Controlled override for detail panel visibility */
+        detailOpen?: boolean;
+    }
+</script>
+
+<script lang="ts">
     import { getLayoutStore } from "$lib/state/layout.svelte";
     import {
         getShortcutStore,
@@ -13,6 +40,8 @@
      * @component WorkspaceLayout
      * The main application shell managing navigational zones.
      */
+    const layoutStore = getLayoutStore();
+
     let {
         /** Content for the far-left vertical strip */
         workspaceStrip,
@@ -30,19 +59,13 @@
         navWidth = "240px",
         /** Width of the contextual detail panel */
         detailWidth = "320px",
-    } = $props<{
-        workspaceStrip?: Snippet;
-        navigationPanel?: Snippet;
-        content?: Snippet;
-        detailPanel?: Snippet;
-        namespace?: string;
-        stripWidth?: string;
-        navWidth?: string;
-        detailWidth?: string;
-    }>();
 
-    // Consume layout store from context (provided by RuneProvider)
-    const layoutStore = getLayoutStore();
+        /** Controlled override for navigation panel visibility */
+        navOpen = $bindable(layoutStore.navOpen),
+        /** Controlled override for detail panel visibility */
+        detailOpen = $bindable(layoutStore.detailOpen),
+    }: WorkspaceLayoutProps = $props();
+
     const shortcutStore = getShortcutStore();
 
     // Initial configuration based on props
@@ -97,10 +120,11 @@
     {/if}
 
     <!-- Mobile Nav Backdrop -->
-    {#if navigationPanel && layoutStore.navOpen}
+    {#if navigationPanel && navOpen}
         <button
-            class="fixed inset-0 bg-black/50 z-[40] md:hidden cursor-default border-none"
-            onclick={() => (layoutStore.navOpen = false)}
+            class="fixed inset-0 bg-black/50 md:hidden cursor-default border-none"
+            style="z-index: var(--rl-z-backdrop, 40);"
+            onclick={() => (navOpen = false)}
             aria-label="Close navigation"
         ></button>
     {/if}
@@ -108,19 +132,18 @@
     <!-- Zone 2: Navigation Panel -->
     {#if navigationPanel}
         <aside
-            class="rl-nav h-full shrink-0 bg-base-200 overflow-hidden flex flex-col transition-all duration-300 ease-in-out z-[50]"
-            class:border-r={layoutStore.navOpen}
+            class="rl-nav h-full shrink-0 bg-base-200 overflow-hidden flex flex-col transition-all duration-300 ease-in-out"
+            class:border-r={navOpen}
             class:border-base-content={true}
             style="
                 border-opacity: 0.05;
-                width: {layoutStore.navOpen
-                ? 'var(--rl-nav-width, 240px)'
-                : '0px'};
+                z-index: var(--rl-z-nav, 50);
+                width: {navOpen ? 'var(--rl-nav-width, 240px)' : '0px'};
                 left: {workspaceStrip ? 'var(--rl-strip-width, 72px)' : '0px'};
             "
             class:max-md:!w-[var(--rl-nav-width,240px)]={true}
             class:max-md:fixed={true}
-            class:max-md:-translate-x-[200%]={!layoutStore.navOpen}
+            class:max-md:-translate-x-[200%]={!navOpen}
             data-rl-panel="navigation"
         >
             <div class="w-[var(--rl-nav-width,240px)] h-full flex flex-col">
@@ -141,10 +164,11 @@
     </main>
 
     <!-- Mobile Detail Backdrop -->
-    {#if detailPanel && layoutStore.detailOpen}
+    {#if detailPanel && detailOpen}
         <button
-            class="fixed inset-0 bg-black/50 z-[40] md:hidden cursor-default border-none"
-            onclick={() => (layoutStore.detailOpen = false)}
+            class="fixed inset-0 bg-black/50 md:hidden cursor-default border-none"
+            style="z-index: var(--rl-z-backdrop, 40);"
+            onclick={() => (detailOpen = false)}
             aria-label="Close detail panel"
         ></button>
     {/if}
@@ -152,14 +176,13 @@
     <!-- Zone 4: Detail Panel -->
     {#if detailPanel}
         <aside
-            class="rl-detail h-full shrink-0 bg-base-100 overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out z-[50]"
-            class:border-l={layoutStore.detailOpen}
+            class="rl-detail h-full shrink-0 bg-base-100 overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out"
+            class:border-l={detailOpen}
             class:border-base-content={true}
             style="
                 border-opacity: 0.05;
-                width: {layoutStore.detailOpen
-                ? 'var(--rl-detail-width, 320px)'
-                : '0px'};
+                z-index: var(--rl-z-detail, 50);
+                width: {detailOpen ? 'var(--rl-detail-width, 320px)' : '0px'};
             "
             class:max-md:!w-[var(--rl-detail-width,320px)]={true}
             class:max-md:fixed={true}

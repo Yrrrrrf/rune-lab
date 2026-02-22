@@ -46,6 +46,7 @@
         <button
             type="button"
             class="btn btn-ghost btn-sm m-1 h-auto min-h-[2rem] px-2"
+            aria-haspopup="dialog"
             onclick={() => modal?.showModal()}
         >
             <span class="flex items-center gap-2">
@@ -66,9 +67,12 @@
                     </form>
                 </div>
                 <div class="max-h-[60vh] overflow-y-auto p-2">
-                    <ul class="menu bg-base-100 w-full p-0">
+                    <ul class="menu bg-base-100 w-full p-0" role="menu">
                         {#each options as option}
-                            <li class="border-b border-base-100 last:border-0">
+                            <li
+                                class="border-b border-base-100 last:border-0"
+                                role="menuitem"
+                            >
                                 <button
                                     class="w-full text-left py-3"
                                     onclick={() => modal?.close()}
@@ -96,6 +100,7 @@
     <div
         tabindex="0"
         role="button"
+        aria-haspopup="menu"
         class="btn btn-ghost btn-sm m-1 {tooltip
             ? 'tooltip tooltip-bottom'
             : ''}"
@@ -107,10 +112,11 @@
     </div>
 
     <ul
+        role="menu"
         class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-xl border border-base-200 max-h-96 overflow-y-auto"
     >
         {#each options as option}
-            <li>
+            <li role="menuitem">
                 {@render item(option)}
             </li>
         {/each}
