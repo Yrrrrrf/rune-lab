@@ -195,6 +195,9 @@
                         >Explorer</span
                     >
                 </div>
+                <ThemeSelector />
+                <LanguageSelector />
+                <CurrencySelector />
             {/snippet}
             {#snippet footer()}
                 <div class="flex flex-col gap-2">
@@ -369,4 +372,4 @@
     {/snippet}
 </WorkspaceLayout>
 
-<ApiMonitor />
+<!-- <ApiMonitor /> -->

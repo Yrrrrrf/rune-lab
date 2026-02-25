@@ -1,7 +1,6 @@
 <script lang="ts">
 	import "./layout.css";
 	import RuneProvider from "$lib/components/RuneProvider.svelte";
-	import { getAppStore } from "$lib/state/app.svelte";
 	import * as m from "$lib/paraglide/messages.js";
 
 	let { children } = $props();

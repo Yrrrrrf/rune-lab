@@ -15,6 +15,7 @@
     import { Toaster, CommandPalette, ShortcutPalette } from "$lib/index";
 
     import type { PersistenceDriver } from "$lib/persistence/types";
+    import { localStorageDriver } from "$lib/persistence/drivers";
     import { RUNE_LAB_CONTEXT } from "$lib/context";
     import type { AppData } from "$lib/state/app.svelte";
 
@@ -26,6 +27,9 @@
         favicon?: string;
         manageHead?: boolean;
         dictionary?: Record<string, any>;
+        locales?: readonly string[];
+        onLanguageChange?: (code: string) => void;
+        onThemeChange?: (name: string) => void;
     }
 
     let { children, config = {} } = $props<{
@@ -42,11 +46,16 @@
     wire(toastStore);
 
     // Capture the initial persistence prop to avoid Svelte 5 reactive capture warnings
-    const initialPersistence = untrack(() => config.persistence);
+    // Default to localStorageDriver to ensure UI selectors persist across browser page reloads
+    const initialPersistence = untrack(
+        () => config.persistence ?? localStorageDriver,
+    );
+    const initialLocales = untrack(() => config.locales);
 
     const themeStore = createThemeStore(initialPersistence);
     const languageStore = createLanguageStore({
         driver: initialPersistence,
+        locales: initialLocales,
     });
     const currencyStore = createCurrencyStore(initialPersistence);
     const shortcutStore = createShortcutStore();
@@ -85,7 +94,22 @@
     });
 
     $effect(() => {
-        if (config.apiUrl) apiStore.init(config.apiUrl, "v1", config.apiHealthCheck);
+        if (config.apiUrl)
+            apiStore.init(config.apiUrl, "v1", config.apiHealthCheck);
+    });
+
+    $effect(() => {
+        const code = languageStore.current as string;
+        if (config.onLanguageChange) {
+            config.onLanguageChange(code);
+        }
+    });
+
+    $effect(() => {
+        const name = themeStore.current as string;
+        if (config.onThemeChange) {
+            config.onThemeChange(name);
+        }
     });
 
     onMount(() => {

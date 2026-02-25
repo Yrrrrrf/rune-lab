@@ -4,11 +4,11 @@
         getLanguageStore,
         type Language,
     } from "$lib/state/language.svelte";
+    import * as rlMessages from "$lib/paraglide/messages.js";
+    import { getContext } from "svelte";
+    import { setLocale } from "$lib/paraglide/runtime";
 
     const languageStore = getLanguageStore();
-
-    import { getContext } from "svelte";
-    import { createMessageResolver } from "$lib/internal/message-resolver";
 
     let {
         languages: allowedLocales = languageStore.available.map((l) => l.code),
@@ -20,11 +20,17 @@
         onchange?: (value: string) => void;
     } = $props();
 
-    const dictionary = getContext<Record<string, any>>("rl:dictionary") || {};
+    const userDictionary =
+        getContext<Record<string, any>>("rl:dictionary") ?? {};
 
-    const getLabel = createMessageResolver<Language>(dictionary as any, {
-        keyExtractor: (l) => l.code,
-    });
+    function getLabel(lang: Language): string {
+        const key = lang.code;
+        if (typeof userDictionary[key] === "function")
+            return userDictionary[key]();
+        if (typeof (rlMessages as any)[key] === "function")
+            return (rlMessages as any)[key]();
+        return lang.code.toUpperCase();
+    }
 
     let active = $derived(
         languageStore.get(languageStore.current) ?? languageStore.available[0],
@@ -42,8 +48,8 @@
     options={available}
     tooltip={getLabel(active)}
 >
-    {#snippet triggerLabel(l)}
-        <span class="text-lg">{l?.flag ?? active.flag}</span>
+    {#snippet triggerLabel()}
+        <span class="text-lg">{active.flag}</span>
     {/snippet}
 
     {#snippet item(l)}
@@ -51,6 +57,7 @@
             class="flex items-center gap-3 w-full"
             onclick={() => {
                 languageStore.set(l.code);
+                setLocale(l.code as any);
                 current = l.code;
                 onchange?.(l.code);
             }}

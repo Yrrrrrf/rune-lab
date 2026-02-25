@@ -1,11 +1,10 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
     import { getThemeStore, type Theme } from "$lib/state/theme.svelte";
+    import * as rlMessages from "$lib/paraglide/messages.js";
+    import { getContext } from "svelte";
 
     const themeStore = getThemeStore();
-
-    import { getContext } from "svelte";
-    import { createMessageResolver } from "$lib/internal/message-resolver";
 
     let {
         themes = [],
@@ -17,11 +16,17 @@
         onchange?: (value: string) => void;
     } = $props();
 
-    const dictionary = getContext<Record<string, any>>("rl:dictionary") || {};
+    const userDictionary =
+        getContext<Record<string, any>>("rl:dictionary") ?? {};
 
-    const getThemeLabel = createMessageResolver<Theme>(dictionary as any, {
-        keyExtractor: (t) => t.name,
-    });
+    function getThemeLabel(theme: Theme): string {
+        const key = theme.name;
+        if (typeof userDictionary[key] === "function")
+            return userDictionary[key]();
+        if (typeof (rlMessages as any)[key] === "function")
+            return (rlMessages as any)[key]();
+        return theme.name;
+    }
 
     let activeTheme = $derived(
         themeStore.get(themeStore.current) ?? themeStore.available[0],
@@ -39,8 +44,8 @@
     options={available}
     tooltip={getThemeLabel(activeTheme)}
 >
-    {#snippet triggerLabel(t)}
-        <span class="text-lg">{t?.icon ?? activeTheme.icon}</span>
+    {#snippet triggerLabel()}
+        <span class="text-lg">{activeTheme.icon}</span>
     {/snippet}
 
     {#snippet item(t)}
@@ -54,7 +59,7 @@
         >
             <input
                 type="radio"
-                name="theme-dropdown"
+                name="theme-{t.name}"
                 class="theme-controller radio radio-xs"
                 value={t.name}
                 bind:group={themeStore.current}

@@ -4,11 +4,10 @@
         getCurrencyStore,
         type Currency,
     } from "$lib/state/currency.svelte";
+    import * as rlMessages from "$lib/paraglide/messages.js";
+    import { getContext } from "svelte";
 
     const currencyStore = getCurrencyStore();
-
-    import { getContext } from "svelte";
-    import { createMessageResolver } from "$lib/internal/message-resolver";
 
     let {
         codes = [],
@@ -20,11 +19,17 @@
         onchange?: (value: string) => void;
     } = $props();
 
-    const dictionary = getContext<Record<string, any>>("rl:dictionary") || {};
+    const userDictionary =
+        getContext<Record<string, any>>("rl:dictionary") ?? {};
 
-    const getLabel = createMessageResolver<Currency>(dictionary as any, {
-        keyExtractor: (c) => String(c.code),
-    });
+    function getLabel(currency: Currency): string {
+        const key = String(currency.code);
+        if (typeof userDictionary[key] === "function")
+            return userDictionary[key]();
+        if (typeof (rlMessages as any)[key] === "function")
+            return (rlMessages as any)[key]();
+        return String(currency.code);
+    }
 
     let active = $derived(
         currencyStore.get(currencyStore.current) ?? currencyStore.available[0],
@@ -42,8 +47,8 @@
     options={available}
     tooltip={getLabel(active)}
 >
-    {#snippet triggerLabel(c)}
-        <span class="font-bold">{c.symbol}</span>
+    {#snippet triggerLabel()}
+        <span class="font-bold">{active.symbol}</span>
     {/snippet}
 
     {#snippet item(c)}
