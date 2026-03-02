@@ -7,8 +7,7 @@
 
 # web-generated files
 node_modules
-build
 dist
 scripts
 
-# bunfig.toml
+bunfig.toml

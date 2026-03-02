@@ -1,4 +1,3 @@
-// @internal/ui - Public barrel export
 // All components, actions, and layout primitives
 
 // ── Actions ───────────────────────────────────────────────────────────────────

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import "./layout.css";
 	import * as m from "$lib/paraglide/messages.js";
-	import { RuneProvider } from "@internal/ui";
+	import { RuneProvider } from "$lib";
 
 	let { children } = $props();
 

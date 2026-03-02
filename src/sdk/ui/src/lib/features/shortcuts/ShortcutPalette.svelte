@@ -7,7 +7,7 @@
         type ShortcutEntry,
     } from "@internal/state";
     import { getAppStore } from "@internal/state";
-    import { Icon } from "@internal/ui";
+    import { Icon } from "$lib";
 
     const appStore = getAppStore();
     const shortcutStore = getShortcutStore();

@@ -13,7 +13,7 @@ const config = {
   alias: {
     "@internal/state": "../../sdk/state/src/index.ts",
     "@internal/core": "../../sdk/core/src/index.ts",
-    "@internal/ui": "../../sdk/ui/src/index.ts",
+    "@internal/ui": "../../sdk/ui/src/lib/index.ts",
   },
 };
 export default config;
