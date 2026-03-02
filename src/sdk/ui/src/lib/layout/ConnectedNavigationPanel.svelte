@@ -1,10 +1,7 @@
 <!-- src/lib/features/layout/smart/ConnectedNavigationPanel.svelte -->
 <script lang="ts">
-    import {
-        getLayoutStore,
-        type NavigationSection,
-    } from "@internal/state";
-    import NavigationPanel from "../../../layout/NavigationPanel.svelte";
+    import { getLayoutStore, type NavigationSection } from "@internal/state";
+    import NavigationPanel from "./NavigationPanel.svelte";
     import type { Snippet } from "svelte";
 
     let { sections, header, footer } = $props<{

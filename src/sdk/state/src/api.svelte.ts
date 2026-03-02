@@ -4,6 +4,7 @@
 export type ConnectionState = "connected" | "connecting" | "disconnected";
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "./context";
+import { DEV } from "esm-env";
 
 export class ApiStore {
   // State
@@ -42,7 +43,7 @@ export class ApiStore {
         this.connectionState = isHealthy ? "connected" : "disconnected";
       } else {
         // Simulate connection if no health check provided
-        if (import.meta.env.DEV) {
+        if (DEV) {
           console.warn(
             "[rune-lab] ApiStore: No healthCheck provided to init(). Using simulated connection delay.",
           );

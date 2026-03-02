@@ -13,7 +13,7 @@
     "dev:ui": "bun run --cwd src/sdk/ui dev",
     "build:ui": "bun run --cwd src/sdk/ui build",
     "compile:i18n": "paraglide-js compile --project ./src/sdk/ui/src/i18n/project.inlang --outdir ./src/sdk/ui/src/lib/paraglide",
-    "package": "bun run compile:i18n && svelte-package -i src -o dist --tsconfig src/sdk/ui/tsconfig.json"
+    "package": "bun run compile:i18n && bun run --cwd src/sdk/ui package"
   },
   "workspaces": [
     "src/sdk/*",
@@ -28,14 +28,20 @@
       "svelte": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./state": {
-      "types": "./dist/sdk/state/src/index.d.ts",
-      "default": "./dist/sdk/state/src/index.js"
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "svelte": "./dist/ui/index.js",
+      "default": "./dist/ui/index.js"
     },
     "./core": {
-      "types": "./dist/sdk/core/src/index.d.ts",
-      "default": "./dist/sdk/core/src/index.js"
-    }
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./state": {
+      "types": "./dist/state/index.d.ts",
+      "default": "./dist/state/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "dependencies": {
     "vite": "npm:vite@^7.3.1",

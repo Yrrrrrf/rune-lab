@@ -1,7 +1,7 @@
 <script lang="ts">
 	import "./layout.css";
 	import * as m from "$lib/paraglide/messages.js";
-    import { RuneProvider } from "..";
+	import { RuneProvider } from "@internal/ui";
 
 	let { children } = $props();
 
@@ -42,5 +42,5 @@
 		favicon: "/img/rune.png",
 	}}
 >
-		{@render children()}
+	{@render children()}
 </RuneProvider>

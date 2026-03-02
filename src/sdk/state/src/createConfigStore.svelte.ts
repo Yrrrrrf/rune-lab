@@ -2,6 +2,7 @@
 
 import { type PersistenceDriver } from "@internal/core";
 import { createInMemoryDriver } from "./persistence/drivers";
+import { DEV } from "esm-env";
 
 export type ConfigStore<T extends ConfigItem> = {
   current: T[keyof T];
@@ -64,7 +65,7 @@ export function createConfigStore<T extends ConfigItem>(
         this.current = saved as T[typeof idKey];
       }
 
-      if (import.meta.env?.DEV) {
+      if (DEV) {
         console.log(`${icon} ${displayName} configured:`, {
           current: this.current,
         });

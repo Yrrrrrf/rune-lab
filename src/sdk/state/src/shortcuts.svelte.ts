@@ -1,6 +1,7 @@
 import hotkeys from "hotkeys-js";
 import { getContext, untrack } from "svelte";
 import { RUNE_LAB_CONTEXT } from "./context";
+import { DEV } from "esm-env";
 
 /**
  * Metadata for a keyboard shortcut
@@ -130,7 +131,7 @@ export class ShortcutStore {
       const existingIndex = this.entries.findIndex((e) => e.id === entry.id);
 
       if (existingIndex !== -1) {
-        if (import.meta.env?.DEV) {
+        if (DEV) {
           console.warn(
             `[ShortcutStore] Overwriting shortcut ID "${entry.id}"`,
             {
@@ -147,7 +148,7 @@ export class ShortcutStore {
       const collision = this.entries.find(
         (e) => e.keys === entry.keys && e.scope === entry.scope,
       );
-      if (collision && import.meta.env?.DEV) {
+      if (collision && DEV) {
         console.warn(
           `[ShortcutStore] Collision detected for keys "${entry.keys}" in scope "${entry.scope}". ` +
             `ID "${entry.id}" will displace "${collision.id}".`,

@@ -1,6 +1,7 @@
 // src/lib/stores/app-config.svelte.ts
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "./context";
+import { DEV } from "esm-env";
 
 // SDK Package - Application Metadata Management
 
@@ -39,7 +40,7 @@ export class AppStore {
    */
   init(data: Partial<AppData>): void {
     if (this.#initialized) {
-      if (import.meta.env?.DEV) {
+      if (DEV) {
         console.warn(
           "AppStore.init() called multiple times. Ignoring subsequent calls.",
           "Overwritten properties would have been:",

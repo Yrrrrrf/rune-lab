@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "../../../dist/core",
+    "rootDir": "./src",
+    "strict": true
+  },
+  "include": [
+    "src"
+  ]
+}

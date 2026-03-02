@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getAppStore } from "@internal/state";
+  import { DEV } from "esm-env";
 
   /**
    * Simple Icon component for Rune Lab
@@ -63,7 +64,7 @@
     if (appStore?.customIcons?.[name]) return appStore.customIcons[name];
     if (paths[name]) return paths[name];
 
-    if (import.meta.env?.DEV) {
+    if (DEV) {
       console.warn(`[Icon] Unknown icon name: "${name}"`);
     }
     return paths.unknown;

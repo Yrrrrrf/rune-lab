@@ -1,3 +1,5 @@
+import { DEV } from "esm-env";
+
 /**
  * Svelte action to teleport a DOM element to a different target (e.g. body)
  */
@@ -11,7 +13,7 @@ export function portal(
   function update(newTarget: string | HTMLElement) {
     if (typeof newTarget === "string") {
       targetNode = document.querySelector(newTarget);
-      if (!targetNode && import.meta.env?.DEV) {
+      if (!targetNode && DEV) {
         console.warn(
           `portal target selector "${newTarget}" not found in document.`,
         );

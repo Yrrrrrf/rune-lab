@@ -1,10 +1,7 @@
 <!-- src/lib/features/layout/smart/ConnectedWorkspaceStrip.svelte -->
 <script lang="ts">
-    import {
-        getLayoutStore,
-        type WorkspaceItem,
-    } from "@internal/state";
-    import WorkspaceStrip from "../../../layout/WorkspaceStrip.svelte";
+    import { getLayoutStore, type WorkspaceItem } from "@internal/state";
+    import WorkspaceStrip from "./WorkspaceStrip.svelte";
     import type { Snippet } from "svelte";
 
     let { items, globalActions } = $props<{
