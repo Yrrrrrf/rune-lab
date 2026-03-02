@@ -1,0 +1,35 @@
+// @internal/ui - Public barrel export
+// All components, actions, and layout primitives
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+export { portal } from "./lib/actions/portal";
+
+// ── Core Components ───────────────────────────────────────────────────────────
+export { default as RuneProvider } from "./lib/components/RuneProvider.svelte";
+export { default as Icon } from "./lib/components/Icon.svelte";
+export { default as Toaster } from "./lib/components/Toaster.svelte";
+export { default as ApiMonitor } from "./lib/components/ApiMonitor.svelte";
+
+// ── Features ──────────────────────────────────────────────────────────────────
+export { default as CommandPalette } from "./lib/features/command-palette/CommandPalette.svelte";
+export { default as ShortcutPalette } from "./lib/features/shortcuts/ShortcutPalette.svelte";
+
+// Setting Selectors
+export { default as AppSettingSelector } from "./lib/features/config/AppSettingSelector.svelte";
+export { default as ThemeSelector } from "./lib/features/config/ThemeSelector.svelte";
+export { default as LanguageSelector } from "./lib/features/config/LanguageSelector.svelte";
+export { default as CurrencySelector } from "./lib/features/config/CurrencySelector.svelte";
+
+// ── Layout Primitives ─────────────────────────────────────────────────────────
+export { default as WorkspaceLayout } from "./lib/layout/WorkspaceLayout.svelte";
+export { default as WorkspaceStrip } from "./lib/layout/WorkspaceStrip.svelte";
+export { default as NavigationPanel } from "./lib/layout/NavigationPanel.svelte";
+export { default as ContentArea } from "./lib/layout/ContentArea.svelte";
+export { default as DetailPanel } from "./lib/layout/DetailPanel.svelte";
+
+// ── Connected (Smart) Components ──────────────────────────────────────────────
+export { default as ConnectedNavigationPanel } from "./lib/features/layout/smart/ConnectedNavigationPanel.svelte";
+export { default as ConnectedWorkspaceStrip } from "./lib/features/layout/smart/ConnectedWorkspaceStrip.svelte";
+
+// ── Paraglide messages ────────────────────────────────────────────────────────
+export * as sdkMessages from "./lib/paraglide/messages.js";

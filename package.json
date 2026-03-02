@@ -1,7 +1,7 @@
 {
   "name": "rune-lab",
-  "version": "0.1.2",
-  "description": "Rune Lab: Modern toolkit for Svelte 5 Runes applications.",
+  "version": "0.2.0",
+  "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
   "author": "Fernando Bryan Reza Campos",
@@ -9,6 +9,16 @@
     "type": "git",
     "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
   },
+  "scripts": {
+    "dev:ui": "bun run --cwd src/sdk/ui dev",
+    "build:ui": "bun run --cwd src/sdk/ui build",
+    "compile:i18n": "paraglide-js compile --project ./src/sdk/ui/src/i18n/project.inlang --outdir ./src/sdk/ui/src/lib/paraglide",
+    "package": "bun run compile:i18n && svelte-package -i src -o dist --tsconfig src/sdk/ui/tsconfig.json"
+  },
+  "workspaces": [
+    "src/sdk/*",
+    "src/explorer/*"
+  ],
   "files": [
     "dist"
   ],
@@ -18,54 +28,37 @@
       "svelte": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./config": {
-      "types": "./dist/config.d.ts",
-      "default": "./dist/config.js"
-    },
     "./state": {
-      "types": "./dist/state/index.d.ts",
-      "default": "./dist/state/index.js"
+      "types": "./dist/sdk/state/src/index.d.ts",
+      "default": "./dist/sdk/state/src/index.js"
     },
-    "./layout": {
-      "types": "./dist/layout/index.d.ts",
-      "default": "./dist/layout/index.js"
-    },
-    "./server": {
-      "types": "./dist/server/index.d.ts",
-      "default": "./dist/server/index.js"
-    },
-    "./paraglide/*": {
-      "types": "./dist/paraglide/*.d.ts",
-      "default": "./dist/paraglide/*.js"
-    },
-    "./package.json": "./package.json"
+    "./core": {
+      "types": "./dist/sdk/core/src/index.d.ts",
+      "default": "./dist/sdk/core/src/index.js"
+    }
   },
-  "scripts": {
-    "dev": "vite dev",
-    "build": "vite build && bun run prepack",
-    "preview": "vite preview",
-    "compile": "paraglide-js compile --project ./src/i18n/project.inlang --outdir ./src/lib/paraglide",
-    "prepare": "svelte-kit sync || echo ''",
-    "prepack": "bun run compile && bunx svelte-kit sync && bunx svelte-package && rm -f dist/paraglide/.gitignore dist/paraglide/.prettierignore && bunx publint"
+  "dependencies": {
+    "vite": "npm:vite@^7.3.1",
+    "typescript": "npm:typescript@^5.9.3",
+    "tailwindcss": "npm:tailwindcss@^4.2.1",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.2.1",
+    "@tailwindcss/forms": "npm:@tailwindcss/forms@^0.5.11",
+    "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.19",
+    "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.13.1",
+    "hotkeys-js": "npm:hotkeys-js@^4.0.2",
+    "dinero.js": "npm:dinero.js@^2.0.0",
+    "daisyui": "npm:daisyui@^5.5.19",
+    "svelte": "npm:svelte@^5.53.6",
+    "svelte-check": "npm:svelte-check@^4.4.4",
+    "@sveltejs/kit": "npm:@sveltejs/kit@^2.53.4",
+    "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static@^3.0.10",
+    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte@^7.0.0",
+    "@internal/core": "workspace:*",
+    "@internal/state": "workspace:*",
+    "@internal/ui": "workspace:*"
   },
   "devDependencies": {
-    "@sveltejs/kit": "^2.53.2",
-    "svelte": "^5.53.5",
-    "@inlang/paraglide-js": "^2.12.0",
-    "@sveltejs/adapter-static": "^3.0.10",
     "@sveltejs/package": "^2.5.7",
-    "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "@tailwindcss/forms": "^0.5.11",
-    "@tailwindcss/typography": "^0.5.19",
-    "@tailwindcss/vite": "^4.2.1",
-    "@types/node": "^25.3.0",
-    "daisyui": "^5.5.19",
-    "esm-env": "^1.2.2",
-    "hotkeys-js": "^4.0.2",
-    "publint": "^0.3.17",
-    "svelte-check": "^4.4.3",
-    "tailwindcss": "^4.2.1",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.1"
+    "publint": "^0.3.18"
   }
 }
