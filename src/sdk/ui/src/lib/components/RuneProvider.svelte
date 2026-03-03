@@ -15,7 +15,7 @@
     import { localStorageDriver } from "@internal/state";
     import { RUNE_LAB_CONTEXT } from "@internal/state";
     import type { AppData } from "@internal/state";
-    import { CommandPalette, ShortcutPalette, Toaster } from "$lib";
+    import { CommandPalette, ShortcutPalette, Toaster } from "../../mod";
 
     export interface RuneLabConfig {
         persistence?: PersistenceDriver;

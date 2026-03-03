@@ -1,7 +1,7 @@
 <script lang="ts">
 	import "./layout.css";
 	import * as m from "$lib/paraglide/messages.js";
-	import { RuneProvider } from "$lib";
+	import { RuneProvider } from "../mod";
 
 	let { children } = $props();
 
@@ -35,7 +35,7 @@
 
 <RuneProvider
 	config={{
-		app: { name: "Inventory", version: "0.0.1" },
+		app: { name: "Inventory", version: "0.2.0" },
 		apiUrl: "https://api.example.com",
 		apiHealthCheck: async () => true,
 		dictionary: m,

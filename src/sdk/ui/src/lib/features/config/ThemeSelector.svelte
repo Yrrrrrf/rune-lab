@@ -1,7 +1,7 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
     import { getThemeStore, type Theme } from "@internal/state";
-    import * as rlMessages from "../../paraglide/messages.js";
+    import * as rlMessages from "$lib/paraglide/messages.js";
     import { getContext } from "svelte";
 
     const themeStore = getThemeStore();

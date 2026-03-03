@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "dev:ui": "bun run --cwd src/sdk/ui dev",
     "build:ui": "bun run --cwd src/sdk/ui build",
     "compile:i18n": "paraglide-js compile --project ./src/sdk/ui/src/i18n/project.inlang --outdir ./src/sdk/ui/src/lib/paraglide",
-    "package": "bun run compile:i18n && bun run --cwd src/sdk/ui package"
+    "build:index": "bun run scripts/build-index.js"
   },
   "workspaces": [
     "src/sdk/*",

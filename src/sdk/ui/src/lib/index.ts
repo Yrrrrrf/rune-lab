@@ -33,6 +33,6 @@ export { default as ConnectedWorkspaceStrip } from "./layout/ConnectedWorkspaceS
 // ── Paraglide messages ────────────────────────────────────────────────────────
 export * as sdkMessages from "./paraglide/messages.js";
 
-// Consumers shouldn't need rune-lab/state just to get cookieDriver, stores, etc.
-export * from "@internal/state";
-export * from "@internal/core";
+// // Consumers shouldn't need rune-lab/state just to get cookieDriver, stores, etc.
+// export * from "@internal/state";
+// export * from "@internal/core";

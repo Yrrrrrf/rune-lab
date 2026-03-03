@@ -5,15 +5,14 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "svelte": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./src/mod.ts",
+      "svelte": "./src/mod.ts",
+      "default": "./src/mod.ts"
     }
   },
   "scripts": {
     "dev": "vite dev --host",
-    "build": "vite build",
-    "package": "svelte-package -i src/lib -o ../../../dist/ui"
+    "build": "svelte-package -i src/lib -o ../../../dist/ui"
   },
   "dependencies": {
     "@internal/core": "workspace:*",

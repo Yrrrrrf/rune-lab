@@ -1,13 +1,13 @@
 <!-- src/lib/features/shortcuts/ShortcutPalette.svelte -->
 <script lang="ts">
-    import { onMount, tick } from "svelte";
+    import { tick } from "svelte";
+    import type { ShortcutEntry } from "@internal/state";
     import {
+        getAppStore,
         getShortcutStore,
         LAYOUT_SHORTCUTS,
-        type ShortcutEntry,
     } from "@internal/state";
-    import { getAppStore } from "@internal/state";
-    import { Icon } from "$lib";
+    import { Icon } from "@internal/ui";
 
     const appStore = getAppStore();
     const shortcutStore = getShortcutStore();
