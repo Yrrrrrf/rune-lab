@@ -31,6 +31,7 @@
     import {
         getLayoutStore,
         getShortcutStore,
+        getLanguageStore,
         shortcutListener,
         LAYOUT_SHORTCUTS,
     } from "@internal/state";
@@ -41,6 +42,13 @@
      * The main application shell managing navigational zones.
      */
     const layoutStore = getLayoutStore();
+    const languageStore = getLanguageStore();
+
+    /** RTL languages (ISO 639-1 codes) */
+    const RTL_LANGUAGES = new Set(["ar", "he", "fa", "ur"]);
+    const dir = $derived(
+        RTL_LANGUAGES.has(String(languageStore.current)) ? "rtl" : "ltr",
+    );
 
     let {
         /** Content for the far-left vertical strip */
@@ -105,6 +113,7 @@
     class="rl-layout flex h-[100dvh] w-screen overflow-hidden bg-base-100 text-base-content font-sans relative"
     use:shortcutListener={shortcutStore}
     data-rl-layout
+    {dir}
 >
     <!-- Zone 1: Workspace Strip -->
     {#if workspaceStrip}

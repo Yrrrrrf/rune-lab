@@ -10,6 +10,8 @@ export type ConfigStore<T extends ConfigItem> = {
   set: (id: T[keyof T]) => void;
   get: (id: T[keyof T]) => T | undefined;
   getProp: <K extends keyof T>(prop: K, id?: T[keyof T]) => T[K] | undefined;
+  /** Append additional items (e.g. custom themes/currencies from the consuming app) */
+  addItems: (newItems: T[]) => void;
 };
 
 /**
@@ -18,11 +20,11 @@ export type ConfigStore<T extends ConfigItem> = {
  * with validation, persistence, and utilities
  */
 
-interface ConfigItem {
+export interface ConfigItem {
   [key: string]: any;
 }
 
-interface ConfigStoreOptions<T extends ConfigItem> {
+export interface ConfigStoreOptions<T extends ConfigItem> {
   /** Array of available items */
   items: readonly T[];
   /** Storage key used by the persistence driver */
@@ -101,6 +103,17 @@ export function createConfigStore<T extends ConfigItem>(
     ): T[K] | undefined {
       const targetId = id ?? this.current;
       return this.get(targetId)?.[prop];
+    }
+
+    /**
+     * Append additional items (deduplicates by idKey)
+     */
+    addItems(newItems: T[]): void {
+      for (const item of newItems) {
+        if (!this.get(item[idKey])) {
+          this.available.push(item);
+        }
+      }
     }
   }
 

@@ -30,6 +30,20 @@ export { default as DetailPanel } from "./layout/DetailPanel.svelte";
 export { default as ConnectedNavigationPanel } from "./layout/ConnectedNavigationPanel.svelte";
 export { default as ConnectedWorkspaceStrip } from "./layout/ConnectedWorkspaceStrip.svelte";
 
+// ── Primitives ────────────────────────────────────────────────────────────────
+export { default as DatePicker } from "./primitives/DatePicker.svelte";
+
+// ── User Components ───────────────────────────────────────────────────────────
+export { default as UserAvatar } from "./components/user/UserAvatar.svelte";
+export { default as UserProfile } from "./components/user/UserProfile.svelte";
+
+// ── Notification Components ───────────────────────────────────────────────────
+export { default as NotificationBell } from "./features/notifications/NotificationBell.svelte";
+
+// ── Money Components ──────────────────────────────────────────────────────────
+export { default as MoneyDisplay } from "./components/money/MoneyDisplay.svelte";
+export { default as MoneyInput } from "./components/money/MoneyInput.svelte";
+
 // ── Paraglide messages ────────────────────────────────────────────────────────
 export * as sdkMessages from "./paraglide/messages.js";
 

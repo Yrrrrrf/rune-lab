@@ -18,7 +18,11 @@ export interface Currency {
 const CURRENCIES: Currency[] = [
   { code: "USD", symbol: "$", decimals: 2 },
   { code: "EUR", symbol: "€", decimals: 2 },
+  { code: "GBP", symbol: "£", decimals: 2 },
   { code: "MXN", symbol: "$", decimals: 2 },
+  { code: "CAD", symbol: "C$", decimals: 2 },
+  { code: "BRL", symbol: "R$", decimals: 2 },
+  { code: "INR", symbol: "₹", decimals: 2 },
   { code: "CNY", symbol: "¥", decimals: 2 },
   { code: "JPY", symbol: "¥", decimals: 0 },
   { code: "KRW", symbol: "₩", decimals: 0 },
@@ -27,24 +31,53 @@ const CURRENCIES: Currency[] = [
 
 import type { PersistenceDriver } from "@internal/core";
 
+export interface CurrencyStoreOptions {
+  driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
+  /** Additional custom currencies to append to the built-in set */
+  customCurrencies?: Currency[];
+  /** Default currency code if no persisted value exists */
+  defaultCurrency?: string;
+}
+
 export function createCurrencyStore(
-  driver?: PersistenceDriver | (() => PersistenceDriver | undefined),
+  driverOrOptions?:
+    | PersistenceDriver
+    | (() => PersistenceDriver | undefined)
+    | CurrencyStoreOptions,
 ) {
-  return createConfigStore({
+  // Normalize overloaded argument
+  const opts: CurrencyStoreOptions =
+    driverOrOptions && typeof driverOrOptions === "object" && "driver" in driverOrOptions
+      ? driverOrOptions
+      : { driver: driverOrOptions as PersistenceDriver | (() => PersistenceDriver | undefined) | undefined };
+
+  const resolvedDriver =
+    typeof opts.driver === "function" ? opts.driver() : opts.driver;
+
+  const store = createConfigStore({
     items: CURRENCIES,
     storageKey: "currency",
     displayName: "Currency",
     idKey: "code",
     icon: "💰",
-    driver: typeof driver === "function" ? driver() : driver,
+    driver: resolvedDriver,
   });
+
+  // Append custom currencies if provided
+  if (opts.customCurrencies?.length) {
+    store.addItems(opts.customCurrencies);
+  }
+
+  // Set default currency if provided and no persisted value found
+  if (!resolvedDriver?.get("currency") && opts.defaultCurrency) {
+    if (store.get(opts.defaultCurrency as any)) {
+      store.set(opts.defaultCurrency as any);
+    }
+  }
+
+  return store;
 }
 
 export function getCurrencyStore() {
   return getContext<ConfigStore<Currency>>(RUNE_LAB_CONTEXT.currency);
 }
-
-// Usage:
-// currencyStore.set("USD")
-// currencyStore.getProp("symbol") // "$"
-// currencyStore.getProp("decimals") // 2

@@ -1,0 +1,34 @@
+{
+    "name": "@internal/auth",
+    "version": "0.0.1",
+    "description": "Authentication layer for rune-lab — Better-Auth client SDK integration",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "build": "svelte-package -i src -o ../../../dist/auth"
+    },
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "default": "./src/index.ts"
+        }
+    },
+    "dependencies": {
+        "@internal/core": "workspace:*",
+        "@internal/state": "workspace:*",
+        "esm-env": "^1.2.2"
+    },
+    "peerDependencies": {
+        "svelte": "^5.53.6",
+        "better-auth": "^1.5.0"
+    },
+    "peerDependenciesMeta": {
+        "better-auth": {
+            "optional": true
+        }
+    },
+    "devDependencies": {
+        "svelte": "^5.53.6",
+        "typescript": "^5.9.3"
+    }
+}

@@ -59,26 +59,63 @@ const THEMES: Theme[] = themeOrder.map((name: string) => ({
 
 import type { PersistenceDriver } from "@internal/core";
 import themeOrder from "daisyui/functions/themeOrder.js";
+import { BROWSER } from "esm-env";
+
+export interface ThemeStoreOptions {
+  driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
+  /** Additional custom themes to append to the built-in DaisyUI set */
+  customThemes?: Theme[];
+  /** Fallback theme if no persisted value exists (after system preference check) */
+  defaultTheme?: string;
+}
 
 export function createThemeStore(
-  driver?: PersistenceDriver | (() => PersistenceDriver | undefined),
+  driverOrOptions?:
+    | PersistenceDriver
+    | (() => PersistenceDriver | undefined)
+    | ThemeStoreOptions,
 ) {
-  return createConfigStore<Theme>({
+  // Normalize overloaded argument
+  const opts: ThemeStoreOptions =
+    driverOrOptions && typeof driverOrOptions === "object" && "driver" in driverOrOptions
+      ? driverOrOptions
+      : { driver: driverOrOptions as PersistenceDriver | (() => PersistenceDriver | undefined) | undefined };
+
+  const resolvedDriver =
+    typeof opts.driver === "function" ? opts.driver() : opts.driver;
+
+  const store = createConfigStore<Theme>({
     items: THEMES,
     storageKey: "theme",
     displayName: "Theme",
     idKey: "name",
     icon: "🎨",
-    driver: typeof driver === "function" ? driver() : driver,
+    driver: resolvedDriver,
   });
+
+  // Append custom themes if provided
+  if (opts.customThemes?.length) {
+    store.addItems(opts.customThemes);
+  }
+
+  // System preference detection — only if no persisted value was loaded
+  if (!resolvedDriver?.get("theme") && BROWSER) {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const systemDefault = prefersDark ? "dark" : "light";
+    const chosen = opts.defaultTheme ?? systemDefault;
+    if (store.get(chosen as any)) {
+      store.set(chosen as any);
+    }
+  } else if (!resolvedDriver?.get("theme") && opts.defaultTheme) {
+    // SSR / non-browser: use defaultTheme if provided
+    if (store.get(opts.defaultTheme as any)) {
+      store.set(opts.defaultTheme as any);
+    }
+  }
+
+  return store;
 }
 
 export function getThemeStore() {
   return getContext<ConfigStore<Theme>>(RUNE_LAB_CONTEXT.theme);
 }
-
-// Usage:
-// themeStore.set("dark")
-// themeStore.get("dark")
-// themeStore.getProp("icon") // gets icon of current theme
-// themeStore.getProp("icon", "dark") // gets icon of specific theme

@@ -43,7 +43,7 @@ export const sessionStorageDriver: PersistenceDriver = {
   },
 };
 
-export const cookieDriver = (
+export const createCookieDriver = (
   options: {
     path?: string;
     maxAge?: number;
@@ -68,3 +68,6 @@ export const cookieDriver = (
     document.cookie = `${key}=; max-age=0; path=${options.path || "/"}`;
   },
 });
+
+/** Default cookie driver singleton (path='/') */
+export const cookieDriver: PersistenceDriver = createCookieDriver({ path: "/" });

@@ -11,4 +11,6 @@ export const RUNE_LAB_CONTEXT = {
   layout: Symbol("rl:layout"),
   commands: Symbol("rl:commands"),
   persistence: Symbol("rl:persistence"),
+  cart: Symbol("rl:cart"),
+  session: Symbol("rl:session"),
 } as const satisfies Record<string, symbol>;

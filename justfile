@@ -7,6 +7,8 @@ build:
     bun run --cwd src/sdk/core build
     # STATE — svelte-package handles .svelte.ts rune files
     bun run --cwd src/sdk/state build
+    # AUTH — svelte-package handles .svelte.ts rune files
+    bun run --cwd src/sdk/auth build
     # UI — svelte-package, now outputs to dist/ui/
     bun run --cwd src/sdk/ui build
     bun run build:index  # Generate index.js + index.d.ts (for UI module)

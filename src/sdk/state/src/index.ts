@@ -8,10 +8,12 @@ export { RUNE_LAB_CONTEXT } from "./context";
 export { useRuneLab } from "./composables/useRuneLab";
 export type { RuneLabContext } from "./composables/useRuneLab";
 export { usePersistence } from "./composables/usePersistence";
+export { useMoney } from "./composables/useMoney";
 
 // ── Persistence Drivers ───────────────────────────────────────────────────────
 export {
   cookieDriver,
+  createCookieDriver,
   createInMemoryDriver,
   inMemoryDriver,
   localStorageDriver,
@@ -48,6 +50,7 @@ export {
 export {
   createCurrencyStore,
   type Currency,
+  type CurrencyStoreOptions,
   getCurrencyStore,
 } from "./currency.svelte";
 export { createToastStore, getToastStore, ToastStore } from "./toast.svelte";
@@ -66,9 +69,18 @@ export {
   type ShortcutMeta,
   ShortcutStore,
 } from "./shortcuts.svelte";
-export { createThemeStore, getThemeStore, type Theme } from "./theme.svelte";
+export { createThemeStore, getThemeStore, type Theme, type ThemeStoreOptions } from "./theme.svelte";
 export {
+  type ConfigItem,
   type ConfigStore,
+  type ConfigStoreOptions,
   createConfigStore,
 } from "./createConfigStore.svelte";
 export { createToastBridge, notify } from "./toast-bridge";
+export {
+  createCartStore,
+  getCartStore,
+  type CartStore,
+  type CartStoreConfig,
+  type CartEntry,
+} from "./cart.svelte";

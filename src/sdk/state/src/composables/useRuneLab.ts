@@ -10,6 +10,9 @@ import {
   getThemeStore,
   getToastStore,
 } from "../index";
+import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "../context";
+import type { SessionStore } from "@internal/auth";
 
 export interface RuneLabContext {
   app: ReturnType<typeof getAppStore>;
@@ -21,6 +24,8 @@ export interface RuneLabContext {
   shortcut: ReturnType<typeof getShortcutStore>;
   layout: ReturnType<typeof getLayoutStore>;
   commands: ReturnType<typeof getCommandStore>;
+  /** Available when auth is enabled in RuneProvider config */
+  session?: SessionStore;
 }
 
 /**
@@ -28,6 +33,14 @@ export interface RuneLabContext {
  * Must be called during component initialization (in the `<script>` block).
  */
 export function useRuneLab(): RuneLabContext {
+  // Session is optional — only present when auth is enabled
+  let session: SessionStore | undefined;
+  try {
+    session = getContext<SessionStore>(RUNE_LAB_CONTEXT.session);
+  } catch {
+    // Auth not enabled — session stays undefined
+  }
+
   return {
     app: getAppStore(),
     api: getApiStore(),
@@ -38,5 +51,6 @@ export function useRuneLab(): RuneLabContext {
     shortcut: getShortcutStore(),
     layout: getLayoutStore(),
     commands: getCommandStore(),
+    session,
   };
 }

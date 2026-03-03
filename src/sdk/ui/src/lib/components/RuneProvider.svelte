@@ -10,11 +10,16 @@
         createLanguageStore,
         createCurrencyStore,
         createShortcutStore,
+        createCartStore,
+        type CartStoreConfig,
     } from "@internal/state";
     import type { PersistenceDriver } from "@internal/core";
     import { localStorageDriver } from "@internal/state";
     import { RUNE_LAB_CONTEXT } from "@internal/state";
     import type { AppData } from "@internal/state";
+    import type { Theme } from "@internal/state";
+    import type { Currency } from "@internal/state";
+    import { createSessionStore } from "@internal/auth";
     import { CommandPalette, ShortcutPalette, Toaster } from "../../mod";
 
     export interface RuneLabConfig {
@@ -28,6 +33,30 @@
         locales?: readonly string[];
         onLanguageChange?: (code: string) => void;
         onThemeChange?: (name: string) => void;
+
+        // Theming (DaisyUI)
+        /** Additional custom themes to register alongside the built-in DaisyUI set */
+        customThemes?: Theme[];
+        /** Theme to use when no persisted value exists (after system preference detection) */
+        defaultTheme?: string;
+
+        // Currencies (Dinero.js)
+        /** Additional custom currencies to register */
+        currencies?: Currency[];
+        /** Default currency code when no persisted value exists */
+        defaultCurrency?: string;
+
+        // Cart (opt-in)
+        /** CartStore configuration — when provided, a CartStore is created and registered in context */
+        cart?: CartStoreConfig<any>;
+
+        // Auth (opt-in)
+        /** When true, creates and registers a SessionStore in context */
+        auth?: {
+            enabled?: boolean;
+            /** Callback when session changes (login, logout, expiry) */
+            onSessionChange?: (session: any) => void;
+        };
     }
 
     let { children, config = {} } = $props<{
@@ -46,13 +75,27 @@
         () => config.persistence ?? localStorageDriver,
     );
     const initialLocales = untrack(() => config.locales);
+    const initialCustomThemes = untrack(() => config.customThemes);
+    const initialDefaultTheme = untrack(() => config.defaultTheme);
+    const initialCustomCurrencies = untrack(() => config.currencies);
+    const initialDefaultCurrency = untrack(() => config.defaultCurrency);
+    const initialCartConfig = untrack(() => config.cart);
+    const initialAuthConfig = untrack(() => config.auth);
 
-    const themeStore = createThemeStore(initialPersistence);
+    const themeStore = createThemeStore({
+        driver: initialPersistence,
+        customThemes: initialCustomThemes,
+        defaultTheme: initialDefaultTheme,
+    });
     const languageStore = createLanguageStore({
         driver: initialPersistence,
         locales: initialLocales,
     });
-    const currencyStore = createCurrencyStore(initialPersistence);
+    const currencyStore = createCurrencyStore({
+        driver: initialPersistence,
+        customCurrencies: initialCustomCurrencies,
+        defaultCurrency: initialDefaultCurrency,
+    });
     const shortcutStore = createShortcutStore();
 
     // 2. Initialize Complex Stores (Dependency Injection)
@@ -66,7 +109,7 @@
         currencyStore,
     });
 
-    // 3. Provide Contexts
+    // 3. Provide Core Contexts
     setContext(RUNE_LAB_CONTEXT.app, appStore);
     setContext(RUNE_LAB_CONTEXT.api, apiStore);
     setContext(RUNE_LAB_CONTEXT.toast, toastStore);
@@ -77,6 +120,18 @@
     setContext(RUNE_LAB_CONTEXT.layout, layoutStore);
     setContext(RUNE_LAB_CONTEXT.commands, commandStore);
     setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
+
+    // 4. Opt-in: CartStore (C-01 FIX)
+    if (initialCartConfig) {
+        const cartStore = createCartStore(initialCartConfig);
+        setContext(RUNE_LAB_CONTEXT.cart, cartStore);
+    }
+
+    // 5. Opt-in: SessionStore (C-02 FIX)
+    if (initialAuthConfig && initialAuthConfig.enabled !== false) {
+        const sessionStore = createSessionStore();
+        setContext(RUNE_LAB_CONTEXT.session, sessionStore);
+    }
 
     const initialDictionary = untrack(() => config.dictionary);
     if (initialDictionary) {

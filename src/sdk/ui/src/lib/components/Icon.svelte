@@ -3,8 +3,11 @@
   import { DEV } from "esm-env";
 
   /**
-   * Simple Icon component for Rune Lab
-   * Centralizes SVG paths to reduce boilerplate
+   * Simple Icon component for Rune Lab.
+   * Centralizes SVG paths to reduce boilerplate.
+   *
+   * ⚠️ SECURITY: `customIcons` values (from `appStore.customIcons` or the `icons` prop)
+   * are rendered as **unsanitized HTML** via `{@html}`. Only pass trusted SVG path strings.
    */
   let {
     name,
