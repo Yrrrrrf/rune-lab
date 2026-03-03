@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
@@ -58,13 +58,13 @@
     "svelte-check": "npm:svelte-check@^4.4.4",
     "@sveltejs/kit": "npm:@sveltejs/kit@^2.53.4",
     "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static@^3.0.10",
-    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte@^7.0.0",
-    "@internal/core": "workspace:*",
-    "@internal/state": "workspace:*",
-    "@internal/ui": "workspace:*"
+    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte@^7.0.0"
   },
   "devDependencies": {
     "@sveltejs/package": "^2.5.7",
-    "publint": "^0.3.18"
+    "publint": "^0.3.18",
+    "@internal/core": "workspace:*",
+    "@internal/state": "workspace:*",
+    "@internal/ui": "workspace:*"
   }
 }
