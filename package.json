@@ -16,8 +16,7 @@
     "build:index": "bun run scripts/build-index.js"
   },
   "workspaces": [
-    "src/sdk/*",
-    "src/explorer/*"
+    "src/sdk/*"
   ],
   "files": [
     "dist"
