@@ -1,5 +1,4 @@
-// sdk/auth/src/index.ts
-// Public barrel for @internal/auth
+// sdk/state/src/auth/index.ts
 
 export type { AuthConfig, Session, User } from "./types";
 export {

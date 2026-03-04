@@ -41,10 +41,6 @@
       "types": "./dist/state/index.d.ts",
       "default": "./dist/state/index.js"
     },
-    "./auth": {
-      "types": "./dist/auth/index.d.ts",
-      "default": "./dist/auth/index.js"
-    },
     "./package.json": "./package.json"
   },
   "peerDependencies": {
@@ -80,7 +76,6 @@
     "publint": "^0.3.18",
     "@internal/core": "workspace:*",
     "@internal/state": "workspace:*",
-    "@internal/ui": "workspace:*",
-    "@internal/auth": "workspace:*"
+    "@internal/ui": "workspace:*"
   }
 }

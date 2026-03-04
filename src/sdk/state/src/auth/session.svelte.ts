@@ -1,9 +1,9 @@
-// sdk/auth/src/session.svelte.ts
+// sdk/state/src/auth/session.svelte.ts
 // SessionStore — manages authentication state via Svelte 5 runes.
 // This is a SKELETON — full Better-Auth wiring is deferred to a dedicated spec.
 
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@internal/state";
+import { RUNE_LAB_CONTEXT } from "../context";
 import type { Session, User } from "./types";
 
 /**

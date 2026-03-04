@@ -89,3 +89,13 @@ export {
   createCartStore,
   getCartStore,
 } from "./cart.svelte";
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+export {
+  type AuthConfig,
+  createSessionStore,
+  getSessionStore,
+  type Session,
+  SessionStore,
+  type User,
+} from "./auth/index";

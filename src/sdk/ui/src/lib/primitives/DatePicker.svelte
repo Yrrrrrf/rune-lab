@@ -22,6 +22,7 @@
 
 <script lang="ts">
     import { getLanguageStore } from "@internal/state";
+    import { untrack } from "svelte";
 
     let {
         value,
@@ -40,9 +41,12 @@
         return typeof d === "string" ? new Date(d) : d;
     }
 
-    let selectedDate = $state(parseDate(value));
-    let viewYear = $state(parseDate(value).getFullYear());
-    let viewMonth = $state(parseDate(value).getMonth());
+    // Capture the initial value once to avoid state_referenced_locally warnings
+    const initialDate = untrack(() => parseDate(value));
+
+    let selectedDate = $state(initialDate);
+    let viewYear = $state(initialDate.getFullYear());
+    let viewMonth = $state(initialDate.getMonth());
 
     // Locale-aware formatting
     const locale = $derived(String(languageStore.current) || "en");

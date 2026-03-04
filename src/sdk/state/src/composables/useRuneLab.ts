@@ -9,10 +9,10 @@ import {
   getShortcutStore,
   getThemeStore,
   getToastStore,
+  type SessionStore,
 } from "../index";
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "../context";
-import type { SessionStore } from "@internal/auth";
 
 export interface RuneLabContext {
   app: ReturnType<typeof getAppStore>;

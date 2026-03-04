@@ -1,4 +1,4 @@
-// sdk/auth/src/types.ts
+// sdk/state/src/auth/types.ts
 // Core auth types — framework-agnostic interfaces
 
 /**

@@ -11,6 +11,7 @@
         createCurrencyStore,
         createShortcutStore,
         createCartStore,
+        createSessionStore,
         type CartStoreConfig,
     } from "@internal/state";
     import type { PersistenceDriver } from "@internal/core";
@@ -19,7 +20,6 @@
     import type { AppData } from "@internal/state";
     import type { Theme } from "@internal/state";
     import type { Currency } from "@internal/state";
-    import { createSessionStore } from "@internal/auth";
     import { CommandPalette, ShortcutPalette, Toaster } from "../../mod";
 
     export interface RuneLabConfig {
