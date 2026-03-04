@@ -77,12 +77,19 @@ export function createThemeStore(
 ) {
   // Normalize overloaded argument
   const opts: ThemeStoreOptions =
-    driverOrOptions && typeof driverOrOptions === "object" && "driver" in driverOrOptions
+    driverOrOptions && typeof driverOrOptions === "object" &&
+      "driver" in driverOrOptions
       ? driverOrOptions
-      : { driver: driverOrOptions as PersistenceDriver | (() => PersistenceDriver | undefined) | undefined };
+      : {
+        driver: driverOrOptions as
+          | PersistenceDriver
+          | (() => PersistenceDriver | undefined)
+          | undefined,
+      };
 
-  const resolvedDriver =
-    typeof opts.driver === "function" ? opts.driver() : opts.driver;
+  const resolvedDriver = typeof opts.driver === "function"
+    ? opts.driver()
+    : opts.driver;
 
   const store = createConfigStore<Theme>({
     items: THEMES,
@@ -100,7 +107,8 @@ export function createThemeStore(
 
   // System preference detection — only if no persisted value was loaded
   if (!resolvedDriver?.get("theme") && BROWSER) {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const prefersDark =
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
     const systemDefault = prefersDark ? "dark" : "light";
     const chosen = opts.defaultTheme ?? systemDefault;
     if (store.get(chosen as any)) {

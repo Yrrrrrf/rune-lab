@@ -47,12 +47,19 @@ export function createCurrencyStore(
 ) {
   // Normalize overloaded argument
   const opts: CurrencyStoreOptions =
-    driverOrOptions && typeof driverOrOptions === "object" && "driver" in driverOrOptions
+    driverOrOptions && typeof driverOrOptions === "object" &&
+      "driver" in driverOrOptions
       ? driverOrOptions
-      : { driver: driverOrOptions as PersistenceDriver | (() => PersistenceDriver | undefined) | undefined };
+      : {
+        driver: driverOrOptions as
+          | PersistenceDriver
+          | (() => PersistenceDriver | undefined)
+          | undefined,
+      };
 
-  const resolvedDriver =
-    typeof opts.driver === "function" ? opts.driver() : opts.driver;
+  const resolvedDriver = typeof opts.driver === "function"
+    ? opts.driver()
+    : opts.driver;
 
   const store = createConfigStore({
     items: CURRENCIES,

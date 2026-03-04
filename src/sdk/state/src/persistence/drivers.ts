@@ -70,4 +70,6 @@ export const createCookieDriver = (
 });
 
 /** Default cookie driver singleton (path='/') */
-export const cookieDriver: PersistenceDriver = createCookieDriver({ path: "/" });
+export const cookieDriver: PersistenceDriver = createCookieDriver({
+  path: "/",
+});

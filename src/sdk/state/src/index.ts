@@ -69,7 +69,12 @@ export {
   type ShortcutMeta,
   ShortcutStore,
 } from "./shortcuts.svelte";
-export { createThemeStore, getThemeStore, type Theme, type ThemeStoreOptions } from "./theme.svelte";
+export {
+  createThemeStore,
+  getThemeStore,
+  type Theme,
+  type ThemeStoreOptions,
+} from "./theme.svelte";
 export {
   type ConfigItem,
   type ConfigStore,
@@ -78,9 +83,9 @@ export {
 } from "./createConfigStore.svelte";
 export { createToastBridge, notify } from "./toast-bridge";
 export {
-  createCartStore,
-  getCartStore,
+  type CartEntry,
   type CartStore,
   type CartStoreConfig,
-  type CartEntry,
+  createCartStore,
+  getCartStore,
 } from "./cart.svelte";

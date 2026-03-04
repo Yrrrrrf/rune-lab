@@ -3,42 +3,42 @@
 // Consumers should never import Dinero directly — these helpers encapsulate it.
 
 import {
-    dinero,
-    toDecimal,
-    add as dineroAdd,
-    subtract as dineroSubtract,
-    multiply as dineroMultiply,
-    type Dinero,
-    type DineroCurrency,
-    // ISO 4217 currency definitions
-    USD,
-    EUR,
-    MXN,
-    JPY,
-    KRW,
-    CNY,
-    AED,
-    GBP,
-    CAD,
-    BRL,
-    INR,
+  add as dineroAdd,
+  AED,
+  BRL,
+  CAD,
+  CNY,
+  type Dinero,
+  dinero,
+  type DineroCurrency,
+  EUR,
+  GBP,
+  INR,
+  JPY,
+  KRW,
+  multiply as dineroMultiply,
+  MXN,
+  subtract as dineroSubtract,
+  toDecimal,
+  // ISO 4217 currency definitions
+  USD,
 } from "dinero.js";
 
 /**
  * Map of ISO 4217 currency codes to Dinero currency objects
  */
 export const CURRENCY_MAP: Record<string, DineroCurrency<number>> = {
-    USD,
-    EUR,
-    MXN,
-    JPY,
-    KRW,
-    CNY,
-    AED,
-    GBP,
-    CAD,
-    BRL,
-    INR,
+  USD,
+  EUR,
+  MXN,
+  JPY,
+  KRW,
+  CNY,
+  AED,
+  GBP,
+  CAD,
+  BRL,
+  INR,
 };
 
 /**
@@ -47,14 +47,16 @@ export const CURRENCY_MAP: Record<string, DineroCurrency<number>> = {
  * @param currencyCode - ISO 4217 currency code (e.g., "USD")
  */
 export function createMoney(
-    amount: number,
-    currencyCode: string,
+  amount: number,
+  currencyCode: string,
 ): Dinero<number> {
-    const currency = CURRENCY_MAP[currencyCode];
-    if (!currency) {
-        throw new Error(`Unknown currency code: ${currencyCode}. Add it to CURRENCY_MAP.`);
-    }
-    return dinero({ amount, currency });
+  const currency = CURRENCY_MAP[currencyCode];
+  if (!currency) {
+    throw new Error(
+      `Unknown currency code: ${currencyCode}. Add it to CURRENCY_MAP.`,
+    );
+  }
+  return dinero({ amount, currency });
 }
 
 /**
@@ -64,25 +66,24 @@ export function createMoney(
  * @param currencyCode - ISO 4217 code for Intl.NumberFormat (e.g., "USD")
  */
 export function formatMoney(
-    money: Dinero<number>,
-    locale: string = "en-US",
-    currencyCode?: string,
+  money: Dinero<number>,
+  locale: string = "en-US",
+  currencyCode?: string,
 ): string {
-    return toDecimal(money, ({ value, currency }) => {
-        const code =
-            currencyCode ??
-            Object.entries(CURRENCY_MAP).find(
-                ([, c]) => c.code === currency.code,
-            )?.[0] ??
-            currency.code;
+  return toDecimal(money, ({ value, currency }) => {
+    const code = currencyCode ??
+      Object.entries(CURRENCY_MAP).find(
+        ([, c]) => c.code === currency.code,
+      )?.[0] ??
+      currency.code;
 
-        return new Intl.NumberFormat(locale, {
-            style: "currency",
-            currency: code,
-            minimumFractionDigits: currency.exponent,
-            maximumFractionDigits: currency.exponent,
-        }).format(Number(value));
-    });
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: code,
+      minimumFractionDigits: currency.exponent,
+      maximumFractionDigits: currency.exponent,
+    }).format(Number(value));
+  });
 }
 
 /**
@@ -90,42 +91,42 @@ export function formatMoney(
  * Convenience wrapper around createMoney + formatMoney
  */
 export function formatAmount(
-    amount: number,
-    currencyCode: string,
-    locale: string = "en-US",
+  amount: number,
+  currencyCode: string,
+  locale: string = "en-US",
 ): string {
-    const money = createMoney(amount, currencyCode);
-    return formatMoney(money, locale, currencyCode);
+  const money = createMoney(amount, currencyCode);
+  return formatMoney(money, locale, currencyCode);
 }
 
 /**
  * Add two monetary values (must be same currency)
  */
 export function addMoney(
-    a: Dinero<number>,
-    b: Dinero<number>,
+  a: Dinero<number>,
+  b: Dinero<number>,
 ): Dinero<number> {
-    return dineroAdd(a, b);
+  return dineroAdd(a, b);
 }
 
 /**
  * Subtract two monetary values (must be same currency)
  */
 export function subtractMoney(
-    a: Dinero<number>,
-    b: Dinero<number>,
+  a: Dinero<number>,
+  b: Dinero<number>,
 ): Dinero<number> {
-    return dineroSubtract(a, b);
+  return dineroSubtract(a, b);
 }
 
 /**
  * Multiply a monetary value by a factor
  */
 export function multiplyMoney(
-    money: Dinero<number>,
-    factor: number,
+  money: Dinero<number>,
+  factor: number,
 ): Dinero<number> {
-    return dineroMultiply(money, factor);
+  return dineroMultiply(money, factor);
 }
 
 // Re-export the Dinero type for type annotations
