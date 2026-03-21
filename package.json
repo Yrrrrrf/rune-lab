@@ -56,9 +56,10 @@
     }
   },
   "dependencies": {
-    "hotkeys-js": "npm:hotkeys-js@^4.0.2",
     "better-auth": "^1.5.2",
-    "dinero.js": "npm:dinero.js@^2.0.0"
+    "dinero.js": "npm:dinero.js@^2.0.0",
+    "gwa": "^0.0.1",
+    "hotkeys-js": "npm:hotkeys-js@^4.0.2"
   },
   "devDependencies": {
     "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.13.1",
