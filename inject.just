@@ -53,8 +53,7 @@ inject-clean dest=".": _build-for-inject
     echo "💀 Running yog reborn --deep in $dest_abs..."
     (cd "$dest_abs" && yog reborn --deep)
 
-    # Re-use inject logic after the clean reinstall
-    just -f "{{ justfile() }}" inject "$dest_abs"
+    just -f "{{ justfile_directory() }}/justfile" inject "$dest_abs"
 
 # ── Internal ──────────────────────────────────────────────────────────────────
 
@@ -62,5 +61,5 @@ inject-clean dest=".": _build-for-inject
 [private]
 _build-for-inject:
     @echo "🔨 Building rune-lab from {{ justfile_directory() }}..."
-    just --justfile "{{ justfile() }}" --working-directory "{{ justfile_directory() }}" build
+    just --justfile "{{ justfile_directory() }}/justfile" --working-directory "{{ justfile_directory() }}" build
     @echo "✅  rune-lab built."
