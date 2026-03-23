@@ -3,7 +3,7 @@
  */
 export type ToastType = "info" | "success" | "warning" | "error";
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./context";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
 
 export interface Toast {
   id: string;

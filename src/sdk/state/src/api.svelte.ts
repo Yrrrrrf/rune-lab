@@ -3,7 +3,7 @@
  */
 export type ConnectionState = "connected" | "connecting" | "disconnected";
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./context";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
 import { DEV } from "esm-env";
 
 export class ApiStore {
@@ -51,7 +51,7 @@ export class ApiStore {
         await new Promise((resolve) => setTimeout(resolve, 1500));
         this.connectionState = "connected";
       }
-    } catch (e) {
+    } catch (_e) {
       this.connectionState = "disconnected";
     }
   }

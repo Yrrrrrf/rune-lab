@@ -1,7 +1,7 @@
 // All components, actions, and layout primitives
 
 // ── Actions ───────────────────────────────────────────────────────────────────
-export { portal } from "./actions/portal.js";
+export { portal } from "./actions/portal.ts";
 
 // ── Core Components ───────────────────────────────────────────────────────────
 export { default as RuneProvider } from "./components/RuneProvider.svelte";

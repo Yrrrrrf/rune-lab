@@ -1,10 +1,7 @@
-import {
-  type ConfigStore,
-  createConfigStore,
-} from "./createConfigStore.svelte";
+import { createConfigStore } from "./createConfigStore.svelte.ts";
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./context";
-import { registerCurrency } from "@internal/core";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
+import { type DineroCurrency, registerCurrency } from "@internal/core";
 
 /**
  * Currency configuration
@@ -74,7 +71,7 @@ export function createCurrencyStore(
     ? opts.driver()
     : opts.driver;
 
-  const store = createConfigStore({
+  const store = createConfigStore<Currency>({
     items: CURRENCIES,
     storageKey: "currency",
     displayName: "Currency",
@@ -90,30 +87,34 @@ export function createCurrencyStore(
    * @remarks Custom currencies with non-decimal base systems must use
    * registerCurrency() from @internal/core explicitly before addItems().
    */
-  function addCurrency(meta: Currency, dineroDef?: any) {
+  function addCurrency(meta: Currency, dineroDef?: unknown) {
     const def = dineroDef || buildDineroDef(meta);
-    registerCurrency(meta.code, def);
+    registerCurrency(meta.code, def as DineroCurrency<number>);
     store.addItems([meta]);
   }
 
   // Append and auto-register custom currencies if provided
   if (opts.customCurrencies?.length) {
     for (const c of opts.customCurrencies) {
-      registerCurrency(c.code, buildDineroDef(c));
+      registerCurrency(c.code, buildDineroDef(c) as DineroCurrency<number>);
     }
     store.addItems(opts.customCurrencies);
   }
 
   // Set default currency if provided and no persisted value found
   if (!resolvedDriver?.get("currency") && opts.defaultCurrency) {
-    if (store.get(opts.defaultCurrency as any)) {
-      store.set(opts.defaultCurrency as any);
+    if (store.get(opts.defaultCurrency as never)) {
+      store.set(opts.defaultCurrency as never);
     }
   }
 
-  return {
-    ...store,
-    addCurrency,
+  // Explicitly attach method to ensure prototype is preserved and method is available
+  // across different build environments.
+  (store as unknown as { addCurrency: typeof addCurrency }).addCurrency =
+    addCurrency;
+
+  return store as ReturnType<typeof createConfigStore<Currency>> & {
+    addCurrency: typeof addCurrency;
   };
 }
 

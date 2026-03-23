@@ -2,7 +2,7 @@
 // Generic cart store factory — business-agnostic add/remove/total pattern.
 
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./context";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
 import type { PersistenceDriver } from "@internal/core";
 import { DEV } from "esm-env";
 

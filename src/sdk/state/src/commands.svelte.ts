@@ -1,12 +1,12 @@
-import { getContext, untrack } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./context";
-import type { AppStore } from "./app.svelte";
-import type { ApiStore } from "./api.svelte";
-import type { ConfigStore } from "./createConfigStore.svelte";
-import type { ToastStore } from "./toast.svelte";
-import type { Theme } from "./theme.svelte";
-import type { Language } from "./language.svelte";
-import type { Currency } from "./currency.svelte";
+import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
+import type { AppStore } from "./app.svelte.ts";
+import type { ApiStore } from "./api.svelte.ts";
+import type { ConfigStore } from "./createConfigStore.svelte.ts";
+import type { ToastStore } from "./toast.svelte.ts";
+import type { Theme } from "./theme.svelte.ts";
+import type { Language } from "./language.svelte.ts";
+import type { Currency } from "./currency.svelte.ts";
 
 /**
  * Command Palette Store

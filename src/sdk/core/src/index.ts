@@ -1,5 +1,5 @@
-export * from "./internal/message-resolver";
+export * from "./internal/message-resolver.ts";
 
-export * from "./persistence/types";
+export * from "./persistence/types.ts";
 
-export * from "./money/index";
+export * from "./money/index.ts";

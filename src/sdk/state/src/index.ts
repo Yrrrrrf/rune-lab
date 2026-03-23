@@ -2,13 +2,13 @@
 // Unified public barrel for @internal/state
 
 // ── Context ───────────────────────────────────────────────────────────────────
-export { RUNE_LAB_CONTEXT } from "./context";
+export { RUNE_LAB_CONTEXT } from "./context.ts";
 
 // ── Composables ───────────────────────────────────────────────────────────────
-export { useRuneLab } from "./composables/useRuneLab";
-export type { RuneLabContext } from "./composables/useRuneLab";
-export { usePersistence } from "./composables/usePersistence";
-export { useMoney } from "./composables/useMoney";
+export { useRuneLab } from "./composables/useRuneLab.ts";
+export type { RuneLabContext } from "./composables/useRuneLab.ts";
+export { usePersistence } from "./composables/usePersistence.ts";
+export { useMoney } from "./composables/useMoney.ts";
 
 // ── Persistence Drivers ───────────────────────────────────────────────────────
 export {
@@ -18,7 +18,7 @@ export {
   inMemoryDriver,
   localStorageDriver,
   sessionStorageDriver,
-} from "./persistence/drivers";
+} from "./persistence/drivers.ts";
 
 // Stores
 export {
@@ -26,7 +26,7 @@ export {
   AppStore,
   createAppStore,
   getAppStore,
-} from "./app.svelte";
+} from "./app.svelte.ts";
 
 export {
   createLayoutStore,
@@ -35,32 +35,32 @@ export {
   type NavigationItem,
   type NavigationSection,
   type WorkspaceItem,
-} from "./layout.svelte";
+} from "./layout.svelte.ts";
 export {
   ApiStore,
   type ConnectionState,
   createApiStore,
   getApiStore,
-} from "./api.svelte";
+} from "./api.svelte.ts";
 export {
   createLanguageStore,
   getLanguageStore,
   type Language,
-} from "./language.svelte";
+} from "./language.svelte.ts";
 export {
   createCurrencyStore,
   type Currency,
   type CurrencyStore,
   type CurrencyStoreOptions,
   getCurrencyStore,
-} from "./currency.svelte";
-export { createToastStore, getToastStore, ToastStore } from "./toast.svelte";
+} from "./currency.svelte.ts";
+export { createToastStore, getToastStore, ToastStore } from "./toast.svelte.ts";
 export {
   type Command,
   CommandStore,
   createCommandStore,
   getCommandStore,
-} from "./commands.svelte";
+} from "./commands.svelte.ts";
 export {
   createShortcutStore,
   getShortcutStore,
@@ -69,27 +69,26 @@ export {
   shortcutListener,
   type ShortcutMeta,
   ShortcutStore,
-} from "./shortcuts.svelte";
+} from "./shortcuts.svelte.ts";
 export {
   createThemeStore,
   getThemeStore,
   type Theme,
   type ThemeStoreOptions,
-} from "./theme.svelte";
+} from "./theme.svelte.ts";
 export {
-  type ConfigItem,
   type ConfigStore,
   type ConfigStoreOptions,
   createConfigStore,
-} from "./createConfigStore.svelte";
-export { createToastBridge, notify } from "./toast-bridge";
+} from "./createConfigStore.svelte.ts";
+export { createToastBridge, notify } from "./toast-bridge.ts";
 export {
   type CartEntry,
   type CartStore,
   type CartStoreConfig,
   createCartStore,
   getCartStore,
-} from "./cart.svelte";
+} from "./cart.svelte.ts";
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 export {
@@ -99,4 +98,4 @@ export {
   type Session,
   SessionStore,
   type User,
-} from "./auth/index";
+} from "./auth/index.ts";

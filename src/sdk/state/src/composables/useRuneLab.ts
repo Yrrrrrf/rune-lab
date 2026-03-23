@@ -10,9 +10,9 @@ import {
   getThemeStore,
   getToastStore,
   type SessionStore,
-} from "../index";
+} from "../index.ts";
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "../context";
+import { RUNE_LAB_CONTEXT } from "../context.ts";
 
 export interface RuneLabContext {
   app: ReturnType<typeof getAppStore>;

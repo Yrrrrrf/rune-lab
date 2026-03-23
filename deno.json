@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "strict": true,
+    "noImplicitAny": false
+  },
+  "nodeModulesDir": "auto",
+  "exclude": [
+    ".old",
+    "dist",
+    "node_modules",
+    "scripts",
+    "**/*.test.ts",
+    "**/*.test.js",
+    "**/*.config.ts",
+    "**/*.config.js",
+    "vitest-setup.ts",
+    "src/sdk/ui/src/lib/paraglide"
+  ],
+  "imports": {
+    "@internal/core": "./src/sdk/core/src/index.ts",
+    "@internal/state": "./src/sdk/state/src/index.ts",
+    "@internal/ui": "./src/sdk/ui/src/lib/index.ts",
+    "rune-lab/core": "./src/sdk/core/src/index.ts",
+    "rune-lab/state": "./src/sdk/state/src/index.ts",
+    "rune-lab/ui": "./src/sdk/ui/src/lib/index.ts",
+    "$lib/": "./src/sdk/ui/src/lib/",
+    "daisyui/": "./node_modules/daisyui/",
+    "esm-env": "npm:esm-env@^1.2.2",
+    "svelte": "npm:svelte@^5.54.1",
+    "vitest": "npm:vitest@^4.1.0",
+    "dinero.js": "npm:dinero.js@^2.0.2",
+    "@sveltejs/kit": "npm:@sveltejs/kit@^2.55.0",
+    "hotkeys-js": "npm:hotkeys-js@^4.0.2"
+  }
+}

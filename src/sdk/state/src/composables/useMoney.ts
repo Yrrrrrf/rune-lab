@@ -2,10 +2,10 @@
 // Context-aware money composable that reads CurrencyStore + LanguageStore
 
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "../context";
-import type { ConfigStore } from "../createConfigStore.svelte";
-import type { Currency } from "../currency.svelte";
-import type { Language } from "../language.svelte";
+import { RUNE_LAB_CONTEXT } from "../context.ts";
+import type { ConfigStore } from "../createConfigStore.svelte.ts";
+import type { Currency } from "../currency.svelte.ts";
+import type { Language } from "../language.svelte.ts";
 import {
   addMoney,
   createMoney,

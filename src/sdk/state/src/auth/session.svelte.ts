@@ -3,8 +3,8 @@
 // This is a SKELETON — full Better-Auth wiring is deferred to a dedicated spec.
 
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "../context";
-import type { Session, User } from "./types";
+import { RUNE_LAB_CONTEXT } from "../context.ts";
+import type { Session, User } from "./types.ts";
 
 /**
  * SessionStore — reactive authentication state.
@@ -34,32 +34,34 @@ export class SessionStore {
   /**
    * Initialize the session — placeholder for Better-Auth client setup
    */
-  async init(): Promise<void> {
+  init(): Promise<void> {
     // TODO: Wire Better-Auth client.getSession() here
     this.isReady = true;
+    return Promise.resolve();
   }
 
   /**
    * Log in — placeholder
    */
-  async login(
+  login(
     _credentials: { email: string; password: string },
   ): Promise<boolean> {
     // TODO: Wire Better-Auth client.signIn.email() here
     console.warn(
       "SessionStore.login() is a stub — implement Better-Auth integration",
     );
-    return false;
+    return Promise.resolve(false);
   }
 
   /**
    * Log out — placeholder
    */
-  async logout(): Promise<void> {
+  logout(): Promise<void> {
     // TODO: Wire Better-Auth client.signOut() here
     this.user = null;
     this.session = null;
     this.isAuthenticated = false;
+    return Promise.resolve();
   }
 }
 

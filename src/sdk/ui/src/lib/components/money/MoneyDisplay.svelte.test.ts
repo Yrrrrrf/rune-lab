@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/svelte";
+import "@testing-library/jest-dom/vitest";
 import { describe, expect, it } from "vitest";
 import MoneyDisplay from "./MoneyDisplay.svelte";
 import { RUNE_LAB_CONTEXT } from "@internal/state";

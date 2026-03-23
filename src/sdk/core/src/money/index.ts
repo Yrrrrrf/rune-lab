@@ -14,4 +14,4 @@ export {
   safeAmount,
   subtractMoney,
   toMinorUnit,
-} from "./money";
+} from "./money.ts";

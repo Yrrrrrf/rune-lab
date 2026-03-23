@@ -3,9 +3,9 @@
 import {
   type ConfigStore,
   createConfigStore,
-} from "./createConfigStore.svelte";
+} from "./createConfigStore.svelte.ts";
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./context";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
 
 /**
  * Language configuration

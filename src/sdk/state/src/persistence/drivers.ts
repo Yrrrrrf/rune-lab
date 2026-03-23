@@ -5,41 +5,43 @@ import { BROWSER as browser } from "esm-env";
 export function createInMemoryDriver(): PersistenceDriver {
   const store = new Map<string, string>();
   return {
-    get: (key) => store.get(key) ?? null,
-    set: (key, value) => store.set(key, value),
-    remove: (key) => store.delete(key),
+    get: (key: string) => store.get(key) ?? null,
+    set: (key: string, value: string) => store.set(key, value),
+    remove: (key: string) => {
+      store.delete(key);
+    },
   };
 }
 
 export const inMemoryDriver: PersistenceDriver = createInMemoryDriver();
 
 export const localStorageDriver: PersistenceDriver = {
-  get: (key) => {
+  get: (key: string) => {
     if (!browser) return null;
-    return window.localStorage.getItem(key);
+    return globalThis.localStorage.getItem(key);
   },
-  set: (key, value) => {
+  set: (key: string, value: string) => {
     if (!browser) return;
-    window.localStorage.setItem(key, value);
+    globalThis.localStorage.setItem(key, value);
   },
-  remove: (key) => {
+  remove: (key: string) => {
     if (!browser) return;
-    window.localStorage.removeItem(key);
+    globalThis.localStorage.removeItem(key);
   },
 };
 
 export const sessionStorageDriver: PersistenceDriver = {
-  get: (key) => {
+  get: (key: string) => {
     if (!browser) return null;
-    return window.sessionStorage.getItem(key);
+    return globalThis.sessionStorage.getItem(key);
   },
-  set: (key, value) => {
+  set: (key: string, value: string) => {
     if (!browser) return;
-    window.sessionStorage.setItem(key, value);
+    globalThis.sessionStorage.setItem(key, value);
   },
-  remove: (key) => {
+  remove: (key: string) => {
     if (!browser) return;
-    window.sessionStorage.removeItem(key);
+    globalThis.sessionStorage.removeItem(key);
   },
 };
 
@@ -50,12 +52,12 @@ export const createCookieDriver = (
     sameSite?: "Lax" | "Strict" | "None";
   } = {},
 ): PersistenceDriver => ({
-  get: (key) => {
+  get: (key: string) => {
     if (!browser) return null;
     const match = document.cookie.match(new RegExp(`(^| )${key}=([^;]+)`));
     return match ? decodeURIComponent(match[2]) : null;
   },
-  set: (key, value) => {
+  set: (key: string, value: string) => {
     if (!browser) return;
     let cookie = `${key}=${encodeURIComponent(value)}`;
     if (options.path) cookie += `; path=${options.path}`;
@@ -63,7 +65,7 @@ export const createCookieDriver = (
     if (options.sameSite) cookie += `; samesite=${options.sameSite}`;
     document.cookie = cookie;
   },
-  remove: (key) => {
+  remove: (key: string) => {
     if (!browser) return;
     document.cookie = `${key}=; max-age=0; path=${options.path || "/"}`;
   },

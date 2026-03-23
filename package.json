@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",

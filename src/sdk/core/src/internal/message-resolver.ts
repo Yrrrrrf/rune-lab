@@ -8,7 +8,7 @@ import { DEV } from "esm-env";
  * Creates a resolver that dynamically looks up and calls message functions.
  */
 
-type MessageBundle = Record<string, (...args: any[]) => string>;
+type MessageBundle = Record<string, (...args: unknown[]) => string>;
 
 interface MessageResolverConfig<T> {
   /**

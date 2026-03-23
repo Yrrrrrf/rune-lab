@@ -1,6 +1,6 @@
 // src/lib/stores/app-config.svelte.ts
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./context";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
 import { DEV } from "esm-env";
 
 // SDK Package - Application Metadata Management

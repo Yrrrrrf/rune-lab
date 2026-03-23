@@ -27,7 +27,7 @@ export interface Session {
  */
 export interface AuthConfig {
   /** Better-Auth client instance */
-  client?: any; // Will be typed to BetterAuthClient once integrated
+  client?: unknown; // Will be typed to BetterAuthClient once integrated
   /** Callback when session changes (login, logout, expiry) */
   onSessionChange?: (session: Session | null) => void;
   /** Routes that require authentication */

@@ -1,5 +1,5 @@
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "../context";
+import { RUNE_LAB_CONTEXT } from "../context.ts";
 import type { PersistenceDriver } from "@internal/core";
 
 export function usePersistence(): PersistenceDriver | undefined {

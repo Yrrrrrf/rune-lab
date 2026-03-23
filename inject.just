@@ -17,11 +17,6 @@
 # inject       → build rune-lab, then hot-swap node_modules/rune-lab
 # inject-clean → full dependency reset first (yog reborn --deep), then inject
 # ─────────────────────────────────────────────────────────────────────────────
-#
-# * from anywhere — dot means "here"
-# just -f ~/docs/lab/code/typescript/rune-lab/justfile inject .
-# * or with an explicit path
-# just -f ~/docs/lab/code/typescript/rune-lab/justfile inject ~/docs/lab/code/typescript/chimera
 
 # Hot-swap: rebuild rune-lab and inject into <dest>/node_modules/rune-lab
 inject dest=".": _build-for-inject

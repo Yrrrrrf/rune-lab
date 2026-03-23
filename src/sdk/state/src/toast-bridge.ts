@@ -1,4 +1,4 @@
-import type { ToastStore, ToastType } from "./toast.svelte";
+import type { ToastStore, ToastType } from "./toast.svelte.ts";
 
 interface QueuedToast {
   message: string;

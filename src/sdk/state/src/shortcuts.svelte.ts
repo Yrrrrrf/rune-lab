@@ -1,6 +1,6 @@
 import hotkeys from "hotkeys-js";
 import { getContext, untrack } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./context";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
 import { DEV } from "esm-env";
 
 /**
@@ -217,7 +217,7 @@ export function shortcutListener(
       for (const entry of shortcutStore.entries) {
         if (entry.enabled === false) continue;
 
-        hotkeys(entry.keys, "all", (event, handler) => {
+        hotkeys(entry.keys, "all", (event, _handler) => {
           // Scoping logic: check if the event target is within the required scope
           if (entry.scope === "global") {
             // Hotkeys.js already filters inputs by default
@@ -251,10 +251,10 @@ export function shortcutListener(
       }
     };
 
-    window.addEventListener("focusin", handleFocusIn);
+    globalThis.addEventListener("focusin", handleFocusIn);
 
     return () => {
-      window.removeEventListener("focusin", handleFocusIn);
+      globalThis.removeEventListener("focusin", handleFocusIn);
     };
   });
 
