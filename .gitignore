@@ -8,7 +8,6 @@
 # web-generated files
 node_modules
 dist
-scripts
 
 bunfig.toml
 mod.d.ts
