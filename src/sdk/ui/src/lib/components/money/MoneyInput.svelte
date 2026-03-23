@@ -15,13 +15,15 @@
         unit?: 'major' | 'minor';
         /** Override currency code (defaults to CurrencyStore.current) */
         currency?: ISO4217Code | string;
-        /** Minimum value in same units as amount */
+        /** The currency the amount is stored in (e.g. MXN) */
+        storageCurrency?: ISO4217Code | string;
+        /** Minimum value in same units as amount (in storageCurrency) */
         min?: number;
-        /** Maximum value in same units as amount */
+        /** Maximum value in same units as amount (in storageCurrency) */
         max?: number;
         /** Placeholder text */
         placeholder?: string;
-        /** Fired when the value changes (unit matches the unit prop) */
+        /** Fired when the value changes (unit matches the unit prop, in storageCurrency) */
         oninput?: (val: number) => void;
         /** Input disabled state */
         disabled?: boolean;
@@ -36,6 +38,7 @@
         amount = $bindable(0),
         unit = 'minor',
         currency,
+        storageCurrency,
         min,
         max,
         placeholder = "0.00",
@@ -45,18 +48,32 @@
 
     const currencyStore = getCurrencyStore();
 
-    const resolvedCurrency = $derived(
+    const resolvedDisplayCurrency = $derived(
         currency ?? String(currencyStore.current),
     );
 
-    const currencyMeta = $derived(currencyStore.get(resolvedCurrency));
-    const symbol = $derived(currencyMeta?.symbol ?? "$");
-    const decimals = $derived(currencyMeta?.decimals ?? 2);
+    const resolvedStorageCurrency = $derived(
+        storageCurrency ?? resolvedDisplayCurrency
+    );
 
-    // Convert to minor units internally for consistent arithmetic if needed, 
-    // but here we just need to display it.
+    const displayMeta = $derived(currencyStore.get(resolvedDisplayCurrency));
+    const symbol = $derived(displayMeta?.symbol ?? "$");
+    const decimals = $derived(displayMeta?.decimals ?? 2);
+
+    // The display value is reactive to amount (which is in storage currency)
     const displayValue = $derived.by(() => {
-        const val = amount ?? 0;
+        let val = amount ?? 0;
+        
+        // If storage !== display, convert for display
+        if (resolvedStorageCurrency !== resolvedDisplayCurrency && currencyStore.canConvert) {
+            const minorAmount = unit === 'major' ? toMinorUnit(val, resolvedStorageCurrency) : val;
+            const convertedMinor = currencyStore.convertAmount(Number(minorAmount), resolvedStorageCurrency, resolvedDisplayCurrency);
+            
+            if (decimals === 0) return String(Math.round(convertedMinor));
+            return (convertedMinor / Math.pow(10, decimals)).toFixed(decimals);
+        }
+
+        // Standard display (no conversion or no rates)
         if (unit === 'major') {
             return Number(val).toFixed(decimals);
         }
@@ -69,7 +86,11 @@
         const target = e.target as HTMLInputElement;
         const raw = target.value.replace(/[^0-9.,-]/g, "");
 
-        if (!raw) return;
+        if (!raw) {
+            amount = 0;
+            oninput?.(0);
+            return;
+        }
 
         // String-based parsing: split on decimal point
         const parts = raw.split(".");
@@ -79,33 +100,36 @@
         let fractionalPart = (parts[1] || "").slice(0, decimals);
         fractionalPart = fractionalPart.padEnd(decimals, "0");
 
-        // Combine as integer minor units — no floats involved
+        // Combine as integer minor units (in display currency)
         const combined =
             decimals === 0 ? integerPart : integerPart + fractionalPart;
 
-        let cents = parseInt(combined, 10);
-        if (isNaN(cents)) return;
+        let displayCents = parseInt(combined, 10);
+        if (isNaN(displayCents)) return;
 
-        // Apply constraints in minor units
-        let finalCents = cents;
+        // Convert back to storage currency
+        let storageCents = displayCents;
+        if (resolvedStorageCurrency !== resolvedDisplayCurrency && currencyStore.canConvert) {
+            storageCents = currencyStore.convertAmount(displayCents, resolvedDisplayCurrency, resolvedStorageCurrency);
+        }
+
+        // Apply constraints in storage currency minor units
+        let finalStorageCents = storageCents;
         
+        const storageDecimals = currencyStore.get(resolvedStorageCurrency)?.decimals ?? 2;
+        const minCents = min !== undefined ? (unit === 'major' ? toMinorUnit(min, resolvedStorageCurrency) : min) : undefined;
+        const maxCents = max !== undefined ? (unit === 'major' ? toMinorUnit(max, resolvedStorageCurrency) : max) : undefined;
+            
+        if (minCents !== undefined) finalStorageCents = Math.max(finalStorageCents, minCents);
+        if (maxCents !== undefined) finalStorageCents = Math.min(finalStorageCents, maxCents);
+            
         if (unit === 'major') {
-            // If we are working in major units, we need to convert min/max to cents for comparison
-            const minCents = min !== undefined ? toMinorUnit(min, resolvedCurrency) : undefined;
-            const maxCents = max !== undefined ? toMinorUnit(max, resolvedCurrency) : undefined;
-            
-            if (minCents !== undefined) finalCents = Math.max(finalCents, minCents);
-            if (maxCents !== undefined) finalCents = Math.min(finalCents, maxCents);
-            
-            const majorValue = finalCents / Math.pow(10, decimals);
+            const majorValue = finalStorageCents / Math.pow(10, storageDecimals);
             amount = majorValue;
             oninput?.(majorValue);
         } else {
-            if (min !== undefined) finalCents = Math.max(finalCents, min);
-            if (max !== undefined) finalCents = Math.min(finalCents, max);
-            
-            amount = finalCents;
-            oninput?.(finalCents);
+            amount = finalStorageCents;
+            oninput?.(finalStorageCents);
         }
     }
 </script>

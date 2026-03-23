@@ -9,6 +9,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./vitest-setup.ts"],
     globals: true,
+    exclude: ["**/node_modules/**", "**/dist/**", "**/cypress/**", "**/.{idea,git,cache,output,temp,svelte-kit}/**"],
     alias: {
       "@internal/core": path.resolve(__dirname, "./src/sdk/core/src"),
       "@internal/state": path.resolve(__dirname, "./src/sdk/state/src"),

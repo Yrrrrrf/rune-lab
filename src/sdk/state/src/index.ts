@@ -9,6 +9,8 @@ export { useRuneLab } from "./composables/useRuneLab.ts";
 export type { RuneLabContext } from "./composables/useRuneLab.ts";
 export { usePersistence } from "./composables/usePersistence.ts";
 export { useMoney } from "./composables/useMoney.ts";
+export { useMoneyFilter } from "./composables/useMoneyFilter.ts";
+export type { MoneyFilterOptions } from "./composables/useMoneyFilter.ts";
 
 // ── Persistence Drivers ───────────────────────────────────────────────────────
 export {
@@ -54,6 +56,11 @@ export {
   type CurrencyStoreOptions,
   getCurrencyStore,
 } from "./currency.svelte.ts";
+export {
+  createExchangeRateStore,
+  ExchangeRateStore,
+  getExchangeRateStore,
+} from "./exchange-rate.svelte.ts";
 export { createToastStore, getToastStore, ToastStore } from "./toast.svelte.ts";
 export {
   type Command,

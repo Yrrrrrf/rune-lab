@@ -1,4 +1,4 @@
-[doc('Test the client')]
+[doc('Test the client (runs once)')]
 [group('Dev')]
-test:
-    @echo "✓ Client tests passed"
+test *args:
+    bun vitest run {{ args }}

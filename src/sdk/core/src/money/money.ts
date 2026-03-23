@@ -8,9 +8,12 @@ import {
   BRL,
   CAD,
   CNY,
+  convert as dineroConvert,
   type Dinero,
   dinero,
   type DineroCurrency,
+  transformScale as dineroTransformScale,
+  type DineroSnapshot,
   EUR,
   GBP,
   INR,
@@ -21,6 +24,7 @@ import {
   subtract as dineroSubtract,
   toDecimal,
   // ISO 4217 currency definitions
+  toSnapshot,
   USD,
 } from "dinero.js";
 
@@ -46,6 +50,30 @@ export const CURRENCY_MAP: Record<string, DineroCurrency<number>> = {
  * Enables IDE autocomplete while allowing any string for dynamic currencies.
  */
 export type ISO4217Code = keyof typeof CURRENCY_MAP;
+
+/**
+ * Scaled integer rate for Dinero.js conversion.
+ * Avoids floating-point errors by using integer amounts with a scale.
+ */
+export type ScaledRate = { amount: number; scale: number };
+
+/**
+ * Map of currency codes to their exchange rates relative to a base currency.
+ * Rates can be plain numbers (integers) or ScaledRate objects.
+ */
+export type RateMap = Record<string, ScaledRate | number>;
+
+/**
+ * Converts a human-readable float rate (e.g., 17.23) into a ScaledRate.
+ * Defaults to 4 decimal places of precision if not specified.
+ */
+export function scaledRate(float: number, precision: number = 4): ScaledRate {
+  const factor = Math.pow(10, precision);
+  return {
+    amount: Math.round(float * factor),
+    scale: precision,
+  };
+}
 
 /**
  * Register a new currency in CURRENCY_MAP atomically.
@@ -198,5 +226,159 @@ export function multiplyMoney(
   return dineroMultiply(money, factor);
 }
 
-// Re-export the Dinero type for type annotations
-export type { Dinero, DineroCurrency };
+/**
+ * Converts a Dinero object to another currency.
+ * Both currencies must share the same base (base 10 for all standard ISO currencies).
+ */
+export function convertMoney(
+  money: Dinero<number>,
+  toCurrencyCode: string,
+  rates: RateMap,
+): Dinero<number> {
+  const targetCurrency = CURRENCY_MAP[toCurrencyCode];
+  if (!targetCurrency) {
+    throw new Error(
+      `Unknown target currency: ${toCurrencyCode}. Register it first via registerCurrency().`,
+    );
+  }
+
+  const rate = rates[toCurrencyCode];
+  if (rate === undefined) {
+    throw new Error(`Missing exchange rate for currency: ${toCurrencyCode}`);
+  }
+
+  try {
+    return dineroConvert(money, targetCurrency, { [toCurrencyCode]: rate });
+  } catch (err) {
+    if (err instanceof Error && err.message.includes("base")) {
+      throw new Error(
+        `Cannot convert between currencies with different bases. Ensure both are base 10.`,
+      );
+    }
+    throw err;
+  }
+}
+
+/**
+ * Converts a raw minor-unit amount between currencies.
+ * Returns the original amount if from and to currencies are the same.
+ */
+export function convertAmount(
+  amount: number,
+  fromCode: string,
+  toCode: string,
+  rates: RateMap,
+): number {
+  if (fromCode === toCode) return amount;
+  const targetCurrency = CURRENCY_MAP[toCode];
+  if (!targetCurrency) {
+    throw new Error(`Unknown target currency: ${toCode}`);
+  }
+
+  const sourceMoney = createMoney(amount, fromCode);
+  const convertedMoney = convertMoney(sourceMoney, toCode, rates);
+
+  // Normalize back to the target currency's standard exponent
+  const targetMoney = dineroTransformScale(convertedMoney, targetCurrency.exponent);
+  const snapshot = toSnapshot(targetMoney);
+
+  return snapshot.amount;
+}
+
+
+/**
+ * Converts Dinero object to a Stripe-compatible payload.
+ */
+export function toStripeMoney(money: Dinero<number>): {
+  amount: number;
+  currency: string;
+} {
+  const snapshot = toSnapshot(money);
+  return {
+    amount: snapshot.amount,
+    currency: snapshot.currency.code.toLowerCase(),
+  };
+}
+
+/**
+ * Converts Dinero object to a PayPal-compatible payload.
+ */
+export function toPaypalMoney(money: Dinero<number>): {
+  value: string;
+  currency_code: string;
+} {
+  const value = toDecimal(money);
+  const snapshot = toSnapshot(money);
+  return {
+    value,
+    currency_code: snapshot.currency.code,
+  };
+}
+
+/**
+ * Converts Dinero object to an Adyen-compatible payload.
+ */
+export function toAdyenMoney(money: Dinero<number>): {
+  value: number;
+  currency: string;
+} {
+  const snapshot = toSnapshot(money);
+  return {
+    value: snapshot.amount,
+    currency: snapshot.currency.code.toUpperCase(),
+  };
+}
+
+/**
+ * Converts Dinero object to a Square-compatible payload (uses BigInt).
+ */
+export function toSquareMoney(money: Dinero<number>): {
+  amount: bigint;
+  currency: string;
+} {
+  const snapshot = toSnapshot(money);
+  return {
+    amount: BigInt(snapshot.amount),
+    currency: snapshot.currency.code,
+  };
+}
+
+/**
+ * Serializes a Dinero object into a plain object snapshot.
+ */
+export function toMoneySnapshot(money: Dinero<number>): {
+  amount: number;
+  currency: string;
+  scale: number;
+} {
+  const snapshot = toSnapshot(money);
+  return {
+    amount: snapshot.amount,
+    currency: snapshot.currency.code,
+    scale: snapshot.scale,
+  };
+}
+
+/**
+ * Restores a Dinero object from a snapshot.
+ */
+export function fromMoneySnapshot(snapshot: {
+  amount: number;
+  currency: string;
+  scale?: number;
+}): Dinero<number> {
+  const currency = CURRENCY_MAP[snapshot.currency];
+  if (!currency) {
+    throw new Error(
+      `Unknown currency: ${snapshot.currency}. Register it first.`,
+    );
+  }
+  return dinero({
+    amount: snapshot.amount,
+    currency,
+    scale: snapshot.scale ?? currency.exponent,
+  });
+}
+
+// Re-export types
+export type { Dinero, DineroCurrency, DineroSnapshot };

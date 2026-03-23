@@ -12,7 +12,9 @@
         createShortcutStore,
         createCartStore,
         createSessionStore,
+        createExchangeRateStore,
         type CartStoreConfig,
+        type ExchangeRateStore,
     } from "@internal/state";
     import type { PersistenceDriver } from "@internal/core";
     import { localStorageDriver } from "@internal/state";
@@ -46,6 +48,13 @@
         currencies?: Currency[];
         /** Default currency code when no persisted value exists */
         defaultCurrency?: string;
+        /** Bootstrap-time exchange rates */
+        exchangeRates?: {
+            base: string;
+            rates: Record<string, number>;
+        };
+        /** Callback when rates are initialized/updated */
+        onRatesUpdate?: (store: ExchangeRateStore) => void;
 
         // Cart (opt-in)
         /** CartStore configuration — when provided, a CartStore is created and registered in context */
@@ -80,8 +89,14 @@
     const initialDefaultTheme = untrack(() => config.defaultTheme);
     const initialCustomCurrencies = untrack(() => config.currencies);
     const initialDefaultCurrency = untrack(() => config.defaultCurrency);
+    const initialExchangeRates = untrack(() => config.exchangeRates);
     const initialCartConfig = untrack(() => config.cart);
     const initialAuthConfig = untrack(() => config.auth);
+
+    const exchangeRateStore = createExchangeRateStore();
+    if (initialExchangeRates) {
+        exchangeRateStore.setRates(initialExchangeRates.base, initialExchangeRates.rates);
+    }
 
     const themeStore = createThemeStore({
         driver: initialPersistence,
@@ -96,6 +111,7 @@
         driver: initialPersistence,
         customCurrencies: initialCustomCurrencies,
         defaultCurrency: initialDefaultCurrency,
+        exchangeRateStore,
     });
     const shortcutStore = createShortcutStore();
 
@@ -117,6 +133,7 @@
     setContext(RUNE_LAB_CONTEXT.theme, themeStore);
     setContext(RUNE_LAB_CONTEXT.language, languageStore);
     setContext(RUNE_LAB_CONTEXT.currency, currencyStore);
+    setContext(RUNE_LAB_CONTEXT.exchangeRate, exchangeRateStore);
     setContext(RUNE_LAB_CONTEXT.shortcut, shortcutStore);
     setContext(RUNE_LAB_CONTEXT.layout, layoutStore);
     setContext(RUNE_LAB_CONTEXT.commands, commandStore);
@@ -165,6 +182,9 @@
 
     onMount(() => {
         layoutStore.init();
+        if (config.onRatesUpdate) {
+            config.onRatesUpdate(exchangeRateStore);
+        }
     });
 
     // Meta tags derived from app store state

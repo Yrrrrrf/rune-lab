@@ -40,6 +40,7 @@ const CURRENCIES: Currency[] = [
 ] as const;
 
 import type { PersistenceDriver } from "@internal/core";
+import { type ExchangeRateStore } from "./exchange-rate.svelte.ts";
 
 export interface CurrencyStoreOptions {
   driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
@@ -47,6 +48,8 @@ export interface CurrencyStoreOptions {
   customCurrencies?: Currency[];
   /** Default currency code if no persisted value exists */
   defaultCurrency?: string;
+  /** Wired exchange rate store for conversions */
+  exchangeRateStore?: ExchangeRateStore;
 }
 
 export function createCurrencyStore(
@@ -80,6 +83,8 @@ export function createCurrencyStore(
     driver: resolvedDriver,
   });
 
+  const exchangeRateStore = opts.exchangeRateStore;
+
   /**
    * Extension: Atomic currency registration.
    * Updates both the Dinero registry (core) and the reactive store (UI).
@@ -91,6 +96,18 @@ export function createCurrencyStore(
     const def = dineroDef || buildDineroDef(meta);
     registerCurrency(meta.code, def as DineroCurrency<number>);
     store.addItems([meta]);
+  }
+
+  /**
+   * Converts an amount from one currency to another.
+   * Defaults to converting to the current store currency.
+   */
+  function convertAmount(amount: number, fromCode: string, toCode?: string): number {
+    const target = toCode ?? String((store as any).current);
+    if (fromCode === target) return amount;
+    if (!exchangeRateStore || !exchangeRateStore.hasRates) return amount;
+
+    return exchangeRateStore.convertAmount(amount, fromCode, target);
   }
 
   // Append and auto-register custom currencies if provided
@@ -110,11 +127,16 @@ export function createCurrencyStore(
 
   // Explicitly attach method to ensure prototype is preserved and method is available
   // across different build environments.
-  (store as unknown as { addCurrency: typeof addCurrency }).addCurrency =
-    addCurrency;
+  Object.defineProperties(store, {
+    addCurrency: { value: addCurrency },
+    convertAmount: { value: convertAmount },
+    canConvert: { get: () => !!exchangeRateStore?.hasRates }
+  });
 
   return store as ReturnType<typeof createConfigStore<Currency>> & {
     addCurrency: typeof addCurrency;
+    convertAmount: typeof convertAmount;
+    readonly canConvert: boolean;
   };
 }
 

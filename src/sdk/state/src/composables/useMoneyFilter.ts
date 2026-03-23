@@ -1,0 +1,89 @@
+// sdk/state/src/composables/useMoneyFilter.ts
+
+import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "../context.ts";
+import { type CurrencyStore } from "../currency.svelte.ts";
+import { useMoney } from "./useMoney.ts";
+
+export interface MoneyFilterOptions {
+  min?: number;
+  max?: number;
+  unit?: "major" | "minor";
+  autoConvertOnChange?: boolean;
+}
+
+/**
+ * A reactive currency-aware filter composable.
+ * Handles min/max thresholds that auto-convert when the display currency changes.
+ */
+export function useMoneyFilter(options: MoneyFilterOptions = {}) {
+  const currencyStore = getContext<CurrencyStore>(RUNE_LAB_CONTEXT.currency);
+  const { format } = useMoney();
+
+  let min = $state(options.min ?? 0);
+  let max = $state(options.max ?? Infinity);
+  const unit = options.unit ?? "minor";
+  const autoConvertOnChange = options.autoConvertOnChange ?? true;
+
+  let lastCurrency = $state(String(currencyStore.current));
+
+  $effect(() => {
+    const currentCurrency = String(currencyStore.current);
+    if (autoConvertOnChange && currentCurrency !== lastCurrency) {
+      if (currencyStore.canConvert) {
+        if (min !== 0) {
+          min = currencyStore.convertAmount(min, lastCurrency, currentCurrency);
+        }
+        if (max !== Infinity) {
+          max = currencyStore.convertAmount(max, lastCurrency, currentCurrency);
+        }
+      } else {
+        // Reset if no rates available
+        min = 0;
+        max = Infinity;
+      }
+    }
+    lastCurrency = currentCurrency;
+  });
+
+  function setMin(value: number) {
+    min = value;
+  }
+
+  function setMax(value: number) {
+    max = value;
+  }
+
+  function reset() {
+    min = 0;
+    max = Infinity;
+  }
+
+  /**
+   * Checks if an amount (in its entity currency) matches the current filter.
+   */
+  function matches(amount: number, entityCurrency: string): boolean {
+    const currentCurrency = String(currencyStore.current);
+    
+    // Convert entity amount to display currency for comparison
+    const convertedAmount = currencyStore.convertAmount(amount, entityCurrency, currentCurrency);
+    
+    return convertedAmount >= min && convertedAmount <= max;
+  }
+
+  const displayMin = $derived(format(min, undefined, unit));
+  const displayMax = $derived(max === Infinity ? "∞" : format(max, undefined, unit));
+
+  return {
+    get min() { return min; },
+    set min(v) { min = v; },
+    get max() { return max; },
+    set max(v) { max = v; },
+    setMin,
+    setMax,
+    reset,
+    matches,
+    displayMin: $derived(displayMin),
+    displayMax: $derived(displayMax),
+  };
+}

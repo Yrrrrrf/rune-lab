@@ -8,28 +8,43 @@ import type { Currency } from "../currency.svelte.ts";
 import type { Language } from "../language.svelte.ts";
 import {
   addMoney,
+  convertAmount,
+  convertMoney,
   createMoney,
   type Dinero,
   formatMoney,
+  fromMoneySnapshot,
   type ISO4217Code,
+  multiplyMoney,
+  safeAmount,
   subtractMoney,
+  toAdyenMoney,
   toMinorUnit,
+  toMoneySnapshot,
+  toPaypalMoney,
+  toSquareMoney,
+  toStripeMoney,
 } from "@internal/core";
+import { type ExchangeRateStore } from "../exchange-rate.svelte.ts";
+import { type CurrencyStore } from "../currency.svelte.ts";
 
 /**
  * Context-aware money composable.
  * Reads CurrencyStore and LanguageStore from rune-lab context.
  *
  * Usage:
- *   const { format, toDinero, add, subtract } = useMoney();
+ *   const { format, toDinero, add, subtract, convert } = useMoney();
  *   const display = format(150.00, undefined, 'major'); // "$150.00"
  */
 export function useMoney() {
-  const currencyStore = getContext<ConfigStore<Currency>>(
+  const currencyStore = getContext<CurrencyStore>(
     RUNE_LAB_CONTEXT.currency,
   );
   const languageStore = getContext<ConfigStore<Language>>(
     RUNE_LAB_CONTEXT.language,
+  );
+  const exchangeRateStore = getContext<ExchangeRateStore>(
+    RUNE_LAB_CONTEXT.exchangeRate,
   );
 
   /**
@@ -55,6 +70,7 @@ export function useMoney() {
     amount: number | null | undefined,
     currencyCode?: ISO4217Code | string,
     unit: "major" | "minor" = "minor",
+    localeOverride?: string,
   ): string {
     if (
       amount === null || amount === undefined ||
@@ -64,7 +80,7 @@ export function useMoney() {
     }
 
     const code = currencyCode ?? String(currencyStore.current);
-    const locale = String(languageStore.current) || "en";
+    const locale = localeOverride ?? (String(languageStore.current) || "en");
 
     const minorAmount = unit === "major"
       ? toMinorUnit(Number(amount), code)
@@ -72,6 +88,70 @@ export function useMoney() {
 
     const money = createMoney(minorAmount, code);
     return formatMoney(money, locale, code);
+  }
+
+  /**
+   * Converts an amount from fromCode to the current display currency.
+   */
+  function convert(
+    amount: number,
+    fromCode: string,
+    unit: "major" | "minor" = "minor",
+  ): Dinero<number> {
+    const minorAmount = unit === "major" ? toMinorUnit(amount, fromCode) : amount;
+    const currentCode = String(currencyStore.current);
+
+    if (!exchangeRateStore?.hasRates || fromCode === currentCode) {
+      return createMoney(minorAmount, fromCode);
+    }
+
+    const sourceMoney = createMoney(minorAmount, fromCode);
+    return convertMoney(sourceMoney, currentCode, exchangeRateStore.rates);
+  }
+
+  /**
+   * Convenience: converts and formats an amount in one go.
+   */
+  function formatConverted(
+    amount: number,
+    fromCode: string,
+    unit: "major" | "minor" = "minor",
+  ): string {
+    const money = convert(amount, fromCode, unit);
+    const locale = (String(languageStore.current) || "en");
+    const currentCode = String(currencyStore.current);
+    const snapshot = toMoneySnapshot(money);
+    
+    // If conversion didn't happen (no rates), format as original currency
+    const displayCode = exchangeRateStore?.hasRates ? currentCode : snapshot.currency;
+    
+    return formatMoney(money, locale, displayCode);
+  }
+
+  /**
+   * Format an amount for a specific payment provider payload.
+   */
+  function toPayload(
+    amount: number,
+    currencyCode?: string,
+    target: "stripe" | "paypal" | "adyen" | "square" = "stripe",
+    unit: "major" | "minor" = "minor",
+  ) {
+    const code = currencyCode ?? String(currencyStore.current);
+    const money = toDinero(amount, code, unit);
+
+    switch (target) {
+      case "stripe":
+        return toStripeMoney(money);
+      case "paypal":
+        return toPaypalMoney(money);
+      case "adyen":
+        return toAdyenMoney(money);
+      case "square":
+        return toSquareMoney(money);
+      default:
+        return toStripeMoney(money);
+    }
   }
 
   /**
@@ -104,5 +184,5 @@ export function useMoney() {
     return subtractMoney(aMoney, bMoney);
   }
 
-  return { toDinero, format, add, subtract };
+  return { toDinero, format, add, subtract, convert, formatConverted, toPayload };
 }

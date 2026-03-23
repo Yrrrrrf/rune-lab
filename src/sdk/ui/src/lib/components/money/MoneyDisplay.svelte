@@ -7,6 +7,9 @@
         unit = 'minor',
         fallback = "—",
         currency,
+        sourceCurrency,
+        showSourceCurrency = false,
+        noRatesFallback,
         locale,
         compact = false,
     } = $props<{
@@ -21,6 +24,12 @@
         fallback?: string;
         /** Override currency code (defaults to CurrencyStore.current) */
         currency?: ISO4217Code | string;
+        /** The currency the amount is stored in (e.g. MXN) */
+        sourceCurrency?: ISO4217Code | string;
+        /** Show the original currency as a label */
+        showSourceCurrency?: boolean;
+        /** Fallback text if conversion is needed but rates are missing */
+        noRatesFallback?: string;
         /** Override locale (defaults to LanguageStore.current) */
         locale?: string;
         /** Use compact notation (e.g., $1.2M) */
@@ -30,15 +39,19 @@
     const currencyStore = getCurrencyStore();
     const languageStore = getLanguageStore();
 
-    const resolvedCurrency = $derived(
+    const resolvedDisplayCurrency = $derived(
         currency ?? String(currencyStore.current),
+    );
+
+    const resolvedSourceCurrency = $derived(
+        sourceCurrency ?? resolvedDisplayCurrency
     );
 
     const resolvedLocale = $derived(
         locale ?? (String(languageStore.current) || "en"),
     );
 
-    const currencyMeta = $derived(currencyStore.get(resolvedCurrency));
+    const currencyMeta = $derived(currencyStore.get(resolvedDisplayCurrency));
     const decimals = $derived(currencyMeta?.decimals ?? 2);
 
     const formatted = $derived.by(() => {
@@ -47,23 +60,44 @@
             return fallback;
         }
 
-        // Convert to minor units if necessary
+        // Convert to minor units if necessary (in source currency)
         const minorAmount = unit === 'major' 
-            ? toMinorUnit(Number(amount), resolvedCurrency) 
+            ? toMinorUnit(Number(amount), resolvedSourceCurrency) 
             : amount;
 
+        // Conversion logic
+        let displayAmount = Number(minorAmount);
+        let displayCurrency = resolvedDisplayCurrency;
+
+        if (resolvedSourceCurrency !== resolvedDisplayCurrency) {
+            if (currencyStore.canConvert) {
+                displayAmount = currencyStore.convertAmount(Number(minorAmount), resolvedSourceCurrency, resolvedDisplayCurrency);
+            } else if (noRatesFallback) {
+                return noRatesFallback;
+            } else {
+                // Fallback to source currency display if rates missing
+                displayCurrency = resolvedSourceCurrency;
+            }
+        }
+
         if (compact) {
-            const majorUnits = Number(minorAmount) / Math.pow(10, decimals);
+            const displayDecimals = currencyStore.get(displayCurrency)?.decimals ?? 2;
+            const majorUnits = displayAmount / Math.pow(10, displayDecimals);
             return new Intl.NumberFormat(resolvedLocale, {
                 style: "currency",
-                currency: resolvedCurrency,
+                currency: displayCurrency,
                 notation: "compact",
                 maximumFractionDigits: 1,
             }).format(majorUnits);
         }
 
-        return formatAmount(minorAmount, resolvedCurrency, resolvedLocale);
+        return formatAmount(displayAmount, displayCurrency, resolvedLocale);
     });
 </script>
 
-<data value={amount} class="rl-money-display tabular-nums">{formatted}</data>
+<data value={amount} class="rl-money-display tabular-nums">
+    {formatted}
+    {#if showSourceCurrency && sourceCurrency && sourceCurrency !== resolvedDisplayCurrency}
+        <small class="opacity-50 ml-1">({sourceCurrency})</small>
+    {/if}
+</data>
