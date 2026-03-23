@@ -8,6 +8,7 @@ export { default as RuneProvider } from "./components/RuneProvider.svelte";
 export { default as Icon } from "./components/Icon.svelte";
 export { default as Toaster } from "./components/Toaster.svelte";
 export { default as ApiMonitor } from "./components/ApiMonitor.svelte";
+export { default as Kyntharil } from "./components/Kyntharil.svelte";
 
 // ── Features ──────────────────────────────────────────────────────────────────
 export { default as CommandPalette } from "./features/command-palette/CommandPalette.svelte";

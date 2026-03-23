@@ -4,6 +4,7 @@ import {
 } from "./createConfigStore.svelte";
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "./context";
+import { registerCurrency } from "@internal/core";
 
 /**
  * Currency configuration
@@ -13,6 +14,18 @@ export interface Currency {
   code: string; // ISO 4217 code (e.g., "USD", "EUR", "MXN")
   symbol: string; // Currency symbol (e.g., "$", "€", "₹")
   decimals: number; // Number of decimal places (usually 2)
+}
+
+/**
+ * Helper to build a minimal Dinero definition from Currency metadata.
+ * Assumes base 10 (standard decimal) for auto-registration.
+ */
+function buildDineroDef(meta: Currency) {
+  return {
+    code: meta.code,
+    base: 10,
+    exponent: meta.decimals,
+  };
 }
 
 const CURRENCIES: Currency[] = [
@@ -70,8 +83,24 @@ export function createCurrencyStore(
     driver: resolvedDriver,
   });
 
-  // Append custom currencies if provided
+  /**
+   * Extension: Atomic currency registration.
+   * Updates both the Dinero registry (core) and the reactive store (UI).
+   *
+   * @remarks Custom currencies with non-decimal base systems must use
+   * registerCurrency() from @internal/core explicitly before addItems().
+   */
+  function addCurrency(meta: Currency, dineroDef?: any) {
+    const def = dineroDef || buildDineroDef(meta);
+    registerCurrency(meta.code, def);
+    store.addItems([meta]);
+  }
+
+  // Append and auto-register custom currencies if provided
   if (opts.customCurrencies?.length) {
+    for (const c of opts.customCurrencies) {
+      registerCurrency(c.code, buildDineroDef(c));
+    }
     store.addItems(opts.customCurrencies);
   }
 
@@ -82,9 +111,14 @@ export function createCurrencyStore(
     }
   }
 
-  return store;
+  return {
+    ...store,
+    addCurrency,
+  };
 }
 
+export type CurrencyStore = ReturnType<typeof createCurrencyStore>;
+
 export function getCurrencyStore() {
-  return getContext<ConfigStore<Currency>>(RUNE_LAB_CONTEXT.currency);
+  return getContext<CurrencyStore>(RUNE_LAB_CONTEXT.currency);
 }

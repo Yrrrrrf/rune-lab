@@ -80,6 +80,17 @@
     onMount(() => {
         layoutStore.init({ namespace });
 
+        // Apply global scroll lock while WorkspaceLayout is mounted
+        const originalHtmlOverflow = document.documentElement.style.overflow;
+        const originalBodyOverflow = document.body.style.overflow;
+        const originalHtmlHeight = document.documentElement.style.height;
+        const originalBodyHeight = document.body.style.height;
+
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.height = "100%";
+        document.body.style.height = "100%";
+
         // Register default layout shortcuts
         const shortcuts = [
             {
@@ -103,6 +114,12 @@
         }
 
         return () => {
+            // Restore original styles
+            document.documentElement.style.overflow = originalHtmlOverflow;
+            document.body.style.overflow = originalBodyOverflow;
+            document.documentElement.style.height = originalHtmlHeight;
+            document.body.style.height = originalBodyHeight;
+
             shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_NAV.id);
             shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_DETAIL.id);
         };
@@ -203,16 +220,6 @@
 </div>
 
 <style>
-    /* Global lock for entire screen, relying on WorkspaceLayout scroll areas */
-    :global(html),
-    :global(body) {
-        overflow: hidden;
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
     :global(.rl-layout) {
         --rl-strip-width: 72px;
         --rl-nav-width: 240px;

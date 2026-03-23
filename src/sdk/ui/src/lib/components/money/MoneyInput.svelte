@@ -3,19 +3,26 @@
   No floats cross the boundary — values are always integer minor units.
 -->
 <script module lang="ts">
+    import type { ISO4217Code } from "@internal/core";
+
     export interface MoneyInputProps {
-        /** Current value in minor units (e.g., 15000 = $150.00) */
-        value?: number;
+        /** Current value in minor or major units (see unit prop) */
+        amount?: number | null | undefined;
+        /** 
+         * Whether the amount is in 'major' (e.g., pesos) or 'minor' (e.g., centavos) units.
+         * Defaults to 'minor' for backward compatibility.
+         */
+        unit?: 'major' | 'minor';
         /** Override currency code (defaults to CurrencyStore.current) */
-        currency?: string;
-        /** Minimum value in minor units */
+        currency?: ISO4217Code | string;
+        /** Minimum value in same units as amount */
         min?: number;
-        /** Maximum value in minor units */
+        /** Maximum value in same units as amount */
         max?: number;
         /** Placeholder text */
         placeholder?: string;
-        /** Fired when the value changes (in minor units) */
-        oninput?: (cents: number) => void;
+        /** Fired when the value changes (unit matches the unit prop) */
+        oninput?: (val: number) => void;
         /** Input disabled state */
         disabled?: boolean;
     }
@@ -23,9 +30,11 @@
 
 <script lang="ts">
     import { getCurrencyStore } from "@internal/state";
+    import { toMinorUnit } from "@internal/core";
 
     let {
-        value = 0,
+        amount = $bindable(0),
+        unit = 'minor',
         currency,
         min,
         max,
@@ -40,22 +49,22 @@
         currency ?? String(currencyStore.current),
     );
 
-    // M-02 parallel: derive symbol/decimals from resolved currency, not store current
     const currencyMeta = $derived(currencyStore.get(resolvedCurrency));
     const symbol = $derived(currencyMeta?.symbol ?? "$");
     const decimals = $derived(currencyMeta?.decimals ?? 2);
 
-    // Convert minor units → display string
+    // Convert to minor units internally for consistent arithmetic if needed, 
+    // but here we just need to display it.
     const displayValue = $derived.by(() => {
-        if (decimals === 0) return String(value);
+        const val = amount ?? 0;
+        if (unit === 'major') {
+            return Number(val).toFixed(decimals);
+        }
+        if (decimals === 0) return String(val);
         const divisor = Math.pow(10, decimals);
-        return (value / divisor).toFixed(decimals);
+        return (Number(val) / divisor).toFixed(decimals);
     });
 
-    /**
-     * M-03 FIX: Parse user input to minor units using string-based integer parsing
-     * to avoid floating-point precision traps (e.g., 1.005 * 100 = 100.49999...)
-     */
     function handleInput(e: Event) {
         const target = e.target as HTMLInputElement;
         const raw = target.value.replace(/[^0-9.,-]/g, "");
@@ -77,11 +86,27 @@
         let cents = parseInt(combined, 10);
         if (isNaN(cents)) return;
 
-        if (min !== undefined) cents = Math.max(cents, min);
-        if (max !== undefined) cents = Math.min(cents, max);
-
-        value = cents;
-        oninput?.(cents);
+        // Apply constraints in minor units
+        let finalCents = cents;
+        
+        if (unit === 'major') {
+            // If we are working in major units, we need to convert min/max to cents for comparison
+            const minCents = min !== undefined ? toMinorUnit(min, resolvedCurrency) : undefined;
+            const maxCents = max !== undefined ? toMinorUnit(max, resolvedCurrency) : undefined;
+            
+            if (minCents !== undefined) finalCents = Math.max(finalCents, minCents);
+            if (maxCents !== undefined) finalCents = Math.min(finalCents, maxCents);
+            
+            const majorValue = finalCents / Math.pow(10, decimals);
+            amount = majorValue;
+            oninput?.(majorValue);
+        } else {
+            if (min !== undefined) finalCents = Math.max(finalCents, min);
+            if (max !== undefined) finalCents = Math.min(finalCents, max);
+            
+            amount = finalCents;
+            oninput?.(finalCents);
+        }
     }
 </script>
 

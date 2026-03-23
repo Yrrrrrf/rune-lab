@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
@@ -43,39 +43,41 @@
     "./package.json": "./package.json"
   },
   "peerDependencies": {
-    "svelte": "^5.53.7",
-    "tailwindcss": "^4.2.1",
-    "daisyui": "^5.5.19"
+    "svelte": "^5.54.1",
+    "tailwindcss": "^4.2.2",
+    "daisyui": "^5.5.19",
+    "dinero.js": "npm:dinero.js@^2.0.2",
+    "better-auth": "^1.5.5"
   },
   "peerDependenciesMeta": {
     "better-auth": {
       "optional": true
-    },
-    "dinero.js": {
-      "optional": true
     }
   },
   "dependencies": {
-    "better-auth": "^1.5.2",
-    "dinero.js": "npm:dinero.js@^2.0.0",
     "gwa": "^0.0.1",
     "hotkeys-js": "npm:hotkeys-js@^4.0.2"
   },
+
   "devDependencies": {
-    "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.13.1",
-    "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static@^3.0.10",
-    "@sveltejs/kit": "npm:@sveltejs/kit@^2.53.4",
-    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte@^7.0.0",
-    "@sveltejs/package": "^2.5.7",
-    "@tailwindcss/forms": "npm:@tailwindcss/forms@^0.5.11",
-    "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.19",
-    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.2.1",
-    "svelte-check": "npm:svelte-check@^4.4.4",
-    "typescript": "npm:typescript@^5.9.3",
-    "vite": "npm:vite@^7.3.1",
-    "publint": "^0.3.18",
+    "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.15.1",
     "@internal/core": "workspace:*",
     "@internal/state": "workspace:*",
-    "@internal/ui": "workspace:*"
+    "@internal/ui": "workspace:*",
+    "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static@^3.0.10",
+    "@sveltejs/kit": "npm:@sveltejs/kit@^2.55.0",
+    "@sveltejs/package": "^2.5.7",
+    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte@^7.0.0",
+    "@tailwindcss/forms": "npm:@tailwindcss/forms@^0.5.11",
+    "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.19",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.2.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/svelte": "^5.3.1",
+    "jsdom": "^29.0.1",
+    "publint": "^0.3.18",
+    "svelte-check": "npm:svelte-check@^4.4.5",
+    "typescript": "npm:typescript@^5.9.3",
+    "vite": "npm:vite@^8.0.1",
+    "vitest": "^4.1.0"
   }
 }

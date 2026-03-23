@@ -140,6 +140,45 @@ also scan the `rune-lab` dist output:
 > component classes used by `rune-lab` will be included in your build and theme
 > switching will work across library components and your own code alike.
 
+## Money & Currency
+
+Rune Lab provides a robust, Dinero.js-backed money layer that handles precision
+arithmetic and locale-aware formatting.
+
+### MoneyDisplay
+
+```svelte
+<script>
+  import { MoneyDisplay } from "rune-lab";
+</script>
+
+<!-- Minor units (default): $150.00 -->
+<MoneyDisplay amount={15000} currency="USD" />
+
+<!-- Major units: $150.00 -->
+<MoneyDisplay amount={150} unit="major" currency="USD" />
+
+<!-- Compact notation: $1.2M -->
+<MoneyDisplay amount={1200000} unit="major" compact />
+
+<!-- Null handling with fallback: "—" -->
+<MoneyDisplay amount={null} fallback="N/A" />
+```
+
+### MoneyInput
+
+A masked input that prevents floating-point precision errors by working
+exclusively with integers.
+
+```svelte
+<script>
+  import { MoneyInput } from "rune-lab";
+  let price = $state(150.00);
+</script>
+
+<MoneyInput bind:amount={price} unit="major" currency="USD" />
+```
+
 ## Persistence Drivers
 
 Rune Lab provides built-in drivers to remember user preferences (like theme,

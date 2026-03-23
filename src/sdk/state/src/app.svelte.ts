@@ -36,7 +36,10 @@ export class AppStore {
   #initialized = false;
 
   /**
-   * Initialize app store with metadata
+   * Initialize app store with metadata.
+   *
+   * @contract init() is idempotent. Call it once at app startup via RuneProvider.
+   * Subsequent calls are silently ignored to maintain stability across SSR/CSR cycles.
    */
   init(data: Partial<AppData>): void {
     if (this.#initialized) {
@@ -59,6 +62,13 @@ export class AppStore {
     if (data.homepage) this.homepage = data.homepage;
 
     this.#initialized = true;
+  }
+
+  /**
+   * @internal Test-only. Resets initialization guard.
+   */
+  __reset(): void {
+    this.#initialized = false;
   }
 
   /**

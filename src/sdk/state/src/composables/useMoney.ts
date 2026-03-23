@@ -11,7 +11,9 @@ import {
   createMoney,
   type Dinero,
   formatMoney,
+  type ISO4217Code,
   subtractMoney,
+  toMinorUnit,
 } from "@internal/core";
 
 /**
@@ -20,7 +22,7 @@ import {
  *
  * Usage:
  *   const { format, toDinero, add, subtract } = useMoney();
- *   const display = format(15000); // "$150.00" (based on current currency + locale)
+ *   const display = format(150.00, undefined, 'major'); // "$150.00"
  */
 export function useMoney() {
   const currencyStore = getContext<ConfigStore<Currency>>(
@@ -31,41 +33,75 @@ export function useMoney() {
   );
 
   /**
-   * Convert minor-unit amount to a Dinero object using current currency
+   * Convert amount to a Dinero object using current currency
    */
-  function toDinero(amount: number, currencyCode?: string): Dinero<number> {
+  function toDinero(
+    amount: number | null | undefined,
+    currencyCode?: ISO4217Code | string,
+    unit: "major" | "minor" = "minor",
+  ): Dinero<number> {
     const code = currencyCode ?? String(currencyStore.current);
-    return createMoney(amount, code);
+    const minorAmount =
+      unit === "major" && amount !== null && amount !== undefined
+        ? toMinorUnit(Number(amount), code)
+        : amount;
+    return createMoney(minorAmount, code);
   }
 
   /**
-   * Format an amount (minor units) as a locale-aware currency string
+   * Format an amount as a locale-aware currency string
    */
-  function format(amount: number, currencyCode?: string): string {
+  function format(
+    amount: number | null | undefined,
+    currencyCode?: ISO4217Code | string,
+    unit: "major" | "minor" = "minor",
+  ): string {
+    if (
+      amount === null || amount === undefined ||
+      (typeof amount === "number" && isNaN(amount))
+    ) {
+      return "—";
+    }
+
     const code = currencyCode ?? String(currencyStore.current);
     const locale = String(languageStore.current) || "en";
-    const money = createMoney(amount, code);
+
+    const minorAmount = unit === "major"
+      ? toMinorUnit(Number(amount), code)
+      : amount;
+
+    const money = createMoney(minorAmount, code);
     return formatMoney(money, locale, code);
   }
 
   /**
-   * Add two amounts (minor units) in the current currency
+   * Add two amounts in the current currency
    */
-  function add(a: number, b: number, currencyCode?: string): Dinero<number> {
+  function add(
+    a: number,
+    b: number,
+    currencyCode?: ISO4217Code | string,
+    unit: "major" | "minor" = "minor",
+  ): Dinero<number> {
     const code = currencyCode ?? String(currencyStore.current);
-    return addMoney(createMoney(a, code), createMoney(b, code));
+    const aMoney = toDinero(a, code, unit);
+    const bMoney = toDinero(b, code, unit);
+    return addMoney(aMoney, bMoney);
   }
 
   /**
-   * Subtract two amounts (minor units) in the current currency
+   * Subtract two amounts in the current currency
    */
   function subtract(
     a: number,
     b: number,
-    currencyCode?: string,
+    currencyCode?: ISO4217Code | string,
+    unit: "major" | "minor" = "minor",
   ): Dinero<number> {
     const code = currencyCode ?? String(currencyStore.current);
-    return subtractMoney(createMoney(a, code), createMoney(b, code));
+    const aMoney = toDinero(a, code, unit);
+    const bMoney = toDinero(b, code, unit);
+    return subtractMoney(aMoney, bMoney);
   }
 
   return { toDinero, format, add, subtract };

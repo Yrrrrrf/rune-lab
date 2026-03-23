@@ -32,7 +32,8 @@
         dictionary?: Record<string, any>;
         locales?: readonly string[];
         onLanguageChange?: (code: string) => void;
-        onThemeChange?: (name: string) => void;
+        /** Icon provider to use. 'material' injects Google Material Symbols font link. */
+        icons?: 'material' | 'none';
 
         // Theming (DaisyUI)
         /** Additional custom themes to register alongside the built-in DaisyUI set */
@@ -182,6 +183,9 @@
         {#each metaTags as meta}
             <meta name={meta.name} content={meta.content} />
         {/each}
+        {#if config.icons === "material"}
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        {/if}
     {/if}
 </svelte:head>
 

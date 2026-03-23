@@ -1,31 +1,31 @@
-<!--
-  MoneyDisplay — Renders a monetary amount with locale-aware formatting.
-  Uses CurrencyStore + LanguageStore from context for defaults.
-  Zero domain knowledge.
--->
-<script module lang="ts">
-    export interface MoneyDisplayProps {
-        /** Amount in minor units (e.g., 15000 = $150.00 for USD) */
-        amount: number;
-        /** Override currency code (defaults to CurrencyStore.current) */
-        currency?: string;
-        /** Override locale (defaults to LanguageStore.current) */
-        locale?: string;
-        /** Use compact notation (e.g., $150K) */
-        compact?: boolean;
-    }
-</script>
-
 <script lang="ts">
     import { getLanguageStore, getCurrencyStore } from "@internal/state";
-    import { formatAmount } from "@internal/core";
+    import { formatAmount, toMinorUnit, type ISO4217Code } from "@internal/core";
 
     let {
         amount,
+        unit = 'minor',
+        fallback = "—",
         currency,
         locale,
         compact = false,
-    }: MoneyDisplayProps = $props();
+    } = $props<{
+        /** Amount in minor or major units (see unit prop) */
+        amount: number | null | undefined;
+        /** 
+         * Whether the amount is in 'major' (e.g., pesos) or 'minor' (e.g., centavos) units.
+         * Defaults to 'minor' for backward compatibility.
+         */
+        unit?: 'major' | 'minor';
+        /** String to display if amount is null, undefined, or NaN. Defaults to "—" */
+        fallback?: string;
+        /** Override currency code (defaults to CurrencyStore.current) */
+        currency?: ISO4217Code | string;
+        /** Override locale (defaults to LanguageStore.current) */
+        locale?: string;
+        /** Use compact notation (e.g., $1.2M) */
+        compact?: boolean;
+    }>();
 
     const currencyStore = getCurrencyStore();
     const languageStore = getLanguageStore();
@@ -38,13 +38,22 @@
         locale ?? (String(languageStore.current) || "en"),
     );
 
-    // M-02 FIX: Derive decimals from the RESOLVED currency, not the store's current
     const currencyMeta = $derived(currencyStore.get(resolvedCurrency));
     const decimals = $derived(currencyMeta?.decimals ?? 2);
 
     const formatted = $derived.by(() => {
+        // If amount is null/undefined/NaN, use fallback
+        if (amount === null || amount === undefined || (typeof amount === 'number' && isNaN(amount))) {
+            return fallback;
+        }
+
+        // Convert to minor units if necessary
+        const minorAmount = unit === 'major' 
+            ? toMinorUnit(Number(amount), resolvedCurrency) 
+            : amount;
+
         if (compact) {
-            const majorUnits = amount / Math.pow(10, decimals);
+            const majorUnits = Number(minorAmount) / Math.pow(10, decimals);
             return new Intl.NumberFormat(resolvedLocale, {
                 style: "currency",
                 currency: resolvedCurrency,
@@ -52,7 +61,8 @@
                 maximumFractionDigits: 1,
             }).format(majorUnits);
         }
-        return formatAmount(amount, resolvedCurrency, resolvedLocale);
+
+        return formatAmount(minorAmount, resolvedCurrency, resolvedLocale);
     });
 </script>
 

@@ -19,14 +19,14 @@
     "@internal/state": "workspace:*"
   },
   "peerDependencies": {
-    "svelte": "^5.0.0",
-    "daisyui": "^5.0.0",
-    "tailwindcss": "^4.0.0"
+    "svelte": "^5.54.1",
+    "daisyui": "^5.5.19",
+    "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
-    "@sveltejs/kit": "^2.53.2",
+    "@sveltejs/kit": "^2.55.0",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "svelte": "^5.53.5",
+    "svelte": "^5.54.1",
     "typescript": "^5.9.3"
   }
 }

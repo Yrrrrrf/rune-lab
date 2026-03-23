@@ -42,21 +42,90 @@ export const CURRENCY_MAP: Record<string, DineroCurrency<number>> = {
 };
 
 /**
- * Create a Dinero monetary value from an amount in minor units (cents)
- * @param amount - Amount in minor units (e.g., 1234 = $12.34 for USD)
+ * Derived type of all built-in ISO 4217 currency codes.
+ * Enables IDE autocomplete while allowing any string for dynamic currencies.
+ */
+export type ISO4217Code = keyof typeof CURRENCY_MAP;
+
+/**
+ * Register a new currency in CURRENCY_MAP atomically.
+ * Ensures the core registry and any store-level registries stay in sync.
+ */
+export function registerCurrency(
+  code: string,
+  currency: DineroCurrency<number>,
+): void {
+  CURRENCY_MAP[code] = currency;
+}
+
+/**
+ * Normalizes an unknown input into a valid finite number.
+ * Handles null, undefined, bigints, and SurrealDB Decimal objects via toString().
+ */
+function toNumber(amount: unknown): number {
+  if (amount === null || amount === undefined) return 0;
+  if (typeof amount === "number") return Number.isFinite(amount) ? amount : 0;
+  if (typeof amount === "bigint") return Number(amount);
+
+  // Handle SurrealDB Decimal (which has a toString method) or other objects
+  if (typeof amount === "object") {
+    try {
+      // SurrealDB Decimal.toString() returns a numeric string
+      const str = String(amount);
+      const parsed = parseFloat(str);
+      return Number.isFinite(parsed) ? parsed : 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  const coerced = Number(amount);
+  return Number.isFinite(coerced) ? coerced : 0;
+}
+
+/**
+ * Normalizes an unknown input into a valid integer for Dinero.js.
+ * Exported so consumers can apply the same defensive coercion.
+ */
+export function safeAmount(amount: unknown): number {
+  return Math.round(toNumber(amount));
+}
+
+/**
+ * Converts a major-unit amount (e.g., pesos) to a minor-unit integer (e.g., centavos).
+ * Uses the currency's exponent from CURRENCY_MAP.
+ */
+export function toMinorUnit(
+  amount: unknown,
+  currencyCode: ISO4217Code | string,
+): number {
+  const currency = CURRENCY_MAP[currencyCode];
+  if (!currency) {
+    throw new Error(
+      `Unknown currency code: ${currencyCode}. Register it first via registerCurrency().`,
+    );
+  }
+  const base = Array.isArray(currency.base) ? currency.base[0] : currency.base;
+  const factor = Math.pow(Number(base), Number(currency.exponent));
+  return Math.round(toNumber(amount) * factor);
+}
+
+/**
+ * Create a Dinero monetary value from an amount.
+ * @param amount - Amount (normalized internally via safeAmount)
  * @param currencyCode - ISO 4217 currency code (e.g., "USD")
  */
 export function createMoney(
-  amount: number,
-  currencyCode: string,
+  amount: unknown,
+  currencyCode: ISO4217Code | string,
 ): Dinero<number> {
   const currency = CURRENCY_MAP[currencyCode];
   if (!currency) {
     throw new Error(
-      `Unknown currency code: ${currencyCode}. Add it to CURRENCY_MAP.`,
+      `Unknown currency code: ${currencyCode}. Register it first via registerCurrency().`,
     );
   }
-  return dinero({ amount, currency });
+  return dinero({ amount: safeAmount(amount), currency });
 }
 
 /**
@@ -87,12 +156,12 @@ export function formatMoney(
 }
 
 /**
- * Format a raw amount (minor units) as a locale-aware currency string
- * Convenience wrapper around createMoney + formatMoney
+ * Format a raw amount as a locale-aware currency string.
+ * Convenience wrapper around createMoney + formatMoney.
  */
 export function formatAmount(
-  amount: number,
-  currencyCode: string,
+  amount: unknown,
+  currencyCode: ISO4217Code | string,
   locale: string = "en-US",
 ): string {
   const money = createMoney(amount, currencyCode);

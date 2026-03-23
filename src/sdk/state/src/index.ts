@@ -50,6 +50,7 @@ export {
 export {
   createCurrencyStore,
   type Currency,
+  type CurrencyStore,
   type CurrencyStoreOptions,
   getCurrencyStore,
 } from "./currency.svelte";

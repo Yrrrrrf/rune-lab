@@ -14,11 +14,21 @@
     size = "w-5 h-5",
     class: className = "",
     icons = {},
+    provider = "svg",
+    fill = 0,
+    weight = 400,
+    grade = 0,
+    opsz = 24,
   } = $props<{
     name: string;
     size?: string;
     class?: string;
     icons?: Record<string, string>;
+    provider?: "svg" | "material";
+    fill?: 0 | 1;
+    weight?: 100 | 200 | 300 | 400 | 500 | 600 | 700;
+    grade?: -25 | 0 | 200;
+    opsz?: 20 | 24 | 40 | 48;
   }>();
 
   let appStore: ReturnType<typeof getAppStore> | undefined;
@@ -74,16 +84,25 @@
   });
 </script>
 
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width="2"
-  stroke-linecap="round"
-  stroke-linejoin="round"
-  class="{size} {className}"
->
-  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-  {@html path}
-</svg>
+{#if provider === "material"}
+  <span
+    class="material-symbols-outlined {size} {className} select-none"
+    style="font-variation-settings: 'FILL' {fill}, 'wght' {weight}, 'GRAD' {grade}, 'opsz' {opsz}; display: inline-flex; align-items: center; justify-content: center;"
+  >
+    {name}
+  </span>
+{:else}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="{size} {className}"
+  >
+    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+    {@html path}
+  </svg>
+{/if}
