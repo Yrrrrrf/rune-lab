@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
@@ -58,7 +58,6 @@
     "gwa": "^0.0.1",
     "hotkeys-js": "npm:hotkeys-js@^4.0.2"
   },
-
   "devDependencies": {
     "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.15.1",
     "@internal/core": "workspace:*",
