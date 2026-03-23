@@ -1,6 +1,9 @@
 [doc('Build Client')]
 [group('Build')]
 build:
+    # * Clean up previous build
+    rm -rf dist
+
     # * Compile i18n first — UI depends on it
     bun run compile:i18n
 
@@ -11,7 +14,8 @@ build:
     bun run --cwd src/sdk/state build
     # UI — svelte-package, outputs to dist/ui/
     bun run --cwd src/sdk/ui build
-    bun run build:index  # Generate root index.js + index.d.ts
+    # * Build main index.js and index.d.ts
+    bun run build:index
 
     # Clean up paraglide artifacts that shouldn't be published
     rm -f dist/ui/paraglide/.gitignore dist/ui/paraglide/.prettierignore

@@ -13,7 +13,7 @@
     "dev:ui": "bun run --cwd src/sdk/ui dev",
     "build:ui": "bun run --cwd src/sdk/ui build",
     "compile:i18n": "paraglide-js compile --project ./src/sdk/ui/src/i18n/project.inlang --outdir ./src/sdk/ui/src/lib/paraglide",
-    "build:index": "bun run scripts/build-index.js"
+    "build:index": "bun run scripts/build-index.ts"
   },
   "workspaces": [
     "src/sdk/*"
@@ -43,11 +43,11 @@
     "./package.json": "./package.json"
   },
   "peerDependencies": {
-    "svelte": "^5.54.1",
+    "svelte": "^5.55.0",
     "tailwindcss": "^4.2.2",
     "daisyui": "^5.5.19",
     "dinero.js": "npm:dinero.js@^2.0.2",
-    "better-auth": "^1.5.5"
+    "better-auth": "^1.5.6"
   },
   "peerDependenciesMeta": {
     "better-auth": {
@@ -75,8 +75,8 @@
     "jsdom": "^29.0.1",
     "publint": "^0.3.18",
     "svelte-check": "npm:svelte-check@^4.4.5",
-    "typescript": "npm:typescript@^5.9.3",
-    "vite": "npm:vite@^8.0.1",
-    "vitest": "^4.1.0"
+    "typescript": "npm:typescript@^6.0.2",
+    "vite": "npm:vite@^8.0.2",
+    "vitest": "^4.1.1"
   }
 }
