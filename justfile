@@ -71,5 +71,5 @@ test:
 [doc('Publish to npm & jsr')]
 [group('Deploy')]
 deploy:
-    bun run publish
+    bun publish
     @echo "✓ Client published to npm & jsr"
