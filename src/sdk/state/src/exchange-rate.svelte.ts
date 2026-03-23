@@ -1,6 +1,6 @@
 // sdk/state/src/exchange-rate.svelte.ts
 
-import { getContext, setContext } from "svelte";
+import { getContext } from "svelte";
 import {
   convertAmount,
   convertMoney,
@@ -88,25 +88,35 @@ export class ExchangeRateStore {
 
       // We use createMoney and convertMoney directly to get the Dinero object and its snapshot
       const sourceMoney = createMoney(oneUnit, fromCode);
-      
+
       let targetMoney;
       if (fromCode === currentBase) {
         targetMoney = convertMoney(sourceMoney, toCode, currentRates);
       } else if (toCode === currentBase) {
         const rateToBase = currentRates[fromCode];
         if (!rateToBase) return undefined;
-        const r = typeof rateToBase === "number" ? rateToBase : rateToBase.amount / Math.pow(10, rateToBase.scale);
-        targetMoney = convertMoney(sourceMoney, toCode, { [toCode]: scaledRate(1 / r, 6) });
+        const r = typeof rateToBase === "number"
+          ? rateToBase
+          : rateToBase.amount / Math.pow(10, rateToBase.scale);
+        targetMoney = convertMoney(sourceMoney, toCode, {
+          [toCode]: scaledRate(1 / r, 6),
+        });
       } else {
         // Triangulate
         const rateToBase = currentRates[fromCode];
         const rateToTarget = currentRates[toCode];
         if (!rateToBase || !rateToTarget) return undefined;
-        
-        const r1 = typeof rateToBase === "number" ? rateToBase : rateToBase.amount / Math.pow(10, rateToBase.scale);
-        const r2 = typeof rateToTarget === "number" ? rateToTarget : rateToTarget.amount / Math.pow(10, rateToTarget.scale);
-        
-        targetMoney = convertMoney(sourceMoney, toCode, { [toCode]: scaledRate(r2 / r1, 6) });
+
+        const r1 = typeof rateToBase === "number"
+          ? rateToBase
+          : rateToBase.amount / Math.pow(10, rateToBase.scale);
+        const r2 = typeof rateToTarget === "number"
+          ? rateToTarget
+          : rateToTarget.amount / Math.pow(10, rateToTarget.scale);
+
+        targetMoney = convertMoney(sourceMoney, toCode, {
+          [toCode]: scaledRate(r2 / r1, 6),
+        });
       }
 
       const snapshot = toMoneySnapshot(targetMoney);
@@ -114,7 +124,7 @@ export class ExchangeRateStore {
         amount: snapshot.amount,
         scale: snapshot.scale,
       };
-    } catch (err) {
+    } catch (_err) {
       return undefined;
     }
   }
@@ -142,25 +152,27 @@ export class ExchangeRateStore {
         ? rateToBase
         : rateToBase.amount / Math.pow(10, rateToBase.scale);
       const inverseRate = scaledRate(1 / r, 6);
-      
+
       return convertAmount(amount, fromCode, toCode, {
         [toCode]: inverseRate,
       });
     }
 
     // Triangulation: From -> Base -> To
-    const amountInBase = this.convertAmount(amount, fromCode, this.#baseCurrency);
+    const amountInBase = this.convertAmount(
+      amount,
+      fromCode,
+      this.#baseCurrency,
+    );
     return this.convertAmount(amountInBase, this.#baseCurrency, toCode);
   }
 }
 
 /**
- * Factory to create and provide the ExchangeRateStore in context.
+ * Factory to create the ExchangeRateStore.
  */
 export function createExchangeRateStore() {
-  const store = new ExchangeRateStore();
-  setContext(RUNE_LAB_CONTEXT.exchangeRate, store);
-  return store;
+  return new ExchangeRateStore();
 }
 
 /**

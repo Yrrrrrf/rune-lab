@@ -4,19 +4,15 @@
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "../context.ts";
 import type { ConfigStore } from "../createConfigStore.svelte.ts";
-import type { Currency } from "../currency.svelte.ts";
 import type { Language } from "../language.svelte.ts";
 import {
   addMoney,
-  convertAmount,
   convertMoney,
   createMoney,
   type Dinero,
   formatMoney,
-  fromMoneySnapshot,
   type ISO4217Code,
   multiplyMoney,
-  safeAmount,
   subtractMoney,
   toAdyenMoney,
   toMinorUnit,
@@ -98,7 +94,9 @@ export function useMoney() {
     fromCode: string,
     unit: "major" | "minor" = "minor",
   ): Dinero<number> {
-    const minorAmount = unit === "major" ? toMinorUnit(amount, fromCode) : amount;
+    const minorAmount = unit === "major"
+      ? toMinorUnit(amount, fromCode)
+      : amount;
     const currentCode = String(currencyStore.current);
 
     if (!exchangeRateStore?.hasRates || fromCode === currentCode) {
@@ -118,14 +116,29 @@ export function useMoney() {
     unit: "major" | "minor" = "minor",
   ): string {
     const money = convert(amount, fromCode, unit);
-    const locale = (String(languageStore.current) || "en");
+    const locale = String(languageStore.current) || "en";
     const currentCode = String(currencyStore.current);
     const snapshot = toMoneySnapshot(money);
-    
+
     // If conversion didn't happen (no rates), format as original currency
-    const displayCode = exchangeRateStore?.hasRates ? currentCode : snapshot.currency;
-    
+    const displayCode = exchangeRateStore?.hasRates
+      ? currentCode
+      : snapshot.currency;
+
     return formatMoney(money, locale, displayCode);
+  }
+
+  /**
+   * Multiply an amount by a factor.
+   */
+  function multiply(
+    amount: number,
+    factor: number,
+    currencyCode?: ISO4217Code | string,
+    unit: "major" | "minor" = "minor",
+  ): Dinero<number> {
+    const money = toDinero(amount, currencyCode, unit);
+    return multiplyMoney(money, factor);
   }
 
   /**
@@ -184,5 +197,14 @@ export function useMoney() {
     return subtractMoney(aMoney, bMoney);
   }
 
-  return { toDinero, format, add, subtract, convert, formatConverted, toPayload };
+  return {
+    toDinero,
+    format,
+    add,
+    subtract,
+    convert,
+    formatConverted,
+    toPayload,
+    multiply,
+  };
 }

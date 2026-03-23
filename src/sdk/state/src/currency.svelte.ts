@@ -1,4 +1,7 @@
-import { createConfigStore } from "./createConfigStore.svelte.ts";
+import {
+  type ConfigStore,
+  createConfigStore,
+} from "./createConfigStore.svelte.ts";
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "./context.ts";
 import { type DineroCurrency, registerCurrency } from "@internal/core";
@@ -102,8 +105,12 @@ export function createCurrencyStore(
    * Converts an amount from one currency to another.
    * Defaults to converting to the current store currency.
    */
-  function convertAmount(amount: number, fromCode: string, toCode?: string): number {
-    const target = toCode ?? String((store as any).current);
+  function convertAmount(
+    amount: number,
+    fromCode: string,
+    toCode?: string,
+  ): number {
+    const target = toCode ?? String((store as ConfigStore<Currency>).current);
     if (fromCode === target) return amount;
     if (!exchangeRateStore || !exchangeRateStore.hasRates) return amount;
 
@@ -130,7 +137,7 @@ export function createCurrencyStore(
   Object.defineProperties(store, {
     addCurrency: { value: addCurrency },
     convertAmount: { value: convertAmount },
-    canConvert: { get: () => !!exchangeRateStore?.hasRates }
+    canConvert: { get: () => !!exchangeRateStore?.hasRates },
   });
 
   return store as ReturnType<typeof createConfigStore<Currency>> & {

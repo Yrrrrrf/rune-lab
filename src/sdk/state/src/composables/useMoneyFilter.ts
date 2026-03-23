@@ -25,7 +25,7 @@ export function useMoneyFilter(options: MoneyFilterOptions = {}) {
   const unit = options.unit ?? "minor";
   const autoConvertOnChange = options.autoConvertOnChange ?? true;
 
-  let lastCurrency = $state(String(currencyStore.current));
+  let lastCurrency = String(currencyStore.current);
 
   $effect(() => {
     const currentCurrency = String(currencyStore.current);
@@ -64,26 +64,44 @@ export function useMoneyFilter(options: MoneyFilterOptions = {}) {
    */
   function matches(amount: number, entityCurrency: string): boolean {
     const currentCurrency = String(currencyStore.current);
-    
+
     // Convert entity amount to display currency for comparison
-    const convertedAmount = currencyStore.convertAmount(amount, entityCurrency, currentCurrency);
-    
+    const convertedAmount = currencyStore.convertAmount(
+      amount,
+      entityCurrency,
+      currentCurrency,
+    );
+
     return convertedAmount >= min && convertedAmount <= max;
   }
 
   const displayMin = $derived(format(min, undefined, unit));
-  const displayMax = $derived(max === Infinity ? "∞" : format(max, undefined, unit));
+  const displayMax = $derived(
+    max === Infinity ? "∞" : format(max, undefined, unit),
+  );
 
   return {
-    get min() { return min; },
-    set min(v) { min = v; },
-    get max() { return max; },
-    set max(v) { max = v; },
+    get min() {
+      return min;
+    },
+    set min(v) {
+      min = v;
+    },
+    get max() {
+      return max;
+    },
+    set max(v) {
+      max = v;
+    },
+    get displayMin() {
+      return displayMin;
+    },
+    get displayMax() {
+      return displayMax;
+    },
     setMin,
     setMax,
     reset,
     matches,
-    displayMin: $derived(displayMin),
-    displayMax: $derived(displayMax),
   };
 }

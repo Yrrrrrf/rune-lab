@@ -7,7 +7,17 @@ import { RUNE_LAB_CONTEXT } from "@internal/state";
 // Mock stores for context
 const mockCurrencyStore = {
   current: "USD",
-  get: (code: string) => ({ symbol: "$", decimals: 2 }),
+  get: (code: string) => {
+    if (code === "JPY") return { symbol: "¥", decimals: 0 };
+    if (code === "MXN") return { symbol: "$", decimals: 2 };
+    return { symbol: "$", decimals: 2 };
+  },
+  canConvert: true,
+  convertAmount: (amount, from, to) => {
+    if (from === "USD" && to === "MXN") return amount * 20;
+    if (from === "MXN" && to === "USD") return amount / 20;
+    return amount;
+  }
 };
 
 const mockLanguageStore = {
@@ -82,5 +92,37 @@ describe("MoneyDisplay.svelte", () => {
       context,
     });
     expect(screen.getByText(/\$1\.2M/)).toBeInTheDocument();
+  });
+
+  it("converts from sourceCurrency to current display currency", () => {
+    // 2000 MXN -> 100 USD
+    render(MoneyDisplay, {
+      props: { amount: 2000, unit: "major", sourceCurrency: "MXN" },
+      context,
+    });
+    expect(screen.getByText(/\$100\.00/)).toBeInTheDocument();
+  });
+
+  it("shows source currency label when showSourceCurrency is true", () => {
+    render(MoneyDisplay, {
+      props: { amount: 2000, unit: "major", sourceCurrency: "MXN", showSourceCurrency: true },
+      context,
+    });
+    expect(screen.getByText("(MXN)")).toBeInTheDocument();
+  });
+
+  it("falls back to source currency when conversion is impossible", () => {
+    const contextNoConvert = new Map(context);
+    contextNoConvert.set(RUNE_LAB_CONTEXT.currency, {
+      ...mockCurrencyStore,
+      canConvert: false
+    });
+
+    render(MoneyDisplay, {
+      props: { amount: 2000, unit: "major", sourceCurrency: "MXN" },
+      context: contextNoConvert,
+    });
+    // Should show $2,000.00 (MXN)
+    expect(screen.getByText(/\$2,000\.00/)).toBeInTheDocument();
   });
 });

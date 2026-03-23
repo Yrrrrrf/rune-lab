@@ -12,7 +12,6 @@ import {
   type Dinero,
   dinero,
   type DineroCurrency,
-  transformScale as dineroTransformScale,
   type DineroSnapshot,
   EUR,
   GBP,
@@ -25,6 +24,7 @@ import {
   toDecimal,
   // ISO 4217 currency definitions
   toSnapshot,
+  transformScale as dineroTransformScale,
   USD,
 } from "dinero.js";
 
@@ -279,12 +279,14 @@ export function convertAmount(
   const convertedMoney = convertMoney(sourceMoney, toCode, rates);
 
   // Normalize back to the target currency's standard exponent
-  const targetMoney = dineroTransformScale(convertedMoney, targetCurrency.exponent);
+  const targetMoney = dineroTransformScale(
+    convertedMoney,
+    targetCurrency.exponent,
+  );
   const snapshot = toSnapshot(targetMoney);
 
   return snapshot.amount;
 }
-
 
 /**
  * Converts Dinero object to a Stripe-compatible payload.
