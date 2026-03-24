@@ -1,6 +1,7 @@
 <!-- src/lib/layout/WorkspaceLayout.svelte -->
 <script module lang="ts">
     import type { Snippet } from "svelte";
+    import type { LayoutConfig } from "@internal/core";
 
     export interface WorkspaceLayoutProps {
         /** Content for the far-left vertical strip */
@@ -12,6 +13,13 @@
         /** Right-side contextual detail panel */
         detailPanel?: Snippet;
         namespace?: string;
+
+        /**
+         * Declarative layout configuration.
+         * When provided, zones can be rendered from config entries.
+         * Snippet props take priority when both are provided.
+         */
+        config?: LayoutConfig;
 
         /** Width of the left workspace strip */
         stripWidth?: string;

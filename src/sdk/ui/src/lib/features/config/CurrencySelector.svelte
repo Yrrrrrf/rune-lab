@@ -1,11 +1,6 @@
 <script lang="ts">
-    import AppSettingSelector from "./AppSettingSelector.svelte";
-    import {
-        getCurrencyStore,
-        type Currency,
-    } from "@internal/state";
-    import * as rlMessages from "../../paraglide/messages.js";
-    import { getContext } from "svelte";
+    import ResourceSelector from "./ResourceSelector.svelte";
+    import { getCurrencyStore } from "@internal/state";
 
     const currencyStore = getCurrencyStore();
 
@@ -18,36 +13,15 @@
         current?: string;
         onchange?: (value: string) => void;
     } = $props();
-
-    const userDictionary =
-        getContext<Record<string, any>>("rl:dictionary") ?? {};
-
-    function getLabel(currency: Currency): string {
-        const key = String(currency.code);
-        if (typeof userDictionary[key] === "function")
-            return userDictionary[key]();
-        if (typeof (rlMessages as any)[key] === "function")
-            return (rlMessages as any)[key]();
-        return String(currency.code);
-    }
-
-    let active = $derived(
-        currencyStore.get(currencyStore.current) ?? currencyStore.available[0],
-    );
-
-    let available = $derived(
-        codes.length > 0
-            ? currencyStore.available.filter((c) => codes.includes(c.code))
-            : currencyStore.available,
-    );
 </script>
 
-<AppSettingSelector
-    value={active}
-    options={available}
-    tooltip={getLabel(active)}
+<ResourceSelector
+    store={currencyStore}
+    idKey="code"
+    filterKeys={codes}
+    {onchange}
 >
-    {#snippet triggerLabel()}
+    {#snippet triggerLabel(active)}
         <span class="font-bold">{active.symbol}</span>
     {/snippet}
 
@@ -61,7 +35,7 @@
             }}
         >
             <span class="badge badge-sm badge-ghost w-8">{c.symbol}</span>
-            <span>{getLabel(c)}</span>
+            <span>{c.code}</span>
         </button>
     {/snippet}
-</AppSettingSelector>
+</ResourceSelector>

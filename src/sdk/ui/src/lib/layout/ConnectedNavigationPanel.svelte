@@ -2,6 +2,7 @@
 <script lang="ts">
     import { getLayoutStore, type NavigationSection } from "@internal/state";
     import NavigationPanel from "./NavigationPanel.svelte";
+    import { createNavigationConnection } from "./connection-factory.ts";
     import type { Snippet } from "svelte";
 
     let { sections, header, footer } = $props<{
@@ -11,17 +12,15 @@
     }>();
 
     const layoutStore = getLayoutStore();
+    const connection = createNavigationConnection(layoutStore);
 </script>
 
 <NavigationPanel
     {sections}
     {header}
     {footer}
-    activeId={layoutStore.activeNavItemId}
-    collapsedIds={layoutStore.collapsedSections}
-    onSelect={(item) => layoutStore.navigate(item.id!)}
-    onToggle={(id, isOpen) =>
-        isOpen
-            ? layoutStore.expandSection(id)
-            : layoutStore.collapseSection(id)}
+    activeId={connection.activeId}
+    collapsedIds={connection.collapsedIds}
+    onSelect={connection.onSelect}
+    onToggle={connection.onToggle}
 />

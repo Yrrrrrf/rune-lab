@@ -1,10 +1,17 @@
 <script lang="ts">
     import { getLanguageStore, getCurrencyStore } from "@internal/state";
-    import { formatAmount, toMinorUnit, type ISO4217Code } from "@internal/core";
+    import {
+        formatAmount,
+        toMinorUnit,
+        type ISO4217Code,
+        MoneyPrimitive,
+    } from "@internal/core";
+    import { DEV } from "esm-env";
 
     let {
-        amount,
-        unit = 'minor',
+        amount: amountProp,
+        money,
+        unit = "minor",
         fallback = "—",
         currency,
         sourceCurrency,
@@ -14,12 +21,18 @@
         compact = false,
     } = $props<{
         /** Amount in minor or major units (see unit prop) */
-        amount: number | null | undefined;
-        /** 
+        amount?: number | null | undefined;
+        /**
+         * MoneyPrimitive instance. When provided, amount, currency, and unit
+         * are derived from the primitive. Takes precedence over raw amount.
+         */
+        money?: MoneyPrimitive;
+        /**
          * Whether the amount is in 'major' (e.g., pesos) or 'minor' (e.g., centavos) units.
+         * @deprecated Use `money` prop with MoneyPrimitive instead.
          * Defaults to 'minor' for backward compatibility.
          */
-        unit?: 'major' | 'minor';
+        unit?: "major" | "minor";
         /** String to display if amount is null, undefined, or NaN. Defaults to "—" */
         fallback?: string;
         /** Override currency code (defaults to CurrencyStore.current) */
@@ -36,6 +49,22 @@
         compact?: boolean;
     }>();
 
+    // Dev warning for deprecated usage
+    $effect(() => {
+        if (DEV && money && unit !== "minor") {
+            console.warn(
+                "[MoneyDisplay] The `unit` prop is deprecated when using `money: MoneyPrimitive`. " +
+                    "The unit is derived from the MoneyPrimitive instance.",
+            );
+        }
+    });
+
+    // Derive effective values from MoneyPrimitive or legacy props
+    const amount = $derived(money ? money.minor : amountProp);
+    const effectiveSourceCurrency = $derived(
+        money ? money.currencyCode : sourceCurrency,
+    );
+
     const currencyStore = getCurrencyStore();
     const languageStore = getLanguageStore();
 
@@ -44,7 +73,7 @@
     );
 
     const resolvedSourceCurrency = $derived(
-        sourceCurrency ?? resolvedDisplayCurrency
+        effectiveSourceCurrency ?? resolvedDisplayCurrency,
     );
 
     const resolvedLocale = $derived(
@@ -56,14 +85,19 @@
 
     const formatted = $derived.by(() => {
         // If amount is null/undefined/NaN, use fallback
-        if (amount === null || amount === undefined || (typeof amount === 'number' && isNaN(amount))) {
+        if (
+            amount === null ||
+            amount === undefined ||
+            (typeof amount === "number" && isNaN(amount))
+        ) {
             return fallback;
         }
 
         // Convert to minor units if necessary (in source currency)
-        const minorAmount = unit === 'major' 
-            ? toMinorUnit(Number(amount), resolvedSourceCurrency) 
-            : amount;
+        const minorAmount =
+            unit === "major"
+                ? toMinorUnit(Number(amount), resolvedSourceCurrency)
+                : amount;
 
         // Conversion logic
         let displayAmount = Number(minorAmount);
@@ -71,7 +105,11 @@
 
         if (resolvedSourceCurrency !== resolvedDisplayCurrency) {
             if (currencyStore.canConvert) {
-                displayAmount = currencyStore.convertAmount(Number(minorAmount), resolvedSourceCurrency, resolvedDisplayCurrency);
+                displayAmount = currencyStore.convertAmount(
+                    Number(minorAmount),
+                    resolvedSourceCurrency,
+                    resolvedDisplayCurrency,
+                );
             } else if (noRatesFallback) {
                 return noRatesFallback;
             } else {
@@ -81,7 +119,8 @@
         }
 
         if (compact) {
-            const displayDecimals = currencyStore.get(displayCurrency)?.decimals ?? 2;
+            const displayDecimals =
+                currencyStore.get(displayCurrency)?.decimals ?? 2;
             const majorUnits = displayAmount / Math.pow(10, displayDecimals);
             return new Intl.NumberFormat(resolvedLocale, {
                 style: "currency",

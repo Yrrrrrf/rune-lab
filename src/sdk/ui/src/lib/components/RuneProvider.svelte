@@ -1,32 +1,19 @@
 <script lang="ts">
     import { setContext, untrack, type Snippet, onMount } from "svelte";
     import {
-        createAppStore,
-        createLayoutStore,
-        createCommandStore,
-        createApiStore,
-        createToastStore,
-        createThemeStore,
-        createLanguageStore,
-        createCurrencyStore,
-        createShortcutStore,
-        createCartStore,
-        createSessionStore,
-        createExchangeRateStore,
-        type CartStoreConfig,
         type ExchangeRateStore,
+        type CartStoreConfig,
+        RUNE_LAB_CONTEXT,
+        localStorageDriver,
+        initializeStores,
+        registerBuiltinStores,
     } from "@internal/state";
     import type { PersistenceDriver } from "@internal/core";
-    import { localStorageDriver } from "@internal/state";
-    import { RUNE_LAB_CONTEXT } from "@internal/state";
-    import type { AppData } from "@internal/state";
-    import type { Theme } from "@internal/state";
-    import type { Currency } from "@internal/state";
     import { CommandPalette, ShortcutPalette, Toaster } from "../../mod";
 
     export interface RuneLabConfig {
         persistence?: PersistenceDriver;
-        app?: Partial<AppData>;
+        app?: Partial<import("@internal/state").AppData>;
         apiUrl?: string;
         apiHealthCheck?: () => Promise<boolean>;
         favicon?: string;
@@ -35,17 +22,17 @@
         locales?: readonly string[];
         onLanguageChange?: (code: string) => void;
         /** Icon provider to use. 'material' injects Google Material Symbols font link. */
-        icons?: 'material' | 'none';
+        icons?: "material" | "none";
 
         // Theming (DaisyUI)
         /** Additional custom themes to register alongside the built-in DaisyUI set */
-        customThemes?: Theme[];
+        customThemes?: import("@internal/state").Theme[];
         /** Theme to use when no persisted value exists (after system preference detection) */
         defaultTheme?: string;
 
         // Currencies (Dinero.js)
         /** Additional custom currencies to register */
-        currencies?: Currency[];
+        currencies?: import("@internal/state").Currency[];
         /** Default currency code when no persisted value exists */
         defaultCurrency?: string;
         /** Bootstrap-time exchange rates */
@@ -67,6 +54,9 @@
             /** Callback when session changes (login, logout, expiry) */
             onSessionChange?: (session: any) => void;
         };
+
+        /** Callback when theme changes */
+        onThemeChange?: (name: string) => void;
     }
 
     let { children, config = {} } = $props<{
@@ -74,87 +64,62 @@
         config?: RuneLabConfig;
     }>();
 
-    // 1. Initialize Base Configuration Stores
-    const appStore = createAppStore();
-    const apiStore = createApiStore();
-    const toastStore = createToastStore();
+    // ── Registry-Driven Store Initialization ──────────────────────────────────
 
-    // Capture the initial persistence prop to avoid Svelte 5 reactive capture warnings
-    // Default to localStorageDriver to ensure UI selectors persist across browser page reloads
+    // Capture initial config to avoid Svelte 5 reactive capture warnings
+    const initialConfig = untrack(() => ({ ...config }));
     const initialPersistence = untrack(
         () => config.persistence ?? localStorageDriver,
     );
-    const initialLocales = untrack(() => config.locales);
-    const initialCustomThemes = untrack(() => config.customThemes);
-    const initialDefaultTheme = untrack(() => config.defaultTheme);
-    const initialCustomCurrencies = untrack(() => config.currencies);
-    const initialDefaultCurrency = untrack(() => config.defaultCurrency);
-    const initialExchangeRates = untrack(() => config.exchangeRates);
-    const initialCartConfig = untrack(() => config.cart);
-    const initialAuthConfig = untrack(() => config.auth);
 
-    const exchangeRateStore = createExchangeRateStore();
-    if (initialExchangeRates) {
-        exchangeRateStore.setRates(initialExchangeRates.base, initialExchangeRates.rates);
+    // 1. Register built-in store entries (idempotent — uses Map overwrite)
+    registerBuiltinStores();
+
+    // 2. Initialize all stores via the registry's topological sort
+    const stores = initializeStores(
+        initialConfig as Record<string, unknown>,
+        initialPersistence,
+    );
+
+    // 3. Provide all stores as context (single loop, zero manual setContext)
+    const CONTEXT_KEY_MAP: Record<string, symbol> = {
+        app: RUNE_LAB_CONTEXT.app,
+        api: RUNE_LAB_CONTEXT.api,
+        toast: RUNE_LAB_CONTEXT.toast,
+        theme: RUNE_LAB_CONTEXT.theme,
+        language: RUNE_LAB_CONTEXT.language,
+        currency: RUNE_LAB_CONTEXT.currency,
+        exchangeRate: RUNE_LAB_CONTEXT.exchangeRate,
+        shortcut: RUNE_LAB_CONTEXT.shortcut,
+        layout: RUNE_LAB_CONTEXT.layout,
+        commands: RUNE_LAB_CONTEXT.commands,
+        cart: RUNE_LAB_CONTEXT.cart,
+        session: RUNE_LAB_CONTEXT.session,
+    };
+
+    for (const [key, store] of stores) {
+        const contextKey = CONTEXT_KEY_MAP[key];
+        if (contextKey) setContext(contextKey, store);
     }
 
-    const themeStore = createThemeStore({
-        driver: initialPersistence,
-        customThemes: initialCustomThemes,
-        defaultTheme: initialDefaultTheme,
-    });
-    const languageStore = createLanguageStore({
-        driver: initialPersistence,
-        locales: initialLocales,
-    });
-    const currencyStore = createCurrencyStore({
-        driver: initialPersistence,
-        customCurrencies: initialCustomCurrencies,
-        defaultCurrency: initialDefaultCurrency,
-        exchangeRateStore,
-    });
-    const shortcutStore = createShortcutStore();
-
-    // 2. Initialize Complex Stores (Dependency Injection)
-    const layoutStore = createLayoutStore(initialPersistence);
-    const commandStore = createCommandStore({
-        appStore,
-        apiStore,
-        toastStore,
-        themeStore,
-        languageStore,
-        currencyStore,
-    });
-
-    // 3. Provide Core Contexts
-    setContext(RUNE_LAB_CONTEXT.app, appStore);
-    setContext(RUNE_LAB_CONTEXT.api, apiStore);
-    setContext(RUNE_LAB_CONTEXT.toast, toastStore);
-    setContext(RUNE_LAB_CONTEXT.theme, themeStore);
-    setContext(RUNE_LAB_CONTEXT.language, languageStore);
-    setContext(RUNE_LAB_CONTEXT.currency, currencyStore);
-    setContext(RUNE_LAB_CONTEXT.exchangeRate, exchangeRateStore);
-    setContext(RUNE_LAB_CONTEXT.shortcut, shortcutStore);
-    setContext(RUNE_LAB_CONTEXT.layout, layoutStore);
-    setContext(RUNE_LAB_CONTEXT.commands, commandStore);
+    // Also provide the persistence driver itself
     setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
 
-    // 4. Opt-in: CartStore (C-01 FIX)
-    if (initialCartConfig) {
-        const cartStore = createCartStore(initialCartConfig);
-        setContext(RUNE_LAB_CONTEXT.cart, cartStore);
-    }
-
-    // 5. Opt-in: SessionStore (C-02 FIX)
-    if (initialAuthConfig && initialAuthConfig.enabled !== false) {
-        const sessionStore = createSessionStore();
-        setContext(RUNE_LAB_CONTEXT.session, sessionStore);
-    }
-
+    // Provide user dictionary if given
     const initialDictionary = untrack(() => config.dictionary);
     if (initialDictionary) {
         setContext("rl:dictionary", initialDictionary);
     }
+
+    // ── Convenience accessors for effects ──────────────────────────────────
+    const appStore = stores.get("app") as any;
+    const apiStore = stores.get("api") as any;
+    const layoutStore = stores.get("layout") as any;
+    const languageStore = stores.get("language") as any;
+    const themeStore = stores.get("theme") as any;
+    const exchangeRateStore = stores.get("exchangeRate") as ExchangeRateStore;
+
+    // ── Dynamic config tracking (reactive effects) ────────────────────────
 
     // Track config changes dynamically
     $effect(() => {
@@ -204,7 +169,10 @@
             <meta name={meta.name} content={meta.content} />
         {/each}
         {#if config.icons === "material"}
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+            <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+            />
         {/if}
     {/if}
 </svelte:head>

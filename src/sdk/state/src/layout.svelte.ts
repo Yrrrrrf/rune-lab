@@ -2,6 +2,7 @@
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "./context.ts";
 import type { PersistenceDriver } from "@internal/core";
+import { resolveDriver } from "./persistence/provider.ts";
 
 export interface WorkspaceItem {
   id: string;
@@ -44,11 +45,8 @@ export class LayoutStore {
   constructor(
     driver?: PersistenceDriver | (() => PersistenceDriver | undefined),
   ) {
-    // We import locally here or at top-level. We can just fallback to window if undefined,
-    // but better to expect it via inject. The app supplies it in createLayoutStore.
-    this.#driver = (typeof driver === "function" ? driver() : driver) as
-      | PersistenceDriver
-      | undefined;
+    // Use resolveDriver but allow undefined result for SSR/no-driver scenarios
+    this.#driver = driver ? resolveDriver(driver) : undefined;
   }
 
   init(options?: { namespace?: string; driver?: PersistenceDriver }) {

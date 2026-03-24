@@ -1,8 +1,6 @@
 <script lang="ts">
-    import AppSettingSelector from "./AppSettingSelector.svelte";
-    import { getLanguageStore, type Language } from "@internal/state";
-    import * as rlMessages from "../../paraglide/messages.js";
-    import { getContext } from "svelte";
+    import ResourceSelector from "./ResourceSelector.svelte";
+    import { getLanguageStore } from "@internal/state";
     import { setLocale } from "../../paraglide/runtime";
 
     const languageStore = getLanguageStore();
@@ -16,36 +14,15 @@
         current?: string;
         onchange?: (value: string) => void;
     } = $props();
-
-    const userDictionary =
-        getContext<Record<string, any>>("rl:dictionary") ?? {};
-
-    function getLabel(lang: Language): string {
-        const key = lang.code;
-        if (typeof userDictionary[key] === "function")
-            return userDictionary[key]();
-        if (typeof (rlMessages as any)[key] === "function")
-            return (rlMessages as any)[key]();
-        return lang.code.toUpperCase();
-    }
-
-    let active = $derived(
-        languageStore.get(languageStore.current) ?? languageStore.available[0],
-    );
-
-    let available = $derived(
-        languageStore.available.filter((l) =>
-            allowedLocales.includes(l.code as any),
-        ),
-    );
 </script>
 
-<AppSettingSelector
-    value={active}
-    options={available}
-    tooltip={getLabel(active)}
+<ResourceSelector
+    store={languageStore}
+    idKey="code"
+    filterKeys={[...allowedLocales]}
+    {onchange}
 >
-    {#snippet triggerLabel()}
+    {#snippet triggerLabel(active)}
         <span class="text-lg">{active.flag}</span>
     {/snippet}
 
@@ -60,7 +37,7 @@
             }}
         >
             <span class="text-lg">{l.flag}</span>
-            <span>{getLabel(l)}</span>
+            <span>{l.code.toUpperCase()}</span>
         </button>
     {/snippet}
-</AppSettingSelector>
+</ResourceSelector>

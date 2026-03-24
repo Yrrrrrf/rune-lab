@@ -43,6 +43,7 @@ const CURRENCIES: Currency[] = [
 ] as const;
 
 import type { PersistenceDriver } from "@internal/core";
+import { resolveDriver } from "./persistence/provider.ts";
 import { type ExchangeRateStore } from "./exchange-rate.svelte.ts";
 
 export interface CurrencyStoreOptions {
@@ -73,9 +74,7 @@ export function createCurrencyStore(
           | undefined,
       };
 
-  const resolvedDriver = typeof opts.driver === "function"
-    ? opts.driver()
-    : opts.driver;
+  const resolvedDriver = resolveDriver(opts.driver);
 
   const store = createConfigStore<Currency>({
     items: CURRENCIES,

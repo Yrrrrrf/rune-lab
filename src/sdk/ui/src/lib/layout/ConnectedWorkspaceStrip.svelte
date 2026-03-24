@@ -2,6 +2,7 @@
 <script lang="ts">
     import { getLayoutStore, type WorkspaceItem } from "@internal/state";
     import WorkspaceStrip from "./WorkspaceStrip.svelte";
+    import { createWorkspaceConnection } from "./connection-factory.ts";
     import type { Snippet } from "svelte";
 
     let { items, globalActions } = $props<{
@@ -10,11 +11,12 @@
     }>();
 
     const layoutStore = getLayoutStore();
+    const connection = createWorkspaceConnection(layoutStore);
 </script>
 
 <WorkspaceStrip
     {items}
     {globalActions}
-    activeId={layoutStore.activeWorkspaceId}
-    onSelect={(id) => layoutStore.activateWorkspace(id)}
+    activeId={connection.activeId}
+    onSelect={connection.onSelect}
 />

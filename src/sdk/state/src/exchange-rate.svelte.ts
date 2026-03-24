@@ -2,14 +2,17 @@
 
 import { getContext } from "svelte";
 import {
-  convertAmount,
   convertMoney,
   createMoney,
   CURRENCY_MAP,
+  directConversion,
+  inverseConversion,
   type RateMap,
+  resolveRate,
   type ScaledRate,
   scaledRate,
   toMoneySnapshot,
+  triangularConversion,
 } from "@internal/core";
 import { RUNE_LAB_CONTEXT } from "./context.ts";
 
@@ -82,37 +85,31 @@ export class ExchangeRateStore {
         fromCurrency.exponent,
       );
 
-      // Convert through base if necessary
       const currentRates = this.#rates;
       const currentBase = this.#baseCurrency;
 
-      // We use createMoney and convertMoney directly to get the Dinero object and its snapshot
       const sourceMoney = createMoney(oneUnit, fromCode);
 
       let targetMoney;
       if (fromCode === currentBase) {
+        // Direct: base → target
         targetMoney = convertMoney(sourceMoney, toCode, currentRates);
       } else if (toCode === currentBase) {
+        // Inverse: target → base
         const rateToBase = currentRates[fromCode];
         if (!rateToBase) return undefined;
-        const r = typeof rateToBase === "number"
-          ? rateToBase
-          : rateToBase.amount / Math.pow(10, rateToBase.scale);
+        const r = resolveRate(rateToBase);
         targetMoney = convertMoney(sourceMoney, toCode, {
           [toCode]: scaledRate(1 / r, 6),
         });
       } else {
-        // Triangulate
+        // Triangular: source → base → target
         const rateToBase = currentRates[fromCode];
         const rateToTarget = currentRates[toCode];
         if (!rateToBase || !rateToTarget) return undefined;
 
-        const r1 = typeof rateToBase === "number"
-          ? rateToBase
-          : rateToBase.amount / Math.pow(10, rateToBase.scale);
-        const r2 = typeof rateToTarget === "number"
-          ? rateToTarget
-          : rateToTarget.amount / Math.pow(10, rateToTarget.scale);
+        const r1 = resolveRate(rateToBase);
+        const r2 = resolveRate(rateToTarget);
 
         targetMoney = convertMoney(sourceMoney, toCode, {
           [toCode]: scaledRate(r2 / r1, 6),
@@ -131,40 +128,36 @@ export class ExchangeRateStore {
 
   /**
    * Internal conversion logic that handles triangulation through base currency.
+   * Delegates all math to ConversionStrategies (directConversion, inverseConversion, triangularConversion).
    */
   convertAmount(amount: number, fromCode: string, toCode: string): number {
     if (fromCode === toCode) return amount;
     if (!this.hasRates) return amount;
 
-    // Direct: Base -> Target
+    // Direct: Base → Target
     if (fromCode === this.#baseCurrency) {
-      return convertAmount(amount, fromCode, toCode, this.#rates);
+      const rateToTarget = this.#rates[toCode];
+      if (!rateToTarget) return amount;
+      return directConversion(amount, resolveRate(rateToTarget));
     }
 
-    // Inverse: Target -> Base
+    // Inverse: Target → Base
     if (toCode === this.#baseCurrency) {
-      const rateToBase = this.#rates[fromCode];
-      if (!rateToBase) return amount;
-
-      // Dinero convert doesn't easily do inverse without a rate map where BASE is the key.
-      // We can simulate it by creating a temporary rate map.
-      const r = typeof rateToBase === "number"
-        ? rateToBase
-        : rateToBase.amount / Math.pow(10, rateToBase.scale);
-      const inverseRate = scaledRate(1 / r, 6);
-
-      return convertAmount(amount, fromCode, toCode, {
-        [toCode]: inverseRate,
-      });
+      const rateFromSource = this.#rates[fromCode];
+      if (!rateFromSource) return amount;
+      return inverseConversion(amount, resolveRate(rateFromSource));
     }
 
-    // Triangulation: From -> Base -> To
-    const amountInBase = this.convertAmount(
+    // Triangulation: From → Base → To
+    const rateFromSource = this.#rates[fromCode];
+    const rateToTarget = this.#rates[toCode];
+    if (!rateFromSource || !rateToTarget) return amount;
+
+    return triangularConversion(
       amount,
-      fromCode,
-      this.#baseCurrency,
+      resolveRate(rateFromSource),
+      resolveRate(rateToTarget),
     );
-    return this.convertAmount(amountInBase, this.#baseCurrency, toCode);
   }
 }
 

@@ -13,9 +13,15 @@ export { default as Kyntharil } from "./components/Kyntharil.svelte";
 // ── Features ──────────────────────────────────────────────────────────────────
 export { default as CommandPalette } from "./features/command-palette/CommandPalette.svelte";
 export { default as ShortcutPalette } from "./features/shortcuts/ShortcutPalette.svelte";
+export { default as ShortcutBinder } from "./features/shortcuts/ShortcutBinder.svelte";
 
 // Setting Selectors
 export { default as AppSettingSelector } from "./features/config/AppSettingSelector.svelte";
+export { default as ResourceSelector } from "./features/config/ResourceSelector.svelte";
+export {
+  APP_CONFIGURATIONS,
+  type ConfigDimension,
+} from "./features/config/APP_CONFIGURATIONS.ts";
 export { default as ThemeSelector } from "./features/config/ThemeSelector.svelte";
 export { default as LanguageSelector } from "./features/config/LanguageSelector.svelte";
 export { default as CurrencySelector } from "./features/config/CurrencySelector.svelte";
@@ -30,6 +36,14 @@ export { default as DetailPanel } from "./layout/DetailPanel.svelte";
 // ── Connected (Smart) Components ──────────────────────────────────────────────
 export { default as ConnectedNavigationPanel } from "./layout/ConnectedNavigationPanel.svelte";
 export { default as ConnectedWorkspaceStrip } from "./layout/ConnectedWorkspaceStrip.svelte";
+
+// ── Connection Factory (Phase 3) ──────────────────────────────────────────────
+export {
+  createNavigationConnection,
+  createWorkspaceConnection,
+  type NavigationConnection,
+  type WorkspaceConnection,
+} from "./layout/connection-factory.ts";
 
 // ── Primitives ────────────────────────────────────────────────────────────────
 export { default as DatePicker } from "./primitives/DatePicker.svelte";

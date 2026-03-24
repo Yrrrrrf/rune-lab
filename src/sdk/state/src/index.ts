@@ -11,6 +11,7 @@ export { usePersistence } from "./composables/usePersistence.ts";
 export { useMoney } from "./composables/useMoney.ts";
 export { useMoneyFilter } from "./composables/useMoneyFilter.ts";
 export type { MoneyFilterOptions } from "./composables/useMoneyFilter.ts";
+export { useShortcuts } from "./composables/useShortcuts.ts";
 
 // ── Persistence Drivers ───────────────────────────────────────────────────────
 export {
@@ -21,6 +22,26 @@ export {
   localStorageDriver,
   sessionStorageDriver,
 } from "./persistence/drivers.ts";
+
+// ── Driver Provider (Phase 2) ─────────────────────────────────────────────────
+export {
+  getDriverContext,
+  resolveDriver,
+  setDriverContext,
+} from "./persistence/provider.ts";
+
+// ── Store Registry (Phase 2) ──────────────────────────────────────────────────
+export {
+  clearRegistry,
+  getAllRegisteredStores,
+  getRegisteredStore,
+  initializeStores,
+  registerStore,
+  STORE_REGISTRY,
+  unregisterStore,
+} from "./registry/index.ts";
+export { registerBuiltinStores } from "./registry/builtin-entries.ts";
+export type { StoreFactory, StoreRegistryEntry } from "./registry/types.ts";
 
 // Stores
 export {

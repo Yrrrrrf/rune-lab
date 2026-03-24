@@ -53,6 +53,7 @@ const THEME_ICONS: Record<string, string> = {
 };
 
 import type { PersistenceDriver } from "@internal/core";
+import { resolveDriver } from "./persistence/provider.ts";
 import themeOrder from "daisyui/functions/themeOrder.js";
 import { BROWSER } from "esm-env";
 
@@ -88,9 +89,7 @@ export function createThemeStore(
           | undefined,
       };
 
-  const resolvedDriver = typeof opts.driver === "function"
-    ? opts.driver()
-    : opts.driver;
+  const resolvedDriver = resolveDriver(opts.driver);
 
   const store = createConfigStore<Theme>({
     items: THEMES,

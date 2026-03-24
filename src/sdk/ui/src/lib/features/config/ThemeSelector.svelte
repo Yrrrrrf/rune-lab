@@ -1,8 +1,6 @@
 <script lang="ts">
-    import AppSettingSelector from "./AppSettingSelector.svelte";
+    import ResourceSelector from "./ResourceSelector.svelte";
     import { getThemeStore, type Theme } from "@internal/state";
-    import * as rlMessages from "$lib/paraglide/messages.js";
-    import { getContext } from "svelte";
 
     const themeStore = getThemeStore();
 
@@ -15,37 +13,16 @@
         current?: string;
         onchange?: (value: string) => void;
     } = $props();
-
-    const userDictionary =
-        getContext<Record<string, any>>("rl:dictionary") ?? {};
-
-    function getThemeLabel(theme: Theme): string {
-        const key = theme.name;
-        if (typeof userDictionary[key] === "function")
-            return userDictionary[key]();
-        if (typeof (rlMessages as any)[key] === "function")
-            return (rlMessages as any)[key]();
-        return theme.name;
-    }
-
-    let activeTheme = $derived(
-        themeStore.get(themeStore.current) ?? themeStore.available[0],
-    );
-
-    let available = $derived(
-        themes.length > 0
-            ? themeStore.available.filter((t) => themes.includes(t.name))
-            : themeStore.available,
-    );
 </script>
 
-<AppSettingSelector
-    value={activeTheme}
-    options={available}
-    tooltip={getThemeLabel(activeTheme)}
+<ResourceSelector
+    store={themeStore}
+    idKey="name"
+    filterKeys={themes}
+    {onchange}
 >
-    {#snippet triggerLabel()}
-        <span class="text-lg">{activeTheme.icon}</span>
+    {#snippet triggerLabel(active)}
+        <span class="text-lg">{active.icon}</span>
     {/snippet}
 
     {#snippet item(t)}
@@ -66,8 +43,8 @@
             />
             <span class="text-lg">{t.icon}</span>
             <span class="capitalize">
-                {getThemeLabel(t)}
+                {t.name}
             </span>
         </button>
     {/snippet}
-</AppSettingSelector>
+</ResourceSelector>
