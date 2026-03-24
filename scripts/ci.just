@@ -1,7 +1,7 @@
 [doc('Format Client code')]
 [group('CI')]
 fmt:
-    deno fmt
+    deno fmt .
     @echo "✓ Client code formatted"
 
 [doc('Lint Client code')]

@@ -69,12 +69,12 @@ Get your application shell running in less than 20 lines. Inside your
   import { cookieDriver } from "rune-lab";
 
   let { children } = $props();
-  
+
   // Example navigation
   const sections = [{ id: "main", title: "Main", items: [{ id: "home", label: "Home" }] }];
 </script>
 
-<RuneProvider 
+<RuneProvider
   app={{ name: "My App", version: "1.0.0" }}
   persistence={cookieDriver}
 >
@@ -232,7 +232,7 @@ register them inside an `$effect` returning a cleanup function**:
 ```svelte
 <script lang="ts">
   import { getShortcutStore, getToastStore } from "rune-lab";
-  
+
   const shortcuts = getShortcutStore();
   const toasts = getToastStore();
 
