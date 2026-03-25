@@ -17,9 +17,8 @@ export default defineConfig({
     svelteTesting(),
     tailwindcss(),
     paraglideVitePlugin({
-      // todo: Change the current i18n lib to another...
-      project: "./src/ui/src/i18n/project.inlang",
-      outdir: "./src/ui/src/lib/paraglide",
+      project: "./src/i18n/project.inlang/project.inlang",
+      outdir: "./src/i18n/lib/paraglide",
     }),
   ],
   test: {

@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vite-plus/test";
-import { ExchangeRateStore } from "./exchange-rate.svelte.ts";
+import { ExchangeRateStore } from "@rune-lab/money";
 import { createCurrencyStore } from "./currency.svelte.ts";
 import { inMemoryDriver } from "./persistence/drivers.ts";
 import { useMoneyFilter } from "./composables/useMoneyFilter.ts";
 import { setContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./context.ts";
+import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
 import { createLanguageStore } from "./language.svelte.ts";
 
 // Mock useMoney since it uses getContext and other stores

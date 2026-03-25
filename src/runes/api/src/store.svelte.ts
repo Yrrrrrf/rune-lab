@@ -1,0 +1,80 @@
+/**
+ * API connection state and configuration
+ */
+export type ConnectionState = "connected" | "connecting" | "disconnected";
+import { getContext } from "svelte";
+import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
+import { DEV } from "esm-env";
+
+export class ApiStore {
+  // State
+  url = $state("http://localhost:8000");
+  version = $state("v1");
+  connectionState = $state<ConnectionState>("disconnected");
+  #healthCheck: (() => Promise<boolean>) | undefined;
+
+  // Derived
+  isConnected = $derived(this.connectionState === "connected");
+  isLoading = $derived(this.connectionState === "connecting");
+
+  // Short aliases for compatibility with the user's snippet
+  get URL() {
+    return this.url;
+  }
+  get VERSION() {
+    return this.version;
+  }
+  get IS_CONNECTED() {
+    return this.isConnected;
+  }
+  get IS_LOADING() {
+    return this.isLoading;
+  }
+
+  /**
+   * Reconnect to the API
+   */
+  async reconnect() {
+    this.connectionState = "connecting";
+
+    try {
+      if (this.#healthCheck) {
+        const isHealthy = await this.#healthCheck();
+        this.connectionState = isHealthy ? "connected" : "disconnected";
+      } else {
+        // Simulate connection if no health check provided
+        if (DEV) {
+          console.warn(
+            "[rune-lab] ApiStore: No healthCheck provided to init(). Using simulated connection delay.",
+          );
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        this.connectionState = "connected";
+      }
+    } catch (_e) {
+      this.connectionState = "disconnected";
+    }
+  }
+
+  /**
+   * Initialize API settings
+   */
+  init(
+    url: string,
+    version: string = "v1",
+    healthCheck?: () => Promise<boolean>,
+  ) {
+    this.url = url;
+    this.version = version;
+    if (healthCheck) this.#healthCheck = healthCheck;
+    this.reconnect();
+  }
+}
+
+export function createApiStore() {
+  return new ApiStore();
+}
+
+export function getApiStore() {
+  return getContext<ApiStore>(RUNE_LAB_CONTEXT.api);
+}

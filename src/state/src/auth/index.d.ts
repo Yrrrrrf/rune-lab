@@ -1,6 +1,0 @@
-export type { AuthConfig, Session, User } from "./types.ts";
-export {
-  createSessionStore,
-  getSessionStore,
-  SessionStore,
-} from "./session.svelte.ts";

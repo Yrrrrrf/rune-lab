@@ -6,7 +6,7 @@ import {
   registerStore,
   STORE_REGISTRY,
   unregisterStore,
-} from "./index.ts";
+} from "@rune-lab/kernel";
 
 describe("StoreRegistry", () => {
   // Clean slate for each test

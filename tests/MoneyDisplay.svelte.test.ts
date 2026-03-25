@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/svelte";
 import "@testing-library/jest-dom/vitest";
 import { describe, expect, it } from "vite-plus/test";
 import MoneyDisplay from "./MoneyDisplay.svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/state";
+import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
 
 // Mock stores for context
 const mockCurrencyStore = {

@@ -15,7 +15,7 @@ import {
   toPaypalMoney,
   toSquareMoney,
   toStripeMoney,
-} from "./money";
+} from "@rune-lab/money";
 
 describe("Money Core Utilities", () => {
   describe("safeAmount()", () => {
