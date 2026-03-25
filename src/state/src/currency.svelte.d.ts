@@ -11,7 +11,7 @@ export interface Currency {
   symbol: string;
   decimals: number;
 }
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 export interface CurrencyStoreOptions {
   driver?: PersistenceDriver | (() => PersistenceDriver | undefined);

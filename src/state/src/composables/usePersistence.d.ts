@@ -1,2 +1,2 @@
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 export declare function usePersistence(): PersistenceDriver | undefined;

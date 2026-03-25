@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { getLanguageStore, getCurrencyStore } from "@internal/state";
+    import { getLanguageStore, getCurrencyStore } from "@rune-lab/state";
     import {
         formatAmount,
         toMinorUnit,
         type ISO4217Code,
         MoneyPrimitive,
-    } from "@internal/core";
+    } from "@rune-lab/core";
     import { DEV } from "esm-env";
 
     let {

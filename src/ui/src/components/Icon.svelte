@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getAppStore } from "@internal/state";
+  import { getAppStore } from "@rune-lab/state";
   import { DEV } from "esm-env";
 
   /**

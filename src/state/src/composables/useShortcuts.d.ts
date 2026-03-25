@@ -1,4 +1,4 @@
-import type { ShortcutConfig } from "@internal/core";
+import type { ShortcutConfig } from "@rune-lab/core";
 /**
  * Declarative shortcut registration composable.
  * Registers all shortcuts via ShortcutStore in a single `$effect` and

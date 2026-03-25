@@ -6,9 +6,9 @@ export { default as NavigationPanel } from "./NavigationPanel.svelte";
 export { default as ContentArea } from "./ContentArea.svelte";
 export { default as DetailPanel } from "./DetailPanel.svelte";
 
-export { createLayoutStore, getLayoutStore } from "@internal/state";
+export { createLayoutStore, getLayoutStore } from "@rune-lab/state";
 export type {
   NavigationItem,
   NavigationSection,
   WorkspaceItem,
-} from "@internal/state";
+} from "@rune-lab/state";

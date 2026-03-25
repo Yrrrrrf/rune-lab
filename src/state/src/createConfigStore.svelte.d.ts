@@ -1,4 +1,4 @@
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 export type ConfigStore<T extends object> = {
   current: T[keyof T];
   available: T[];

@@ -1,6 +1,6 @@
 <script lang="ts">
     import ResourceSelector from "./ResourceSelector.svelte";
-    import { getLanguageStore } from "@internal/state";
+    import { getLanguageStore } from "@rune-lab/state";
     import { setLocale } from "../../paraglide/runtime";
 
     const languageStore = getLanguageStore();

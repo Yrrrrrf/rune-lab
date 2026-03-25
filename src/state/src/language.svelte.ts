@@ -37,7 +37,7 @@ export const LANGUAGES = [
   { code: "vi", flag: "🇻🇳" },
 ] as const;
 
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 import { resolveDriver } from "./persistence/provider.ts";
 
 export interface LanguageStoreOptions {

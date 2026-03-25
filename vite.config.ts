@@ -17,8 +17,9 @@ export default defineConfig({
     svelteTesting(),
     tailwindcss(),
     paraglideVitePlugin({
-      project: "./src/sdk/ui/src/i18n/project.inlang",
-      outdir: "./src/sdk/ui/src/lib/paraglide",
+      // todo: Change the current i18n lib to another...
+      project: "./src/ui/src/i18n/project.inlang",
+      outdir: "./src/ui/src/lib/paraglide",
     }),
   ],
   test: {
@@ -26,9 +27,9 @@ export default defineConfig({
     setupFiles: ["@testing-library/jest-dom/vitest"],
     globals: true,
     alias: {
-      "@internal/core": new URL("src/sdk/core/src", import.meta.url).pathname,
-      "@internal/state": new URL("src/sdk/state/src", import.meta.url).pathname,
-      "@internal/ui": new URL("src/sdk/ui/src/lib", import.meta.url).pathname,
+      "@rune-lab/core": new URL("src/core/src", import.meta.url).pathname,
+      "@rune-lab/state": new URL("src/state/src", import.meta.url).pathname,
+      "@rune-lab/ui": new URL("src/ui/src", import.meta.url).pathname,
     },
   },
 });

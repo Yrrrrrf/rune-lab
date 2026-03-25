@@ -1,4 +1,4 @@
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 export declare function createInMemoryDriver(): PersistenceDriver;
 export declare const inMemoryDriver: PersistenceDriver;
 export declare const localStorageDriver: PersistenceDriver;

@@ -1,7 +1,7 @@
 // sdk/state/src/registry/types.ts
 // Types for the Store Registry — the declarative store auto-wiring engine.
 
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 
 /**
  * Factory function signature for creating a store.

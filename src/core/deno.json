@@ -1,5 +1,5 @@
 {
-  "name": "@internal/core",
+  "name": "@rune-lab/core",
   "version": "0.2.0",
   "exports": "./src/mod.ts"
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
     import ResourceSelector from "./ResourceSelector.svelte";
-    import { getCurrencyStore } from "@internal/state";
+    import { getCurrencyStore } from "@rune-lab/state";
 
     const currencyStore = getCurrencyStore();
 

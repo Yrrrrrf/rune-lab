@@ -1,4 +1,4 @@
-import type { Dinero, ISO4217Code } from "@internal/core";
+import type { Dinero, ISO4217Code } from "@rune-lab/core";
 /**
  * Context-aware money composable.
  * Reads CurrencyStore and LanguageStore from rune-lab context.

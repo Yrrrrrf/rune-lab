@@ -13,7 +13,7 @@ import {
   scaledRate,
   toMoneySnapshot,
   triangularConversion,
-} from "@internal/core";
+} from "@rune-lab/core";
 import { RUNE_LAB_CONTEXT } from "./context.ts";
 
 export class ExchangeRateStore {

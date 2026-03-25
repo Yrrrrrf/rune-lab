@@ -4,7 +4,7 @@ import {
 } from "./createConfigStore.svelte.ts";
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "./context.ts";
-import { type DineroCurrency, registerCurrency } from "@internal/core";
+import { type DineroCurrency, registerCurrency } from "@rune-lab/core";
 
 /**
  * Currency configuration
@@ -42,7 +42,7 @@ const CURRENCIES: Currency[] = [
   { code: "AED", symbol: "د.إ", decimals: 2 },
 ] as const;
 
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 import { resolveDriver } from "./persistence/provider.ts";
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 
@@ -92,7 +92,7 @@ export function createCurrencyStore(
    * Updates both the Dinero registry (core) and the reactive store (UI).
    *
    * @remarks Custom currencies with non-decimal base systems must use
-   * registerCurrency() from @internal/core explicitly before addItems().
+   * registerCurrency() from @rune-lab/core explicitly before addItems().
    */
   function addCurrency(meta: Currency, dineroDef?: unknown) {
     const def = dineroDef || buildDineroDef(meta);

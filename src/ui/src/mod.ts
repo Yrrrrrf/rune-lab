@@ -62,5 +62,5 @@ export { default as MoneyInput } from "./components/money/MoneyInput.svelte";
 export * as sdkMessages from "./paraglide/messages.js";
 
 // // Consumers shouldn't need rune-lab/state just to get cookieDriver, stores, etc.
-// export * from "@internal/state";
-// export * from "@internal/core";
+// export * from "@rune-lab/state";
+// export * from "@rune-lab/core";

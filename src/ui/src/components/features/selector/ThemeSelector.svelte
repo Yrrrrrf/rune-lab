@@ -1,6 +1,6 @@
 <script lang="ts">
     import ResourceSelector from "./ResourceSelector.svelte";
-    import { getThemeStore, type Theme } from "@internal/state";
+    import { getThemeStore, type Theme } from "@rune-lab/state";
 
     const themeStore = getThemeStore();
 

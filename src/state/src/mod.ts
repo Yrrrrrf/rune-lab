@@ -1,5 +1,5 @@
 // sdk/state/src/index.ts
-// Unified public barrel for @internal/state
+// Unified public barrel for @rune-lab/state
 
 // ── Context ───────────────────────────────────────────────────────────────────
 export { RUNE_LAB_CONTEXT } from "./context.ts";

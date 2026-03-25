@@ -1,10 +1,7 @@
 <!-- src/lib/layout/NavigationPanel.svelte -->
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import type {
-        NavigationItem,
-        NavigationSection,
-    } from "@internal/state";
+    import type { NavigationItem, NavigationSection } from "@rune-lab/state";
 
     let {
         header,

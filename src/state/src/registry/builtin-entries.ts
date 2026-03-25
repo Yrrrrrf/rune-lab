@@ -3,7 +3,7 @@
 // These are registered once at module load time.
 
 import { registerStore } from "./index.ts";
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 
 import { type AppStore, createAppStore } from "../app.svelte.ts";
 import { type ApiStore, createApiStore } from "../api.svelte.ts";

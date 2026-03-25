@@ -1,5 +1,5 @@
 import type { StoreRegistryEntry } from "./types.ts";
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 export type { StoreFactory, StoreRegistryEntry } from "./types.ts";
 /**
  * The global store registry.

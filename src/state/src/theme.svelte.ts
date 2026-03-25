@@ -52,7 +52,7 @@ const THEME_ICONS: Record<string, string> = {
   silk: "🎀",
 };
 
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 import { resolveDriver } from "./persistence/provider.ts";
 import themeOrder from "daisyui/functions/themeOrder.js";
 import { BROWSER } from "esm-env";

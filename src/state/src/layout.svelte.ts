@@ -1,7 +1,7 @@
 // src/lib/state/layout.svelte.ts
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "./context.ts";
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 import { resolveDriver } from "./persistence/provider.ts";
 
 export interface WorkspaceItem {

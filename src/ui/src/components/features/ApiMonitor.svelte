@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { getApiStore } from "@internal/state";
-    import { getToastStore } from "@internal/state";
+    import { getApiStore } from "@rune-lab/state";
+    import { getToastStore } from "@rune-lab/state";
 
     const apiStore = getApiStore();
     const toastStore = getToastStore();

@@ -3,7 +3,7 @@ export interface Theme {
   name: string;
   icon: string;
 }
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 export interface ThemeStoreOptions {
   driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
   /** Additional custom themes to append to the built-in DaisyUI set */

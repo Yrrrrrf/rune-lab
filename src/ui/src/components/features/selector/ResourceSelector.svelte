@@ -1,6 +1,6 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
-    import type { ConfigStore } from "@internal/state";
+    import type { ConfigStore } from "@rune-lab/state";
     import * as rlMessages from "$lib/paraglide/messages.js";
     import { getContext, type Snippet } from "svelte";
 
@@ -62,9 +62,7 @@
         return key;
     }
 
-    let active = $derived(
-        store.get(store.current) ?? store.available[0],
-    );
+    let active = $derived(store.get(store.current) ?? store.available[0]);
 
     let available = $derived(
         filterKeys.length > 0

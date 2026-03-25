@@ -20,7 +20,7 @@ import {
   toPaypalMoney,
   toSquareMoney,
   toStripeMoney,
-} from "@internal/core";
+} from "@rune-lab/core";
 import type { ExchangeRateStore } from "../exchange-rate.svelte.ts";
 import type { CurrencyStore } from "../currency.svelte.ts";
 

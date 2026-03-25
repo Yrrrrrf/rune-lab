@@ -1,4 +1,4 @@
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 /**
  * Factory function signature for creating a store.
  * Receives the resolved config, driver, and a map of already-created store instances.

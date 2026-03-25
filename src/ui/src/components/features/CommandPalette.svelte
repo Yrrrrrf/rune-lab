@@ -1,8 +1,8 @@
 <!-- src/client/sdk/ui/src/features/config/CommandPalette.svelte -->
 <script lang="ts">
-    import { onMount, tick } from "svelte";
-    import { getCommandStore, type Command } from "@internal/state";
-    import { getShortcutStore } from "@internal/state";
+    import { tick } from "svelte";
+    import { getCommandStore, type Command } from "@rune-lab/state";
+    import { getShortcutStore } from "@rune-lab/state";
     import { Icon } from "../../../mod";
 
     let { shortcutKey = "shift+k" } = $props<{ shortcutKey?: string }>();

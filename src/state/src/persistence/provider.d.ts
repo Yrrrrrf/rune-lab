@@ -1,4 +1,4 @@
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 /**
  * Resolves a driver input (function or instance) into a concrete PersistenceDriver.
  * If the input is null/undefined, returns an inMemoryDriver as the Null Object.

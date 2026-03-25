@@ -1,4 +1,4 @@
-import type { RateMap, ScaledRate } from "@internal/core";
+import type { RateMap, ScaledRate } from "@rune-lab/core";
 export declare class ExchangeRateStore {
   #private;
   /**

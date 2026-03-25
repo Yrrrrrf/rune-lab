@@ -7,13 +7,13 @@
         localStorageDriver,
         initializeStores,
         registerBuiltinStores,
-    } from "@internal/state";
-    import type { PersistenceDriver } from "@internal/core";
+    } from "@rune-lab/state";
+    import type { PersistenceDriver } from "@rune-lab/core";
     import { CommandPalette, ShortcutPalette, Toaster } from "../../mod";
 
     export interface RuneLabConfig {
         persistence?: PersistenceDriver;
-        app?: Partial<import("@internal/state").AppData>;
+        app?: Partial<import("@rune-lab/state").AppData>;
         apiUrl?: string;
         apiHealthCheck?: () => Promise<boolean>;
         favicon?: string;
@@ -26,13 +26,13 @@
 
         // Theming (DaisyUI)
         /** Additional custom themes to register alongside the built-in DaisyUI set */
-        customThemes?: import("@internal/state").Theme[];
+        customThemes?: import("@rune-lab/state").Theme[];
         /** Theme to use when no persisted value exists (after system preference detection) */
         defaultTheme?: string;
 
         // Currencies (Dinero.js)
         /** Additional custom currencies to register */
-        currencies?: import("@internal/state").Currency[];
+        currencies?: import("@rune-lab/state").Currency[];
         /** Default currency code when no persisted value exists */
         defaultCurrency?: string;
         /** Bootstrap-time exchange rates */

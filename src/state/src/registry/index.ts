@@ -3,7 +3,7 @@
 // RuneProvider iterates this at mount time to auto-wire all stores.
 
 import type { StoreRegistryEntry } from "./types.ts";
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 
 export type { StoreFactory, StoreRegistryEntry } from "./types.ts";
 

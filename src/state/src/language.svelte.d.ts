@@ -61,7 +61,7 @@ export declare const LANGUAGES: readonly [
     readonly flag: "🇻🇳";
   },
 ];
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 export interface LanguageStoreOptions {
   driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
   onLocaleChange?: (code: string) => void;

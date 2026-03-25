@@ -1,5 +1,5 @@
 // sdk/state/src/persistence/drivers.ts
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 import { BROWSER as browser } from "esm-env";
 
 export function createInMemoryDriver(): PersistenceDriver {

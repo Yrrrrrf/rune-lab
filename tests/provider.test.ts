@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 import { resolveDriver } from "./provider.ts";
-import type { PersistenceDriver } from "@internal/core";
+import type { PersistenceDriver } from "@rune-lab/core";
 
 describe("DriverProvider", () => {
   describe("resolveDriver", () => {

@@ -3,8 +3,8 @@
   No floats cross the boundary — values are always integer minor units.
 -->
 <script module lang="ts">
-    import type { ISO4217Code } from "@internal/core";
-    import { MoneyPrimitive } from "@internal/core";
+    import type { ISO4217Code } from "@rune-lab/core";
+    import { MoneyPrimitive } from "@rune-lab/core";
 
     export interface MoneyInputProps {
         /** Current value in minor or major units (see unit prop) */
@@ -38,8 +38,8 @@
 </script>
 
 <script lang="ts">
-    import { getCurrencyStore } from "@internal/state";
-    import { toMinorUnit } from "@internal/core";
+    import { getCurrencyStore } from "@rune-lab/state";
+    import { toMinorUnit } from "@rune-lab/core";
     import { DEV } from "esm-env";
 
     let {

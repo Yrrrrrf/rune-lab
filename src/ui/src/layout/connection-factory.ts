@@ -2,7 +2,7 @@
 // Connection functions that generate reactive prop bindings from LayoutStore.
 // Svelte 5 doesn't support React-style HOCs — this is the idiomatic alternative.
 
-import type { LayoutStore } from "@internal/state";
+import type { LayoutStore } from "@rune-lab/state";
 
 /**
  * Reactive prop binding for the NavigationPanel component.
