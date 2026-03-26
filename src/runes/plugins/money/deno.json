@@ -1,0 +1,8 @@
+{
+  "name": "@rune-lab/money",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
+  "imports": {
+    "dinero.js": "npm:dinero.js"
+  }
+}
