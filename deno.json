@@ -50,6 +50,6 @@
   },
   "exclude": [
     ".old/**",
-    "src/runes/plugins/**"
+    "**/*.test.ts"
   ]
 }

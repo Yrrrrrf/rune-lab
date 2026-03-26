@@ -18,7 +18,12 @@ import {
   toSquareMoney,
   toStripeMoney,
 } from "@rune-lab/money";
-import type { Dinero, ISO4217Code, ExchangeRateStore, CurrencyStore } from "@rune-lab/money";
+import type {
+  CurrencyStore,
+  Dinero,
+  ExchangeRateStore,
+  ISO4217Code,
+} from "@rune-lab/money";
 
 export interface UseMoneyReturn {
   toDinero: (
@@ -59,7 +64,11 @@ export interface UseMoneyReturn {
     currencyCode?: string,
     target?: "stripe" | "paypal" | "adyen" | "square",
     unit?: "major" | "minor",
-  ) => any;
+  ) =>
+    | { amount: number; currency: string }
+    | { value: string; currency_code: string }
+    | { value: number; currency: string }
+    | { amount: bigint; currency: string };
   multiply: (
     amount: number,
     factor: number,
@@ -78,7 +87,7 @@ export interface UseMoneyReturn {
  */
 export function useMoney(): UseMoneyReturn {
   const currencyStore = getContext<CurrencyStore>(RUNE_LAB_CONTEXT.currency);
-  const languageStore = getContext<ConfigStore<any>>(
+  const languageStore = getContext<ConfigStore<unknown>>(
     RUNE_LAB_CONTEXT.language,
   );
   const exchangeRateStore = getContext<ExchangeRateStore>(

@@ -4,6 +4,15 @@ import { createCurrencyStore, type Currency } from "./currency.svelte.ts";
 import { createExchangeRateStore } from "./exchange-rate.svelte.ts";
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 
+interface MoneyConfig {
+  exchangeRates?: {
+    base: string;
+    rates: Record<string, number>;
+  };
+  currencies?: Currency[];
+  defaultCurrency?: string;
+}
+
 /**
  * Money Plugin — provides currency management and exchange rate conversion.
  */
@@ -13,14 +22,11 @@ export const MoneyPlugin: RunePlugin = defineRune({
     {
       id: "exchangeRate",
       contextKey: RUNE_LAB_CONTEXT.exchangeRate,
-      factory: (config: any) => {
+      factory: (config: unknown) => {
         const store = createExchangeRateStore();
-        if (config.exchangeRates) {
-          const rates = config.exchangeRates as {
-            base: string;
-            rates: Record<string, number>;
-          };
-          store.setRates(rates.base, rates.rates);
+        const c = config as MoneyConfig;
+        if (c?.exchangeRates) {
+          store.setRates(c.exchangeRates.base, c.exchangeRates.rates);
         }
         return store;
       },
@@ -30,14 +36,15 @@ export const MoneyPlugin: RunePlugin = defineRune({
       id: "currency",
       contextKey: RUNE_LAB_CONTEXT.currency,
       factory: (
-        config: any,
+        config: unknown,
         driver: PersistenceDriver,
-        stores: Map<string, any>,
+        stores: Map<string, unknown>,
       ) => {
+        const c = config as MoneyConfig;
         return createCurrencyStore({
           driver,
-          customCurrencies: config.currencies as Currency[],
-          defaultCurrency: config.defaultCurrency as string,
+          customCurrencies: c?.currencies,
+          defaultCurrency: c?.defaultCurrency,
           exchangeRateStore: stores.get("exchangeRate") as ExchangeRateStore,
         });
       },
