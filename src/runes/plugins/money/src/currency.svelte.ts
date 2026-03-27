@@ -2,10 +2,10 @@ import {
   type ConfigStore,
   createConfigStore,
   getCurrencyStore,
-  resolveDriver,
 } from "@rune-lab/kernel";
 import type { Currency } from "@rune-lab/kernel";
 import { type DineroCurrency, registerCurrency } from "@rune-lab/money";
+import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 
 export type { Currency };
 
@@ -35,113 +35,61 @@ const CURRENCIES: Currency[] = [
   { code: "AED", symbol: "د.إ", decimals: 2 },
 ] as const;
 
-import type { PersistenceDriver } from "@rune-lab/kernel";
-import type { ExchangeRateStore } from "@rune-lab/money";
+const baseStore: ConfigStore<Currency> = createConfigStore<Currency>({
+  items: CURRENCIES,
+  storageKey: "currency",
+  displayName: "Currency",
+  idKey: "code",
+  icon: "💰",
+});
 
-export interface CurrencyStoreOptions {
-  driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
-  /** Additional custom currencies to append to the built-in set */
-  customCurrencies?: Currency[];
-  /** Default currency code if no persisted value exists */
-  defaultCurrency?: string;
-  /** Wired exchange rate store for conversions */
-  exchangeRateStore?: ExchangeRateStore;
+// We hold a reference to exchangeRateStore if configured later
+let _exchangeRateStore: ExchangeRateStore | undefined;
+export function setExchangeRateStore(store: ExchangeRateStore) {
+  _exchangeRateStore = store;
 }
 
-export function createCurrencyStore(
-  driverOrOptions?:
-    | PersistenceDriver
-    | (() => PersistenceDriver | undefined)
-    | CurrencyStoreOptions,
-): ReturnType<typeof createConfigStore<Currency>> & {
-  addCurrency: (meta: Currency, dineroDef?: unknown) => void;
-  convertAmount: (amount: number, fromCode: string, toCode?: string) => number;
+/**
+ * Extension: Atomic currency registration.
+ * Updates both the Dinero registry (core) and the reactive store (UI).
+ *
+ * @remarks Custom currencies with non-decimal base systems must use
+ * registerCurrency() from @rune-lab/kernel explicitly before addItems().
+ */
+function addCurrency(meta: Currency, dineroDef?: unknown) {
+  const def = dineroDef || buildDineroDef(meta);
+  registerCurrency(meta.code, def as DineroCurrency<number>);
+  baseStore.addItems([meta]);
+}
+
+/**
+ * Converts an amount from one currency to another.
+ * Defaults to converting to the current store currency.
+ */
+function convertAmount(
+  amount: number,
+  fromCode: string,
+  toCode?: string,
+): number {
+  const target = toCode ?? String((baseStore as ConfigStore<Currency>).current);
+  if (fromCode === target) return amount;
+  if (!_exchangeRateStore || !_exchangeRateStore.hasRates) return amount;
+
+  return _exchangeRateStore.convertAmount(amount, fromCode, target);
+}
+
+export const currencyStore: ConfigStore<Currency> & {
+  addCurrency: typeof addCurrency;
+  convertAmount: typeof convertAmount;
   readonly canConvert: boolean;
-} {
-  // Normalize overloaded argument
-  const opts: CurrencyStoreOptions =
-    driverOrOptions && typeof driverOrOptions === "object" &&
-      "driver" in driverOrOptions
-      ? driverOrOptions
-      : {
-        driver: driverOrOptions as
-          | PersistenceDriver
-          | (() => PersistenceDriver | undefined)
-          | undefined,
-      };
+} = Object.assign(baseStore, {
+  addCurrency,
+  convertAmount,
+  get canConvert() {
+    return !!_exchangeRateStore?.hasRates;
+  },
+});
 
-  const resolvedDriver = resolveDriver(opts.driver);
-
-  const store = createConfigStore<Currency>({
-    items: CURRENCIES,
-    storageKey: "currency",
-    displayName: "Currency",
-    idKey: "code",
-    icon: "💰",
-    driver: resolvedDriver,
-  });
-
-  const exchangeRateStore = opts.exchangeRateStore;
-
-  /**
-   * Extension: Atomic currency registration.
-   * Updates both the Dinero registry (core) and the reactive store (UI).
-   *
-   * @remarks Custom currencies with non-decimal base systems must use
-   * registerCurrency() from @rune-lab/kernel explicitly before addItems().
-   */
-  function addCurrency(meta: Currency, dineroDef?: unknown) {
-    const def = dineroDef || buildDineroDef(meta);
-    registerCurrency(meta.code, def as DineroCurrency<number>);
-    store.addItems([meta]);
-  }
-
-  /**
-   * Converts an amount from one currency to another.
-   * Defaults to converting to the current store currency.
-   */
-  function convertAmount(
-    amount: number,
-    fromCode: string,
-    toCode?: string,
-  ): number {
-    const target = toCode ?? String((store as ConfigStore<Currency>).current);
-    if (fromCode === target) return amount;
-    if (!exchangeRateStore || !exchangeRateStore.hasRates) return amount;
-
-    return exchangeRateStore.convertAmount(amount, fromCode, target);
-  }
-
-  // Append and auto-register custom currencies if provided
-  if (opts.customCurrencies?.length) {
-    for (const c of opts.customCurrencies) {
-      registerCurrency(c.code, buildDineroDef(c) as DineroCurrency<number>);
-    }
-    store.addItems(opts.customCurrencies);
-  }
-
-  // Set default currency if provided and no persisted value found
-  if (!resolvedDriver?.get("currency") && opts.defaultCurrency) {
-    if (store.get(opts.defaultCurrency as never)) {
-      store.set(opts.defaultCurrency as never);
-    }
-  }
-
-  // Explicitly attach method to ensure prototype is preserved and method is available
-  // across different build environments.
-  Object.defineProperties(store, {
-    addCurrency: { value: addCurrency },
-    convertAmount: { value: convertAmount },
-    canConvert: { get: () => !!exchangeRateStore?.hasRates },
-  });
-
-  return store as ReturnType<typeof createConfigStore<Currency>> & {
-    addCurrency: typeof addCurrency;
-    convertAmount: typeof convertAmount;
-    readonly canConvert: boolean;
-  };
-}
-
-export type CurrencyStore = ReturnType<typeof createCurrencyStore>;
+export type CurrencyStore = typeof currencyStore;
 
 export { getCurrencyStore };

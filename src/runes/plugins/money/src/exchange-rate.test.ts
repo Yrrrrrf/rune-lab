@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 import { ExchangeRateStore } from "./exchange-rate.svelte.ts";
-import { createCurrencyStore } from "./currency.svelte.ts";
+import { currencyStore, setExchangeRateStore } from "./currency.svelte.ts";
 import { inMemoryDriver, RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import { createLanguageStore } from "../../../layout/src/language.svelte.ts";
+import { languageStore } from "../../../layout/src/language.svelte.ts";
 
 // Mock useMoney since it uses getContext and other stores
 vi.mock("./useMoney.ts", () => ({
@@ -51,10 +51,7 @@ describe("CurrencyStore Integration", () => {
     const exchangeRateStore = new ExchangeRateStore();
     exchangeRateStore.setRates("USD", { MXN: 20 });
 
-    const currencyStore = createCurrencyStore({
-      exchangeRateStore,
-      driver: inMemoryDriver,
-    });
+    setExchangeRateStore(exchangeRateStore);
 
     expect(currencyStore.canConvert).toBe(true);
 
@@ -64,10 +61,7 @@ describe("CurrencyStore Integration", () => {
 
   it("should return original amount if no rates available", () => {
     const exchangeRateStore = new ExchangeRateStore();
-    const currencyStore = createCurrencyStore({
-      exchangeRateStore,
-      driver: inMemoryDriver,
-    });
+    setExchangeRateStore(exchangeRateStore);
 
     expect(currencyStore.canConvert).toBe(false);
 
@@ -82,17 +76,14 @@ describe("useMoneyFilter", () => {
     const exchangeRateStore = new ExchangeRateStore();
     exchangeRateStore.setRates("USD", { MXN: 20 });
 
-    const currencyStore = createCurrencyStore({
-      exchangeRateStore,
-      driver: inMemoryDriver,
-    });
+    setExchangeRateStore(exchangeRateStore);
 
     // Manual mock of context for the composable
     // In a real test we'd use render() from @testing-library/svelte
     const mockContext = new Map();
     mockContext.set(RUNE_LAB_CONTEXT.currency, currencyStore);
     mockContext.set(RUNE_LAB_CONTEXT.exchangeRate, exchangeRateStore);
-    mockContext.set(RUNE_LAB_CONTEXT.language, createLanguageStore({ driver: inMemoryDriver }));
+    mockContext.set(RUNE_LAB_CONTEXT.language, languageStore);
 
     // We can't easily call useMoneyFilter outside component without more setup
     // but we can verify the matches logic in CurrencyStore

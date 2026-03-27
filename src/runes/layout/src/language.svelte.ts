@@ -5,8 +5,7 @@ import {
   createConfigStore,
   getLanguageStore,
 } from "@rune-lab/kernel";
-import type { Language, PersistenceDriver } from "@rune-lab/kernel";
-import { resolveDriver } from "@rune-lab/kernel";
+import type { Language } from "@rune-lab/kernel";
 
 export type { Language };
 
@@ -31,30 +30,15 @@ export const LANGUAGES = [
   { code: "vi", flag: "🇻🇳" },
 ] as const;
 
-export interface LanguageStoreOptions {
-  driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
-  onLocaleChange?: (code: string) => void;
-  locales?: readonly string[];
-}
-
-export function createLanguageStore(
-  options?: LanguageStoreOptions,
-): ConfigStore<Language> {
-  const driver = resolveDriver(options?.driver);
-  const items = options?.locales
-    ? LANGUAGES.filter((l) => options.locales!.includes(l.code))
-    : LANGUAGES;
-
-  const store = createConfigStore<Language>({
-    items,
+export const languageStore: ConfigStore<Language> = createConfigStore<Language>(
+  {
+    items: LANGUAGES,
     storageKey: "language",
     displayName: "Language",
     idKey: "code",
     icon: "🌍",
-    driver,
-  });
+  },
+);
 
-  return store;
-}
-
+export type LanguageStore = ReturnType<typeof createConfigStore<Language>>;
 export { getLanguageStore };

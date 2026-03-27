@@ -1,13 +1,8 @@
 // @ts-nocheck: legacy daisyui imports and complex ConfigStore typing
 // client/packages/ui/src/state/theme-config.svelte.ts
 
-import {
-  type ConfigStore,
-  createConfigStore,
-  getThemeStore,
-} from "@rune-lab/kernel";
-import type { PersistenceDriver, Theme } from "@rune-lab/kernel";
-import { resolveDriver } from "@rune-lab/kernel";
+import { createConfigStore, getThemeStore } from "@rune-lab/kernel";
+import type { Theme } from "@rune-lab/kernel";
 import { BROWSER } from "esm-env";
 
 export type { Theme };
@@ -56,65 +51,23 @@ const THEMES: Theme[] = Object.keys(THEME_ICONS).map((name: string) => ({
   icon: THEME_ICONS[name] ?? "🎨",
 }));
 
-export interface ThemeStoreOptions {
-  driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
-  /** Additional custom themes to append to the built-in DaisyUI set */
-  customThemes?: Theme[];
-  /** Fallback theme if no persisted value exists (after system preference check) */
-  defaultTheme?: string;
+export const themeStore: ConfigStore<Theme> = createConfigStore<Theme>({
+  items: THEMES,
+  storageKey: "theme",
+  displayName: "Theme",
+  idKey: "name",
+  icon: "🎨",
+});
+
+// System preference detection — only if no persisted value was loaded
+if (!themeStore.current && BROWSER) {
+  const prefersDark =
+    globalThis.matchMedia("(prefers-color-scheme: dark)").matches;
+  const systemDefault = prefersDark ? "dark" : "light";
+  if (themeStore.get(systemDefault as never)) {
+    themeStore.set(systemDefault as never);
+  }
 }
 
-export function createThemeStore(
-  driverOrOptions?:
-    | PersistenceDriver
-    | (() => PersistenceDriver | undefined)
-    | ThemeStoreOptions,
-): ConfigStore<Theme> {
-  // Normalize overloaded argument
-  const opts: ThemeStoreOptions =
-    driverOrOptions && typeof driverOrOptions === "object" &&
-      "driver" in driverOrOptions
-      ? driverOrOptions
-      : {
-        driver: driverOrOptions as
-          | PersistenceDriver
-          | (() => PersistenceDriver | undefined)
-          | undefined,
-      };
-
-  const resolvedDriver = resolveDriver(opts.driver);
-
-  const store = createConfigStore<Theme>({
-    items: THEMES,
-    storageKey: "theme",
-    displayName: "Theme",
-    idKey: "name",
-    icon: "🎨",
-    driver: resolvedDriver,
-  });
-
-  // Append custom themes if provided
-  if (opts.customThemes?.length) {
-    store.addItems(opts.customThemes);
-  }
-
-  // System preference detection — only if no persisted value was loaded
-  if (!resolvedDriver?.get("theme") && BROWSER) {
-    const prefersDark =
-      globalThis.matchMedia("(prefers-color-scheme: dark)").matches;
-    const systemDefault = prefersDark ? "dark" : "light";
-    const chosen = opts.defaultTheme ?? systemDefault;
-    if (store.get(chosen as never)) {
-      store.set(chosen as never);
-    }
-  } else if (!resolvedDriver?.get("theme") && opts.defaultTheme) {
-    // SSR / non-browser: use defaultTheme if provided
-    if (store.get(opts.defaultTheme as never)) {
-      store.set(opts.defaultTheme as never);
-    }
-  }
-
-  return store;
-}
-
+export type ThemeStore = ReturnType<typeof createConfigStore<Theme>>;
 export { getThemeStore };
