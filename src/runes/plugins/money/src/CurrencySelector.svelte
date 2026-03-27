@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ResourceSelector from "./ResourceSelector.svelte";
+    import { ResourceSelector } from "@rune-lab/layout";
     import { getCurrencyStore } from "@rune-lab/kernel";
 
     const currencyStore = getCurrencyStore();

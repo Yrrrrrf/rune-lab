@@ -1,4 +1,7 @@
 export * from "./context/context.ts";
+export * from "./context/types.ts";
+export * from "./context/app.svelte.ts";
+export * from "./context/stores.svelte.ts";
 export * from "./persistence/types.ts";
 export * from "./persistence/drivers.ts";
 export * from "./persistence/provider.ts";
@@ -8,3 +11,5 @@ export * from "./registry/types.ts";
 export * from "./registry/mod.ts";
 export * from "./registry/plugin.ts";
 export * from "./tokens/props.ts";
+export * from "./actions/portal.ts";
+export * from "./actions/shortcut-listener.ts";

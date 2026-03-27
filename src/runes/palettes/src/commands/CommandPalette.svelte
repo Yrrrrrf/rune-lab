@@ -3,7 +3,7 @@
     import { tick } from "svelte";
     import { getCommandStore, type Command } from "@rune-lab/kernel";
     import { getShortcutStore } from "@rune-lab/kernel";
-    import { Icon } from "../../../mod";
+    import { Icon } from "../../../layout/src/mod.ts";
 
     let { shortcutKey = "shift+k" } = $props<{ shortcutKey?: string }>();
 

@@ -1,18 +1,16 @@
 // @ts-nocheck: legacy daisyui imports and complex ConfigStore typing
 // client/packages/ui/src/state/theme-config.svelte.ts
 
-import { type ConfigStore, createConfigStore } from "@rune-lab/kernel";
-import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import type { PersistenceDriver } from "@rune-lab/kernel";
+import {
+  type ConfigStore,
+  createConfigStore,
+  getThemeStore,
+} from "@rune-lab/kernel";
+import type { PersistenceDriver, Theme } from "@rune-lab/kernel";
 import { resolveDriver } from "@rune-lab/kernel";
-// import themeOrder from "daisyui/src/theming/themeOrder.js";
 import { BROWSER } from "esm-env";
 
-export interface Theme {
-  name: string;
-  icon: string;
-}
+export type { Theme };
 
 // Icon map for known themes - unknown ones fall back to 🎨
 const THEME_ICONS: Record<string, string> = {
@@ -53,13 +51,6 @@ const THEME_ICONS: Record<string, string> = {
   silk: "🎀",
 };
 
-// // Derived from daisyUI directly — stays in sync automatically
-// const THEMES: Theme[] = themeOrder.map((name: string) => ({
-//   name,
-//   icon: THEME_ICONS[name] ?? "🎨",
-// }));
-
-// todo: Derived from daisyUI directly — stays in sync automatically
 const THEMES: Theme[] = Object.keys(THEME_ICONS).map((name: string) => ({
   name,
   icon: THEME_ICONS[name] ?? "🎨",
@@ -126,6 +117,4 @@ export function createThemeStore(
   return store;
 }
 
-export function getThemeStore(): ConfigStore<Theme> {
-  return getContext<ConfigStore<Theme>>(RUNE_LAB_CONTEXT.theme);
-}
+export { getThemeStore };

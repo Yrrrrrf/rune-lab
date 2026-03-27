@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { portal } from "../../actions/portal";
+    import { portal } from "@rune-lab/kernel";
     import { type Snippet } from "svelte";
 
     let {

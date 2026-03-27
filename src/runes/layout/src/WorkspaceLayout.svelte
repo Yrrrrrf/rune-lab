@@ -1,7 +1,7 @@
 <!-- src/lib/layout/WorkspaceLayout.svelte -->
 <script module lang="ts">
     import type { Snippet } from "svelte";
-    import type { LayoutConfig } from "@rune-lab/kernel";
+    import type { LayoutConfig } from "./types.ts";
 
     export interface WorkspaceLayoutProps {
         /** Content for the far-left vertical strip */
@@ -38,11 +38,13 @@
 <script lang="ts">
     import {
         getLayoutStore,
-        getShortcutStore,
         getLanguageStore,
+    } from "./mod.ts";
+    import { LAYOUT_SHORTCUTS } from "./types.ts";
+    import {
+        getShortcutStore,
         shortcutListener,
-        LAYOUT_SHORTCUTS,
-    } from "@rune-lab/kernel";
+    } from "@rune-lab/palettes";
     import { onMount } from "svelte";
 
     /**

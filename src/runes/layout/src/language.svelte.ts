@@ -1,17 +1,14 @@
 // sdk/state/src/language.svelte.ts
 
-import { type ConfigStore, createConfigStore } from "@rune-lab/kernel";
-import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
+import {
+  type ConfigStore,
+  createConfigStore,
+  getLanguageStore,
+} from "@rune-lab/kernel";
+import type { Language, PersistenceDriver } from "@rune-lab/kernel";
+import { resolveDriver } from "@rune-lab/kernel";
 
-/**
- * Language configuration
- * Represents a supported language in the application
- */
-export interface Language {
-  code: string; // ISO 639-1 (e.g., "en", "es", "fr")
-  flag?: string; // Emoji flag or icon
-}
+export type { Language };
 
 export const LANGUAGES = [
   // --- INDOEUROPEAS (Rama Romance / Latín) ---
@@ -33,9 +30,6 @@ export const LANGUAGES = [
   { code: "ko", flag: "🇰🇷" },
   { code: "vi", flag: "🇻🇳" },
 ] as const;
-
-import type { PersistenceDriver } from "@rune-lab/kernel";
-import { resolveDriver } from "@rune-lab/kernel";
 
 export interface LanguageStoreOptions {
   driver?: PersistenceDriver | (() => PersistenceDriver | undefined);
@@ -63,6 +57,4 @@ export function createLanguageStore(
   return store;
 }
 
-export function getLanguageStore(): ConfigStore<Language> {
-  return getContext<ConfigStore<Language>>(RUNE_LAB_CONTEXT.language);
-}
+export { getLanguageStore };

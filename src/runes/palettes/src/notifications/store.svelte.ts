@@ -1,16 +1,10 @@
 /**
  * Toast notification store
  */
-export type ToastType = "info" | "success" | "warning" | "error";
-import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
+import { getToastStore } from "@rune-lab/kernel";
+import type { Toast, ToastType } from "@rune-lab/kernel";
 
-export interface Toast {
-  id: string;
-  message: string;
-  type: ToastType;
-  duration?: number;
-}
+export type { Toast, ToastType };
 
 export class ToastStore {
   toasts: Toast[] = $state<Toast[]>([]);
@@ -61,6 +55,4 @@ export function createToastStore(): ToastStore {
   return new ToastStore();
 }
 
-export function getToastStore(): ToastStore {
-  return getContext<ToastStore>(RUNE_LAB_CONTEXT.toast);
-}
+export { getToastStore };

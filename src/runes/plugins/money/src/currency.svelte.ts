@@ -1,21 +1,13 @@
 import {
   type ConfigStore,
   createConfigStore,
+  getCurrencyStore,
   resolveDriver,
 } from "@rune-lab/kernel";
-import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
+import type { Currency } from "@rune-lab/kernel";
 import { type DineroCurrency, registerCurrency } from "@rune-lab/money";
 
-/**
- * Currency configuration
- * Based on ISO 4217 currency codes
- */
-export interface Currency {
-  code: string; // ISO 4217 code (e.g., "USD", "EUR", "MXN")
-  symbol: string; // Currency symbol (e.g., "$", "€", "₹")
-  decimals: number; // Number of decimal places (usually 2)
-}
+export type { Currency };
 
 /**
  * Helper to build a minimal Dinero definition from Currency metadata.
@@ -152,6 +144,4 @@ export function createCurrencyStore(
 
 export type CurrencyStore = ReturnType<typeof createCurrencyStore>;
 
-export function getCurrencyStore(): CurrencyStore {
-  return getContext<CurrencyStore>(RUNE_LAB_CONTEXT.currency);
-}
+export { getCurrencyStore };

@@ -22,13 +22,13 @@
         "./src/runes/layout/src/mod.ts"
       ],
       "@rune-lab/palettes": [
-        "./src/runes/palettes/mod.ts"
-      ],
-      "@rune-lab/kythrill": [
-        "./src/runes/kythrill/mod.ts"
+        "./src/runes/palettes/src/mod.ts"
       ],
       "@rune-lab/money": [
         "./src/runes/plugins/money/src/mod.ts"
+      ],
+      "@rune-lab/i18n/*": [
+        "./src/i18n/*"
       ]
     }
   }

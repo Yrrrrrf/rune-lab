@@ -46,7 +46,14 @@ export interface WorkspaceConnection {
  * ```
  */
 export function createNavigationConnection(
-  layoutStore: LayoutStore,
+  layoutStore: Pick<
+    LayoutStore,
+    | "activeNavItemId"
+    | "collapsedSections"
+    | "navigate"
+    | "expandSection"
+    | "collapseSection"
+  >,
 ): NavigationConnection {
   return {
     get activeId() {
@@ -75,7 +82,7 @@ export function createNavigationConnection(
  * @returns Prop bindings compatible with WorkspaceStrip
  */
 export function createWorkspaceConnection(
-  layoutStore: LayoutStore,
+  layoutStore: Pick<LayoutStore, "activeWorkspaceId" | "activateWorkspace">,
 ): WorkspaceConnection {
   return {
     get activeId() {

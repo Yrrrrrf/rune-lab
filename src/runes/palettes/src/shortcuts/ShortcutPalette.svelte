@@ -7,7 +7,6 @@
         getShortcutStore,
         LAYOUT_SHORTCUTS,
     } from "@rune-lab/kernel";
-    import { Icon } from "@rune-lab/shell";
 
     const appStore = getAppStore();
     const shortcutStore = getShortcutStore();
@@ -119,7 +118,8 @@
             class="border-b border-base-200 p-6 flex items-center gap-4 bg-base-200/30"
         >
             <div class="p-2 bg-primary/10 rounded-lg text-primary">
-                <Icon name="shortcut" class="w-6 h-6" />
+                <!-- <Icon name="shortcut" class="w-6 h-6" /> -->
+                <!-- todo: Add Shortcut Icon -->
             </div>
             <div class="flex-1">
                 <h2 class="text-xl font-bold tracking-tight">

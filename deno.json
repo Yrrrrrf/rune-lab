@@ -14,11 +14,9 @@
   },
   "nodeModulesDir": "manual",
   "workspace": [
-    "./src/lab",
     "./src/kernel",
     "./src/runes/layout",
     "./src/runes/palettes",
-    "./src/runes/kythrill",
     "./src/runes/plugins/money"
   ],
   "tasks": {
@@ -27,12 +25,15 @@
   },
   "imports": {
     "@deno/dnt": "jsr:@deno/dnt",
+    "@rune-lab/core": "./src/mod.ts",
+    "@rune-lab/i18n/": "./src/i18n/",
     "typescript": "npm:typescript@5.9.3",
     "@tailwindcss/vite": "npm:@tailwindcss/vite",
     "esm-env": "npm:esm-env",
     "vite": "npm:vite",
     "vite-plus": "npm:vite-plus",
     "daisyui/": "npm:daisyui/",
+    "hotkeys-js": "npm:hotkeys-js",
     "@inlang/paraglide-js": "npm:@inlang/paraglide-js",
     "svelte": "npm:svelte",
     "@sveltejs/kit": "npm:@sveltejs/kit",

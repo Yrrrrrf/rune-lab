@@ -1,16 +1,18 @@
 <script lang="ts">
     import ResourceSelector from "./ResourceSelector.svelte";
     import { getLanguageStore } from "@rune-lab/kernel";
-    import { setLocale } from "../../paraglide/runtime";
+    import { setLocale } from "@rune-lab/i18n/paraglide/runtime.js";
 
     const languageStore = getLanguageStore();
 
     let {
-        languages: allowedLocales = languageStore.available.map((l) => l.code),
-        current = $bindable(languageStore.current),
+        languages: allowedLocales = languageStore.available.map((l) =>
+            String(l.code),
+        ),
+        current = $bindable(String(languageStore.current)),
         onchange,
     }: {
-        languages?: ReadonlyArray<string>;
+        languages?: string[];
         current?: string;
         onchange?: (value: string) => void;
     } = $props();

@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { getToastStore } from "@rune-lab/kernel";
-  import { portal } from "../actions/portal";
+  import { getToastStore, portal } from "@rune-lab/kernel";
   import { flip } from "svelte/animate";
   import { fade, fly } from "svelte/transition";
 

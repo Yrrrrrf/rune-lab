@@ -1,34 +1,14 @@
 // src/lib/state/layout.svelte.ts
-import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import type { PersistenceDriver } from "@rune-lab/kernel";
+import { getLayoutStore } from "@rune-lab/kernel";
+import type {
+  NavigationItem,
+  NavigationSection,
+  PersistenceDriver,
+  WorkspaceItem,
+} from "@rune-lab/kernel";
 import { resolveDriver } from "@rune-lab/kernel";
 
-export interface WorkspaceItem {
-  id: string;
-  icon: string;
-  label: string;
-  badge?: string | number;
-  href?: string;
-  onClick?: () => void;
-}
-
-export interface NavigationItem {
-  id: string;
-  label: string;
-  icon?: string;
-  href?: string;
-  badge?: string | number;
-  isActive?: boolean;
-  onClick?: () => void;
-  children?: NavigationItem[];
-}
-
-export interface NavigationSection {
-  id: string;
-  title: string;
-  items: NavigationItem[];
-}
+export type { NavigationItem, NavigationSection, WorkspaceItem };
 
 export class LayoutStore {
   workspaces: WorkspaceItem[] = $state<WorkspaceItem[]>([]);
@@ -159,6 +139,4 @@ export function createLayoutStore(
   return new LayoutStore(driver);
 }
 
-export function getLayoutStore(): LayoutStore {
-  return getContext<LayoutStore>(RUNE_LAB_CONTEXT.layout);
-}
+export { getLayoutStore };

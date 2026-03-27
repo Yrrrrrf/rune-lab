@@ -82,9 +82,11 @@
 
   // 2. Register all plugins
   // Note: defineRune maps each slot into the STORE_REGISTRY
-  for (const plugin of plugins) {
-    defineRune(plugin);
-  }
+  untrack(() => {
+    for (const plugin of plugins) {
+      defineRune(plugin);
+    }
+  });
 
   const initialPersistence = untrack(() => config.persistence ?? localStorageDriver);
 

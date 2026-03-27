@@ -6,7 +6,7 @@
 
     let {
         themes = [],
-        current = $bindable(themeStore.current),
+        current = $bindable(String(themeStore.current)),
         onchange,
     }: {
         themes?: string[];

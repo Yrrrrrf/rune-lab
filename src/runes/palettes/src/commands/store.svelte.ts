@@ -1,24 +1,12 @@
-import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import type { ConfigStore } from "@rune-lab/kernel";
-import type { ToastStore } from "../notifications/store.svelte.ts";
+import { getCommandStore } from "@rune-lab/kernel";
+import type { Command, ConfigStore, IToastStore } from "@rune-lab/kernel";
 
-/**
- * Command Palette Store
- */
-export interface Command {
-  id: string;
-  label: string;
-  category?: string;
-  icon?: string;
-  action?: () => void;
-  children?: Command[];
-}
+export type { Command };
 
 export interface CommandServices {
   appStore: unknown;
   apiStore: unknown;
-  toastStore: ToastStore;
+  toastStore: IToastStore;
   themeStore: ConfigStore<unknown>;
   languageStore: ConfigStore<unknown>;
   currencyStore: ConfigStore<unknown>;
@@ -37,7 +25,6 @@ export class CommandStore {
 
   refreshDefaultCommands(): void {
     // Intentionally empty.
-    // Consumers (like the demo app) should inject their own default commands via `commandStore.register`.
     this.commands = [];
   }
 
@@ -74,7 +61,6 @@ export class CommandStore {
     );
   }
 
-  // Native JS private field — TypeScript CAN emit .d.ts for this, unlike `private`
   #findById(id: string, list: Command[]): Command | undefined {
     for (const cmd of list) {
       if (cmd.id === id) return cmd;
@@ -91,6 +77,4 @@ export function createCommandStore(services: CommandServices): CommandStore {
   return new CommandStore(services);
 }
 
-export function getCommandStore(): CommandStore {
-  return getContext<CommandStore>(RUNE_LAB_CONTEXT.commands);
-}
+export { getCommandStore };

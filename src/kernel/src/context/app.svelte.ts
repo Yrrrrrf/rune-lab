@@ -1,9 +1,7 @@
-// src/lib/stores/app-config.svelte.ts
+// src/kernel/src/context/app.svelte.ts
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
 import { DEV } from "esm-env";
-
-// SDK Package - Application Metadata Management
 
 /**
  * Application metadata interface
@@ -37,9 +35,6 @@ export class AppStore {
 
   /**
    * Initialize app store with metadata.
-   *
-   * @contract init() is idempotent. Call it once at app startup via RuneProvider.
-   * Subsequent calls are silently ignored to maintain stability across SSR/CSR cycles.
    */
   init(data: Partial<AppData>): void {
     if (this.#initialized) {
@@ -93,8 +88,6 @@ export class AppStore {
     this.customIcons = { ...this.customIcons, ...icons };
   }
 }
-
-// Export singleton instance
 
 export function createAppStore(): AppStore {
   return new AppStore();
