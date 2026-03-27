@@ -1,6 +1,6 @@
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import type { PersistenceDriver } from "@rune-lab/kernel";
+import { RUNE_LAB_CONTEXT } from "../mod.ts";
+import type { PersistenceDriver } from "../mod.ts";
 
 export function usePersistence(): PersistenceDriver | undefined {
   return getContext<PersistenceDriver | undefined>(

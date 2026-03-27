@@ -1,6 +1,6 @@
 import type { Component } from "svelte";
 import type { StoreFactory } from "./types.ts";
-import { registerStore } from "./index.ts";
+import { registerStore } from "./mod.ts";
 
 /**
  * A slot for a single store within a RunePlugin.

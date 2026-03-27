@@ -1,1 +1,5 @@
-{ "name": "@rune-lab/kernel", "version": "0.1.0", "exports": "./mod.ts" }
+{
+  "name": "@rune-lab/kernel",
+  "version": "0.1.0",
+  "exports": "./src/mod.ts"
+}

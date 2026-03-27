@@ -1,31 +1,23 @@
-import { build, emptyDir } from "@deno/dnt";
+import * as dnt from "@deno/dnt";
+import denoConfig from "../deno.json" with { type: "json" };
 
-await emptyDir("./npm");
+await dnt.emptyDir("./npm");
 
-await build({
+await dnt.build({
   entryPoints: ["./mod.ts"],
   outDir: "./npm",
-  shims: {
-    // see JS docs for overview and more options
-    deno: true,
-  },
+  // see JS docs for overview and more options
+  shims: { deno: true },
   package: {
-    // package.json properties
-    name: "your-package",
-    version: Deno.args[0],
-    description: "Your package.",
-    license: "MIT",
-    repository: {
-      type: "git",
-      url: "git+https://github.com/username/repo.git",
-    },
-    bugs: {
-      url: "https://github.com/username/repo/issues",
-    },
+    name: denoConfig.name,
+    version: denoConfig.version,
+    description: denoConfig.description,
+    license: denoConfig.license,
+    repository: denoConfig.repository,
   },
   postBuild() {
-    // steps to run after building and before running the tests
-    Deno.copyFileSync("LICENSE", "npm/LICENSE");
-    Deno.copyFileSync("README.md", "npm/README.md");
+    // // steps to run after building and before running the tests
+    // Deno.copyFileSync("LICENSE", "npm/LICENSE");
+    // Deno.copyFileSync("README.md", "npm/README.md");
   },
 });

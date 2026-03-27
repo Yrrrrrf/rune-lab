@@ -4,7 +4,7 @@
 // and guarantees a concrete PersistenceDriver is always available.
 
 import { getContext, setContext } from "svelte";
-import type { PersistenceDriver } from "@rune-lab/kernel";
+import type { PersistenceDriver } from "../mod.ts";
 import { createInMemoryDriver } from "./drivers.ts";
 
 const DRIVER_CONTEXT_KEY = Symbol("rl:driver-provider");

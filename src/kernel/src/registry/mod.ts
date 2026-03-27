@@ -1,7 +1,3 @@
-// sdk/state/src/registry/index.ts
-// Store Registry — declarative map of context keys to store factories.
-// RuneProvider iterates this at mount time to auto-wire all stores.
-
 import type { StoreRegistryEntry } from "./types.ts";
 import type { PersistenceDriver } from "@rune-lab/kernel";
 

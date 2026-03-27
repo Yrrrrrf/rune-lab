@@ -7,7 +7,7 @@ import {
   getShortcutStore,
   getThemeStore,
   getToastStore,
-} from "../../mod.ts";
+} from "../../../mod.ts";
 
 export interface RuneLabContext {
   app: ReturnType<typeof getAppStore>;

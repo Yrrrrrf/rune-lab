@@ -3,11 +3,7 @@ import { describe, expect, it, vi } from "vite-plus/test";
 // Mock esm-env before importing the module
 vi.mock("esm-env", () => ({ DEV: true }));
 
-import {
-  batchResolveMessages,
-  createMessageResolver,
-  hasMessage,
-} from "./message-resolver.ts";
+import { batchResolveMessages, createMessageResolver, hasMessage } from "./message-resolver.ts";
 
 describe("MessageResolver", () => {
   const mockMessages = {
@@ -47,9 +43,7 @@ describe("MessageResolver", () => {
 
       const result = resolver({ code: "UNKNOWN" });
       expect(result).toBe("UNKNOWN"); // falls back to original key
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining("Missing translation"),
-      );
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Missing translation"));
 
       warnSpy.mockRestore();
     });

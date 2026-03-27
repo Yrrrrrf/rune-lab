@@ -2,7 +2,7 @@
 // Pure conversion strategy functions — no store or context dependencies.
 // Extracted from ExchangeRateStore to enable independent testing and extensibility.
 
-import type { ScaledRate } from "../money/money.ts";
+import type { ScaledRate } from "./money.ts";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 

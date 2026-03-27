@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable",
+      "DOM.AsyncIterable"
+    ],
+    // Set modern JS target
+    "target": "ESNext",
+    "module": "ESNext",
+    // Resolution & Extensions
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@rune-lab/kernel": [
+        "./src/kernel/src/mod.ts"
+      ],
+      "@rune-lab/layout": [
+        "./src/runes/layout/src/mod.ts"
+      ],
+      "@rune-lab/palettes": [
+        "./src/runes/palettes/mod.ts"
+      ],
+      "@rune-lab/kythrill": [
+        "./src/runes/kythrill/mod.ts"
+      ],
+      "@rune-lab/money": [
+        "./src/runes/plugins/money/src/mod.ts"
+      ]
+    }
+  }
+}

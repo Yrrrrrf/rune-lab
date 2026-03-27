@@ -5,6 +5,6 @@ export * from "./persistence/provider.ts";
 export * from "./persistence/usePersistence.ts";
 export * from "./persistence/createConfigStore.svelte.ts";
 export * from "./registry/types.ts";
-export * from "./registry/index.ts";
+export * from "./registry/mod.ts";
 export * from "./registry/plugin.ts";
 export * from "./tokens/props.ts";

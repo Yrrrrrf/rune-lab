@@ -7,7 +7,7 @@ import {
   registerStore,
   STORE_REGISTRY,
   unregisterStore,
-} from "./index.ts";
+} from "./mod.ts";
 
 describe("StoreRegistry", () => {
   // Clean slate for each test
@@ -34,11 +34,7 @@ describe("StoreRegistry", () => {
       const entry = getRegisteredStore("test");
       // Factory should be the second one
       expect(
-        entry?.factory(
-          {} as Record<string, unknown>,
-          {} as PersistenceDriver,
-          new Map(),
-        ),
+        entry?.factory({} as Record<string, unknown>, {} as PersistenceDriver, new Map()),
       ).toBe("v2");
     });
 
@@ -116,26 +112,21 @@ describe("StoreRegistry", () => {
         remove: () => {},
       };
 
-      registerStore<
-        Record<string, unknown>,
-        { type: string; hasDriver: boolean; apiUrl: unknown }
-      >({
-        key: "analytics",
-        factory: (config, driver) => ({
-          type: "analytics",
-          hasDriver: !!driver,
-          apiUrl: config.apiUrl,
-        }),
-        optional: true,
-        noPersistence: true,
-      });
+      registerStore<Record<string, unknown>, { type: string; hasDriver: boolean; apiUrl: unknown }>(
+        {
+          key: "analytics",
+          factory: (config, driver) => ({
+            type: "analytics",
+            hasDriver: !!driver,
+            apiUrl: config.apiUrl,
+          }),
+          optional: true,
+          noPersistence: true,
+        },
+      );
 
       const entry = getRegisteredStore("analytics")!;
-      const store = entry.factory(
-        { apiUrl: "test" },
-        mockDriver,
-        new Map(),
-      );
+      const store = entry.factory({ apiUrl: "test" }, mockDriver, new Map());
 
       expect(store).toEqual({
         type: "analytics",
@@ -153,11 +144,7 @@ describe("StoreRegistry", () => {
 
       const entry = getRegisteredStore("optional-feature")!;
       expect(
-        entry.factory(
-          {} as Record<string, unknown>,
-          {} as PersistenceDriver,
-          new Map(),
-        ),
+        entry.factory({} as Record<string, unknown>, {} as PersistenceDriver, new Map()),
       ).toBeNull();
     });
   });

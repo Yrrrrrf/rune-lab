@@ -13,12 +13,6 @@
     ".": "./src/mod.ts"
   },
   "nodeModulesDir": "manual",
-  "compilerOptions": {
-    "lib": [
-      "deno.ns",
-      "dom"
-    ]
-  },
   "workspace": [
     "./src/lab",
     "./src/kernel",
@@ -28,20 +22,19 @@
     "./src/runes/plugins/money"
   ],
   "tasks": {
-    "i18n": "vp exec paraglide-js compile --project ./src/sdk/ui/src/i18n/project.inlang --outdir ./src/sdk/ui/src/lib/paraglide",
+    "i18n": "paraglide-js compile --project ./src/i18n/project.inlang --outdir ./src/i18n/paraglide",
     "build:npm": "deno run -A scripts/build_npm.ts"
   },
   "imports": {
     "@deno/dnt": "jsr:@deno/dnt",
-    "typescript": "npm:typescript",
-    "tailwindcss": "npm:@tailwindcss/vite",
+    "typescript": "npm:typescript@5.9.3",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite",
     "esm-env": "npm:esm-env",
     "vite": "npm:vite",
     "vite-plus": "npm:vite-plus",
     "daisyui/": "npm:daisyui/",
     "@inlang/paraglide-js": "npm:@inlang/paraglide-js",
     "svelte": "npm:svelte",
-    "svelte-check": "npm:svelte-check",
     "@sveltejs/kit": "npm:@sveltejs/kit",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
     "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",

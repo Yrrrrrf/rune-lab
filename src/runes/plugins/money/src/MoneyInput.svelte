@@ -1,7 +1,3 @@
-<!--
-  MoneyInput — Monetary value input that works in minor units (cents).
-  No floats cross the boundary — values are always integer minor units.
--->
 <script module lang="ts">
     import type { ISO4217Code } from "@rune-lab/money";
     import { MoneyPrimitive } from "@rune-lab/money";

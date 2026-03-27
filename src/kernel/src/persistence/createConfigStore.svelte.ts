@@ -81,8 +81,8 @@ class ConfigStoreImpl<T = unknown> {
    */
   get(id: unknown): T | undefined {
     const idKey = this.#options.idKey;
-    return this.available.find((item: T) =>
-      (item as Record<string, unknown>)[idKey as string] === id
+    return this.available.find(
+      (item: T) => (item as Record<string, unknown>)[idKey as string] === id,
     );
   }
 
@@ -92,7 +92,9 @@ class ConfigStoreImpl<T = unknown> {
   getProp<K extends keyof T>(prop: K, id?: unknown): T[K] | undefined {
     const targetId = id ?? this.current;
     return (this.get(targetId) as Record<string, unknown> | undefined)
-      ?.[prop as string] as T[K] | undefined;
+      ?.[prop as string] as
+        | T[K]
+        | undefined;
   }
 
   /**

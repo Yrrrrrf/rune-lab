@@ -16,7 +16,7 @@ export const KythrillPlugin: RunePlugin = defineRune({
     {
       id: "app",
       contextKey: RUNE_LAB_CONTEXT.app,
-      factory: () => DEV ? createAppStore() : null,
+      factory: () => (DEV ? createAppStore() : null),
       noPersistence: true,
       optional: true,
       dependsOn: ["layout", "shortcut", "commands", "toast"],

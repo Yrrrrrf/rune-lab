@@ -1,5 +1,5 @@
 {
   "name": "@rune-lab/kythrill",
   "version": "0.1.0",
-  "exports": "./mod.ts"
+  "exports": "./src/mod.ts"
 }

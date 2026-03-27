@@ -2,13 +2,12 @@ import { describe, expect, it, vi } from "vite-plus/test";
 import { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 import { createCurrencyStore } from "./currency.svelte.ts";
 import { inMemoryDriver, RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import { createLanguageStore } from "../../layout/language.svelte.ts";
+import { createLanguageStore } from "../../../layout/src/language.svelte.ts";
 
 // Mock useMoney since it uses getContext and other stores
 vi.mock("./useMoney.ts", () => ({
   useMoney: () => ({
-    format: (amount: number, code?: string, _unit?: unknown) =>
-      `${amount} ${code ?? "USD"}`,
+    format: (amount: number, code?: string, _unit?: unknown) => `${amount} ${code ?? "USD"}`,
   }),
 }));
 
@@ -93,10 +92,7 @@ describe("useMoneyFilter", () => {
     const mockContext = new Map();
     mockContext.set(RUNE_LAB_CONTEXT.currency, currencyStore);
     mockContext.set(RUNE_LAB_CONTEXT.exchangeRate, exchangeRateStore);
-    mockContext.set(
-      RUNE_LAB_CONTEXT.language,
-      createLanguageStore({ driver: inMemoryDriver }),
-    );
+    mockContext.set(RUNE_LAB_CONTEXT.language, createLanguageStore({ driver: inMemoryDriver }));
 
     // We can't easily call useMoneyFilter outside component without more setup
     // but we can verify the matches logic in CurrencyStore

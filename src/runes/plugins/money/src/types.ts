@@ -1,5 +1,3 @@
-// sdk/core/src/money/index.ts
-
 export {
   addMoney,
   convertAmount,
