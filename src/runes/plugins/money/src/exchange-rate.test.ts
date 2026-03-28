@@ -7,7 +7,8 @@ import { languageStore } from "../../../layout/src/language.svelte.ts";
 // Mock useMoney since it uses getContext and other stores
 vi.mock("./useMoney.ts", () => ({
   useMoney: () => ({
-    format: (amount: number, code?: string, _unit?: unknown) => `${amount} ${code ?? "USD"}`,
+    format: (amount: number, code?: string, _unit?: unknown) =>
+      `${amount} ${code ?? "USD"}`,
   }),
 }));
 

@@ -24,7 +24,9 @@ describe("MoneyPrimitive", () => {
     });
 
     it("should throw for unknown currency", () => {
-      expect(() => MoneyPrimitive.fromMinor(100, "UNKNOWN")).toThrow("Unknown currency code");
+      expect(() => MoneyPrimitive.fromMinor(100, "UNKNOWN")).toThrow(
+        "Unknown currency code",
+      );
     });
   });
 

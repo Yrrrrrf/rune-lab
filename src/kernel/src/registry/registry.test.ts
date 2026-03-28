@@ -34,7 +34,11 @@ describe("StoreRegistry", () => {
       const entry = getRegisteredStore("test");
       // Factory should be the second one
       expect(
-        entry?.factory({} as Record<string, unknown>, {} as PersistenceDriver, new Map()),
+        entry?.factory(
+          {} as Record<string, unknown>,
+          {} as PersistenceDriver,
+          new Map(),
+        ),
       ).toBe("v2");
     });
 
@@ -112,7 +116,10 @@ describe("StoreRegistry", () => {
         remove: () => {},
       };
 
-      registerStore<Record<string, unknown>, { type: string; hasDriver: boolean; apiUrl: unknown }>(
+      registerStore<
+        Record<string, unknown>,
+        { type: string; hasDriver: boolean; apiUrl: unknown }
+      >(
         {
           id: "analytics",
           factory: (config, driver) => ({
@@ -144,7 +151,11 @@ describe("StoreRegistry", () => {
 
       const entry = getRegisteredStore("optional-feature")!;
       expect(
-        entry.factory({} as Record<string, unknown>, {} as PersistenceDriver, new Map()),
+        entry.factory(
+          {} as Record<string, unknown>,
+          {} as PersistenceDriver,
+          new Map(),
+        ),
       ).toBeNull();
     });
   });

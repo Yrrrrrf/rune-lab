@@ -1,9 +1,10 @@
 {
-  "name": "yrrrrrf@rune-lab",
+  "name": "@yrrrrrf/rune-lab",
   "version": "0.4.1",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
+  "readme": "./README.md",
   "author": "Fernando Bryan Reza Campos",
   "repository": {
     "type": "git",
@@ -24,7 +25,6 @@
     "build:npm": "deno run -A scripts/build_npm.ts"
   },
   "imports": {
-    "@deno/dnt": "jsr:@deno/dnt",
     "@rune-lab/core": "./src/mod.ts",
     "@rune-lab/i18n/": "./src/i18n/",
     "typescript": "npm:typescript@5.9.3",
@@ -43,6 +43,7 @@
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom"
   },
   "exclude": [
+    "build/**",
     ".old/**",
     "**/*.test.ts"
   ]

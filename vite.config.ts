@@ -24,8 +24,7 @@ export default defineConfig({
       entry: "./src/mod.ts",
       formats: ["es"],
     },
-    outDir: "build/dist",
-    copyPublicDir: false,
+    outDir: "dist",
     rollupOptions: {
       external: [
         "svelte",
