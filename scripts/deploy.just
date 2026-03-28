@@ -13,7 +13,7 @@ build:
 [group('Deploy')]
 deploy: build
     # * Format build output
-    deno fmt dist
+    deno fmt --no-config dist
     # # * Build npm package
     # deno task build:npm
     # # * Publish to jsr

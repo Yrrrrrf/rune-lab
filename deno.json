@@ -21,8 +21,7 @@
     "./src/runes/plugins/money"
   ],
   "tasks": {
-    "i18n": "paraglide-js compile --project ./src/i18n/project.inlang --outdir ./src/i18n/paraglide",
-    "build:npm": "deno run -A scripts/build_npm.ts"
+    "i18n": "paraglide-js compile --project ./src/i18n/project.inlang --outdir ./src/i18n/paraglide"
   },
   "imports": {
     "@rune-lab/core": "./src/mod.ts",

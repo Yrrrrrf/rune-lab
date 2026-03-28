@@ -1,22 +1,39 @@
 // scripts/build_pkg.ts
 import denoConfig from "../deno.json" with { type: "json" };
 
-// Move all current dist contents into dist/src/
+// ── 1. Restructure: move dist/* → dist/src/ ──────────────────────────────────
 await Deno.mkdir("./dist/src", { recursive: true });
 for await (const entry of Deno.readDir("./dist")) {
   if (entry.name === "src") continue;
-  await Deno.rename(
-    `./dist/${entry.name}`,
-    `./dist/src/${entry.name}`,
-  );
+  await Deno.rename(`./dist/${entry.name}`, `./dist/src/${entry.name}`);
 }
+
+// Clean up any stray deno.ts artifact
+try {
+  await Deno.remove("./dist/src/deno.ts");
+} catch { /* already gone */ }
+
+// ── 2. Generate dist/deno.json (standalone — no workspace members) ────────────
+const denoDistConfig = {
+  name: denoConfig.name,
+  version: denoConfig.version,
+  description: denoConfig.description,
+  license: denoConfig.license,
+  exports: { ".": "./src/mod.ts" },
+  repository: denoConfig.repository,
+};
+await Deno.writeTextFile(
+  "./dist/deno.json",
+  JSON.stringify(denoDistConfig, null, 2),
+);
+
+// ── 3. Generate dist/package.json (derived from deno.json) ───────────────────
 const pkg = {
   name: "rune-lab",
   version: denoConfig.version,
   description: denoConfig.description,
   type: "module",
-  main: denoConfig.exports["."],
-  exports: denoConfig.exports,
+  exports: { ".": "./src/mod.ts" },
   license: denoConfig.license,
   repository: denoConfig.repository,
   peerDependencies: {
@@ -25,19 +42,12 @@ const pkg = {
   },
   keywords: ["svelte", "svelte-5", "runes", "ui", "components"],
 };
-
-try {
-  await Deno.remove("./dist/src/deno.ts");
-} catch {
-  // already gone, no problem
-}
-
-// Drop both config files and docs into dist
-await Deno.copyFile("deno.json", "./dist/deno.json");
 await Deno.writeTextFile("./dist/package.json", JSON.stringify(pkg, null, 2));
+
+// ── 4. Copy metadata ──────────────────────────────────────────────────────────
 await Deno.copyFile("README.md", "./dist/README.md");
 await Deno.copyFile("LICENSE", "./dist/LICENSE");
 
-console.log("✅ dist/ is ready for both npm and JSR");
-console.log("   npm:  cd build/dist && npm publish");
-console.log("   jsr:  deno publish --config build/dist/deno.json");
+console.log(`✅ dist/ is ready for both npm and JSR  (v${denoConfig.version})`);
+console.log("   npm:  cd dist && npm publish");
+console.log("   jsr:  deno publish --config dist/deno.json");
