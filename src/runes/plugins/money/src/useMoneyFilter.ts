@@ -1,6 +1,6 @@
 // sdk/state/src/composables/useMoneyFilter.ts
 
-import { getContext } from "svelte";
+import { getContext, untrack } from "svelte";
 import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
 import type { CurrencyStore } from "@rune-lab/money";
 import { useMoney } from "./useMoney.ts";
@@ -38,25 +38,37 @@ export function useMoneyFilter(
   const unit = options.unit ?? "minor";
   const autoConvertOnChange = options.autoConvertOnChange ?? true;
 
-  let lastCurrency = String(currencyStore.current);
+  let lastCurrency = $state(String(currencyStore.current));
 
   $effect(() => {
     const currentCurrency = String(currencyStore.current);
-    if (autoConvertOnChange && currentCurrency !== lastCurrency) {
+    const previousCurrency = untrack(() => lastCurrency);
+
+    if (autoConvertOnChange && currentCurrency !== previousCurrency) {
       if (currencyStore.canConvert) {
         if (min !== 0) {
-          min = currencyStore.convertAmount(min, lastCurrency, currentCurrency);
+          min = currencyStore.convertAmount(
+            min,
+            previousCurrency,
+            currentCurrency,
+          );
         }
         if (max !== Infinity) {
-          max = currencyStore.convertAmount(max, lastCurrency, currentCurrency);
+          max = currencyStore.convertAmount(
+            max,
+            previousCurrency,
+            currentCurrency,
+          );
         }
       } else {
         // Reset if no rates available
         min = 0;
         max = Infinity;
       }
+      untrack(() => {
+        lastCurrency = currentCurrency;
+      });
     }
-    lastCurrency = currentCurrency;
   });
 
   function setMin(value: number) {

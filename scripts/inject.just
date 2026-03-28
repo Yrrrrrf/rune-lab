@@ -4,9 +4,9 @@
 #    Never pass `.` as dest — pass $PWD or an absolute path instead.
 #
 # Usage:
-#   just -f ~/rune-lab/inject.just inject $PWD
-#   just -f ~/rune-lab/inject.just inject /absolute/path/to/project
-#   just -f ~/rune-lab/inject.just inject-clean $PWD
+#   just -f ~/rune-lab/scripts/inject.just inject $PWD
+#   just -f ~/rune-lab/scripts/inject.just inject /absolute/path/to/project
+#   just -f ~/rune-lab/scripts/inject.just inject-clean $PWD
 #
 # Recipes:
 #   inject        — build rune-lab, then hot-swap node_modules/rune-lab
@@ -39,11 +39,11 @@ inject dest: _build-for-inject
 
     echo "📦 Copying local dist into $dest_abs/node_modules/rune-lab..."
     mkdir -p "$dest_abs/node_modules/rune-lab"
-    cp -r "{{ justfile_directory() }}/dist"         "$dest_abs/node_modules/rune-lab/dist"
-    cp    "{{ justfile_directory() }}/package.json" "$dest_abs/node_modules/rune-lab/package.json"
+    cp -r "{{ justfile_directory() }}/../dist"         "$dest_abs/node_modules/rune-lab/dist"
+    cp    "{{ justfile_directory() }}/../package.json" "$dest_abs/node_modules/rune-lab/package.json"
 
     echo "✅  Done! node_modules/rune-lab → $(du -sh $dest_abs/node_modules/rune-lab | cut -f1)"
-    echo "    Source:  {{ justfile_directory() }}/dist"
+    echo "    Source:  {{ justfile_directory() }}/../dist"
     echo "    Target:  $dest_abs/node_modules/rune-lab"
 
 # Full reset: nuke deps in <dest>, reinstall, then hot-swap rune-lab
@@ -67,6 +67,6 @@ inject-clean dest: _build-for-inject
 
 [private]
 _build-for-inject:
-    @echo "🔨 Building rune-lab from {{ justfile_directory() }}..."
-    just --justfile "{{ justfile_directory() }}/justfile" --working-directory "{{ justfile_directory() }}" build
+    @echo "🔨 Building rune-lab from {{ justfile_directory() }}/.."
+    just --justfile "{{ justfile_directory() }}/../justfile" --working-directory "{{ justfile_directory() }}/.." build
     @echo "✅  rune-lab built."

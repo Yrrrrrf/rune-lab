@@ -17,8 +17,8 @@ export type StoreFactory<TConfig = unknown, TStore = unknown> = (
  * Maps a context key to its factory function and metadata.
  */
 export interface StoreRegistryEntry<TConfig = unknown, TStore = unknown> {
-  /** Unique key matching the RUNE_LAB_CONTEXT key (e.g., "theme", "language") */
-  key: string;
+  /** Unique id (previously key) matching the RUNE_LAB_CONTEXT key */
+  id: string;
   /** The symbol used for Svelte context (e.g., RUNE_LAB_CONTEXT.theme) */
   contextKey?: symbol;
   /** The ID of the plugin that registered this store */
@@ -43,31 +43,13 @@ export interface StoreRegistryEntry<TConfig = unknown, TStore = unknown> {
 }
 
 /**
- * A slot for a single store within a RunePlugin.
- */
-export interface StoreSlot {
-  /** slot id, used as key in STORE_REGISTRY and stores Map */
-  id: string;
-  /** from RUNE_LAB_CONTEXT or consumer-defined symbol */
-  contextKey: symbol;
-  /** existing type: (config, driver, stores) => Store | null */
-  factory: StoreFactory;
-  /** null return from factory means skip, not error */
-  optional?: boolean;
-  /** other slot ids that must initialize first */
-  dependsOn?: string[];
-  /** skip persistence driver injection for this slot */
-  noPersistence?: boolean;
-}
-
-/**
  * A RunePlugin is a collection of stores and overlays.
  */
 export interface RunePlugin {
   /** dot-namespaced: "rune-lab.layout" */
   id: string;
   /** one or more store slots */
-  stores: StoreSlot[];
+  stores: StoreRegistryEntry[];
   /** Svelte components, no required props */
   overlays?: Component<Record<never, never>>[];
 }
@@ -81,7 +63,7 @@ export interface RunePlugin {
  * ```ts
  * // Plugin registration (before RuneProvider mounts)
  * registerStore({
- *   key: "analytics",
+ *   id: "analytics",
  *   factory: (config, driver) => createAnalyticsStore(config),
  *   optional: true,
  *   noPersistence: true,
@@ -97,18 +79,18 @@ const STORE_REGISTRY: Map<string, StoreRegistryEntry> = new Map<
  * Register a store entry in the global registry.
  * Must be called before RuneProvider mounts for the store to be auto-wired.
  *
- * @param entry - Store registry entry with key, factory, and options.
- * @throws Error if a store with the same key is already registered.
+ * @param entry - Store registry entry with id, factory, and options.
+ * @throws Error if a store with the same id is already registered.
  */
 export function registerStore<TConfig = unknown, TStore = unknown>(
   entry: StoreRegistryEntry<TConfig, TStore>,
 ): void {
-  if (STORE_REGISTRY.has(entry.key)) {
+  if (STORE_REGISTRY.has(entry.id)) {
     console.warn(
-      `[StoreRegistry] Overwriting existing store registration for key "${entry.key}"`,
+      `[StoreRegistry] Overwriting existing store registration for id "${entry.id}"`,
     );
   }
-  STORE_REGISTRY.set(entry.key, entry as StoreRegistryEntry);
+  STORE_REGISTRY.set(entry.id, entry as StoreRegistryEntry);
 }
 
 /**
@@ -116,15 +98,10 @@ export function registerStore<TConfig = unknown, TStore = unknown>(
  */
 export function defineRune(plugin: RunePlugin): RunePlugin {
   for (const slot of plugin.stores) {
-    registerStore({
-      key: slot.id,
-      contextKey: slot.contextKey,
-      pluginId: plugin.id,
-      factory: slot.factory,
-      optional: slot.optional,
-      dependsOn: slot.dependsOn,
-      noPersistence: slot.noPersistence,
-    });
+    if (!slot.pluginId) {
+      slot.pluginId = plugin.id;
+    }
+    registerStore(slot);
   }
   return plugin;
 }
@@ -168,25 +145,25 @@ function topologicalSort(entries: StoreRegistryEntry[]): StoreRegistryEntry[] {
   const visited = new Set<string>();
   const visiting = new Set<string>(); // cycle detection
 
-  const entryMap = new Map(entries.map((e) => [e.key, e]));
+  const entryMap = new Map(entries.map((e) => [e.id, e]));
 
   function visit(entry: StoreRegistryEntry) {
-    if (visited.has(entry.key)) return;
-    if (visiting.has(entry.key)) {
+    if (visited.has(entry.id)) return;
+    if (visiting.has(entry.id)) {
       throw new Error(
-        `[StoreRegistry] Circular dependency detected involving "${entry.key}"`,
+        `[StoreRegistry] Circular dependency detected involving "${entry.id}"`,
       );
     }
 
-    visiting.add(entry.key);
+    visiting.add(entry.id);
 
     for (const depKey of entry.dependsOn ?? []) {
       const dep = entryMap.get(depKey);
       if (dep) visit(dep);
     }
 
-    visiting.delete(entry.key);
-    visited.add(entry.key);
+    visiting.delete(entry.id);
+    visited.add(entry.id);
     sorted.push(entry);
   }
 
@@ -234,7 +211,7 @@ export function initializeStores(
     }
 
     if (store !== null && store !== undefined) {
-      stores.set(entry.key, store);
+      stores.set(entry.id, store);
     }
   }
 

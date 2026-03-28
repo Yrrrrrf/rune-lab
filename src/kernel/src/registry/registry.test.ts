@@ -18,7 +18,7 @@ describe("StoreRegistry", () => {
   describe("registerStore", () => {
     it("should register a store entry", () => {
       registerStore({
-        key: "test",
+        id: "test",
         factory: () => ({ value: 42 }),
       });
 
@@ -27,8 +27,8 @@ describe("StoreRegistry", () => {
     });
 
     it("should allow overwriting with a warning", () => {
-      registerStore({ key: "test", factory: () => "v1" });
-      registerStore({ key: "test", factory: () => "v2" });
+      registerStore({ id: "test", factory: () => "v1" });
+      registerStore({ id: "test", factory: () => "v2" });
 
       expect(STORE_REGISTRY.size).toBe(1);
       const entry = getRegisteredStore("test");
@@ -39,9 +39,9 @@ describe("StoreRegistry", () => {
     });
 
     it("should register multiple entries", () => {
-      registerStore({ key: "a", factory: () => "A" });
-      registerStore({ key: "b", factory: () => "B" });
-      registerStore({ key: "c", factory: () => "C" });
+      registerStore({ id: "a", factory: () => "A" });
+      registerStore({ id: "b", factory: () => "B" });
+      registerStore({ id: "c", factory: () => "C" });
 
       expect(STORE_REGISTRY.size).toBe(3);
     });
@@ -50,14 +50,14 @@ describe("StoreRegistry", () => {
   describe("getRegisteredStore", () => {
     it("should return the entry for a registered key", () => {
       registerStore({
-        key: "theme",
+        id: "theme",
         factory: () => "theme-store",
         optional: false,
       });
 
       const entry = getRegisteredStore("theme");
       expect(entry).toBeDefined();
-      expect(entry!.key).toBe("theme");
+      expect(entry!.id).toBe("theme");
       expect(entry!.optional).toBe(false);
     });
 
@@ -68,8 +68,8 @@ describe("StoreRegistry", () => {
 
   describe("getAllRegisteredStores", () => {
     it("should return all registered stores", () => {
-      registerStore({ key: "a", factory: () => "A" });
-      registerStore({ key: "b", factory: () => "B" });
+      registerStore({ id: "a", factory: () => "A" });
+      registerStore({ id: "b", factory: () => "B" });
 
       const all = getAllRegisteredStores();
       expect(all.size).toBe(2);
@@ -80,7 +80,7 @@ describe("StoreRegistry", () => {
 
   describe("unregisterStore", () => {
     it("should remove a registered store", () => {
-      registerStore({ key: "test", factory: () => "val" });
+      registerStore({ id: "test", factory: () => "val" });
       expect(STORE_REGISTRY.has("test")).toBe(true);
 
       const result = unregisterStore("test");
@@ -95,8 +95,8 @@ describe("StoreRegistry", () => {
 
   describe("clearRegistry", () => {
     it("should remove all entries", () => {
-      registerStore({ key: "a", factory: () => "A" });
-      registerStore({ key: "b", factory: () => "B" });
+      registerStore({ id: "a", factory: () => "A" });
+      registerStore({ id: "b", factory: () => "B" });
       expect(STORE_REGISTRY.size).toBe(2);
 
       clearRegistry();
@@ -114,7 +114,7 @@ describe("StoreRegistry", () => {
 
       registerStore<Record<string, unknown>, { type: string; hasDriver: boolean; apiUrl: unknown }>(
         {
-          key: "analytics",
+          id: "analytics",
           factory: (config, driver) => ({
             type: "analytics",
             hasDriver: !!driver,
@@ -137,7 +137,7 @@ describe("StoreRegistry", () => {
 
     it("optional factory can return null", () => {
       registerStore({
-        key: "optional-feature",
+        id: "optional-feature",
         factory: () => null,
         optional: true,
       });

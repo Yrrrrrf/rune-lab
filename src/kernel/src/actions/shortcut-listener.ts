@@ -1,6 +1,14 @@
 import hotkeys from "hotkeys-js";
 import { untrack } from "svelte";
-import type { ShortcutStore } from "../../../runes/palettes/src/shortcuts/store.svelte.ts";
+
+export interface ShortcutStoreLike {
+  entries: {
+    enabled?: boolean;
+    keys: string;
+    when?: () => boolean;
+    handler: (event: KeyboardEvent) => void;
+  }[];
+}
 
 /**
  * Svelte Action to listen for shortcuts registered in shortcutStore.
@@ -8,7 +16,7 @@ import type { ShortcutStore } from "../../../runes/palettes/src/shortcuts/store.
  */
 export function shortcutListener(
   _node: HTMLElement,
-  shortcutStore: ShortcutStore,
+  shortcutStore: ShortcutStoreLike,
 ): { destroy(): void } {
   // Use $effect to reactively sync shortcuts
   const cleanup = $effect.root(() => {
