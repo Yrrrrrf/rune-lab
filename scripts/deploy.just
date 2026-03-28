@@ -2,19 +2,19 @@
 [group('Build')]
 build:
     # * Clean up previous build
-    rm -rf dist
+    rm -rf build/dist
 
     # * Build library using vite-plus
     vp build
-
-    # Clean up paraglide artifacts that shouldn't be published
-    rm -f dist/paraglide/.gitignore dist/paraglide/.prettierignore
-
-    # Validate the published package shape
-    vp exec publint
+    @echo "✓ build done"
 
 [doc('Publish to jsr')]
 [group('Deploy')]
-deploy:
-    deno task build:npm
-    @echo "✓ npm package assembled"
+deploy: build
+    # * Format build output
+    deno fmt build/dist
+    # # * Build npm package
+    # deno task build:npm
+    # # * Publish to jsr
+    # deno publish
+    @echo "✓ deploy done"

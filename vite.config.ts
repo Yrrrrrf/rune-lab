@@ -24,7 +24,7 @@ export default defineConfig({
       entry: "./src/mod.ts",
       formats: ["es"],
     },
-    outDir: "build/jsr",
+    outDir: "build/dist",
     copyPublicDir: false,
     rollupOptions: {
       external: [
@@ -33,11 +33,12 @@ export default defineConfig({
         "esm-env",
         /^@sveltejs\//,
         /^@inlang\//,
+        "hotkeys-js",
       ],
       output: {
         preserveModules: true,
         preserveModulesRoot: "src",
-        entryFileNames: "[name].js",
+        entryFileNames: "[name].ts",
       },
     },
   },
