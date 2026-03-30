@@ -48,6 +48,4 @@ await Deno.writeTextFile("./dist/package.json", JSON.stringify(pkg, null, 2));
 await Deno.copyFile("README.md", "./dist/README.md");
 await Deno.copyFile("LICENSE", "./dist/LICENSE");
 
-console.log(`✅ dist/ is ready for both npm and JSR  (v${denoConfig.version})`);
-console.log("   npm:  cd dist && npm publish");
-console.log("   jsr:  deno publish --config dist/deno.json");
+console.log(`dist/ (v${denoConfig.version})`);

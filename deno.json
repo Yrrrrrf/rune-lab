@@ -42,7 +42,8 @@
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom"
   },
   "exclude": [
-    "build/**",
+    "scripts/**",
+    "dist/**",
     ".old/**",
     "**/*.test.ts"
   ]
