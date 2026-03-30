@@ -8,41 +8,47 @@ for await (const entry of Deno.readDir("./dist")) {
   await Deno.rename(`./dist/${entry.name}`, `./dist/src/${entry.name}`);
 }
 
-// Clean up any stray deno.ts artifact
-// try {
-//   await Deno.remove("./dist/src/deno.ts");
-// } catch { /* already gone */ }
-
-// ── 2. Generate dist/deno.json (standalone — no workspace members) ────────────
-const denoDistConfig = {
-  name: denoConfig.name,
+// ── Shared metadata ───────────────────────────────────────────────────────────
+const exports = { ".": "./src/mod.ts" };
+const imports = {
+  "esm-env": "npm:esm-env@^1.2.2",
+  "hotkeys-js": "npm:hotkeys-js@^4.0.2",
+  "dinero.js": "npm:dinero.js@^2.0.2",
+  "svelte": "npm:svelte@^5.55.0",
+  "svelte/": "npm:svelte@^5.55.0/",
+  "@sveltejs/kit": "npm:@sveltejs/kit@^2.55.0",
+  "@inlang/paraglide-js": "npm:@inlang/paraglide-js@^2.15.1",
+  "@inlang/": "npm:@inlang/paraglide-js@^2.15.1/",
+};
+const peerDependencies = {
+  "svelte": "^5.0.0",
+  "@inlang/paraglide-js": "^2.0.0",
+};
+const meta = {
   version: denoConfig.version,
   description: denoConfig.description,
   license: denoConfig.license,
-  exports: { ".": "./src/mod.ts" },
   repository: denoConfig.repository,
 };
-await Deno.writeTextFile(
-  "./dist/deno.json",
-  JSON.stringify(denoDistConfig, null, 2),
-);
 
-// ── 3. Generate dist/package.json (derived from deno.json) ───────────────────
-const pkg = {
-  name: "rune-lab",
-  version: denoConfig.version,
-  description: denoConfig.description,
+// ── 2. Generate dist/deno.json ────────────────────────────────────────────────
+await Deno.writeTextFile("./dist/deno.json", JSON.stringify({
+  name: "@yrrrrrf/rune-lab",  // JSR scoped name
+  ...meta,
+  exports,
+  imports,
+}, null, 2));
+
+// ── 3. Generate dist/package.json ─────────────────────────────────────────────
+await Deno.writeTextFile("./dist/package.json", JSON.stringify({
+  name: "rune-lab",           // npm unscoped name
+  ...meta,
   type: "module",
-  exports: { ".": "./src/mod.ts" },
-  license: denoConfig.license,
-  repository: denoConfig.repository,
-  peerDependencies: {
-    "svelte": "^5.0.0",
-    "@inlang/paraglide-js": "^2.0.0",
-  },
+  exports,
+  imports,
+  peerDependencies,
   keywords: ["svelte", "svelte-5", "runes", "ui", "components"],
-};
-await Deno.writeTextFile("./dist/package.json", JSON.stringify(pkg, null, 2));
+}, null, 2));
 
 // ── 4. Copy metadata ──────────────────────────────────────────────────────────
 await Deno.copyFile("README.md", "./dist/README.md");

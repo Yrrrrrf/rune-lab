@@ -19,5 +19,6 @@ deploy: build
     # * Publish to jsr
     rm -rf /tmp/rune-lab
     cp -r dist/ /tmp/rune-lab
-    (cd /tmp/rune-lab && deno publish --no-check)
+    # (cd /tmp/rune-lab && deno publish --no-check)
+    (cd /tmp/rune-lab && deno install && deno publish --no-check --allow-slow-types)
     @echo "✓ deploy done"
