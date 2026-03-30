@@ -9,9 +9,9 @@ for await (const entry of Deno.readDir("./dist")) {
 }
 
 // Clean up any stray deno.ts artifact
-try {
-  await Deno.remove("./dist/src/deno.ts");
-} catch { /* already gone */ }
+// try {
+//   await Deno.remove("./dist/src/deno.ts");
+// } catch { /* already gone */ }
 
 // ── 2. Generate dist/deno.json (standalone — no workspace members) ────────────
 const denoDistConfig = {

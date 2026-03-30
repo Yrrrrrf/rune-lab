@@ -14,8 +14,10 @@ build:
 deploy: build
     # * Format build output
     deno fmt --no-config dist
-    # # * Build npm package
-    # deno task build:npm
-    # # * Publish to jsr
-    # deno publish
+    # * Publish to npm
+    # (cd dist && bun publish)
+    # * Publish to jsr
+    rm -rf /tmp/rune-lab
+    cp -r dist/ /tmp/rune-lab
+    (cd /tmp/rune-lab && deno publish --no-check)
     @echo "✓ deploy done"
