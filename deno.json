@@ -1,6 +1,6 @@
 {
   "name": "@yrrrrrf/rune-lab",
-  "version": "0.4.2-beta.1",
+  "version": "0.4.2-beta.2",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "license": "MIT",
@@ -11,21 +11,21 @@
     "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
   },
   "exports": {
-    ".": "./src/mod.ts"
+    ".": "./src/lib/mod.ts"
   },
   "nodeModulesDir": "manual",
   "workspace": [
-    "./src/kernel",
-    "./src/runes/layout",
-    "./src/runes/palettes",
-    "./src/runes/plugins/money"
+    "./src/lib/kernel",
+    "./src/lib/runes/layout",
+    "./src/lib/runes/palettes",
+    "./src/lib/runes/plugins/money"
   ],
   "tasks": {
-    "i18n": "paraglide-js compile --project ./src/i18n/project.inlang --outdir ./src/i18n/paraglide"
+    "i18n": "paraglide-js compile --project ./src/lib/i18n/project.inlang --outdir ./src/lib/i18n/paraglide"
   },
   "imports": {
-    "@rune-lab/core": "./src/mod.ts",
-    "@rune-lab/i18n/": "./src/i18n/",
+    "@rune-lab/core": "./src/lib/mod.ts",
+    "@rune-lab/i18n/": "./src/lib/i18n/",
     "typescript": "npm:typescript@5.9.3",
     "@tailwindcss/vite": "npm:@tailwindcss/vite",
     "esm-env": "npm:esm-env",

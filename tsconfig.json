@@ -16,19 +16,19 @@
     "skipLibCheck": true,
     "paths": {
       "@rune-lab/kernel": [
-        "./src/kernel/src/mod.ts"
+        "./src/lib/kernel/src/mod.ts"
       ],
       "@rune-lab/layout": [
-        "./src/runes/layout/src/mod.ts"
+        "./src/lib/runes/layout/src/mod.ts"
       ],
       "@rune-lab/palettes": [
-        "./src/runes/palettes/src/mod.ts"
+        "./src/lib/runes/palettes/src/mod.ts"
       ],
       "@rune-lab/money": [
-        "./src/runes/plugins/money/src/mod.ts"
+        "./src/lib/runes/plugins/money/src/mod.ts"
       ],
       "@rune-lab/i18n/*": [
-        "./src/i18n/*"
+        "./src/lib/i18n/*"
       ]
     }
   },

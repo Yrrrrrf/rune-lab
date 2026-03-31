@@ -4,21 +4,23 @@ build:
     # * Clean up previous build
     rm -rf dist/
     # * Build library using vite-plus
-    vp build
+    deno run -A npm:@sveltejs/package -- -i src -o dist
+    # vp build
     # * Build ESM package
-    deno run -A scripts/build_pkg.ts
+    # deno run -A scripts/build_pkg.ts
     @echo "✓ build done"
 
 [doc('Publish to jsr')]
 [group('Deploy')]
 deploy: build
     # * Format build output
-    deno fmt --no-config dist
+    # deno fmt --no-config dist
+    deno fmt dist
     # * Publish to npm
     # (cd dist && bun publish)
     # * Publish to jsr
-    rm -rf /tmp/rune-lab
-    cp -r dist/ /tmp/rune-lab
+    # rm -rf /tmp/rune-lab
+    # cp -r dist/ /tmp/rune-lab
     # (cd /tmp/rune-lab && deno publish --no-check)
-    (cd /tmp/rune-lab && deno install && deno publish --no-check --allow-slow-types)
+    # (cd /tmp/rune-lab && deno install && deno publish --no-check --allow-slow-types)
     @echo "✓ deploy done"
