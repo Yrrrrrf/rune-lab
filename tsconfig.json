@@ -33,9 +33,9 @@
     }
   },
   "exclude": [
+    ".*",
     "scripts/**",
     "dist/**",
-    ".old/**",
     "**/*.test.ts"
   ]
 }
