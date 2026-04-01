@@ -1,7 +1,7 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
     import type { ConfigStore } from "../../../kernel/src/mod.ts";
-    import * as rlMessages from "../../../../i18n/paraglide/messages.js";
+    import * as rlMessages from "../../../../i18n/paraglide/messages.ts";
     import { getContext, type Snippet } from "svelte";
 
     /**
