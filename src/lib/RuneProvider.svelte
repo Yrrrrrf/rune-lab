@@ -5,8 +5,10 @@
     localStorageDriver,
     initializeStores,
     defineRune,
+    createAppStore,
   } from "./kernel/src/mod.ts";
   import type { PersistenceDriver, RunePlugin } from "./kernel/src/mod.ts";
+  import type { AppData } from "./kernel/src/mod.ts";
 
   /**
    * Namespaced configuration for Rune Lab plugins.
@@ -18,6 +20,8 @@
     favicon?: string;
     manageHead?: boolean;
     icons?: "material" | "none";
+    /** App metadata — passed to AppStore.init() */
+    app?: Partial<AppData>;
     /** Namespaced config for plugins */
     [pluginId: string]: unknown;
   }
@@ -30,6 +34,13 @@
 
   const initialPlugins = untrack(() => plugins);
   const initialPersistence = untrack(() => config.persistence ?? localStorageDriver);
+
+  // 0. Create and provide the built-in AppStore
+  const appStore = createAppStore();
+  if (config.app) {
+    appStore.init(config.app);
+  }
+  setContext(RUNE_LAB_CONTEXT.app, appStore);
 
   // 1. Register all plugins
   // Note: defineRune maps each slot into the STORE_REGISTRY
@@ -64,7 +75,6 @@
   const allOverlays = $derived(plugins.flatMap((p: RunePlugin) => p.overlays ?? []) as Component<Record<never, never>>[]);
 
   // ── Initialization for layout ──────────────────────────
-  const appStore = stores.get("app") as any;
   const layoutStore = stores.get("layout") as any;
 
   onMount(() => {
@@ -72,10 +82,10 @@
   });
 
   // Meta tags derived from app store state
-  const metaTags = $derived(appStore ? [
+  const metaTags = $derived([
     { name: "description", content: appStore.description },
     { name: "author", content: appStore.author },
-  ] : []);
+  ]);
 </script>
 
 <svelte:head>

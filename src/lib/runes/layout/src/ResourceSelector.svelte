@@ -1,21 +1,9 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
     import type { ConfigStore } from "../../../kernel/src/mod.ts";
-    import * as rlMessages from "../../../i18n/paraglide/messages.ts";
+    import * as rlMessages from "../../../i18n/paraglide/messages.js";
     import { getContext, type Snippet } from "svelte";
 
-    /**
-     * ResourceSelector — Generic configuration picker.
-     * Wraps AppSettingSelector with automatic label resolution and store binding.
-     *
-     * @example
-     * ```svelte
-     * <ResourceSelector store={themeStore} idKey="name">
-     *   {#snippet triggerLabel(item)}<span>{item.icon}</span>{/snippet}
-     *   {#snippet item(t)}<button onclick={() => store.set(t.name)}>{t.name}</button>{/snippet}
-     * </ResourceSelector>
-     * ```
-     */
     let {
         store,
         idKey,

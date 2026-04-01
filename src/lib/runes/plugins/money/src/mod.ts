@@ -18,7 +18,7 @@ export * from "./money.ts";
 export * from "./strategies.ts";
 export * from "./money-primitive.ts";
 export * from "./useMoney.ts";
-export * from "./useMoneyFilter.ts";
+export * from "./useMoneyFilter.svelte.ts";
 
 interface MoneyConfig {
   exchangeRates?: {

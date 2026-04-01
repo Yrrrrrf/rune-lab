@@ -10,8 +10,7 @@ import { sveltekit } from "@sveltejs/kit/vite";
 export default defineConfig({
   resolve: {
     alias: {
-      // Map "rune-lab" self-imports to the library source during dev
-      "rune-lab": "./src/lib",
+      "rune-lab": new URL("src/lib/mod.ts", import.meta.url).pathname,
     },
   },
   plugins: [

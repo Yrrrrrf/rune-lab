@@ -2,9 +2,7 @@
     import {
         ThemeSelector,
         LanguageSelector,
-        CurrencySelector,
         getAppStore,
-        version,
     } from "rune-lab";
 
     const appStore = getAppStore();
@@ -16,7 +14,7 @@
 >
     <div class="flex items-center gap-3">
         <span class="text-xl font-black tracking-tight">🧪 rune-lab lab</span>
-        <span class="badge badge-sm badge-outline font-mono">v{version()}</span>
+        <span class="badge badge-sm badge-outline font-mono">v{appStore.version}</span>
         {#if isDev}
             <span class="badge badge-sm badge-warning font-mono">DEV</span>
         {/if}
@@ -25,7 +23,6 @@
     <div class="flex items-center gap-1">
         <ThemeSelector />
         <LanguageSelector />
-        <CurrencySelector />
         <div class="divider divider-horizontal mx-1 opacity-20"></div>
         <kbd class="kbd kbd-sm text-xs opacity-50">ctrl+/</kbd>
     </div>

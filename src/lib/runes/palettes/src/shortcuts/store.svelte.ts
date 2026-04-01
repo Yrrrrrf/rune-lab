@@ -55,23 +55,29 @@ export class ShortcutStore {
    * Register a single shortcut or an array
    */
   register(entry: ShortcutEntry): void {
-    if (this.entries.find((e) => e.id === entry.id)) return;
-    this.entries.push({ ...entry, enabled: true });
+    untrack(() => {
+      if (this.entries.find((e) => e.id === entry.id)) return;
+      this.entries.push({ ...entry, enabled: true });
+    });
   }
 
   /**
    * Remove shortcut by ID
    */
   unregister(id: string): void {
-    this.entries = this.entries.filter((e) => e.id !== id);
+    untrack(() => {
+      this.entries = this.entries.filter((e) => e.id !== id);
+    });
   }
 
   /**
    * Enable/Disable a shortcut
    */
   setEnabled(id: string, enabled: boolean): void {
-    const entry = this.entries.find((e) => e.id === id);
-    if (entry) entry.enabled = enabled;
+    untrack(() => {
+      const entry = this.entries.find((e) => e.id === id);
+      if (entry) entry.enabled = enabled;
+    });
   }
 
   /**

@@ -16,6 +16,7 @@ export { default as ThemeSelector } from "./ThemeSelector.svelte";
 export { default as ResourceSelector } from "./ResourceSelector.svelte";
 export { default as AppSettingSelector } from "./AppSettingSelector.svelte";
 export { default as NavigationPanel } from "./NavigationPanel.svelte";
+export { default as ConnectedNavigationPanel } from "./ConnectedNavigationPanel.svelte";
 export { default as WorkspaceStrip } from "./WorkspaceStrip.svelte";
 export { default as ContentArea } from "./ContentArea.svelte";
 export { default as DetailPanel } from "./DetailPanel.svelte";

@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.4.2-omega.4",
+  "version": "0.4.2",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "readme": "./README.md",

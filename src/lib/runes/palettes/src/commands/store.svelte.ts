@@ -1,3 +1,4 @@
+import { untrack } from "svelte";
 import { getCommandStore } from "../../../../kernel/src/mod.ts";
 import type {
   Command,
@@ -36,15 +37,19 @@ export class CommandStore {
    * Register a new command
    */
   register(command: Command): void {
-    if (this.commands.find((c) => c.id === command.id)) return;
-    this.commands.push(command);
+    untrack(() => {
+      if (this.commands.find((c) => c.id === command.id)) return;
+      this.commands.push(command);
+    });
   }
 
   /**
    * Remove a command by id
    */
   unregister(id: string): void {
-    this.commands = this.commands.filter((c) => c.id !== id);
+    untrack(() => {
+      this.commands = this.commands.filter((c) => c.id !== id);
+    });
   }
 
   /**

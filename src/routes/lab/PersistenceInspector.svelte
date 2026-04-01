@@ -112,57 +112,64 @@
         <!-- Cookies -->
         <div class="space-y-2">
             <h3 class="text-xs font-bold opacity-60">🍪 Cookies</h3>
-            <div class="bg-base-200 rounded-lg p-2 max-h-48 overflow-y-auto">
-                {#if cookieEntries.length === 0}
-                    <p class="text-xs opacity-30 italic">No cookies</p>
-                {:else}
-                    {#each cookieEntries as [key, value]}
-                        <div class="text-xs font-mono break-all mb-1">
-                            <span class="text-primary font-bold">{key}</span
-                            >=<span class="opacity-60">{value}</span>
-                        </div>
-                    {/each}
-                {/if}
+            <div class="card bg-base-200">
+                <div class="card-body p-2 max-h-48 overflow-y-auto">
+                    {#if cookieEntries.length === 0}
+                        <p class="text-xs opacity-30 italic">No cookies</p>
+                    {:else}
+                        {#each cookieEntries as [key, value]}
+                            <div class="text-xs font-mono break-all mb-1">
+                                <span class="text-primary font-bold">{key}</span
+                                >=<span class="opacity-60">{value}</span>
+                            </div>
+                        {/each}
+                    {/if}
+                </div>
             </div>
         </div>
 
         <!-- localStorage -->
         <div class="space-y-2">
             <h3 class="text-xs font-bold opacity-60">📦 localStorage</h3>
-            <div class="bg-base-200 rounded-lg p-2 max-h-48 overflow-y-auto">
-                {#if localStorageEntries.length === 0}
-                    <p class="text-xs opacity-30 italic">No RL keys</p>
-                {:else}
-                    {#each localStorageEntries as [key, value]}
-                        <div class="text-xs font-mono break-all mb-1">
-                            <span class="text-primary font-bold">{key}</span
-                            >=<span class="opacity-60">{value}</span>
-                        </div>
-                    {/each}
-                {/if}
+            <div class="card bg-base-200">
+                <div class="card-body p-2 max-h-48 overflow-y-auto">
+                    {#if localStorageEntries.length === 0}
+                        <p class="text-xs opacity-30 italic">No RL keys</p>
+                    {:else}
+                        {#each localStorageEntries as [key, value]}
+                            <div class="text-xs font-mono break-all mb-1">
+                                <span class="text-primary font-bold">{key}</span
+                                >=<span class="opacity-60">{value}</span>
+                            </div>
+                        {/each}
+                    {/if}
+                </div>
             </div>
         </div>
 
         <!-- sessionStorage -->
         <div class="space-y-2">
             <h3 class="text-xs font-bold opacity-60">🔒 sessionStorage</h3>
-            <div class="bg-base-200 rounded-lg p-2 max-h-48 overflow-y-auto">
-                {#if sessionStorageEntries.length === 0}
-                    <p class="text-xs opacity-30 italic">No RL keys</p>
-                {:else}
-                    {#each sessionStorageEntries as [key, value]}
-                        <div class="text-xs font-mono break-all mb-1">
-                            <span class="text-primary font-bold">{key}</span
-                            >=<span class="opacity-60">{value}</span>
-                        </div>
-                    {/each}
-                {/if}
+            <div class="card bg-base-200">
+                <div class="card-body p-2 max-h-48 overflow-y-auto">
+                    {#if sessionStorageEntries.length === 0}
+                        <p class="text-xs opacity-30 italic">No RL keys</p>
+                    {:else}
+                        {#each sessionStorageEntries as [key, value]}
+                            <div class="text-xs font-mono break-all mb-1">
+                                <span class="text-primary font-bold">{key}</span
+                                >=<span class="opacity-60">{value}</span>
+                            </div>
+                        {/each}
+                    {/if}
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Reload Test Bar -->
-    <div class="border-t border-base-content/10 pt-3 mt-3 space-y-2">
+    <div class="divider"></div>
+    <div class="space-y-2">
         <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold opacity-60">🔄 Reload Test</h3>
             <button class="btn btn-xs btn-warning" onclick={hardReload}>
@@ -171,7 +178,8 @@
         </div>
 
         {#if Object.keys(preReloadSnapshot).length > 0}
-            <div class="bg-base-200 rounded-lg p-2 space-y-1">
+            <div class="card bg-base-200">
+                <div class="card-body p-2 space-y-1">
                 <p class="text-xs font-bold opacity-60">Pre-reload snapshot:</p>
                 {#each Object.entries(preReloadSnapshot) as [key, value]}
                     {@const currentValue = (() => {
@@ -205,6 +213,7 @@
                         {/if}
                     </div>
                 {/each}
+                </div>
             </div>
         {/if}
     </div>

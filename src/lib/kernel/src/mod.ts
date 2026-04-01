@@ -10,4 +10,4 @@ export * from "./persistence/createConfigStore.svelte.ts";
 export * from "./registry/mod.ts";
 export * from "./tokens/props.ts";
 export * from "./actions/portal.ts";
-export * from "./actions/shortcut-listener.ts";
+export * from "./actions/shortcut-listener.svelte.ts";

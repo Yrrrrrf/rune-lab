@@ -2,7 +2,7 @@
     import LabHeader from "./LabHeader.svelte";
     import StoresMirror from "./StoresMirror.svelte";
     import InteractionDeck from "./InteractionDeck.svelte";
-    import ComponentsPanel from "./ComponentsPanel.svelte";
+    import Showcase from "./showcase/Showcase.svelte";
     import PersistenceInspector from "./PersistenceInspector.svelte";
 </script>
 
@@ -24,9 +24,9 @@
             <InteractionDeck />
         </div>
 
-        <!-- Q3: Components (bottom-left) -->
-        <div class="border-r border-base-content/5 overflow-hidden">
-            <ComponentsPanel />
+        <!-- Q3: Showcase (bottom-left) -->
+        <div class="border-r border-base-content/5 overflow-hidden bg-base-200/50">
+            <Showcase />
         </div>
 
         <!-- Q4: Persistence Inspector (bottom-right) -->
