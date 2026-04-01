@@ -1,6 +1,6 @@
 <script module lang="ts">
-    import type { ISO4217Code } from "@rune-lab/money";
-    import { MoneyPrimitive } from "@rune-lab/money";
+    import type { ISO4217Code } from "./mod.ts";
+    import { MoneyPrimitive } from "./mod.ts";
 
     export interface MoneyInputProps {
         /** Current value in minor or major units (see unit prop) */
@@ -34,8 +34,8 @@
 </script>
 
 <script lang="ts">
-    import { getCurrencyStore } from "@rune-lab/kernel";
-    import { toMinorUnit } from "@rune-lab/money";
+    import { getCurrencyStore } from "../../../../kernel/src/mod.ts";
+    import { toMinorUnit } from "./mod.ts";
     import { DEV } from "esm-env";
 
     let {

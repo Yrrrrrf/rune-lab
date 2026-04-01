@@ -1,6 +1,6 @@
 <!-- src/lib/features/layout/smart/ConnectedNavigationPanel.svelte -->
 <script lang="ts">
-    import { getLayoutStore, type NavigationSection } from "@rune-lab/kernel";
+    import { getLayoutStore, type NavigationSection } from "../../../kernel/src/mod.ts";
     import NavigationPanel from "./NavigationPanel.svelte";
     import { createNavigationConnection } from "./connection-factory.ts";
     import type { Snippet } from "svelte";

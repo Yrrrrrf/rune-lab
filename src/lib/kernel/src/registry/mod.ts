@@ -1,4 +1,4 @@
-import type { PersistenceDriver } from "@rune-lab/kernel";
+import type { PersistenceDriver } from "../persistence/types.ts";
 import type { Component } from "svelte";
 
 /**

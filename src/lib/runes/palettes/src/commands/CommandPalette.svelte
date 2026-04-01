@@ -1,8 +1,8 @@
 <!-- src/client/sdk/ui/src/features/config/CommandPalette.svelte -->
 <script lang="ts">
     import { tick } from "svelte";
-    import { getCommandStore, type Command } from "@rune-lab/kernel";
-    import { getShortcutStore } from "@rune-lab/kernel";
+    import { getCommandStore, type Command } from "../../../../kernel/src/mod.ts";
+    import { getShortcutStore } from "../../../../kernel/src/mod.ts";
     import { Icon } from "../../../layout/src/mod.ts";
 
     let { shortcutKey = "shift+k" } = $props<{ shortcutKey?: string }>();

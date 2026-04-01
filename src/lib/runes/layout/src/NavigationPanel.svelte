@@ -1,7 +1,7 @@
 <!-- src/lib/layout/NavigationPanel.svelte -->
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import type { NavigationItem, NavigationSection } from "@rune-lab/kernel";
+    import type { NavigationItem, NavigationSection } from "../../../kernel/src/mod.ts";
 
     let {
         header,

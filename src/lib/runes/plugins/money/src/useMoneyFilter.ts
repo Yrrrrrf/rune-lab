@@ -1,8 +1,8 @@
 // sdk/state/src/composables/useMoneyFilter.ts
 
 import { getContext, untrack } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import type { CurrencyStore } from "@rune-lab/money";
+import { RUNE_LAB_CONTEXT } from "../../../../kernel/src/mod.ts";
+import type { CurrencyStore } from "./mod.ts";
 import { useMoney } from "./useMoney.ts";
 
 export interface MoneyFilterOptions {

@@ -1,5 +1,9 @@
-import { getCommandStore } from "@rune-lab/kernel";
-import type { Command, ConfigStore, IToastStore } from "@rune-lab/kernel";
+import { getCommandStore } from "../../../../kernel/src/mod.ts";
+import type {
+  Command,
+  ConfigStore,
+  IToastStore,
+} from "../../../../kernel/src/mod.ts";
 
 export type { Command };
 

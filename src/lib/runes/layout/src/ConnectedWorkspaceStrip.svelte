@@ -1,6 +1,6 @@
 <!-- src/lib/features/layout/smart/ConnectedWorkspaceStrip.svelte -->
 <script lang="ts">
-    import { getLayoutStore, type WorkspaceItem } from "@rune-lab/kernel";
+    import { getLayoutStore, type WorkspaceItem } from "../../../kernel/src/mod.ts";
     import WorkspaceStrip from "./WorkspaceStrip.svelte";
     import { createWorkspaceConnection } from "./connection-factory.ts";
     import type { Snippet } from "svelte";

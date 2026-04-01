@@ -13,8 +13,8 @@ import {
   scaledRate,
   toMoneySnapshot,
   triangularConversion,
-} from "@rune-lab/money";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
+} from "./mod.ts";
+import { RUNE_LAB_CONTEXT } from "../../../../kernel/src/mod.ts";
 
 export class ExchangeRateStore {
   #rates = $state<RateMap>({});

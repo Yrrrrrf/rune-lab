@@ -4,8 +4,8 @@ import {
   type ConfigStore,
   createConfigStore,
   getLanguageStore,
-} from "@rune-lab/kernel";
-import type { Language } from "@rune-lab/kernel";
+} from "../../../kernel/src/mod.ts";
+import type { Language } from "../../../kernel/src/mod.ts";
 
 export type { Language };
 

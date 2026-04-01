@@ -1,8 +1,8 @@
 /**
  * Toast notification store
  */
-import { getToastStore } from "@rune-lab/kernel";
-import type { Toast, ToastType } from "@rune-lab/kernel";
+import { getToastStore } from "../../../../kernel/src/mod.ts";
+import type { Toast, ToastType } from "../../../../kernel/src/mod.ts";
 
 export type { Toast, ToastType };
 

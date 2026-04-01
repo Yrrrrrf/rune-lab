@@ -44,7 +44,7 @@
     import {
         getShortcutStore,
         shortcutListener,
-    } from "@rune-lab/palettes";
+    } from "../../palettes/src/mod.ts";
     import { onMount } from "svelte";
 
     /**

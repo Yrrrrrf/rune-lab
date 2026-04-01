@@ -1,4 +1,4 @@
-import type { PersistenceDriver } from "@rune-lab/kernel";
+import type { PersistenceDriver } from "./types.ts";
 import { createInMemoryDriver } from "./drivers.ts";
 import { DEV } from "esm-env";
 

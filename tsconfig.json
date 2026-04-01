@@ -13,24 +13,7 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "skipLibCheck": true,
-    "paths": {
-      "@rune-lab/kernel": [
-        "./src/lib/kernel/src/mod.ts"
-      ],
-      "@rune-lab/layout": [
-        "./src/lib/runes/layout/src/mod.ts"
-      ],
-      "@rune-lab/palettes": [
-        "./src/lib/runes/palettes/src/mod.ts"
-      ],
-      "@rune-lab/money": [
-        "./src/lib/runes/plugins/money/src/mod.ts"
-      ],
-      "@rune-lab/i18n/*": [
-        "./src/lib/i18n/*"
-      ]
-    }
+    "skipLibCheck": true
   },
   "exclude": [
     ".*",

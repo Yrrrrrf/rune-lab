@@ -5,8 +5,8 @@
     localStorageDriver,
     initializeStores,
     defineRune,
-  } from "@rune-lab/kernel";
-  import type { PersistenceDriver, RunePlugin } from "@rune-lab/kernel";
+  } from "./kernel/src/mod.ts";
+  import type { PersistenceDriver, RunePlugin } from "./kernel/src/mod.ts";
 
   /**
    * Namespaced configuration for Rune Lab plugins.
@@ -61,7 +61,7 @@
   setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
 
   // 4. Collect all overlays
-  const allOverlays = $derived(plugins.flatMap(p => p.overlays ?? []) as Component<Record<never, never>>[]);
+  const allOverlays = $derived(plugins.flatMap((p: RunePlugin) => p.overlays ?? []) as Component<Record<never, never>>[]);
 
   // ── Initialization for layout ──────────────────────────
   const appStore = stores.get("app") as any;

@@ -1,12 +1,12 @@
 // src/lib/state/layout.svelte.ts
-import { getLayoutStore } from "@rune-lab/kernel";
+import { getLayoutStore } from "../../../kernel/src/mod.ts";
 import type {
   NavigationItem,
   NavigationSection,
   PersistenceDriver,
   WorkspaceItem,
-} from "@rune-lab/kernel";
-import { resolveDriver } from "@rune-lab/kernel";
+} from "../../../kernel/src/mod.ts";
+import { resolveDriver } from "../../../kernel/src/mod.ts";
 
 export type { NavigationItem, NavigationSection, WorkspaceItem };
 

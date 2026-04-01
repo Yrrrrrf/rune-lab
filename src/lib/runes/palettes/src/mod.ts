@@ -1,5 +1,5 @@
-import { defineRune, RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import type { ConfigStore, RunePlugin } from "@rune-lab/kernel";
+import { defineRune, RUNE_LAB_CONTEXT } from "../../../kernel/src/mod.ts";
+import type { ConfigStore, RunePlugin } from "../../../kernel/src/mod.ts";
 import { createCommandStore } from "./commands/store.svelte.ts";
 import { createShortcutStore } from "./shortcuts/store.svelte.ts";
 import { createToastStore } from "./notifications/store.svelte.ts";

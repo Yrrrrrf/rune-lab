@@ -1,5 +1,8 @@
-import { defineRune, RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import type { PersistenceDriver, RunePlugin } from "@rune-lab/kernel";
+import { defineRune, RUNE_LAB_CONTEXT } from "../../../../kernel/src/mod.ts";
+import type {
+  PersistenceDriver,
+  RunePlugin,
+} from "../../../../kernel/src/mod.ts";
 import {
   type Currency,
   currencyStore,

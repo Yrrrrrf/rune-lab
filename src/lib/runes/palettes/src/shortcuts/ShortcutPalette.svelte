@@ -1,12 +1,12 @@
 <!-- src/lib/features/shortcuts/ShortcutPalette.svelte -->
 <script lang="ts">
     import { tick } from "svelte";
-    import type { ShortcutEntry } from "@rune-lab/kernel";
+    import type { ShortcutEntry } from "../../../../kernel/src/mod.ts";
     import {
         getAppStore,
         getShortcutStore,
         LAYOUT_SHORTCUTS,
-    } from "@rune-lab/kernel";
+    } from "../../../../kernel/src/mod.ts";
 
     const appStore = getAppStore();
     const shortcutStore = getShortcutStore();
@@ -22,8 +22,8 @@
         const q = query.toLowerCase();
         return shortcutStore.active.filter(
             (e) =>
-                e.label.toLowerCase().includes(q) ||
-                e.category.toLowerCase().includes(q) ||
+                (e.label ?? "").toLowerCase().includes(q) ||
+                (e.category ?? "").toLowerCase().includes(q) ||
                 e.keys.toLowerCase().includes(q),
         );
     });
@@ -34,14 +34,15 @@
 
         const result: Record<string, Record<string, ShortcutEntry[]>> = {};
         for (const entry of filtered) {
-            const scope = entry.scope;
-            const category = entry.category;
+            const scope = entry.scope ?? "global";
+            const category = entry.category ?? "General";
             if (!result[scope]) result[scope] = {};
             if (!result[scope][category]) result[scope][category] = [];
             result[scope][category].push(entry);
         }
         return result;
     });
+
 
     // Scopes are now provided by the store
     const sortedScopes = $derived(

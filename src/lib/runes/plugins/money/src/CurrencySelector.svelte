@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { ResourceSelector } from "@rune-lab/layout";
-    import { getCurrencyStore } from "@rune-lab/kernel";
+    import { ResourceSelector } from "../../../layout/src/mod.ts";
+    import { getCurrencyStore } from "../../../../kernel/src/mod.ts";
 
     const currencyStore = getCurrencyStore();
 

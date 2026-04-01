@@ -1,6 +1,12 @@
 import { untrack } from "svelte";
-import { getShortcutStore, shortcutListener } from "@rune-lab/kernel";
-import type { ShortcutConfig, ShortcutEntry } from "@rune-lab/kernel";
+import {
+  getShortcutStore,
+  shortcutListener,
+} from "../../../../kernel/src/mod.ts";
+import type {
+  ShortcutConfig,
+  ShortcutEntry,
+} from "../../../../kernel/src/mod.ts";
 
 export type { ShortcutConfig, ShortcutEntry };
 

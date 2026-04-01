@@ -1,8 +1,8 @@
 // @ts-nocheck: legacy daisyui imports and complex ConfigStore typing
 // client/packages/ui/src/state/theme-config.svelte.ts
 
-import { createConfigStore, getThemeStore } from "@rune-lab/kernel";
-import type { Theme } from "@rune-lab/kernel";
+import { createConfigStore, getThemeStore } from "../../../kernel/src/mod.ts";
+import type { Theme } from "../../../kernel/src/mod.ts";
 import { BROWSER } from "esm-env";
 
 export type { Theme };

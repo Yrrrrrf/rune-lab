@@ -2,8 +2,8 @@
 // Context-aware money composable that reads CurrencyStore + LanguageStore
 
 import { getContext } from "svelte";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
-import type { ConfigStore } from "@rune-lab/kernel";
+import { RUNE_LAB_CONTEXT } from "../../../../kernel/src/mod.ts";
+import type { ConfigStore } from "../../../../kernel/src/mod.ts";
 import {
   addMoney,
   convertMoney,
@@ -17,13 +17,13 @@ import {
   toPaypalMoney,
   toSquareMoney,
   toStripeMoney,
-} from "@rune-lab/money";
+} from "./mod.ts";
 import type {
   CurrencyStore,
   Dinero,
   ExchangeRateStore,
   ISO4217Code,
-} from "@rune-lab/money";
+} from "./mod.ts";
 
 export interface UseMoneyReturn {
   toDinero: (
