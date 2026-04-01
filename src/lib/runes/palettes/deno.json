@@ -1,8 +1,0 @@
-{
-  "name": "@rune-lab/palettes",
-  "version": "0.1.0",
-  "exports": "./mod.ts",
-  "imports": {
-    "hotkeys-js": "npm:hotkeys-js"
-  }
-}

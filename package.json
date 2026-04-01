@@ -1,5 +1,57 @@
 {
   "name": "rune-lab",
-  "version": "0.4.2-beta.2",
-  "packageManager": "pnpm@10.33.0"
+  "version": "0.4.2-beta.10",
+  "description": "Modern toolkit for Svelte 5 Runes applications.",
+  "type": "module",
+  "readme": "./README.md",
+  "license": "MIT",
+  "author": "Fernando Bryan Reza Campos",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
+  },
+  "exports": {
+    ".": {
+      "svelte": "./dist/mod.js",
+      "types": "./dist/mod.d.ts",
+      "default": "./dist/mod.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "svelte": "npm:svelte",
+    "@sveltejs/kit": "npm:@sveltejs/kit",
+    "@inlang/paraglide-js": "npm:@inlang/paraglide-js"
+  },
+  "dependencies": {
+    "esm-env": "npm:esm-env",
+    "hotkeys-js": "npm:hotkeys-js",
+    "daisyui": "npm:daisyui",
+    "dinero.js": "npm:dinero.js"
+  },
+  "devDependencies": {
+    "typescript": "npm:typescript@5.9.3",
+    "vite": "npm:vite",
+    "vite-plus": "npm:vite-plus",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite",
+    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
+    "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
+    "jsdom": "npm:jsdom",
+    "@testing-library/jest-dom": "npm:@testing-library/jest-dom"
+  },
+  "keywords": [
+    "svelte",
+    "svelte-5",
+    "runes",
+    "ui",
+    "components"
+  ],
+  "exclude": [
+    ".*",
+    "scripts/**",
+    "dist/**",
+    "**/*.test.ts"
+  ]
 }

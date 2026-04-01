@@ -1,5 +1,0 @@
-{
-  "name": "@rune-lab/layout",
-  "version": "0.1.0",
-  "exports": "./mod.ts"
-}

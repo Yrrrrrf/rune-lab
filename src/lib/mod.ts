@@ -6,5 +6,5 @@ export * from "@rune-lab/layout";
 export * from "@rune-lab/palettes";
 export * from "@rune-lab/money";
 
-// import denoConfig from "../deno.json" with { type: "json" };
-// export const version = (): string => denoConfig.version;
+import pkgConfig from "../../package.json" with { type: "json" };
+export const version = (): string => pkgConfig.version;

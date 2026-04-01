@@ -7,7 +7,7 @@
 #   just -f ~/rune-lab/scripts/inject.just inject $PWD
 #   just -f ~/rune-lab/scripts/inject.just inject /absolute/path/to/project
 #   just -f ~/rune-lab/scripts/inject.just inject-clean $PWD
-#
+#``
 # Recipes:
 #   inject        — build rune-lab, then hot-swap node_modules/rune-lab
 #   inject-clean  — full dep reset (yog reborn --deep), then inject

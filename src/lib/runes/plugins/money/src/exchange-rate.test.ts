@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 import { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 import { currencyStore, setExchangeRateStore } from "./currency.svelte.ts";
-import { inMemoryDriver, RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
+import { RUNE_LAB_CONTEXT } from "@rune-lab/kernel";
 import { languageStore } from "../../../layout/src/language.svelte.ts";
 
 // Mock useMoney since it uses getContext and other stores

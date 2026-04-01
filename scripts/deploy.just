@@ -3,9 +3,8 @@
 build:
     # * Clean up previous build
     rm -rf dist/
-    # * Build library using vite-plus
+    deno run -A npm:@inlang/paraglide-js compile  --project ./src/lib/i18n/project.inlang --outdir ./src/lib/i18n/paraglide
     deno run -A npm:@sveltejs/package -- -i src -o dist
-    # vp build
     # * Build ESM package
     # deno run -A scripts/build_pkg.ts
     @echo "✓ build done"
@@ -14,13 +13,8 @@ build:
 [group('Deploy')]
 deploy: build
     # * Format build output
-    # deno fmt --no-config dist
-    deno fmt dist
+    deno fmt --no-config dist
     # * Publish to npm
-    # (cd dist && bun publish)
+    bun publish
     # * Publish to jsr
-    # rm -rf /tmp/rune-lab
-    # cp -r dist/ /tmp/rune-lab
-    # (cd /tmp/rune-lab && deno publish --no-check)
-    # (cd /tmp/rune-lab && deno install && deno publish --no-check --allow-slow-types)
     @echo "✓ deploy done"
