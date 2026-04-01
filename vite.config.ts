@@ -4,11 +4,18 @@ import { defineConfig } from "vite-plus";
 import tailwindcss from "@tailwindcss/vite";
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 // main framework
-import { svelte } from "@sveltejs/vite-plugin-svelte";
+// sveltekit for local testing of the main components
+import { sveltekit } from "@sveltejs/kit/vite";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      // Map "rune-lab" self-imports to the library source during dev
+      "rune-lab": "./src/lib",
+    },
+  },
   plugins: [
-    svelte(),
+    sveltekit(),
     tailwindcss(),
     paraglideVitePlugin({
       project: "./src/lib/i18n/project.inlang",

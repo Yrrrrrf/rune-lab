@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.4.2-omega.3",
+  "version": "0.4.2-omega.4",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "readme": "./README.md",
@@ -9,6 +9,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
+  },
+  "scripts": {
+    "dev": "vite dev"
   },
   "exports": {
     ".": {
@@ -32,6 +35,7 @@
     "dinero.js": "npm:dinero.js"
   },
   "devDependencies": {
+    "@sveltejs/kit": "npm:@sveltejs/kit",
     "typescript": "npm:typescript@5.9.3",
     "vite": "npm:vite",
     "vite-plus": "npm:vite-plus",

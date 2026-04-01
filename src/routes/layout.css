@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* @plugin "@tailwindcss/forms"; */
+/* @plugin "@tailwindcss/typography"; */
+
+@plugin "daisyui" {
+  themes: all;
+}
+
+/* Add this to all projects that use rune-lab */
+@source "../../node_modules/rune-lab/dist";
