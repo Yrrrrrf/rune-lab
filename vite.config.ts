@@ -8,6 +8,11 @@ import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { sveltekit } from "@sveltejs/kit/vite";
 
 export default defineConfig({
+  server: {
+    fs: {
+      allow: [".", "package.json"],
+    },
+  },
   resolve: {
     alias: {
       "rune-lab": new URL("src/lib/mod.ts", import.meta.url).pathname,

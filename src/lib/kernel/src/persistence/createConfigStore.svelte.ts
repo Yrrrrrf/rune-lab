@@ -117,8 +117,8 @@ class ConfigStoreImpl<T = unknown> {
     const targetId = id ?? this.current;
     return (this.get(targetId) as Record<string, unknown> | undefined)
       ?.[prop as string] as
-      | T[K]
-      | undefined;
+        | T[K]
+        | undefined;
   }
 
   /**

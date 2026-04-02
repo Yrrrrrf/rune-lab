@@ -37,9 +37,11 @@
 
   // 0. Create and provide the built-in AppStore
   const appStore = createAppStore();
-  if (config.app) {
-    appStore.init(config.app);
-  }
+  untrack(() => {
+    if (config.app) {
+      appStore.init(config.app);
+    }
+  });
   setContext(RUNE_LAB_CONTEXT.app, appStore);
 
   // 1. Register all plugins
