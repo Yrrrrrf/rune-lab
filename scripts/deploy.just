@@ -11,8 +11,10 @@ build:
     fd -e test.js . dist/i18n -x rm {}
     # * Rewrite .ts → .js in dist
     fd -e js -e ts -e svelte . dist -x sed -i "s/from \"\(\.[^\"]*\)\.ts\"/from \"\1.js\"/g; s/from '\(\.[^']*\)\.ts'/from '\1.js'/g" {}
-    # * Fix package.json path (dev: ../../package.json → dist: ../package.json)
-    fd -e js -e ts -e svelte . dist -x sed -i "s|from \"\.\.\/\.\.\/package\.json\"|from \"\.\.\/package\.json\"|g" {}
+    # * Inject package.json version as a static string in dist
+    PKG_VERSION=$(grep '"version"' package.json | sed 's/.*"version": "\(.*\)".*/\1/') && \
+        fd -e js -e ts -e svelte . dist -x sed -i '/import pkgConfig from.*package\.json/d' {} && \
+        fd -e js -e ts -e svelte . dist -x sed -i "s/pkgConfig\.version/\"$PKG_VERSION\"/g" {}
     rm -rf .svelte-kit/__package__
     deno fmt --no-config dist
     @echo "✓ build done"
