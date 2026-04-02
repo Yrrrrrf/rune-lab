@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/Yrrrrrf/rune-lab/main/src/sdk/ui/static/img/rune.png" alt="Rune Lab Icon" width="128" height="128" descripti``on="Icon representing the Svelte Runes system">
+  <img src="https://raw.githubusercontent.com/Yrrrrrf/rune-lab/main/static/img/rune.png" alt="Rune Lab Icon" width="128" height="128" descripti``on="Icon representing the Svelte Runes system">
   <div align="center">Rune Lab</div>
 </h1>
 
