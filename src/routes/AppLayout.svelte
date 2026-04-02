@@ -8,8 +8,8 @@
         getToastStore,
         getLayoutStore,
     } from "rune-lab";
-    import DashboardPanel from "./lab/panels/DashboardPanel.svelte";
-    import ShortcutsPanel from "./lab/panels/ShortcutsPanel.svelte";
+    import DashboardPanel from "./panels/DashboardPanel.svelte";
+    import ShortcutsPanel from "./panels/ShortcutsPanel.svelte";
     import { untrack, type Snippet } from "svelte";
 
     let { children, sections } = $props<{
@@ -62,18 +62,27 @@
         <DetailPanel>
             <div class="flex flex-col h-full w-full">
                 <!-- Header Tabs -->
-                <div class="p-4 border-b border-base-content/5 shrink-0 bg-base-100">
-                    <div role="tablist" class="tabs tabs-box tabs-sm w-full font-medium">
+                <div
+                    class="p-4 border-b border-base-content/5 shrink-0 bg-base-100"
+                >
+                    <div
+                        role="tablist"
+                        class="tabs tabs-box tabs-sm w-full font-medium"
+                    >
                         <button
                             role="tab"
-                            class="tab flex-1 {activeDetailTab === 'inspector' ? 'tab-active' : ''}"
+                            class="tab flex-1 {activeDetailTab === 'inspector'
+                                ? 'tab-active'
+                                : ''}"
                             onclick={() => (activeDetailTab = "inspector")}
                         >
                             Inspector
                         </button>
                         <button
                             role="tab"
-                            class="tab flex-1 {activeDetailTab === 'shortcuts' ? 'tab-active' : ''}"
+                            class="tab flex-1 {activeDetailTab === 'shortcuts'
+                                ? 'tab-active'
+                                : ''}"
                             onclick={() => (activeDetailTab = "shortcuts")}
                         >
                             Shortcuts
