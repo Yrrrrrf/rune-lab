@@ -24,6 +24,9 @@
 
     let isOpen = $state(false);
     let triggerEl = $state<HTMLElement>();
+    // FIX: track the portaled panel so clicks inside it are not treated as
+    // "outside" clicks. The panel lives outside triggerEl in the DOM (portal).
+    let panelEl = $state<HTMLElement | null>(null);
     let panelStyle = $state("position:fixed;visibility:hidden");
 
     function computePosition() {
@@ -53,24 +56,44 @@
         isOpen = false;
     }
 
+    // FIX: removed `capture: true`.
+    //
+    // With capture:true, handleOutsideClick fired BEFORE the item button's
+    // onclick. Because Svelte 5 flushes {#if} DOM removals synchronously in
+    // the same reactive batch, the panel was torn down before the bubble phase
+    // could deliver the click to the button. Result: LanguageSelector and
+    // CurrencySelector needed two clicks (ThemeSelector was immune only
+    // because its radio `change` event is a separate, later event).
+    //
+    // Without capture:true the order is:
+    //   button onclick → wrapper div onclick (close) → document bubble
+    // The item action runs first; then we close; then outside-click check.
+    //
+    // panelEl is checked too: even after the panel is removed from the live
+    // DOM, the detached node still answers .contains() correctly, so we never
+    // double-close on a panel click.
     function handleOutsideClick(e: MouseEvent) {
-        if (!triggerEl?.contains(e.target as Node)) close();
+        const target = e.target as Node;
+        if (!triggerEl?.contains(target) && !panelEl?.contains(target)) {
+            close();
+        }
+    }
+
+    // FIX: named function so we can actually remove it in cleanup.
+    // Before, an inline arrow was passed to addEventListener and could never
+    // be removed — a new Escape handler stacked up on every open.
+    function handleKeyDown(e: KeyboardEvent) {
+        if (e.key === "Escape") close();
     }
 
     $effect(() => {
         if (isOpen) {
-            document.addEventListener("click", handleOutsideClick, {
-                capture: true,
-            });
-            document.addEventListener(
-                "keydown",
-                (e) => e.key === "Escape" && close(),
-            );
+            document.addEventListener("click", handleOutsideClick);
+            document.addEventListener("keydown", handleKeyDown);
         }
         return () => {
-            document.removeEventListener("click", handleOutsideClick, {
-                capture: true,
-            });
+            document.removeEventListener("click", handleOutsideClick);
+            document.removeEventListener("keydown", handleKeyDown); // was missing
         };
     });
 </script>
@@ -148,7 +171,9 @@
 </div>
 
 {#if isOpen}
+    <!-- FIX: bind:this={panelEl} so handleOutsideClick can exclude it -->
     <div
+        bind:this={panelEl}
         use:portal
         style={panelStyle}
         class={responsive ? "hidden md:block" : "block"}
@@ -159,8 +184,6 @@
         >
             {#each options as option}
                 <li role="option" aria-selected={value === option}>
-                    <!-- Event delegation: we close on click unless they clicked the scrollbar -->
-                    <!-- In a real world component you'd wrap the button down here or add a capture handler -->
                     <div
                         role="presentation"
                         onclick={close}

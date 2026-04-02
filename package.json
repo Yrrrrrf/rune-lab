@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "readme": "./README.md",
@@ -11,7 +11,8 @@
     "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
   },
   "scripts": {
-    "dev": "vite dev"
+    "dev": "vite dev",
+    "gen:version": "node scripts/gen-version.js"
   },
   "exports": {
     ".": {

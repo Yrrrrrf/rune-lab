@@ -8,8 +8,15 @@ export type ConfigStore<T = unknown> = {
   set: (id: unknown) => void;
   get: (id: unknown) => T | undefined;
   getProp: <K extends keyof T>(prop: K, id?: unknown) => T[K] | undefined;
-  /** Append additional items (e.g. custom themes/currencies from the consuming app) */
   addItems: (newItems: T[]) => void;
+  /**
+   * Inject (or replace) the persistence driver at runtime.
+   * Call this inside your plugin factory so the real driver
+   * (e.g. localStorageDriver from RuneProvider) is used instead
+   * of the default in-memory fallback that was set at module-load time.
+   * Also re-reads any value already persisted under storageKey.
+   */
+  setDriver: (driver: PersistenceDriver) => void;
 };
 
 export interface ConfigStoreOptions<T = unknown> {
@@ -64,6 +71,23 @@ class ConfigStoreImpl<T = unknown> {
   }
 
   /**
+   * Replace the persistence driver and immediately re-read any saved value.
+   *
+   * Singletons are constructed at module-load time (before RuneProvider
+   * mounts), so they default to createInMemoryDriver(). Call this inside
+   * your plugin factory to swap in the real driver (e.g. localStorageDriver)
+   * so that all subsequent .set() calls are persisted correctly.
+   */
+  setDriver(driver: PersistenceDriver): void {
+    this.#driver = driver;
+    // Re-read persisted value now that we have a real driver
+    const saved = driver.get(this.#options.storageKey);
+    if (saved && this.get(saved)) {
+      this.current = saved;
+    }
+  }
+
+  /**
    * Set current item with validation
    */
   set(id: unknown): void {
@@ -93,8 +117,8 @@ class ConfigStoreImpl<T = unknown> {
     const targetId = id ?? this.current;
     return (this.get(targetId) as Record<string, unknown> | undefined)
       ?.[prop as string] as
-        | T[K]
-        | undefined;
+      | T[K]
+      | undefined;
   }
 
   /**

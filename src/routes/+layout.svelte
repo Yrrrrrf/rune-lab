@@ -6,6 +6,7 @@
 		PalettesPlugin,
 		MoneyPlugin,
 		type NavigationSection,
+		rl_version,
 	} from "rune-lab";
 	import AppLayout from "./AppLayout.svelte";
 
@@ -16,7 +17,12 @@
 			id: "lab",
 			title: "Lab",
 			items: [
-				{ id: "lab.overview", label: "Overview", icon: "🔬", href: "/lab" },
+				{
+					id: "lab.overview",
+					label: "Overview",
+					icon: "🔬",
+					href: "/lab",
+				},
 				{ id: "lab.components", label: "Components", icon: "🧩" },
 				{ id: "lab.themes", label: "Themes", icon: "🎨" },
 			],
@@ -38,8 +44,8 @@
 		favicon: "/img/rune.png",
 		icons: "material",
 		app: {
-			name: "Rune Lab Explorer",
-			version: "0.4.2-omega.4",
+			name: "Rune Lab",
+			version: rl_version(),
 			description: "Modern toolkit for Svelte 5 Runes",
 			author: "Yrrrrrf",
 		},

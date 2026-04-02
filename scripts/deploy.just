@@ -11,6 +11,8 @@ build:
     fd -e test.js . dist/i18n -x rm {}
     # * Rewrite .ts → .js in dist
     fd -e js -e ts -e svelte . dist -x sed -i "s/from \"\(\.[^\"]*\)\.ts\"/from \"\1.js\"/g; s/from '\(\.[^']*\)\.ts'/from '\1.js'/g" {}
+    # * Fix package.json path (dev: ../../package.json → dist: ../package.json)
+    fd -e js -e ts -e svelte . dist -x sed -i "s|from \"\.\.\/\.\.\/package\.json\"|from \"\.\.\/package\.json\"|g" {}
     rm -rf .svelte-kit/__package__
     deno fmt --no-config dist
     @echo "✓ build done"

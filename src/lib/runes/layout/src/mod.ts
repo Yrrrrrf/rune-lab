@@ -38,15 +38,18 @@ export const LayoutPlugin: RunePlugin = defineRune({
     {
       id: "theme",
       contextKey: RUNE_LAB_CONTEXT.theme,
-      factory: (config: unknown, _driver: PersistenceDriver) => {
+      factory: (config: unknown, driver: PersistenceDriver) => {
+        // FIX: inject the real driver (e.g. localStorageDriver from RuneProvider).
+        // The singleton was built at module-load time with createInMemoryDriver(),
+        // so without this call every theme change is lost on page reload.
+        themeStore.setDriver(driver);
+
         const c = config as Record<string, unknown>;
         if (c.customThemes) {
           themeStore.addItems(c.customThemes as Theme[]);
         }
-        if (
-          c.defaultTheme &&
-          !(themeStore as unknown as { current: unknown }).current
-        ) {
+        // Only apply defaultTheme when there's no persisted value already loaded
+        if (c.defaultTheme && !themeStore.current) {
           if (themeStore.get(c.defaultTheme as never)) {
             themeStore.set(c.defaultTheme as never);
           }
@@ -57,7 +60,11 @@ export const LayoutPlugin: RunePlugin = defineRune({
     {
       id: "language",
       contextKey: RUNE_LAB_CONTEXT.language,
-      factory: (config: unknown, _driver: PersistenceDriver) => {
+      factory: (config: unknown, driver: PersistenceDriver) => {
+        // FIX: same as theme — swap in the real driver so language choices
+        // are persisted to localStorage and survive page reloads.
+        languageStore.setDriver(driver);
+
         const c = config as Record<string, unknown>;
         if (c.locales) {
           const localesToKeep = c.locales as string[];

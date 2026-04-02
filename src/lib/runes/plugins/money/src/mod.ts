@@ -53,9 +53,14 @@ export const MoneyPlugin: RunePlugin = defineRune({
       contextKey: RUNE_LAB_CONTEXT.currency,
       factory: (
         config: unknown,
-        _driver: PersistenceDriver,
+        driver: PersistenceDriver,
         stores: Map<string, unknown>,
       ) => {
+        // FIX: inject the real driver so currency selection is persisted.
+        // Previously `_driver` was ignored, leaving the singleton on its
+        // default createInMemoryDriver() — wiped on every page reload.
+        currencyStore.setDriver(driver);
+
         const c = config as MoneyConfig;
         setExchangeRateStore(stores.get("exchangeRate") as ExchangeRateStore);
 
@@ -65,10 +70,7 @@ export const MoneyPlugin: RunePlugin = defineRune({
           }
         }
 
-        if (
-          c?.defaultCurrency &&
-          !(currencyStore as unknown as { current: unknown }).current
-        ) {
+        if (c?.defaultCurrency && !currencyStore.current) {
           if (currencyStore.get(c.defaultCurrency as never)) {
             currencyStore.set(c.defaultCurrency as never);
           }
