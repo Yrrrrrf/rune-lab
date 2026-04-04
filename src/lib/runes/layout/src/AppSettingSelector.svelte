@@ -1,6 +1,19 @@
-<script lang="ts">
-    import { portal } from "../../../kernel/src/mod.ts";
+<script lang="ts" module>
     import { type Snippet } from "svelte";
+
+    export interface AppSettingSelectorProps<T> {
+        options: T[];
+        value: T;
+        item: Snippet<[T]>;
+        triggerLabel: Snippet<[T]>;
+        tooltip?: string;
+        direction?: "top" | "bottom" | "left" | "right" | "end" | "auto";
+        responsive?: boolean;
+    }
+</script>
+
+<script lang="ts" generics="T">
+    import { portal } from "../../../kernel/src/mod.ts";
 
     let {
         options,
@@ -11,10 +24,10 @@
         direction = "bottom",
         responsive = true,
     } = $props<{
-        options: any[];
-        value: any;
-        item: Snippet<[any]>;
-        triggerLabel: Snippet<[any]>;
+        options: T[];
+        value: T;
+        item: Snippet<[T]>;
+        triggerLabel: Snippet<[T]>;
         tooltip?: string;
         direction?: "top" | "bottom" | "left" | "right" | "end" | "auto";
         responsive?: boolean;
@@ -131,12 +144,20 @@
                                 class="border-b border-base-100 last:border-0"
                                 role="menuitem"
                             >
-                                <button
-                                    class="w-full text-left py-3"
+                                <div
+                                    role="button"
+                                    tabindex="0"
+                                    class="w-full text-left py-3 cursor-pointer hover:bg-base-200 px-4 transition-colors"
                                     onclick={() => modal?.close()}
+                                    onkeydown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                            e.preventDefault();
+                                            modal?.close();
+                                        }
+                                    }}
                                 >
                                     {@render item(option)}
-                                </button>
+                                </div>
                             </li>
                         {/each}
                     </ul>

@@ -32,6 +32,8 @@ your app.
   (`LayoutPlugin`, `PalettesPlugin`, `MoneyPlugin`). Only load what you need.
 - **🎨 Dynamic Theming & i18n:** 32 DaisyUI themes and 13 pre-configured locales
   powered by Paraglide JS, with zero-flash SSR persistence.
+- **🔗 Declarative Callbacks:** Bridge store changes (theme, language, currency)
+  to your own system hooks via `RuneProvider` props.
 - **💾 Abstract Persistence Layer:** Swap between cookies, localStorage,
   sessionStorage, or in-memory state seamlessly via generic drivers.
 - **💸 Robust Money Subsystem:** Backed by Dinero.js for floating-point-safe
@@ -102,6 +104,7 @@ Get your application shell running in less than 40 lines. Inside your
     cookieDriver
   } from "rune-lab";
   import type { NavigationSection } from "rune-lab";
+  import { setLocale } from "$lib/i18n/paraglide/runtime.js";
 
   let { children } = $props();
 
@@ -117,13 +120,15 @@ Get your application shell running in less than 40 lines. Inside your
   ];
 </script>
 
-<!-- Initialize the system with your required plugins -->
+<!-- Initialize the system with your required plugins and callbacks -->
 <RuneProvider
   config={{
     app: { name: "My Startup", version: "1.0.0" },
     persistence: cookieDriver,
   }}
   plugins={[LayoutPlugin, PalettesPlugin]}
+  onLanguageChange={(l) => setLocale(l.code)}
+  onThemeChange={(t) => console.log(`Theme changed to ${t.name}`)}
 >
   <WorkspaceLayout>
     {#snippet navigationPanel()}
@@ -174,11 +179,19 @@ formatting, and live exchange-rate triangulation. To use it, simply register the
 
 ```svelte
 <script lang="ts">
-  import { MoneyDisplay, MoneyInput, useMoney } from "rune-lab";
+  import { 
+    MoneyDisplay, 
+    MoneyInput, 
+    CurrencySelector, 
+    useMoney 
+  } from "rune-lab";
   
   let price = $state(15000); // Minor units (e.g., cents) -> $150.00
   const { convert, format } = useMoney();
 </script>
+
+<!-- Select from available currencies -->
+<CurrencySelector />
 
 <!-- Formats safely and localizes based on the active LanguageStore -->
 <MoneyDisplay amount={price} currency="USD" />
@@ -210,6 +223,23 @@ Pass one to `config.persistence` on `<RuneProvider>`:
 ```
 
 ## Advanced Patterns
+
+### Store Observers (`onChange`)
+
+Beyond the `RuneProvider` props, you can imperatively subscribe to any
+`ConfigStore` (theme, language, currency) from your own services or components.
+Callbacks include `try/catch` protection so they never crash the store.
+
+```ts
+import { getThemeStore } from "rune-lab";
+
+const themeStore = getThemeStore();
+
+// Returns an unsubscribe function
+const unsub = themeStore.onChange((newId, oldId) => {
+  console.log(`Theme swapped from ${oldId} to ${newId}`);
+});
+```
 
 ### Keyboard Shortcuts (Auto-Cleanup)
 

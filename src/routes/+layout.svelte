@@ -8,6 +8,7 @@
 		type NavigationSection,
 		version,
 	} from "rune-lab";
+	import { setLocale } from "$lib/i18n/paraglide/runtime.js";
 	import AppLayout from "./AppLayout.svelte";
 
 	let { children } = $props();
@@ -51,6 +52,7 @@
 		},
 	}}
 	plugins={[LayoutPlugin, PalettesPlugin, MoneyPlugin]}
+	onLanguageChange={(l) => setLocale(l.code)}
 >
 	<AppLayout {sections}>
 		{@render children()}

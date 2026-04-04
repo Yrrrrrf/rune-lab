@@ -61,18 +61,20 @@
     );
 </script>
 
+{#snippet _triggerLabel(v: any)}
+    {@render triggerLabel(v)}
+{/snippet}
+
+{#snippet _item(option: any)}
+    {@render item(option)}
+{/snippet}
+
 <AppSettingSelector
     value={active}
     options={available}
     tooltip={resolveLabel(active)}
     {direction}
     {responsive}
->
-    {#snippet triggerLabel(value)}
-        {@render triggerLabel(value)}
-    {/snippet}
-
-    {#snippet item(option)}
-        {@render item(option)}
-    {/snippet}
-</AppSettingSelector>
+    triggerLabel={_triggerLabel}
+    item={_item}
+/>

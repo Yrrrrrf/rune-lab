@@ -26,10 +26,20 @@
     [pluginId: string]: unknown;
   }
 
-  let { children, config = {}, plugins = [] } = $props<{
+  let {
+    children,
+    config = {},
+    plugins = [],
+    onThemeChange,
+    onLanguageChange,
+    onCurrencyChange,
+  } = $props<{
     children: Snippet;
     config?: RuneLabConfig;
     plugins?: RunePlugin[];
+    onThemeChange?: (newTheme: any, oldTheme: any) => void;
+    onLanguageChange?: (newLang: any, oldLang: any) => void;
+    onCurrencyChange?: (newCurrency: any, oldCurrency: any) => void;
   }>();
 
   const initialPlugins = untrack(() => plugins);
@@ -78,9 +88,28 @@
 
   // ── Initialization for layout ──────────────────────────
   const layoutStore = stores.get("layout") as any;
+  const themeStore = stores.get("theme") as any;
+  const languageStore = stores.get("language") as any;
+  const currencyStore = stores.get("currency") as any;
 
   onMount(() => {
     if (layoutStore) layoutStore.init();
+
+    const unsubs: (() => void)[] = [];
+
+    if (onThemeChange && themeStore) {
+      unsubs.push(themeStore.onChange(onThemeChange));
+    }
+    if (onLanguageChange && languageStore) {
+      unsubs.push(languageStore.onChange(onLanguageChange));
+    }
+    if (onCurrencyChange && currencyStore) {
+      unsubs.push(currencyStore.onChange(onCurrencyChange));
+    }
+
+    return () => {
+      unsubs.forEach((unsub) => unsub());
+    };
   });
 
   // Meta tags derived from app store state

@@ -19,6 +19,9 @@ export * from "./strategies.ts";
 export * from "./money-primitive.ts";
 export * from "./useMoney.ts";
 export * from "./useMoneyFilter.svelte.ts";
+export { default as CurrencySelector } from "./CurrencySelector.svelte";
+export { default as MoneyDisplay } from "./MoneyDisplay.svelte";
+export { default as MoneyInput } from "./MoneyInput.svelte";
 
 interface MoneyConfig {
   exchangeRates?: {

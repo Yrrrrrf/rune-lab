@@ -1,7 +1,6 @@
 <script lang="ts">
     import ResourceSelector from "./ResourceSelector.svelte";
     import { getLanguageStore } from "../../../kernel/src/mod.ts";
-    import { setLocale } from "../../../i18n/paraglide/runtime.js";
 
     const languageStore = getLanguageStore();
 
@@ -33,7 +32,6 @@
             class="flex items-center gap-3 w-full"
             onclick={() => {
                 languageStore.set(l.code);
-                setLocale(l.code as any);
                 current = l.code;
                 onchange?.(l.code);
             }}

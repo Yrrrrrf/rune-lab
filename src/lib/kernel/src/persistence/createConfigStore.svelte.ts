@@ -10,6 +10,11 @@ export type ConfigStore<T = unknown> = {
   getProp: <K extends keyof T>(prop: K, id?: unknown) => T[K] | undefined;
   addItems: (newItems: T[]) => void;
   /**
+   * Register a callback to fire when the current item changes.
+   * Returns an unsubscribe function.
+   */
+  onChange: (cb: (newId: unknown, oldId: unknown) => void) => () => void;
+  /**
    * Inject (or replace) the persistence driver at runtime.
    * Call this inside your plugin factory so the real driver
    * (e.g. localStorageDriver from RuneProvider) is used instead
@@ -44,6 +49,7 @@ class ConfigStoreImpl<T = unknown> {
 
   #options: ConfigStoreOptions<T>;
   #driver: PersistenceDriver;
+  #callbacks: Set<(newId: unknown, oldId: unknown) => void> = new Set();
 
   constructor(options: ConfigStoreOptions<T>) {
     this.#options = options;
@@ -96,8 +102,31 @@ class ConfigStoreImpl<T = unknown> {
       console.warn(`${this.#options.displayName} "${id}" not found`);
       return;
     }
+    const old = this.current;
     this.current = id;
     this.#driver.set(this.#options.storageKey, String(id));
+
+    // Call callbacks after state update and persistence
+    this.#callbacks.forEach((cb) => {
+      try {
+        cb(id, old);
+      } catch (err) {
+        if (DEV) {
+          console.error(
+            `[rune-lab] Error in ${this.#options.displayName} onChange callback:`,
+            err,
+          );
+        }
+      }
+    });
+  }
+
+  /**
+   * Register a change callback
+   */
+  onChange(cb: (newId: unknown, oldId: unknown) => void): () => void {
+    this.#callbacks.add(cb);
+    return () => this.#callbacks.delete(cb);
   }
 
   /**
