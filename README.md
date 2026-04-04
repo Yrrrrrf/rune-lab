@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/Yrrrrrf/rune-lab/main/static/img/rune.png" alt="Rune Lab Icon" width="128" height="128" descripti``on="Icon representing the Svelte Runes system">
+  <img src="https://raw.githubusercontent.com/Yrrrrrf/rune-lab/main/static/img/rune.png" alt="Rune Lab Icon" width="128" height="128" description="Icon representing the Svelte Runes system">
   <div align="center">Rune Lab</div>
 </h1>
 
@@ -14,72 +14,120 @@
 
 ## Overview
 
-**Rune Lab** is your modern toolkit for crafting stunning, reactive web
-applications with **Svelte 5**. Harnessing the power of Svelte's new **Runes**
-system, Rune Lab offers a suite of elegant UI components designed for seamless
-data handling and beautiful theming.
+**Rune Lab** is a modern, extensible **plugin-based UI shell** for **Svelte 5**
+applications. Harnessing the power of Svelte's new **Runes** system, it provides
+a complete application skeleton with built-in layout management, dynamic
+theming, i18n, keyboard shortcuts, a command palette, toast notifications, and a
+highly precise money/currency subsystem.
+
+Everything is wired through a centralized **Provider + Registry + Context**
+architecture, ensuring clean dependency injection and state isolation across
+your app.
 
 ## Key Features
 
-- **✨ Svelte 5 Runes Core:** Experience fine-grained reactivity and cleaner
-  component logic.
-- **🎨 Dynamic Theming:** Powered by DaisyUI & Tailwind CSS for extensive
-  customization and out-of-the-box themes.
-- **🔒 TypeScript First:** Robust type-safety for a confident and productive
-  development workflow.
-- **📊 Data-Aware Components:** Tools and components built to handle and
-  visualize complex data.
-
-<!-- - **🛰️ Interactive Schema Explorer:** A standout feature! Visually explore and
-  interact with database schemas exposed by `prism-py` APIs directly within your
-  Svelte application. Test CRUD operations, execute functions, and understand
-  your data structure like never before.
-- **🌐 Smart API Integration:** Includes `apiStore` (using `prism-ts`) for easy
-  and type-safe connection to backend APIs. -->
-
-- **📦 Lightweight Core:** Designed to be lean, with optional integrations.
-
-<!-- - **🦕 Universal Access:** Available on JSR (for Deno) and NPM (for
-  Node.js/Bun/Yarn). -->
+- **✨ Svelte 5 Runes-First:** Built from the ground up using `$state`,
+  `$derived`, and `$effect`. No legacy Svelte 4 stores.
+- **🧩 Extensible Plugin Architecture:** Features are isolated into plugins
+  (`LayoutPlugin`, `PalettesPlugin`, `MoneyPlugin`). Only load what you need.
+- **🎨 Dynamic Theming & i18n:** 32 DaisyUI themes and 13 pre-configured locales
+  powered by Paraglide JS, with zero-flash SSR persistence.
+- **💾 Abstract Persistence Layer:** Swap between cookies, localStorage,
+  sessionStorage, or in-memory state seamlessly via generic drivers.
+- **💸 Robust Money Subsystem:** Backed by Dinero.js for floating-point-safe
+  precision arithmetic, complete with exchange rate strategies and masked
+  currency inputs.
+- **⌨️ Developer & Power-User Friendly:** Out-of-the-box Command Palette
+  (`Ctrl+K`) and interactive Shortcuts Palette (`Ctrl+/`).
 
 ## Installation
 
-<!-- ### Using Deno / [JSR](https://jsr.io/@yrrrrrf/rune-lab)
-
-```bash
-# Add to your Deno project
-deno add @yrrrrrf/rune-lab
-``` -->
-
-### Using [NPM](https://www.npmjs.com/package/rune-lab) / Bun
+### Using NPM / Bun
 
 ```bash
 npm install rune-lab
+# or
 bun install rune-lab
+```
+
+## Project Configuration (Required)
+
+After installing, two configuration steps are required to ensure the framework's
+components are compiled and styled correctly in your consuming project.
+
+### Step 1 — Vite: Process `rune-lab` through the Svelte compiler
+
+By default, Vite externalizes `node_modules` during SSR, bypassing the Svelte
+compiler. Add the following to your `vite.config.ts` to process `rune-lab`
+properly:
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import { sveltekit } from "@sveltejs/kit/vite";
+
+export default defineConfig({
+  plugins: [sveltekit()],
+  ssr: {
+    noExternal: ["rune-lab"], // 👈 CRITICAL for Svelte 5 components in node_modules
+  },
+});
+```
+
+### Step 2 — Tailwind CSS v4: Scan `rune-lab` for utility classes
+
+Tailwind only generates CSS for classes it finds by scanning your source files.
+Add a `@source` directive to your project's main CSS file so Tailwind compiles
+the DaisyUI classes used internally by `rune-lab`:
+
+```css
+/* app.css / layout.css / global.css */
+@import "tailwindcss";
+@source "../node_modules/rune-lab/dist"; /* 👈 add this */
 ```
 
 ## Quick Start
 
-Get your application shell running in less than 20 lines. Inside your
+Get your application shell running in less than 40 lines. Inside your
 `+layout.svelte`:
 
 ```svelte
 <script lang="ts">
-  import { RuneProvider, WorkspaceLayout, ConnectedNavigationPanel } from "rune-lab";
-  import { cookieDriver } from "rune-lab";
+  import { 
+    RuneProvider, 
+    WorkspaceLayout, 
+    ConnectedNavigationPanel,
+    LayoutPlugin,
+    PalettesPlugin,
+    cookieDriver
+  } from "rune-lab";
+  import type { NavigationSection } from "rune-lab";
 
   let { children } = $props();
 
-  // Example navigation
-  const sections = [{ id: "main", title: "Main", items: [{ id: "home", label: "Home" }] }];
+  const sections: NavigationSection[] = [
+    {
+      id: "main",
+      title: "Main Menu",
+      items: [
+        { id: "home", label: "Dashboard", icon: "🏠" },
+        { id: "settings", label: "Settings", icon: "⚙️" }
+      ]
+    }
+  ];
 </script>
 
+<!-- Initialize the system with your required plugins -->
 <RuneProvider
-  app={{ name: "My App", version: "1.0.0" }}
-  persistence={cookieDriver}
+  config={{
+    app: { name: "My Startup", version: "1.0.0" },
+    persistence: cookieDriver,
+  }}
+  plugins={[LayoutPlugin, PalettesPlugin]}
 >
   <WorkspaceLayout>
     {#snippet navigationPanel()}
+      <!-- Auto-wires to LayoutStore state -->
       <ConnectedNavigationPanel {sections} />
     {/snippet}
 
@@ -92,114 +140,104 @@ Get your application shell running in less than 20 lines. Inside your
 </RuneProvider>
 ```
 
-You now have a fully functional reactive layout, keyboard command palette, toast
-notification system, and theme switcher ready to go.
+You now have a fully reactive layout, a keyboard command palette, a toast
+notification system, and theme/language switchers.
 
-## Project Configuration
+## Money & Currency Plugin
 
-After installing, two configuration steps are required to ensure components are
-compiled and styled correctly in your consuming project.
-
-### Step 1 — Vite: process `rune-lab` through the Svelte compiler
-
-Vite's SSR module runner externalizes `node_modules` by default, which means
-`.svelte` files from this package would be loaded as raw ES modules, bypassing
-the Svelte compiler entirely. Add the following to your `vite.config.ts` to
-force Vite to process `rune-lab` through its plugin pipeline:
-
-```ts
-// vite.config.ts
-export default defineConfig({
-  plugins: [sveltekit()],
-  ssr: {
-    noExternal: ["rune-lab"],
-  },
-});
-```
-
-This ensures the Svelte plugin transforms the components correctly during SSR,
-just as it would for your own source files.
-
-### Step 2 — Tailwind CSS: scan `rune-lab` for utility classes
-
-Tailwind only generates CSS for the classes it can find by scanning your source
-files. Because `rune-lab` lives in `node_modules`, its DaisyUI classes are not
-scanned by default and the components will appear unstyled.
-
-Add a `@source` directive to your project's main CSS file to tell Tailwind to
-also scan the `rune-lab` dist output:
-
-```css
-/* app.css / layout.css / global.css — wherever you import Tailwind */
-@import "tailwindcss";
-@source "../node_modules/rune-lab/dist"; /* 👈 add this */
-```
-
-> **Note:** Adjust the relative path to `node_modules` if your CSS file lives at
-> a different depth in your project tree. With both steps in place, all DaisyUI
-> component classes used by `rune-lab` will be included in your build and theme
-> switching will work across library components and your own code alike.
-
-## Money & Currency
-
-Rune Lab provides a robust, Dinero.js-backed money layer that handles precision
-arithmetic and locale-aware formatting.
-
-### MoneyDisplay
+Rune Lab provides a robust money layer that handles precision arithmetic,
+formatting, and live exchange-rate triangulation. To use it, simply register the
+`MoneyPlugin`:
 
 ```svelte
-<script>
-  import { MoneyDisplay } from "rune-lab";
+<script lang="ts">
+  import { MoneyPlugin } from "rune-lab";
 </script>
 
-<!-- Minor units (default): $150.00 -->
-<MoneyDisplay amount={15000} currency="USD" />
-
-<!-- Major units: $150.00 -->
-<MoneyDisplay amount={150} unit="major" currency="USD" />
-
-<!-- Compact notation: $1.2M -->
-<MoneyDisplay amount={1200000} unit="major" compact />
-
-<!-- Null handling with fallback: "—" -->
-<MoneyDisplay amount={null} fallback="N/A" />
+<RuneProvider
+  config={{
+    "rune-lab.money": {
+      defaultCurrency: "USD",
+      exchangeRates: { 
+        base: "USD", 
+        rates: { MXN: 17.23, EUR: 0.91 } 
+      },
+    }
+  }}
+  plugins={[LayoutPlugin, PalettesPlugin, MoneyPlugin]}
+>
+  <!-- App Content -->
+</RuneProvider>
 ```
 
-### MoneyInput
-
-A masked input that prevents floating-point precision errors by working
-exclusively with integers.
+### Displaying & Inputting Money
 
 ```svelte
-<script>
-  import { MoneyInput } from "rune-lab";
-  let price = $state(150.00);
+<script lang="ts">
+  import { MoneyDisplay, MoneyInput, useMoney } from "rune-lab";
+  
+  let price = $state(15000); // Minor units (e.g., cents) -> $150.00
+  const { convert, format } = useMoney();
 </script>
 
-<MoneyInput bind:amount={price} unit="major" currency="USD" />
+<!-- Formats safely and localizes based on the active LanguageStore -->
+<MoneyDisplay amount={price} currency="USD" />
+
+<!-- Compact notation ($1.5M) -->
+<MoneyDisplay amount={150000000} currency="USD" compact />
+
+<!-- Integer-backed masked input (prevents floating point errors) -->
+<MoneyInput bind:amount={price} currency="USD" />
 ```
 
 ## Persistence Drivers
 
-Rune Lab provides built-in drivers to remember user preferences (like theme,
-layout state, or language) across reloads. Pass one of these to the
-`persistence` prop on `<RuneProvider>`:
+Rune Lab provides generic drivers to remember user preferences across reloads.
+Pass one to `config.persistence` on `<RuneProvider>`:
 
-- `cookieDriver`: Best for SSR applications (like SvelteKit) because the server
-  can read the cookie and prevent a "theme flash" on initial load.
-- `localStorageDriver`: Best for client-only applications (SPA) looking for
-  long-term persistence.
+- `cookieDriver`: Best for SSR applications (like SvelteKit) to prevent "theme
+  flash" on initial load.
+- `localStorageDriver`: Best for client-only applications (SPAs).
 - `sessionStorageDriver`: For preferences that should clear when the browser tab
   closes.
 
 ```svelte
 <script lang="ts">
   import { cookieDriver } from "rune-lab";
-  // Then pass directly: <RuneProvider persistence={cookieDriver}>
 </script>
+
+<RuneProvider config={{ persistence: cookieDriver }} plugins={[...]}>
 ```
 
 ## Advanced Patterns
+
+### Keyboard Shortcuts (Auto-Cleanup)
+
+Any component deep in your tree can register its own keyboard shortcuts using
+the `useShortcuts` composable. It handles Svelte's `$effect` lifecycle
+internally, ensuring shortcuts unregister when the component unmounts:
+
+```svelte
+<script lang="ts">
+  import { useShortcuts, getToastStore } from "rune-lab";
+
+  const toasts = getToastStore();
+
+  useShortcuts([
+    {
+      id: "feature.save",
+      keys: "ctrl+s, cmd+s", // Comma-separated alternative keys
+      label: "Save Document",
+      category: "Editor",
+      scope: "global",
+      handler: (e) => {
+        e.preventDefault();
+        toasts.success("Document Saved!");
+      }
+    }
+  ]);
+</script>
+```
 
 ### SvelteKit Route Syncing
 
@@ -214,39 +252,31 @@ router, use an `$effect` inside your `+layout.svelte` right after the provider:
     const layoutStore = getLayoutStore();
 
     $effect(() => {
-        // Example: Use the first path segment as the active nav item
+        // Automatically open the correct nav tree branch
         const segment = page.url.pathname.split("/")[1] || "home";
         layoutStore.navigate(segment);
     });
 </script>
 ```
 
-_(Note: Use `$app/state`, not the older Svelte 4 `$app/stores`)_
+### Calling Toasts from Outside Svelte Components
 
-### Keyboard Shortcuts
+If you need to trigger a toast from a pure `.ts` file (like a fetching utility
+or global error handler), you can use the Toast Bridge:
 
-Any component deep in your tree can register its own keyboard shortcuts
-dynamically. To ensure they clean up when the component unmounts, **always
-register them inside an `$effect` returning a cleanup function**:
+```ts
+import { createToastBridge } from "rune-lab";
 
-```svelte
-<script lang="ts">
-  import { getShortcutStore, getToastStore } from "rune-lab";
+const { notify } = createToastBridge();
 
-  const shortcuts = getShortcutStore();
-  const toasts = getToastStore();
-
-  $effect(() => {
-    shortcuts.register({
-      id: "feature.save",
-      keys: "ctrl s",
-      label: "Save Document",
-      handler: () => toasts.success("Document Saved!")
-    });
-
-    return () => shortcuts.unregister("feature.save"); // Important!
-  });
-</script>
+export async function fetchUser() {
+  try {
+    // ...
+  } catch (err) {
+    // Safely queues the toast if the UI hasn't mounted yet
+    notify("Failed to fetch user data", "error");
+  }
+}
 ```
 
 ## License
