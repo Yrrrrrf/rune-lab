@@ -1,22 +1,23 @@
-[doc('Format Client code')]
+[doc('Format code')]
 [group('CI')]
 fmt:
     deno fmt .
-    @echo "✓ Client code formatted"
+    @echo "✓ Code formatted"
 
-[doc('Lint Client code')]
+[doc('Lint code')]
 [group('CI')]
 lint:
     deno lint .
-    @echo "✓ Client code linted"
+    @echo "✓ Code linted"
 
-[doc('Type-check Client workspace')]
+[doc('Type-check workspace')]
 [group('CI')]
 typecheck:
-    deno run -A npm:svelte-check
-    @echo "✓ Client type-checked"
+    cd src/package && deno run -A npm:svelte-check
+    cd src/lab && deno run -A npm:svelte-check
+    @echo "✓ Type-checked"
 
-[doc('Full client quality gate')]
+[doc('Full quality gate')]
 [group('CI')]
 quality: fmt lint typecheck
-    @echo "✓ Client quality checks passed"
+    @echo "✓ Quality checks passed"
