@@ -3,7 +3,6 @@
   "version": "0.4.6",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
-  "readme": "./README.md",
   "license": "MIT",
   "author": "Fernando Bryan Reza Campos",
   "repository": {
@@ -21,9 +20,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "svelte": "npm:svelte",
-    "@sveltejs/kit": "npm:@sveltejs/kit",
-    "@inlang/paraglide-js": "npm:@inlang/paraglide-js"
+    "svelte": "npm:svelte"
   },
   "dependencies": {
     "esm-env": "npm:esm-env",
@@ -32,13 +29,13 @@
     "dinero.js": "npm:dinero.js"
   },
   "devDependencies": {
-    "@sveltejs/kit": "npm:@sveltejs/kit",
-    "typescript": "npm:typescript@5.9.3",
+    "@sveltejs/package": "npm:@sveltejs/package",
+    "@inlang/paraglide-js": "npm:@inlang/paraglide-js",
+    "svelte": "npm:svelte",
+    "typescript": "npm:typescript",
     "vite": "npm:vite",
     "vite-plus": "npm:vite-plus",
-    "@tailwindcss/vite": "npm:@tailwindcss/vite",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
-    "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
     "jsdom": "npm:jsdom",
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom"
   },

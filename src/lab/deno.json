@@ -1,0 +1,27 @@
+{
+  "tasks": {
+    "dev": "deno run -A npm:vite dev",
+    "build": "deno run -A npm:vite build",
+    "preview": "deno run -A npm:vite preview"
+  },
+  "imports": {
+    "rune-lab": "npm:rune-lab",
+    "@sveltejs/kit": "npm:@sveltejs/kit",
+    "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite",
+    "@inlang/paraglide-js": "npm:@inlang/paraglide-js",
+    "vite": "npm:vite",
+    "tailwindcss": "npm:tailwindcss",
+    "daisyui": "npm:daisyui",
+    "svelte": "npm:svelte"
+  },
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable",
+      "DOM.AsyncIterable"
+    ]
+  }
+}
