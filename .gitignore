@@ -8,4 +8,13 @@
 # web-generated files
 node_modules
 dist
-docs/
+
+# docs & spec files
+docs
+
+# ide configuration files 
+**.code-workspace
+
+# one * means any characters except /
+# two ** means any characters including /
+temp
