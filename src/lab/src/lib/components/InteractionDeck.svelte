@@ -5,7 +5,7 @@
         getCommandStore,
         getLayoutStore,
     } from "rune-lab";
-    import * as m from "$lib/i18n/paraglide/messages.js";
+    import { m } from "$lib/i18n/messages.ts";
 
     const toastStore = getToastStore();
     const shortcutStore = getShortcutStore();
@@ -117,19 +117,23 @@
             <div class="join flex-wrap">
                 <button
                     class="btn btn-xs btn-info join-item"
-                    onclick={() => fireToast("info")}>{m.fire_toast_info()}</button
+                    onclick={() => fireToast("info")}
+                    >{m.fire_toast_info()}</button
                 >
                 <button
                     class="btn btn-xs btn-success join-item"
-                    onclick={() => fireToast("success")}>{m.fire_toast_success()}</button
+                    onclick={() => fireToast("success")}
+                    >{m.fire_toast_success()}</button
                 >
                 <button
                     class="btn btn-xs btn-warning join-item"
-                    onclick={() => fireToast("warning")}>{m.fire_toast_warning()}</button
+                    onclick={() => fireToast("warning")}
+                    >{m.fire_toast_warning()}</button
                 >
                 <button
                     class="btn btn-xs btn-error join-item"
-                    onclick={() => fireToast("error")}>{m.fire_toast_error()}</button
+                    onclick={() => fireToast("error")}
+                    >{m.fire_toast_error()}</button
                 >
                 <button
                     class="btn btn-xs btn-accent join-item"
@@ -177,17 +181,21 @@
                 {#if !testShortcutRegistered}
                     <button
                         class="btn btn-xs btn-primary join-item"
-                        onclick={registerTestShortcut}>{m.register_btn()}</button
+                        onclick={registerTestShortcut}
+                        >{m.register_btn()}</button
                     >
                 {:else}
                     <button
                         class="btn btn-xs btn-error join-item"
-                        onclick={unregisterTestShortcut}>{m.unregister_btn()}</button
+                        onclick={unregisterTestShortcut}
+                        >{m.unregister_btn()}</button
                     >
                 {/if}
             </div>
             <p class="text-xs opacity-50">
-                {m.total_shortcuts_label({ count: shortcutStore.entries.length })}
+                {m.total_shortcuts_label({
+                    count: shortcutStore.entries.length,
+                })}
             </p>
         </div>
     </details>
@@ -208,12 +216,15 @@
                 {:else}
                     <button
                         class="btn btn-xs btn-error join-item"
-                        onclick={unregisterMockCommands}>{m.unregister_all_btn()}</button
+                        onclick={unregisterMockCommands}
+                        >{m.unregister_all_btn()}</button
                     >
                 {/if}
             </div>
             <p class="text-xs opacity-50">
-                {@html m.open_palette_hint({ kbd: '<kbd class="kbd kbd-xs">Ctrl+Shift+K</kbd>' })}
+                {@html m.open_palette_hint({
+                    kbd: '<kbd class="kbd kbd-xs">Ctrl+Shift+K</kbd>',
+                })}
             </p>
             <p class="text-xs opacity-50">
                 {m.registered_label({ count: commandStore.commands.length })}

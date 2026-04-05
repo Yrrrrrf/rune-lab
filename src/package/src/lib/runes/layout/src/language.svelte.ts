@@ -7,7 +7,7 @@ import {
 } from "../../../kernel/src/mod.ts";
 import type { Language } from "../../../kernel/src/mod.ts";
 import { createMessageResolver } from "../../../i18n/message-resolver.ts";
-import * as m from "../../../i18n/paraglide/messages.js";
+import { m } from "../../../i18n/messages.ts";
 
 export type { Language };
 

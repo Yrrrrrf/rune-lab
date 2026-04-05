@@ -1,7 +1,7 @@
 <script lang="ts">
     import ShowcaseCard from "../ShowcaseCard.svelte";
     import { Icon } from "rune-lab";
-    import * as m from "$lib/i18n/paraglide/messages.js";
+    import { m } from "$lib/i18n/messages.ts";
 </script>
 
 <div class="space-y-6">

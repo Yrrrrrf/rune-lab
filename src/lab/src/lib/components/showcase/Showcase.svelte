@@ -1,7 +1,7 @@
 <script lang="ts">
     import { showcaseState } from "./state.svelte";
-    import * as m from "$lib/i18n/paraglide/messages.js";
-    
+    import { m } from "$lib/i18n/messages.ts";
+
     // Tab definitions mapping to our 6 categories
     import Actions from "./tabs/Actions.svelte";
     import DataInput from "./tabs/DataInput.svelte";
@@ -16,7 +16,7 @@
         { id: "display", label: m.display_tab_label(), component: Display },
         { id: "feedback", label: m.feedback_tab_label(), component: Feedback },
         { id: "nav", label: m.nav_tab_label(), component: Navigation },
-        { id: "visual", label: m.visual_tab_label(), component: Visual }
+        { id: "visual", label: m.visual_tab_label(), component: Visual },
     ]);
 
     // Read the active index from shared state
@@ -26,8 +26,13 @@
 
 <div class="flex flex-col h-full overflow-hidden relative">
     <!-- Fixed Header Tab Bar -->
-    <div class="bg-base-200/90 backdrop-blur top-0 z-10 p-3 border-b border-base-300">
-        <div role="tablist" class="tabs tabs-box tabs-lg w-full flex-wrap gap-1">
+    <div
+        class="bg-base-200/90 backdrop-blur top-0 z-10 p-3 border-b border-base-300"
+    >
+        <div
+            role="tablist"
+            class="tabs tabs-box tabs-lg w-full flex-wrap gap-1"
+        >
             {#each tabs as tab, i}
                 <button
                     role="tab"

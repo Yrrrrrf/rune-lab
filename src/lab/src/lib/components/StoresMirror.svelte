@@ -9,7 +9,7 @@
         getLayoutStore,
         getCommandStore,
     } from "rune-lab";
-    import * as m from "$lib/i18n/paraglide/messages.js";
+    import { m } from "$lib/i18n/messages.ts";
 
     const appStore = getAppStore();
     const toastStore = getToastStore();
@@ -52,7 +52,12 @@
                 </div>
                 <p class="text-xs opacity-50">
                     {toastStore.toasts.length > 0
-                        ? m.last_toast_label({ type: toastStore.toasts[toastStore.toasts.length - 1]?.type ?? '' })
+                        ? m.last_toast_label({
+                              type:
+                                  toastStore.toasts[
+                                      toastStore.toasts.length - 1
+                                  ]?.type ?? "",
+                          })
                         : m.no_active_toasts_label()}
                 </p>
             </div>
@@ -116,7 +121,11 @@
                     >
                 </div>
                 <p class="text-xs opacity-50">
-                    {m.palette_status_label({ status: shortcutStore.showPalette ? m.open_label() : m.closed_label() })}
+                    {m.palette_status_label({
+                        status: shortcutStore.showPalette
+                            ? m.open_label()
+                            : m.closed_label(),
+                    })}
                 </p>
             </div>
         </div>
@@ -134,7 +143,15 @@
                     ></div>
                 </div>
                 <p class="text-xs opacity-50">
-                    {m.nav_status_label({ status: layoutStore.navOpen ? m.open_label() : m.closed_label() })} · {m.detail_status_label({ status: layoutStore.detailOpen ? m.open_label() : m.closed_label() })}
+                    {m.nav_status_label({
+                        status: layoutStore.navOpen
+                            ? m.open_label()
+                            : m.closed_label(),
+                    })} · {m.detail_status_label({
+                        status: layoutStore.detailOpen
+                            ? m.open_label()
+                            : m.closed_label(),
+                    })}
                 </p>
             </div>
         </div>
@@ -150,7 +167,9 @@
                         >{commandStore.commands.length}</span
                     >
                 </div>
-                <p class="text-xs opacity-50">{m.registered_commands_label()}</p>
+                <p class="text-xs opacity-50">
+                    {m.registered_commands_label()}
+                </p>
             </div>
         </div>
     </div>

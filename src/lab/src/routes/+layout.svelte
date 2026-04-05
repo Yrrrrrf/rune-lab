@@ -9,7 +9,7 @@
 		version,
 	} from "rune-lab";
 	import { setLocale } from "$lib/i18n/paraglide/runtime.js";
-	import * as m from "$lib/i18n/paraglide/messages.js";
+	import { m } from "$lib/i18n/messages.ts";
 	import AppLayout from "./AppLayout.svelte";
 
 	let { children } = $props();

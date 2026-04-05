@@ -7,7 +7,7 @@
         getShortcutStore,
     } from "rune-lab";
     import { onMount, untrack } from "svelte";
-    import * as m from "$lib/i18n/paraglide/messages.js";
+    import { m } from "$lib/i18n/messages.ts";
 
     const appStore = getAppStore();
     const themeStore = getThemeStore();
@@ -76,7 +76,9 @@
     <!-- Snapshot Table -->
     <div class="card bg-base-100 shadow-xl border border-base-content/5">
         <div class="card-body p-4 gap-0">
-            <h4 class="card-title text-sm mb-2 opacity-70">{m.live_state_label()}</h4>
+            <h4 class="card-title text-sm mb-2 opacity-70">
+                {m.live_state_label()}
+            </h4>
             <div class="overflow-x-auto">
                 <table class="table table-xs">
                     <tbody>
@@ -91,13 +93,15 @@
                         <tr class="hover">
                             <td class="opacity-50">{m.active_toasts()}</td>
                             <td class="font-mono"
-                                >{toastStore.toasts.length} {m.active_label()}</td
+                                >{toastStore.toasts.length}
+                                {m.active_label()}</td
                             >
                         </tr>
                         <tr class="hover">
                             <td class="opacity-50">{m.commands_label()}</td>
                             <td class="font-mono"
-                                >{shortcutStore.entries.length} {m.registered_abbr_label()}</td
+                                >{shortcutStore.entries.length}
+                                {m.registered_abbr_label()}</td
                             >
                         </tr>
                     </tbody>
@@ -154,7 +158,9 @@
         class="card bg-base-100 shadow-xl flex-1 border border-base-content/5 min-h-0"
     >
         <div class="card-body p-4 gap-0 overflow-y-auto">
-            <h4 class="card-title text-sm mb-4 opacity-70">{m.activity_log_label()}</h4>
+            <h4 class="card-title text-sm mb-4 opacity-70">
+                {m.activity_log_label()}
+            </h4>
             {#if logs.length === 0}
                 <div class="p-4 text-center opacity-50 text-sm italic">
                     {m.no_activity_yet_msg()}

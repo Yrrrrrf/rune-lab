@@ -1,7 +1,7 @@
 <script lang="ts">
     import AppSettingSelector from "./AppSettingSelector.svelte";
     import type { ConfigStore } from "../../../kernel/src/mod.ts";
-    import * as rlMessages from "../../../i18n/paraglide/messages.js";
+    import { m } from "../../../i18n/messages.ts";
     import { getContext, type Snippet } from "svelte";
 
     let {
@@ -45,8 +45,7 @@
         const key = String(item[idKey]);
         if (typeof userDictionary[key] === "function")
             return userDictionary[key]();
-        if (typeof (rlMessages as any)[key] === "function")
-            return (rlMessages as any)[key]();
+        if (typeof (m as any)[key] === "function") return (m as any)[key]();
         return key;
     }
 

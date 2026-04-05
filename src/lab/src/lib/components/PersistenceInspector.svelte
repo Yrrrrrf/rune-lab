@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import * as m from "$lib/i18n/paraglide/messages.js";
+    import { m } from "$lib/i18n/messages.ts";
 
     // Persistence keys that rune-lab stores use
     const RL_KEYS = ["theme", "language", "currency", "cart"];
