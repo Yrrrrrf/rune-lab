@@ -15,11 +15,5 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "skipLibCheck": true
-  },
-  "exclude": [
-    ".*",
-    "scripts/**",
-    "dist/**",
-    "**/*.test.ts"
-  ]
+  }
 }
