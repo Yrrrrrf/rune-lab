@@ -42,8 +42,7 @@
             label: testShortcutLabel,
             category: m.lab_label(),
             scope: "global",
-            handler: () =>
-                toastStore.success(`⚡ "${testShortcutLabel}" fired!`),
+            handler: () => toastStore.success(`"${testShortcutLabel}" fired!`),
         });
         testShortcutRegistered = true;
     }
@@ -111,7 +110,7 @@
     <!-- Toast Cannon -->
     <details open class="collapse collapse-arrow bg-base-200">
         <summary class="collapse-title text-sm font-bold min-h-0 py-2"
-            >{m.toast_cannon_label()}</summary
+            >🔔 {m.toast_cannon_label()}</summary
         >
         <div class="collapse-content space-y-2">
             <div class="join flex-wrap">
@@ -137,7 +136,7 @@
                 >
                 <button
                     class="btn btn-xs btn-accent join-item"
-                    onclick={floodToasts}>{m.flood_toasts_label()}</button
+                    onclick={floodToasts}>🌊 {m.flood_toasts_label()}</button
                 >
             </div>
             <label class="flex items-center gap-2 text-xs">
@@ -160,7 +159,7 @@
     <!-- Shortcut Lab -->
     <details class="collapse collapse-arrow bg-base-200">
         <summary class="collapse-title text-sm font-bold min-h-0 py-2"
-            >{m.shortcut_lab_label()}</summary
+            >⚡ {m.shortcut_lab_label()}</summary
         >
         <div class="collapse-content space-y-2">
             <div class="flex gap-2">
@@ -203,7 +202,7 @@
     <!-- Command Palette -->
     <details class="collapse collapse-arrow bg-base-200">
         <summary class="collapse-title text-sm font-bold min-h-0 py-2"
-            >{m.command_palette_label()}</summary
+            >📋 {m.command_palette_label()}</summary
         >
         <div class="collapse-content space-y-2">
             <div class="join">

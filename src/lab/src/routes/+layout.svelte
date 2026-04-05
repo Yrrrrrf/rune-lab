@@ -8,11 +8,17 @@
 		type NavigationSection,
 		version,
 	} from "rune-lab";
-	import { setLocale } from "$lib/i18n/paraglide/runtime.js";
+	import { setLocale, getLocale } from "$lib/i18n/paraglide/runtime.js";
 	import { m } from "$lib/i18n/messages.ts";
 	import AppLayout from "./AppLayout.svelte";
+	import { onMount } from "svelte";
 
 	let { children } = $props();
+
+	onMount(() => {
+		console.log(getLocale());
+		// setLocale("zh");
+	});
 
 	const sections: NavigationSection[] = [
 		{

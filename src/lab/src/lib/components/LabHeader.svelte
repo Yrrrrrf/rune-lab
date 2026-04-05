@@ -15,9 +15,7 @@
     class="flex items-center justify-between px-6 py-3 bg-base-200 border-b border-base-content/10"
 >
     <div class="flex items-center gap-3">
-        <span class="text-xl font-black tracking-tight"
-            >{m.rune_lab_title()}</span
-        >
+        <span class="text-xl font-black tracking-tight">{m.lab_label()}</span>
         <span class="badge badge-sm badge-outline font-mono"
             >v{appStore.version}</span
         >
