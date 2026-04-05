@@ -8,4 +8,4 @@ run:
 [group('Dev')]
 [working-directory('src/package')]
 test *args:
-    bunx vp test
+    bunx vp test {{ args }}

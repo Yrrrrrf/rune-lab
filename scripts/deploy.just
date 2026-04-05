@@ -16,7 +16,7 @@ build:
     deno fmt dist
     @echo "✓ build done"
 
-[doc('Publish to jsr')]
+[doc('Publish package to npm')]
 [group('Deploy')]
 [working-directory('src/package')]
 deploy: build
