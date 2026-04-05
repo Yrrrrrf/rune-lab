@@ -66,14 +66,19 @@ class ConfigStoreImpl<T = unknown> {
       this.current = saved;
     }
 
-    if (DEV) {
-      console.log(
-        `${options.icon ?? "⚙️"} ${options.displayName} configured:`,
-        {
-          current: this.current,
-        },
-      );
+    // Only log here if we were initialized with a real driver (not the default in-memory)
+    if (DEV && options.driver) {
+      this.#logConfig();
     }
+  }
+
+  #logConfig(): void {
+    console.log(
+      `${this.#options.icon ?? "⚙️"} ${this.#options.displayName} configured:`,
+      {
+        current: this.current,
+      },
+    );
   }
 
   /**
@@ -90,6 +95,10 @@ class ConfigStoreImpl<T = unknown> {
     const saved = driver.get(this.#options.storageKey);
     if (saved && this.get(saved)) {
       this.current = saved;
+    }
+
+    if (DEV) {
+      this.#logConfig();
     }
   }
 
