@@ -1,6 +1,7 @@
 <script lang="ts">
     import ResourceSelector from "./ResourceSelector.svelte";
-    import { getThemeStore, type Theme } from "../../../kernel/src/mod.ts";
+    import { getThemeStore } from "../../../kernel/src/mod.ts";
+    import { getThemeName } from "./theme.svelte.ts";
 
     const themeStore = getThemeStore();
 
@@ -22,7 +23,9 @@
     {onchange}
 >
     {#snippet triggerLabel(active)}
-        <span class="text-lg">{active.icon}</span>
+        <div class="flex items-center gap-2">
+            <span class="text-lg">{active.icon}</span>
+        </div>
     {/snippet}
 
     {#snippet item(t)}
@@ -42,8 +45,8 @@
                 bind:group={themeStore.current}
             />
             <span class="text-lg">{t.icon}</span>
-            <span class="capitalize">
-                {t.name}
+            <span class="flex-grow text-left capitalize">
+                {getThemeName(t)}
             </span>
         </button>
     {/snippet}

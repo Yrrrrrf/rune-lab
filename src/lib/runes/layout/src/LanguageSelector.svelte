@@ -1,6 +1,7 @@
 <script lang="ts">
     import ResourceSelector from "./ResourceSelector.svelte";
     import { getLanguageStore } from "../../../kernel/src/mod.ts";
+    import { getLanguageName } from "./language.svelte.ts";
 
     const languageStore = getLanguageStore();
 
@@ -24,7 +25,9 @@
     {onchange}
 >
     {#snippet triggerLabel(active)}
-        <span class="text-lg">{active.flag}</span>
+        <div class="flex items-center gap-2">
+            <span class="text-lg">{active.flag}</span>
+        </div>
     {/snippet}
 
     {#snippet item(l)}
@@ -37,7 +40,8 @@
             }}
         >
             <span class="text-lg">{l.flag}</span>
-            <span>{l.code.toUpperCase()}</span>
+            <span class="text-xs opacity-50 uppercase">{l.code}</span>
+            <span class="flex-grow text-left">{getLanguageName(l)}</span>
         </button>
     {/snippet}
 </ResourceSelector>

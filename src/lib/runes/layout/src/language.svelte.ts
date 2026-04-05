@@ -6,8 +6,17 @@ import {
   getLanguageStore,
 } from "../../../kernel/src/mod.ts";
 import type { Language } from "../../../kernel/src/mod.ts";
+import { createMessageResolver } from "../../../i18n/message-resolver.ts";
+import * as m from "../../../i18n/paraglide/messages.js";
 
 export type { Language };
+
+/**
+ * Resolver to get the display name of a language in the current locale
+ */
+export const getLanguageName = createMessageResolver<Language>(m, {
+  keyExtractor: (l) => l.code,
+});
 
 export const LANGUAGES = [
   // --- INDOEUROPEAS (Rama Romance / Latín) ---

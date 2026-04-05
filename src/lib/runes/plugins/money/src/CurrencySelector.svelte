@@ -1,6 +1,7 @@
 <script lang="ts">
     import { ResourceSelector } from "../../../layout/src/mod.ts";
     import { getCurrencyStore } from "../../../../kernel/src/mod.ts";
+    import { getCurrencyName } from "./currency.svelte.ts";
 
     const currencyStore = getCurrencyStore();
 
@@ -22,7 +23,9 @@
     {onchange}
 >
     {#snippet triggerLabel(active)}
-        <span class="font-bold">{active.symbol}</span>
+        <div class="flex items-center gap-2">
+            <span class="font-bold">{active.symbol}</span>
+        </div>
     {/snippet}
 
     {#snippet item(c)}
@@ -35,7 +38,8 @@
             }}
         >
             <span class="badge badge-sm badge-ghost w-8">{c.symbol}</span>
-            <span>{c.code}</span>
+            <span class="text-xs opacity-50 uppercase">{c.code}</span>
+            <span class="flex-grow text-left">{getCurrencyName(c)}</span>
         </button>
     {/snippet}
 </ResourceSelector>

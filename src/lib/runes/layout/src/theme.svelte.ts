@@ -4,8 +4,17 @@
 import { createConfigStore, getThemeStore } from "../../../kernel/src/mod.ts";
 import type { Theme } from "../../../kernel/src/mod.ts";
 import { BROWSER } from "esm-env";
+import { createMessageResolver } from "../../../i18n/message-resolver.ts";
+import * as m from "../../../i18n/paraglide/messages.js";
 
 export type { Theme };
+
+/**
+ * Resolver to get the display name of a theme in the current locale
+ */
+export const getThemeName = createMessageResolver<Theme>(m, {
+  keyExtractor: (t) => t.name,
+});
 
 // Icon map for known themes - unknown ones fall back to 🎨
 const THEME_ICONS: Record<string, string> = {

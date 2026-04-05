@@ -6,8 +6,17 @@ import {
 import type { Currency } from "../../../../kernel/src/mod.ts";
 import { type DineroCurrency, registerCurrency } from "./mod.ts";
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
+import { createMessageResolver } from "../../../../i18n/message-resolver.ts";
+import * as m from "../../../../i18n/paraglide/messages.js";
 
 export type { Currency };
+
+/**
+ * Resolver to get the display name of a currency in the current locale
+ */
+export const getCurrencyName = createMessageResolver<Currency>(m, {
+  keyExtractor: (c) => c.code,
+});
 
 /**
  * Helper to build a minimal Dinero definition from Currency metadata.
