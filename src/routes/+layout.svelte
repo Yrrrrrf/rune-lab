@@ -52,7 +52,7 @@
 		},
 	}}
 	plugins={[LayoutPlugin, PalettesPlugin, MoneyPlugin]}
-	onLanguageChange={(l) => setLocale(l as string)}
+	onLanguageChange={(l) => setLocale(l)}
 >
 	<AppLayout {sections}>
 		{@render children()}

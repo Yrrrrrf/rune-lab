@@ -10,10 +10,6 @@
     "type": "git",
     "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
   },
-  "scripts": {
-    "dev": "vite dev",
-    "gen:version": "node scripts/gen-version.js"
-  },
   "exports": {
     ".": {
       "svelte": "./dist/mod.js",
