@@ -4,6 +4,9 @@
     "build": "deno run -A npm:vite build",
     "preview": "deno run -A npm:vite preview"
   },
+  "scripts": {
+    "dev": "vite dev"
+  },
   "imports": {
     "rune-lab": "npm:rune-lab",
     "@sveltejs/kit": "npm:@sveltejs/kit",

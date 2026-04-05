@@ -1,49 +1,50 @@
 <script lang="ts">
     import ShowcaseCard from "../ShowcaseCard.svelte";
+    import * as m from "$lib/i18n/paraglide/messages.js";
 </script>
 
 <div class="space-y-6">
     <!-- Hero -->
-    <ShowcaseCard title="Hero" icon="🦸">
+    <ShowcaseCard title={m.hero_label()} icon="🦸">
         <div class="hero bg-base-200 min-h-[300px] rounded-box">
             <div class="hero-content text-center">
                 <div class="max-w-md">
-                    <h1 class="text-3xl font-bold">Hello there</h1>
+                    <h1 class="text-3xl font-bold">{m.hero_title()}</h1>
                     <p class="py-4">
-                        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
+                        {m.hero_desc()}
                     </p>
-                    <button class="btn btn-primary">Get Started</button>
+                    <button class="btn btn-primary">{m.get_started_btn()}</button>
                 </div>
             </div>
         </div>
     </ShowcaseCard>
 
     <!-- Stack & Divider -->
-    <ShowcaseCard title="Stack & Divider" icon="🥞">
+    <ShowcaseCard title={m.stack_divider_label()} icon="🥞">
         <div class="flex flex-col gap-8 w-full">
             <div class="flex flex-col w-full">
-                <div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div> 
-                <div class="divider">OR</div> 
-                <div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
+                <div class="grid h-20 card bg-base-300 rounded-box place-items-center">{m.content_label()}</div> 
+                <div class="divider">{m.or_label()}</div> 
+                <div class="grid h-20 card bg-base-300 rounded-box place-items-center">{m.content_label()}</div>
             </div>
 
             <div class="stack mx-auto pt-4">
                 <div class="card shadow-md bg-primary text-primary-content">
                     <div class="card-body">
-                        <h2 class="card-title">Notification 1</h2> 
-                        <p>You have 3 unread messages. Tap here to see.</p>
+                        <h2 class="card-title">{m.notification_label({ count: 1 })}</h2> 
+                        <p>{m.unread_messages_msg({ count: 3 })}</p>
                     </div>
                 </div> 
                 <div class="card shadow bg-secondary text-secondary-content">
                     <div class="card-body">
-                        <h2 class="card-title">Notification 2</h2> 
-                        <p>You have 3 unread messages. Tap here to see.</p>
+                        <h2 class="card-title">{m.notification_label({ count: 2 })}</h2> 
+                        <p>{m.unread_messages_msg({ count: 3 })}</p>
                     </div>
                 </div> 
                 <div class="card shadow-sm bg-accent text-accent-content">
                     <div class="card-body">
-                        <h2 class="card-title">Notification 3</h2> 
-                        <p>You have 3 unread messages. Tap here to see.</p>
+                        <h2 class="card-title">{m.notification_label({ count: 3 })}</h2> 
+                        <p>{m.unread_messages_msg({ count: 3 })}</p>
                     </div>
                 </div>
             </div>
@@ -51,7 +52,7 @@
     </ShowcaseCard>
 
     <!-- Mask -->
-    <ShowcaseCard title="Masks" icon="🎭">
+    <ShowcaseCard title={m.masks_label()} icon="🎭">
         <div class="flex flex-wrap gap-4">
             <img class="mask mask-squircle w-24" src="https://picsum.photos/200?random=1" alt="Squircle" />
             <img class="mask mask-heart w-24" src="https://picsum.photos/200?random=2" alt="Heart" />
@@ -63,7 +64,7 @@
     </ShowcaseCard>
 
     <!-- Swap -->
-    <ShowcaseCard title="Swap" icon="🔄">
+    <ShowcaseCard title={m.swap_label()} icon="🔄">
         <div class="flex gap-8">
             <label class="swap swap-rotate">
                 <input type="checkbox" />
@@ -80,13 +81,13 @@
     </ShowcaseCard>
 
     <!-- Custom Visual Classes (hover-3d) -->
-    <ShowcaseCard title="Custom 3D Hover & Gallery" icon="🖼️">
+    <ShowcaseCard title={m.custom_visual_label()} icon="🖼️">
         <div class="flex gap-6 mb-8 mt-4">
             <div class="hover-3d w-32 h-32 bg-primary rounded-xl flex items-center justify-center text-primary-content font-bold shadow-xl">
-                Hover Me
+                {m.hover_me_3d_label()}
             </div>
             <div class="hover-3d w-32 h-32 bg-secondary rounded-xl flex items-center justify-center text-secondary-content font-bold shadow-xl">
-                3D Shift
+                {m.shift_3d_label()}
             </div>
         </div>
 

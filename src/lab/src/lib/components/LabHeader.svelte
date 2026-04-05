@@ -1,5 +1,11 @@
 <script lang="ts">
-    import { ThemeSelector, LanguageSelector, getAppStore, CurrencySelector } from "rune-lab";
+    import {
+        ThemeSelector,
+        LanguageSelector,
+        getAppStore,
+        CurrencySelector,
+    } from "rune-lab";
+    import * as m from "$lib/i18n/paraglide/messages.js";
 
     const appStore = getAppStore();
     const isDev = true; // esm-env DEV not available in consumer, but we're always dev here
@@ -9,7 +15,8 @@
     class="flex items-center justify-between px-6 py-3 bg-base-200 border-b border-base-content/10"
 >
     <div class="flex items-center gap-3">
-        <span class="text-xl font-black tracking-tight">🧪 rune-lab lab</span>
+        <span class="text-xl font-black tracking-tight">{m.rune_lab_title()}</span
+        >
         <span class="badge badge-sm badge-outline font-mono"
             >v{appStore.version}</span
         >

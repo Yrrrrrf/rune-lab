@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import * as m from "$lib/i18n/paraglide/messages.js";
 
     // Persistence keys that rune-lab stores use
     const RL_KEYS = ["theme", "language", "currency", "cart"];
@@ -101,21 +102,23 @@
         <h2
             class="text-xs font-black uppercase tracking-widest text-primary/70"
         >
-            Persistence Inspector
+            {m.persistence_inspector_label()}
         </h2>
         <button class="btn btn-xs btn-ghost" onclick={refresh}
-            >🔄 Refresh</button
+            >🔄 {m.refresh_btn()}</button
         >
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
         <!-- Cookies -->
         <div class="space-y-2">
-            <h3 class="text-xs font-bold opacity-60">🍪 Cookies</h3>
+            <h3 class="text-xs font-bold opacity-60">🍪 {m.cookies_label()}</h3>
             <div class="card bg-base-200">
                 <div class="card-body p-2 max-h-48 overflow-y-auto">
                     {#if cookieEntries.length === 0}
-                        <p class="text-xs opacity-30 italic">No cookies</p>
+                        <p class="text-xs opacity-30 italic">
+                            {m.no_cookies_msg()}
+                        </p>
                     {:else}
                         {#each cookieEntries as [key, value]}
                             <div class="text-xs font-mono break-all mb-1">
@@ -130,11 +133,15 @@
 
         <!-- localStorage -->
         <div class="space-y-2">
-            <h3 class="text-xs font-bold opacity-60">📦 localStorage</h3>
+            <h3 class="text-xs font-bold opacity-60">
+                📦 {m.local_storage_label()}
+            </h3>
             <div class="card bg-base-200">
                 <div class="card-body p-2 max-h-48 overflow-y-auto">
                     {#if localStorageEntries.length === 0}
-                        <p class="text-xs opacity-30 italic">No RL keys</p>
+                        <p class="text-xs opacity-30 italic">
+                            {m.no_rl_keys_msg()}
+                        </p>
                     {:else}
                         {#each localStorageEntries as [key, value]}
                             <div class="text-xs font-mono break-all mb-1">
@@ -149,11 +156,15 @@
 
         <!-- sessionStorage -->
         <div class="space-y-2">
-            <h3 class="text-xs font-bold opacity-60">🔒 sessionStorage</h3>
+            <h3 class="text-xs font-bold opacity-60">
+                🔒 {m.session_storage_label()}
+            </h3>
             <div class="card bg-base-200">
                 <div class="card-body p-2 max-h-48 overflow-y-auto">
                     {#if sessionStorageEntries.length === 0}
-                        <p class="text-xs opacity-30 italic">No RL keys</p>
+                        <p class="text-xs opacity-30 italic">
+                            {m.no_rl_keys_msg()}
+                        </p>
                     {:else}
                         {#each sessionStorageEntries as [key, value]}
                             <div class="text-xs font-mono break-all mb-1">
@@ -171,48 +182,53 @@
     <div class="divider"></div>
     <div class="space-y-2">
         <div class="flex items-center justify-between">
-            <h3 class="text-xs font-bold opacity-60">🔄 Reload Test</h3>
+            <h3 class="text-xs font-bold opacity-60">
+                🔄 {m.reload_test_label()}
+            </h3>
             <button class="btn btn-xs btn-warning" onclick={hardReload}>
-                Hard Reload
+                {m.hard_reload_btn()}
             </button>
         </div>
 
         {#if Object.keys(preReloadSnapshot).length > 0}
             <div class="card bg-base-200">
                 <div class="card-body p-2 space-y-1">
-                <p class="text-xs font-bold opacity-60">Pre-reload snapshot:</p>
-                {#each Object.entries(preReloadSnapshot) as [key, value]}
-                    {@const currentValue = (() => {
-                        if (key.startsWith("cookie:")) {
-                            const ck = key.replace("cookie:", "");
-                            return (
-                                cookieEntries.find(([k]) => k === ck)?.[1] ??
-                                "MISSING"
-                            );
-                        }
-                        if (key.startsWith("ls:")) {
-                            const lk = key.replace("ls:", "");
-                            return (
-                                localStorageEntries.find(
-                                    ([k]) => k === lk,
-                                )?.[1] ?? "MISSING"
-                            );
-                        }
-                        return "UNKNOWN";
-                    })()}
-                    <div class="text-xs font-mono flex items-center gap-2">
-                        {#if currentValue === value}
-                            <span class="text-success">✓</span>
-                        {:else}
-                            <span class="text-error">✗</span>
-                        {/if}
-                        <span class="opacity-60">{key}</span>
-                        <span class="font-bold">{value}</span>
-                        {#if currentValue !== value}
-                            <span class="text-error">→ {currentValue}</span>
-                        {/if}
-                    </div>
-                {/each}
+                    <p class="text-xs font-bold opacity-60">
+                        {m.pre_reload_snapshot_label()}
+                    </p>
+                    {#each Object.entries(preReloadSnapshot) as [key, value]}
+                        {@const currentValue = (() => {
+                            if (key.startsWith("cookie:")) {
+                                const ck = key.replace("cookie:", "");
+                                return (
+                                    cookieEntries.find(
+                                        ([k]) => k === ck,
+                                    )?.[1] ?? "MISSING"
+                                );
+                            }
+                            if (key.startsWith("ls:")) {
+                                const lk = key.replace("ls:", "");
+                                return (
+                                    localStorageEntries.find(
+                                        ([k]) => k === lk,
+                                    )?.[1] ?? "MISSING"
+                                );
+                            }
+                            return "UNKNOWN";
+                        })()}
+                        <div class="text-xs font-mono flex items-center gap-2">
+                            {#if currentValue === value}
+                                <span class="text-success">✓</span>
+                            {:else}
+                                <span class="text-error">✗</span>
+                            {/if}
+                            <span class="opacity-60">{key}</span>
+                            <span class="font-bold">{value}</span>
+                            {#if currentValue !== value}
+                                <span class="text-error">→ {currentValue}</span>
+                            {/if}
+                        </div>
+                    {/each}
                 </div>
             </div>
         {/if}

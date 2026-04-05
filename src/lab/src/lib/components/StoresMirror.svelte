@@ -9,6 +9,7 @@
         getLayoutStore,
         getCommandStore,
     } from "rune-lab";
+    import * as m from "$lib/i18n/paraglide/messages.js";
 
     const appStore = getAppStore();
     const toastStore = getToastStore();
@@ -24,7 +25,7 @@
     <h2
         class="text-xs font-black uppercase tracking-widest text-primary/70 mb-4"
     >
-        Stores Mirror
+        {m.stores_mirror_label()}
     </h2>
 
     <div class="grid grid-cols-2 gap-3">
@@ -40,7 +41,6 @@
             </div>
         </div>
 
-
         <!-- ToastStore -->
         <div class="card bg-base-200">
             <div class="card-body p-3 gap-1">
@@ -52,8 +52,8 @@
                 </div>
                 <p class="text-xs opacity-50">
                     {toastStore.toasts.length > 0
-                        ? `Last: ${toastStore.toasts[toastStore.toasts.length - 1]?.type}`
-                        : "No active toasts"}
+                        ? m.last_toast_label({ type: toastStore.toasts[toastStore.toasts.length - 1]?.type ?? '' })
+                        : m.no_active_toasts_label()}
                 </p>
             </div>
         </div>
@@ -76,7 +76,9 @@
         <div class="card bg-base-200">
             <div class="card-body p-3 gap-1">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold opacity-60">LanguageStore</span>
+                    <span class="text-xs font-bold opacity-60"
+                        >LanguageStore</span
+                    >
                     <div class="status status-success status-sm"></div>
                 </div>
                 <p class="text-sm font-medium">
@@ -90,7 +92,9 @@
         <div class="card bg-base-200">
             <div class="card-body p-3 gap-1">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold opacity-60">CurrencyStore</span>
+                    <span class="text-xs font-bold opacity-60"
+                        >CurrencyStore</span
+                    >
                     <div class="status status-success status-sm"></div>
                 </div>
                 <p class="text-sm font-medium">
@@ -104,13 +108,15 @@
         <div class="card bg-base-200">
             <div class="card-body p-3 gap-1">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold opacity-60">ShortcutStore</span>
+                    <span class="text-xs font-bold opacity-60"
+                        >ShortcutStore</span
+                    >
                     <span class="badge badge-xs badge-ghost"
                         >{shortcutStore.entries.length}</span
                     >
                 </div>
                 <p class="text-xs opacity-50">
-                    Palette: {shortcutStore.showPalette ? "open" : "closed"}
+                    {m.palette_status_label({ status: shortcutStore.showPalette ? m.open_label() : m.closed_label() })}
                 </p>
             </div>
         </div>
@@ -119,7 +125,8 @@
         <div class="card bg-base-200">
             <div class="card-body p-3 gap-1">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold opacity-60">LayoutStore</span>
+                    <span class="text-xs font-bold opacity-60">LayoutStore</span
+                    >
                     <div
                         class="status status-sm"
                         class:status-success={layoutStore.navOpen}
@@ -127,9 +134,7 @@
                     ></div>
                 </div>
                 <p class="text-xs opacity-50">
-                    nav: {layoutStore.navOpen ? "open" : "closed"} · detail: {layoutStore.detailOpen
-                        ? "open"
-                        : "closed"}
+                    {m.nav_status_label({ status: layoutStore.navOpen ? m.open_label() : m.closed_label() })} · {m.detail_status_label({ status: layoutStore.detailOpen ? m.open_label() : m.closed_label() })}
                 </p>
             </div>
         </div>
@@ -138,12 +143,14 @@
         <div class="card bg-base-200">
             <div class="card-body p-3 gap-1">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold opacity-60">CommandStore</span>
+                    <span class="text-xs font-bold opacity-60"
+                        >CommandStore</span
+                    >
                     <span class="badge badge-xs badge-ghost"
                         >{commandStore.commands.length}</span
                     >
                 </div>
-                <p class="text-xs opacity-50">Registered commands</p>
+                <p class="text-xs opacity-50">{m.registered_commands_label()}</p>
             </div>
         </div>
     </div>

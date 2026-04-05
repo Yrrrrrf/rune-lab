@@ -8,7 +8,8 @@
 		type NavigationSection,
 		version,
 	} from "rune-lab";
-	import { setLocale } from "../lib/i18n/paraglide/runtime.js";
+	import { setLocale } from "$lib/i18n/paraglide/runtime.js";
+	import * as m from "$lib/i18n/paraglide/messages.js";
 	import AppLayout from "./AppLayout.svelte";
 
 	let { children } = $props();
@@ -16,25 +17,37 @@
 	const sections: NavigationSection[] = [
 		{
 			id: "lab",
-			title: "Lab",
+			title: m.lab_label(),
 			items: [
 				{
 					id: "lab.overview",
-					label: "Overview",
+					label: m.overview_label(),
 					icon: "🔬",
 					href: "/lab",
 				},
-				{ id: "lab.components", label: "Components", icon: "🧩" },
-				{ id: "lab.themes", label: "Themes", icon: "🎨" },
+				{
+					id: "lab.components",
+					label: m.components_label(),
+					icon: "🧩",
+				},
+				{ id: "lab.themes", label: m.themes_label(), icon: "🎨" },
 			],
 		},
 		{
 			id: "system",
-			title: "System",
+			title: m.system_label(),
 			items: [
-				{ id: "system.settings", label: "Settings", icon: "⚙️" },
-				{ id: "system.logs", label: "Activity Logs", icon: "📋" },
-				{ id: "system.users", label: "Users", icon: "👤" },
+				{
+					id: "system.settings",
+					label: m.settings_label(),
+					icon: "⚙️",
+				},
+				{
+					id: "system.logs",
+					label: m.activity_logs_label(),
+					icon: "📋",
+				},
+				{ id: "system.users", label: m.users_label(), icon: "👤" },
 			],
 		},
 	];
@@ -47,7 +60,7 @@
 		app: {
 			name: "Rune Lab",
 			version: version(),
-			description: "Modern toolkit for Svelte 5 Runes",
+			description: m.rune_lab_desc(),
 			author: "Yrrrrrf",
 		},
 	}}

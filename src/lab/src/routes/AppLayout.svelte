@@ -8,8 +8,8 @@
         getToastStore,
         getLayoutStore,
     } from "rune-lab";
-    import DashboardPanel from "./panels/DashboardPanel.svelte";
-    import ShortcutsPanel from "./panels/ShortcutsPanel.svelte";
+    import DashboardPanel from "../lib/components/panels/DashboardPanel.svelte";
+    import ShortcutsPanel from "../lib/components/panels/ShortcutsPanel.svelte";
     import { untrack, type Snippet } from "svelte";
 
     let { children, sections } = $props<{

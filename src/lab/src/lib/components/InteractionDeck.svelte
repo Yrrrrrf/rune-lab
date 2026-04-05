@@ -5,6 +5,7 @@
         getCommandStore,
         getLayoutStore,
     } from "rune-lab";
+    import * as m from "$lib/i18n/paraglide/messages.js";
 
     const toastStore = getToastStore();
     const shortcutStore = getShortcutStore();
@@ -39,7 +40,7 @@
             id: "lab:test-shortcut",
             keys: testShortcutKey,
             label: testShortcutLabel,
-            category: "Lab",
+            category: m.lab_label(),
             scope: "global",
             handler: () =>
                 toastStore.success(`⚡ "${testShortcutLabel}" fired!`),
@@ -59,14 +60,14 @@
         commandStore.register({
             id: "lab:greet",
             label: "Say Hello",
-            category: "Lab",
+            category: m.lab_label(),
             icon: "👋",
             action: () => toastStore.success("Hello from the Lab!"),
         });
         commandStore.register({
             id: "lab:random",
             label: "Random Number",
-            category: "Lab",
+            category: m.lab_label(),
             icon: "🎲",
             action: () =>
                 toastStore.info(`Random: ${Math.floor(Math.random() * 100)}`),
@@ -74,7 +75,7 @@
         commandStore.register({
             id: "lab:nested",
             label: "Nested Commands",
-            category: "Lab",
+            category: m.lab_label(),
             icon: "📂",
             children: [
                 {
@@ -104,38 +105,39 @@
     <h2
         class="text-xs font-black uppercase tracking-widest text-primary/70 mb-3"
     >
-        Interaction Deck
+        {m.interaction_deck_label()}
     </h2>
 
     <!-- Toast Cannon -->
     <details open class="collapse collapse-arrow bg-base-200">
         <summary class="collapse-title text-sm font-bold min-h-0 py-2"
-            >🔔 Toast Cannon</summary
+            >{m.toast_cannon_label()}</summary
         >
         <div class="collapse-content space-y-2">
             <div class="join flex-wrap">
                 <button
                     class="btn btn-xs btn-info join-item"
-                    onclick={() => fireToast("info")}>Info</button
+                    onclick={() => fireToast("info")}>{m.fire_toast_info()}</button
                 >
                 <button
                     class="btn btn-xs btn-success join-item"
-                    onclick={() => fireToast("success")}>Success</button
+                    onclick={() => fireToast("success")}>{m.fire_toast_success()}</button
                 >
                 <button
                     class="btn btn-xs btn-warning join-item"
-                    onclick={() => fireToast("warning")}>Warning</button
+                    onclick={() => fireToast("warning")}>{m.fire_toast_warning()}</button
                 >
                 <button
                     class="btn btn-xs btn-error join-item"
-                    onclick={() => fireToast("error")}>Error</button
+                    onclick={() => fireToast("error")}>{m.fire_toast_error()}</button
                 >
-                <button class="btn btn-xs btn-accent join-item" onclick={floodToasts}
-                    >🌊 Flood (5)</button
+                <button
+                    class="btn btn-xs btn-accent join-item"
+                    onclick={floodToasts}>{m.flood_toasts_label()}</button
                 >
             </div>
             <label class="flex items-center gap-2 text-xs">
-                <span class="opacity-60">Duration:</span>
+                <span class="opacity-60">{m.duration_label()}:</span>
                 <input
                     type="range"
                     min="0"
@@ -154,20 +156,20 @@
     <!-- Shortcut Lab -->
     <details class="collapse collapse-arrow bg-base-200">
         <summary class="collapse-title text-sm font-bold min-h-0 py-2"
-            >⚡ Shortcut Lab</summary
+            >{m.shortcut_lab_label()}</summary
         >
         <div class="collapse-content space-y-2">
             <div class="flex gap-2">
                 <input
                     type="text"
                     class="input input-xs input-bordered flex-1"
-                    placeholder="Key combo"
+                    placeholder={m.key_combo_placeholder()}
                     bind:value={testShortcutKey}
                 />
                 <input
                     type="text"
                     class="input input-xs input-bordered flex-1"
-                    placeholder="Label"
+                    placeholder={m.label_placeholder()}
                     bind:value={testShortcutLabel}
                 />
             </div>
@@ -175,17 +177,17 @@
                 {#if !testShortcutRegistered}
                     <button
                         class="btn btn-xs btn-primary join-item"
-                        onclick={registerTestShortcut}>Register</button
+                        onclick={registerTestShortcut}>{m.register_btn()}</button
                     >
                 {:else}
                     <button
                         class="btn btn-xs btn-error join-item"
-                        onclick={unregisterTestShortcut}>Unregister</button
+                        onclick={unregisterTestShortcut}>{m.unregister_btn()}</button
                     >
                 {/if}
             </div>
             <p class="text-xs opacity-50">
-                Total shortcuts: {shortcutStore.entries.length}
+                {m.total_shortcuts_label({ count: shortcutStore.entries.length })}
             </p>
         </div>
     </details>
@@ -193,7 +195,7 @@
     <!-- Command Palette -->
     <details class="collapse collapse-arrow bg-base-200">
         <summary class="collapse-title text-sm font-bold min-h-0 py-2"
-            >📋 Command Palette</summary
+            >{m.command_palette_label()}</summary
         >
         <div class="collapse-content space-y-2">
             <div class="join">
@@ -201,22 +203,21 @@
                     <button
                         class="btn btn-xs btn-primary join-item"
                         onclick={registerMockCommands}
-                        >Register 3 Commands</button
+                        >{m.register_commands_btn()}</button
                     >
                 {:else}
                     <button
                         class="btn btn-xs btn-error join-item"
-                        onclick={unregisterMockCommands}>Unregister All</button
+                        onclick={unregisterMockCommands}>{m.unregister_all_btn()}</button
                     >
                 {/if}
             </div>
             <p class="text-xs opacity-50">
-                Use <kbd class="kbd kbd-xs">Ctrl+Shift+K</kbd> to open palette
+                {@html m.open_palette_hint({ kbd: '<kbd class="kbd kbd-xs">Ctrl+Shift+K</kbd>' })}
             </p>
             <p class="text-xs opacity-50">
-                Registered: {commandStore.commands.length}
+                {m.registered_label({ count: commandStore.commands.length })}
             </p>
         </div>
     </details>
-
 </div>

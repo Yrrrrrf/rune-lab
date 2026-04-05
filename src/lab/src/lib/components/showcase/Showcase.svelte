@@ -1,5 +1,6 @@
 <script lang="ts">
     import { showcaseState } from "./state.svelte";
+    import * as m from "$lib/i18n/paraglide/messages.js";
     
     // Tab definitions mapping to our 6 categories
     import Actions from "./tabs/Actions.svelte";
@@ -9,14 +10,14 @@
     import Navigation from "./tabs/Navigation.svelte";
     import Visual from "./tabs/Visual.svelte";
 
-    const tabs = [
-        { id: "actions", label: "Actions ⚡", component: Actions },
-        { id: "input", label: "Data Input 📥", component: DataInput },
-        { id: "display", label: "Display 📊", component: Display },
-        { id: "feedback", label: "Feedback 💬", component: Feedback },
-        { id: "nav", label: "Navigation 🗺️", component: Navigation },
-        { id: "visual", label: "Visual 🎨", component: Visual }
-    ];
+    const tabs = $derived([
+        { id: "actions", label: m.actions_tab_label(), component: Actions },
+        { id: "input", label: m.input_tab_label(), component: DataInput },
+        { id: "display", label: m.display_tab_label(), component: Display },
+        { id: "feedback", label: m.feedback_tab_label(), component: Feedback },
+        { id: "nav", label: m.nav_tab_label(), component: Navigation },
+        { id: "visual", label: m.visual_tab_label(), component: Visual }
+    ]);
 
     // Read the active index from shared state
     const activeIndex = $derived(showcaseState.activeTab);
