@@ -87,16 +87,21 @@ function convertAmount(
   return _exchangeRateStore.convertAmount(amount, fromCode, target);
 }
 
-export const currencyStore: ConfigStore<Currency> & {
+export const currencyStore = Object.assign(baseStore, {
+  addCurrency,
+  convertAmount,
+}) as ConfigStore<Currency> & {
   addCurrency: typeof addCurrency;
   convertAmount: typeof convertAmount;
   readonly canConvert: boolean;
-} = Object.assign(baseStore, {
-  addCurrency,
-  convertAmount,
-  get canConvert() {
+};
+
+Object.defineProperty(currencyStore, "canConvert", {
+  get() {
     return !!_exchangeRateStore?.hasRates;
   },
+  enumerable: true,
+  configurable: true,
 });
 
 export type CurrencyStore = typeof currencyStore;

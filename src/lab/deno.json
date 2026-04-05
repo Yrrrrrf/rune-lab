@@ -11,9 +11,13 @@
     "@tailwindcss/vite": "npm:@tailwindcss/vite",
     "@inlang/paraglide-js": "npm:@inlang/paraglide-js",
     "vite": "npm:vite",
+    "vite-plus": "npm:vite-plus",
     "tailwindcss": "npm:tailwindcss",
     "daisyui": "npm:daisyui",
-    "svelte": "npm:svelte"
+    "svelte": "npm:svelte",
+    "esm-env": "npm:esm-env",
+    "hotkeys-js": "npm:hotkeys-js",
+    "dinero.js": "npm:dinero.js"
   },
   "nodeModulesDir": "auto",
   "compilerOptions": {

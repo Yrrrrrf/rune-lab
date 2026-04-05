@@ -1,6 +1,5 @@
 <script lang="ts">
-    import CurrencySelector from "$lib/runes/plugins/money/src/CurrencySelector.svelte";
-    import { ThemeSelector, LanguageSelector, getAppStore } from "rune-lab";
+    import { ThemeSelector, LanguageSelector, getAppStore, CurrencySelector } from "rune-lab";
 
     const appStore = getAppStore();
     const isDev = true; // esm-env DEV not available in consumer, but we're always dev here
