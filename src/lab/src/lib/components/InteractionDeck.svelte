@@ -31,7 +31,7 @@
     }
 
     // ── Shortcut Lab ─────────────────────────────────────────
-    let testShortcutKey = $state("ctrl+shift+t");
+    let testShortcutKey = $state("ctrl+alt+h");
     let testShortcutLabel = $state("Test Shortcut");
     let testShortcutRegistered = $state(false);
 

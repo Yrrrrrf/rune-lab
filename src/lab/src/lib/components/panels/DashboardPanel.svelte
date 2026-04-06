@@ -142,9 +142,12 @@
                 <button
                     class="btn btn-xs btn-outline col-span-2"
                     onclick={() => {
-                        const newTheme =
-                            themeStore.current === "light" ? "dark" : "light";
-                        themeStore.set(newTheme);
+                        const currentIndex = themeStore.available.findIndex(
+                            (t) => t.name === themeStore.current,
+                        );
+                        const nextIndex =
+                            (currentIndex + 1) % themeStore.available.length;
+                        themeStore.set(themeStore.available[nextIndex].name);
                     }}
                 >
                     {m.cycle_theme_btn()}
