@@ -1,4 +1,3 @@
-// @ts-ignore - paraglide generated, gitignored
-import { deLocalizeUrl } from "$lib/i18n/paraglide/runtime.js";
+import { deLocalizeUrl } from "$lib/i18n/messages.ts";
 
 export const reroute = (request) => deLocalizeUrl(request.url).pathname;
