@@ -1,4 +1,5 @@
 import type { Handle } from "@sveltejs/kit";
+// @ts-ignore - paraglide generated, gitignored
 import { paraglideMiddleware } from "$lib/i18n/paraglide/server.js";
 
 const handleParaglide: Handle = ({ event, resolve }) =>
