@@ -24,17 +24,14 @@
   },
   "dependencies": {
     "esm-env": "npm:esm-env",
-    "hotkeys-js": "npm:hotkeys-js",
+    "@inlang/paraglide-js": "npm:@inlang/paraglide-js",
     "daisyui": "npm:daisyui",
+    "hotkeys-js": "npm:hotkeys-js",
     "dinero.js": "npm:dinero.js"
   },
   "devDependencies": {
-    "@sveltejs/package": "npm:@sveltejs/package",
-    "@inlang/paraglide-js": "npm:@inlang/paraglide-js",
-    "svelte": "npm:svelte",
-    "typescript": "npm:typescript",
-    "vite": "npm:vite",
     "vite-plus": "npm:vite-plus",
+    "svelte": "npm:svelte",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
     "jsdom": "npm:jsdom",
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom"

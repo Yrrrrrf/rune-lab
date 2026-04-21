@@ -2,7 +2,7 @@
 [group('Dev')]
 run:
     just --justfile "{{ justfile_directory() }}/scripts/inject.just" --working-directory "{{ justfile_directory() }}" inject "{{ justfile_directory() }}"
-    cd src/lab && deno run -A vite dev --host
+    cd src/lab && deno run -A npm:vite dev --host
 
 [doc('Test the package')]
 [group('Dev')]
