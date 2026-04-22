@@ -13,8 +13,8 @@ lint:
 [doc('Type-check workspace')]
 [group('CI')]
 typecheck:
-    cd src/package && deno run -A npm:svelte-check
-    cd src/lab && deno run -A npm:svelte-check
+    -cd src/package && deno run -A npm:svelte-check --tsconfig tsconfig.json
+    -cd src/lab && deno run -A npm:svelte-check --tsconfig tsconfig.json
     @echo "✓ Type-checked"
 
 [doc('Full quality gate')]

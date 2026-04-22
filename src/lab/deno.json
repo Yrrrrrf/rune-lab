@@ -1,9 +1,4 @@
 {
-  "tasks": {
-    "dev": "deno run -A npm:vite dev",
-    "build": "deno run -A npm:vite build",
-    "preview": "deno run -A npm:vite preview"
-  },
   "nodeModulesDir": "auto",
   "imports": {
     "rune-lab": "npm:rune-lab",
