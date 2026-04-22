@@ -3,7 +3,7 @@
 [working-directory('src/package')]
 build:
     # * Clean previous build
-    rm -rf dist/
+    rm -rf dist
     # * Compile i18n messages → paraglide runtime
     deno run -A npm:@inlang/paraglide-js compile --project ./src/lib/i18n/project.inlang --outdir ./src/lib/i18n/paraglide
     # * Bundle the svelte package (src → dist)

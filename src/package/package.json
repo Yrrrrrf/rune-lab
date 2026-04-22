@@ -1,10 +1,11 @@
 {
   "name": "rune-lab",
-  "version": "0.4.7",
+  "version": "0.4.8-alpha.2",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
-  "license": "MIT",
   "author": "Fernando Bryan Reza Campos",
+  "readme": "./README.md",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
@@ -43,11 +44,5 @@
     "runes",
     "ui",
     "components"
-  ],
-  "exclude": [
-    ".*",
-    "scripts/**",
-    "dist/**",
-    "**/*.test.ts"
   ]
 }
