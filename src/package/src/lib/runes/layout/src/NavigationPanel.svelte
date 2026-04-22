@@ -3,6 +3,16 @@
     import type { Snippet } from "svelte";
     import type { NavigationItem, NavigationSection } from "../../../kernel/src/mod.ts";
 
+    interface Props {
+        header?: Snippet;
+        sections: NavigationSection[];
+        footer?: Snippet;
+        activeId?: string | null;
+        collapsedIds?: Set<string>;
+        onSelect?: (item: NavigationItem) => void;
+        onToggle?: (id: string, isOpen: boolean) => void;
+    }
+
     let {
         header,
         sections = [],
@@ -11,15 +21,7 @@
         collapsedIds = new Set(),
         onSelect,
         onToggle,
-    } = $props<{
-        header?: Snippet;
-        sections: NavigationSection[];
-        footer?: Snippet;
-        activeId?: string | null;
-        collapsedIds?: Set<string>;
-        onSelect?: (item: NavigationItem) => void;
-        onToggle?: (id: string, isOpen: boolean) => void;
-    }>();
+    }: Props = $props();
 
     function handleItemClick(item: NavigationItem) {
         onSelect?.(item);

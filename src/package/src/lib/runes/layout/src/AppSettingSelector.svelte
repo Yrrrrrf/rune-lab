@@ -23,15 +23,7 @@
         tooltip,
         direction = "bottom",
         responsive = true,
-    } = $props<{
-        options: T[];
-        value: T;
-        item: Snippet<[T]>;
-        triggerLabel: Snippet<[T]>;
-        tooltip?: string;
-        direction?: "top" | "bottom" | "left" | "right" | "end" | "auto";
-        responsive?: boolean;
-    }>();
+    }: AppSettingSelectorProps<T> = $props();
 
     let modal = $state<HTMLDialogElement>();
 
@@ -150,7 +142,10 @@
                                     class="w-full text-left py-3 cursor-pointer hover:bg-base-200 px-4 transition-colors"
                                     onclick={() => modal?.close()}
                                     onkeydown={(e) => {
-                                        if (e.key === "Enter" || e.key === " ") {
+                                        if (
+                                            e.key === "Enter" ||
+                                            e.key === " "
+                                        ) {
                                             e.preventDefault();
                                             modal?.close();
                                         }

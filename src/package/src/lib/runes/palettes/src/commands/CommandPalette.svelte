@@ -5,7 +5,11 @@
     import { getShortcutStore } from "../../../../kernel/src/mod.ts";
     import { Icon } from "../../../layout/src/mod.ts";
 
-    let { shortcutKey = "shift+k" } = $props<{ shortcutKey?: string }>();
+    interface Props {
+        shortcutKey?: string;
+    }
+
+    let { shortcutKey = "shift+k" }: Props = $props();
 
     const commandStore = getCommandStore();
     const shortcutStore = getShortcutStore();

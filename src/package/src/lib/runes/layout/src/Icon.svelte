@@ -1,5 +1,9 @@
 <script lang="ts">
-  let { name, class: className = "" } = $props<{ name: string; class?: string }>();
+  interface Props {
+    name: string;
+    class?: string;
+  }
+  let { name, class: className = "" }: Props = $props();
 </script>
 
 <span class="material-symbols-outlined {className}">

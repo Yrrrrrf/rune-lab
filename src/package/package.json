@@ -32,6 +32,7 @@
   "devDependencies": {
     "vite-plus": "npm:vite-plus",
     "svelte": "npm:svelte",
+    "@sveltejs/package": "npm:@sveltejs/package@^2.5.7",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
     "jsdom": "npm:jsdom",
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom"

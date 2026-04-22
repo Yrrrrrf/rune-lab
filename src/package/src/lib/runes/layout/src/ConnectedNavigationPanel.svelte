@@ -5,11 +5,13 @@
     import { createNavigationConnection } from "./connection-factory.ts";
     import type { Snippet } from "svelte";
 
-    let { sections, header, footer } = $props<{
+    interface Props {
         sections: NavigationSection[];
         header?: Snippet;
         footer?: Snippet;
-    }>();
+    }
+
+    let { sections, header, footer }: Props = $props();
 
     const layoutStore = getLayoutStore();
     const connection = createNavigationConnection(layoutStore);

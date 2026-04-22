@@ -22,13 +22,13 @@
     filterKeys={codes}
     {onchange}
 >
-    {#snippet triggerLabel(active)}
+    {#snippet triggerLabel(active: any)}
         <div class="flex items-center gap-2">
             <span class="font-bold">{active.symbol}</span>
         </div>
     {/snippet}
 
-    {#snippet item(c)}
+    {#snippet item(c: any)}
         <button
             class="flex items-center gap-3 w-full"
             onclick={() => {

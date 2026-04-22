@@ -24,13 +24,13 @@
     filterKeys={[...allowedLocales]}
     {onchange}
 >
-    {#snippet triggerLabel(active)}
+    {#snippet triggerLabel(active: any)}
         <div class="flex items-center gap-2">
             <span class="text-lg">{active.flag}</span>
         </div>
     {/snippet}
 
-    {#snippet item(l)}
+    {#snippet item(l: any)}
         <button
             class="flex items-center gap-3 w-full"
             onclick={() => {

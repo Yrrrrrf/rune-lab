@@ -5,10 +5,12 @@
     import { createWorkspaceConnection } from "./connection-factory.ts";
     import type { Snippet } from "svelte";
 
-    let { items, globalActions } = $props<{
+    interface Props {
         items: WorkspaceItem[];
         globalActions?: Snippet;
-    }>();
+    }
+
+    let { items, globalActions }: Props = $props();
 
     const layoutStore = getLayoutStore();
     const connection = createWorkspaceConnection(layoutStore);

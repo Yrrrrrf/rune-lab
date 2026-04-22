@@ -3,17 +3,19 @@
     import type { Snippet } from "svelte";
     import type { WorkspaceItem } from "../../../kernel/src/mod.ts";
 
+    interface Props {
+        items: WorkspaceItem[];
+        globalActions?: Snippet;
+        activeId?: string | null;
+        onSelect?: (id: string, item: WorkspaceItem) => void;
+    }
+
     let {
         items = [],
         globalActions,
         activeId,
         onSelect,
-    } = $props<{
-        items: WorkspaceItem[];
-        globalActions?: Snippet;
-        activeId?: string | null;
-        onSelect?: (id: string, item: WorkspaceItem) => void;
-    }>();
+    }: Props = $props();
 
     function handleWorkspaceClick(item: WorkspaceItem) {
         onSelect?.(item.id, item);
