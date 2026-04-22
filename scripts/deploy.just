@@ -11,7 +11,7 @@ build:
     # * Post-build cleanup: strip i18n artifacts, rewrite .ts→.js imports, inject version
     deno run --allow-read --allow-write ../../scripts/build-pkg.ts
     # * Remove svelte-kit intermediate cache
-    rm -rf .svelte-kit/__package__
+    rm -rf .svelte-kit
     # * Format dist output
     deno fmt dist
     @echo "✓ build done"
