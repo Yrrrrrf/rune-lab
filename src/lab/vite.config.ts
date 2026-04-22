@@ -15,5 +15,5 @@ export default defineConfig({
       project: "./src/lib/i18n/project.inlang",
       outdir: "./src/lib/i18n/paraglide",
     }),
-  ]
+  ],
 });
