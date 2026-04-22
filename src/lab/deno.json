@@ -14,13 +14,5 @@
     "daisyui": "npm:daisyui",
     "hotkeys-js": "npm:hotkeys-js",
     "dinero.js": "npm:dinero.js"
-  },
-  "compilerOptions": {
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable",
-      "DOM.AsyncIterable"
-    ]
   }
 }
