@@ -30,7 +30,7 @@ function buildDineroDef(meta: Currency) {
   };
 }
 
-const CURRENCIES: Currency[] = [
+const CURRENCIES = [
   { code: "USD", symbol: "$", decimals: 2 },
   { code: "EUR", symbol: "€", decimals: 2 },
   { code: "GBP", symbol: "£", decimals: 2 },
@@ -44,7 +44,7 @@ const CURRENCIES: Currency[] = [
   { code: "AED", symbol: "د.إ", decimals: 2 },
 ] as const;
 
-const baseStore: ConfigStore<Currency> = createConfigStore<Currency>({
+const baseStore = createConfigStore<Currency, "code">({
   items: CURRENCIES,
   storageKey: "currency",
   displayName: "Currency",
@@ -80,7 +80,7 @@ function convertAmount(
   fromCode: string,
   toCode?: string,
 ): number {
-  const target = toCode ?? String((baseStore as ConfigStore<Currency>).current);
+  const target = toCode ?? String(baseStore.current);
   if (fromCode === target) return amount;
   if (!_exchangeRateStore || !_exchangeRateStore.hasRates) return amount;
 
@@ -90,7 +90,7 @@ function convertAmount(
 export const currencyStore = Object.assign(baseStore, {
   addCurrency,
   convertAmount,
-}) as ConfigStore<Currency> & {
+}) as ConfigStore<Currency, "code"> & {
   addCurrency: typeof addCurrency;
   convertAmount: typeof convertAmount;
   readonly canConvert: boolean;

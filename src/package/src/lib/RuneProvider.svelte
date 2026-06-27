@@ -3,6 +3,7 @@
   import {
     RUNE_LAB_CONTEXT,
     localStorageDriver,
+    namespaced,
     initializeStores,
     defineRune,
     createAppStore,
@@ -43,7 +44,7 @@
   }>();
 
   const initialPlugins = untrack(() => plugins);
-  const initialPersistence = untrack(() => config.persistence ?? localStorageDriver);
+  const initialPersistence = untrack(() => namespaced(config.persistence ?? localStorageDriver, "rl:"));
 
   // 0. Create and provide the built-in AppStore
   const appStore = createAppStore();

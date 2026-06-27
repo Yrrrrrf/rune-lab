@@ -22,3 +22,10 @@ build:
 deploy: build
     bun publish
     @echo "✓ deploy done"
+
+[doc('Publish package to npm using brave as default browser')]
+[group('Deploy')]
+[working-directory('src/package')]
+publish:
+    let d = (mktemp -d); '#!/bin/sh
+    exec brave "$@"' | save -f $"($d)/xdg-open"; chmod +x $"($d)/xdg-open"; with-env { PATH: ($env.PATH | prepend $d) } { bun publish }    

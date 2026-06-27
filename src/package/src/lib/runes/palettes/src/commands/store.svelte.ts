@@ -12,9 +12,9 @@ export interface CommandServices {
   appStore: unknown;
   apiStore: unknown;
   toastStore: IToastStore;
-  themeStore: ConfigStore<unknown>;
-  languageStore: ConfigStore<unknown>;
-  currencyStore: ConfigStore<unknown>;
+  themeStore: ConfigStore<Record<string, unknown>, string>;
+  languageStore: ConfigStore<Record<string, unknown>, string>;
+  currencyStore: ConfigStore<Record<string, unknown>, string>;
 }
 
 export class CommandStore {

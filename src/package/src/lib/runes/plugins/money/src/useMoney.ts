@@ -87,12 +87,29 @@ export interface UseMoneyReturn {
  */
 export function useMoney(): UseMoneyReturn {
   const currencyStore = getContext<CurrencyStore>(RUNE_LAB_CONTEXT.currency);
-  const languageStore = getContext<ConfigStore<unknown>>(
+  if (!currencyStore) {
+    throw new Error(
+      "[rune-lab] useMoney() found no CurrencyStore. Did you register MoneyPlugin in <RuneProvider plugins={[…]}>?",
+    );
+  }
+  const languageStore = getContext<
+    ConfigStore<Record<string, unknown>, string>
+  >(
     RUNE_LAB_CONTEXT.language,
   );
+  if (!languageStore) {
+    throw new Error(
+      "[rune-lab] useMoney() found no LanguageStore. Did you register LayoutPlugin in <RuneProvider plugins={[…]}>?",
+    );
+  }
   const exchangeRateStore = getContext<ExchangeRateStore>(
     RUNE_LAB_CONTEXT.exchangeRate,
   );
+  if (!exchangeRateStore) {
+    throw new Error(
+      "[rune-lab] useMoney() found no ExchangeRateStore. Did you register MoneyPlugin in <RuneProvider plugins={[…]}>?",
+    );
+  }
 
   /**
    * Convert amount to a Dinero object using current currency

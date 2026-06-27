@@ -94,5 +94,11 @@ export function createAppStore(): AppStore {
 }
 
 export function getAppStore(): AppStore {
-  return getContext<AppStore>(RUNE_LAB_CONTEXT.app);
+  const store = getContext<AppStore>(RUNE_LAB_CONTEXT.app);
+  if (!store) {
+    throw new Error(
+      "[rune-lab] getAppStore() found no AppStore. Did you wrap your application in <RuneProvider>?",
+    );
+  }
+  return store;
 }

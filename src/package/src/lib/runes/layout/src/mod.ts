@@ -50,8 +50,8 @@ export const LayoutPlugin: RunePlugin = defineRune({
         }
         // Only apply defaultTheme when there's no persisted value already loaded
         if (c.defaultTheme && !themeStore.current) {
-          if (themeStore.get(c.defaultTheme as never)) {
-            themeStore.set(c.defaultTheme as never);
+          if (themeStore.get(c.defaultTheme as string)) {
+            themeStore.set(c.defaultTheme as string);
           }
         }
         return themeStore;

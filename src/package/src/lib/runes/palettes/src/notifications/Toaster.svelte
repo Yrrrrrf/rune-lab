@@ -1,7 +1,5 @@
 <script lang="ts">
   import { getToastStore, portal } from "../../../../kernel/src/mod.ts";
-  import { flip } from "svelte/animate";
-  import { fade, fly } from "svelte/transition";
 
   const toastStore = getToastStore();
 
@@ -28,7 +26,7 @@
         "bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400",
       iconColor: "text-amber-500",
       iconPath:
-        "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z", // Proper warning icon
+        "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z",
     },
     error: {
       colors: "bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400",
@@ -39,6 +37,15 @@
   };
 </script>
 
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    .toast-item {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
 <div
   use:portal
   class="toast toast-end toast-bottom z-[9999] p-4 gap-3 pointer-events-none"
@@ -47,8 +54,10 @@
     {@const styles = typeDetails[toast.type] || typeDetails.info}
 
     <div
-      class="pointer-events-auto relative flex w-full max-w-sm items-start gap-4 overflow-hidden rounded-xl border p-4 shadow-lg backdrop-blur-xl transition-all duration-300 sm:min-w-[320px] {styles.colors} animate-in fade-in slide-in-from-bottom-4 zoom-in-95 ease-out data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:slide-out-to-right-full"
+      class="toast-item pointer-events-auto relative flex w-full max-w-sm items-start gap-4 overflow-hidden rounded-xl border p-4 shadow-lg backdrop-blur-xl transition-all duration-300 sm:min-w-[320px] {styles.colors} animate-in fade-in slide-in-from-bottom-4 zoom-in-95 ease-out data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:slide-out-to-right-full"
       role="alert"
+      onmouseenter={() => toastStore.pause(toast.id)}
+      onmouseleave={() => toastStore.resume(toast.id)}
     >
       <!-- Icon -->
       <div class="shrink-0 {styles.iconColor} mt-0.5">

@@ -74,8 +74,8 @@ export const MoneyPlugin: RunePlugin = defineRune({
         }
 
         if (c?.defaultCurrency && !currencyStore.current) {
-          if (currencyStore.get(c.defaultCurrency as never)) {
-            currencyStore.set(c.defaultCurrency as never);
+          if (currencyStore.get(c.defaultCurrency)) {
+            currencyStore.set(c.defaultCurrency);
           }
         }
 

@@ -6,7 +6,7 @@
 
     interface Props {
         /** ConfigStore instance to bind to */
-        store: ConfigStore<T>;
+        store: ConfigStore<T, keyof T>;
         /** Key to use as identifier (e.g., "name", "code") */
         idKey: string;
         /** Optional subset of IDs to show */
@@ -35,7 +35,7 @@
     }: Props = $props();
 
     const userDictionary =
-        getContext<Record<string, any>>("rl:dictionary") ?? {};
+        getContext<Record<string, (...args: unknown[]) => string>>("rl:dictionary") ?? {};
 
     /**
      * Resolve a label for an item through the message chain:
@@ -43,11 +43,11 @@
      * 2. Paraglide messages
      * 3. Raw key fallback
      */
-    function resolveLabel(item: any): string {
-        const key = String(item[idKey]);
+    function resolveLabel(item: T): string {
+        const key = String((item as Record<string, unknown>)[idKey]);
         if (typeof userDictionary[key] === "function")
             return userDictionary[key]();
-        if (typeof (m as any)[key] === "function") return (m as any)[key]();
+        if (typeof (m as Record<string, (...args: unknown[]) => string>)[key] === "function") return (m as Record<string, (...args: unknown[]) => string>)[key]();
         return key;
     }
 
@@ -55,8 +55,8 @@
 
     let available = $derived(
         filterKeys.length > 0
-            ? store.available.filter((item: any) =>
-                  filterKeys.includes(String(item[idKey])),
+            ? store.available.filter((item: T) =>
+                  filterKeys.includes(String((item as Record<string, unknown>)[idKey])),
               )
             : store.available,
     );

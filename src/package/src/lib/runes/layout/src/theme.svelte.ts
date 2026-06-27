@@ -55,12 +55,12 @@ const THEME_ICONS: Record<string, string> = {
   silk: "🎀",
 };
 
-const THEMES: Theme[] = Object.keys(THEME_ICONS).map((name: string) => ({
+const THEMES = Object.keys(THEME_ICONS).map((name: string) => ({
   name,
   icon: THEME_ICONS[name] ?? "🎨",
-}));
+})) as Theme[];
 
-export const themeStore: ConfigStore<Theme> = createConfigStore<Theme>({
+export const themeStore = createConfigStore<Theme, "name">({
   items: THEMES,
   storageKey: "theme",
   displayName: "Theme",
@@ -73,10 +73,10 @@ if (!themeStore.current && BROWSER) {
   const prefersDark =
     globalThis.matchMedia("(prefers-color-scheme: dark)").matches;
   const systemDefault = prefersDark ? "dark" : "light";
-  if (themeStore.get(systemDefault as never)) {
-    themeStore.set(systemDefault as never);
+  if (themeStore.get(systemDefault)) {
+    themeStore.set(systemDefault);
   }
 }
 
-export type ThemeStore = ReturnType<typeof createConfigStore<Theme>>;
+export type ThemeStore = ReturnType<typeof createConfigStore<Theme, "name">>;
 export { getThemeStore };

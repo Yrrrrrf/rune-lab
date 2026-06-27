@@ -27,9 +27,18 @@ export const PalettesPlugin: RunePlugin = defineRune({
           appStore: stores.get("app"),
           apiStore: stores.get("api"),
           toastStore: stores.get("toast") as ToastStore,
-          themeStore: stores.get("theme") as ConfigStore<unknown>,
-          languageStore: stores.get("language") as ConfigStore<unknown>,
-          currencyStore: stores.get("currency") as ConfigStore<unknown>,
+          themeStore: stores.get("theme") as ConfigStore<
+            Record<string, unknown>,
+            string
+          >,
+          languageStore: stores.get("language") as ConfigStore<
+            Record<string, unknown>,
+            string
+          >,
+          currencyStore: stores.get("currency") as ConfigStore<
+            Record<string, unknown>,
+            string
+          >,
         }),
       dependsOn: ["app", "api", "toast", "theme", "language", "currency"],
       noPersistence: true,

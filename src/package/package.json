@@ -1,6 +1,6 @@
 {
   "name": "rune-lab",
-  "version": "0.4.8-alpha.2",
+  "version": "0.4.8",
   "description": "Modern toolkit for Svelte 5 Runes applications.",
   "type": "module",
   "author": "Fernando Bryan Reza Campos",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "vite-plus": "npm:vite-plus",
     "svelte": "npm:svelte",
-    "@sveltejs/package": "npm:@sveltejs/package@^2.5.7",
+    "@sveltejs/package": "npm:@sveltejs/package",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
     "jsdom": "npm:jsdom",
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom"

@@ -50,6 +50,7 @@ export const createCookieDriver = (
     path?: string;
     maxAge?: number;
     sameSite?: "Lax" | "Strict" | "None";
+    secure?: boolean;
   } = {},
 ): PersistenceDriver => ({
   get: (key: string) => {
@@ -63,6 +64,7 @@ export const createCookieDriver = (
     if (options.path) cookie += `; path=${options.path}`;
     if (options.maxAge) cookie += `; max-age=${options.maxAge}`;
     if (options.sameSite) cookie += `; samesite=${options.sameSite}`;
+    if (options.secure) cookie += "; Secure";
     document.cookie = cookie;
   },
   remove: (key: string) => {
@@ -75,3 +77,22 @@ export const createCookieDriver = (
 export const cookieDriver: PersistenceDriver = createCookieDriver({
   path: "/",
 });
+
+/**
+ * Wraps a persistence driver so all keys are prefixed with the given string.
+ * Use this to namespace storage keys and avoid cross-app collisions.
+ *
+ * @param driver - The underlying persistence driver to wrap
+ * @param prefix - The prefix to prepend to all keys (e.g., "rl:")
+ * @returns A new PersistenceDriver that transparently namespaces keys
+ */
+export function namespaced(
+  driver: PersistenceDriver,
+  prefix: string,
+): PersistenceDriver {
+  return {
+    get: (key: string) => driver.get(`${prefix}${key}`),
+    set: (key: string, value: string) => driver.set(`${prefix}${key}`, value),
+    remove: (key: string) => driver.remove(`${prefix}${key}`),
+  };
+}

@@ -18,7 +18,7 @@ describe("Currency Store", () => {
   });
 
   it("should correctly use prototype methods", () => {
-    const usd = currencyStore.get("USD" as never);
+    const usd = currencyStore.get("USD");
 
     expect(usd).toBeDefined();
     expect(usd?.code).toBe("USD");
@@ -28,7 +28,7 @@ describe("Currency Store", () => {
   it("should add a new currency and keep methods", () => {
     currencyStore.addCurrency({ code: "BTC", symbol: "₿", decimals: 8 });
 
-    const btc = currencyStore.get("BTC" as never);
+    const btc = currencyStore.get("BTC");
     expect(btc).toBeDefined();
     expect(btc?.code).toBe("BTC");
     expect(btc?.decimals).toBe(8);

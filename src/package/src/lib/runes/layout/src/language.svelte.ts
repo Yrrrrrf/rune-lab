@@ -1,7 +1,6 @@
 // sdk/state/src/language.svelte.ts
 
 import {
-  type ConfigStore,
   createConfigStore,
   getLanguageStore,
 } from "../../../kernel/src/mod.ts";
@@ -39,15 +38,15 @@ export const LANGUAGES = [
   { code: "vi", flag: "🇻🇳" },
 ] as const;
 
-export const languageStore: ConfigStore<Language> = createConfigStore<Language>(
-  {
-    items: LANGUAGES,
-    storageKey: "language",
-    displayName: "Language",
-    idKey: "code",
-    icon: "🌍",
-  },
-);
+export const languageStore = createConfigStore<Language, "code">({
+  items: LANGUAGES,
+  storageKey: "language",
+  displayName: "Language",
+  idKey: "code",
+  icon: "🌍",
+});
 
-export type LanguageStore = ReturnType<typeof createConfigStore<Language>>;
+export type LanguageStore = ReturnType<
+  typeof createConfigStore<Language, "code">
+>;
 export { getLanguageStore };

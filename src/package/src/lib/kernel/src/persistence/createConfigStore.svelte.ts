@@ -2,18 +2,18 @@ import type { PersistenceDriver } from "./types.ts";
 import { createInMemoryDriver } from "./drivers.ts";
 import { DEV } from "esm-env";
 
-export type ConfigStore<T = unknown> = {
-  current: unknown;
+export type ConfigStore<T, K extends keyof T = keyof T> = {
+  current: T[K];
   available: T[];
-  set: (id: unknown) => void;
-  get: (id: unknown) => T | undefined;
-  getProp: <K extends keyof T>(prop: K, id?: unknown) => T[K] | undefined;
-  addItems: (newItems: T[]) => void;
+  set(id: T[K]): void;
+  get(id: T[K]): T | undefined;
+  getProp<P extends keyof T>(prop: P, id?: T[K]): T[P] | undefined;
+  addItems(newItems: T[]): void;
   /**
    * Register a callback to fire when the current item changes.
    * Returns an unsubscribe function.
    */
-  onChange: (cb: (newId: unknown, oldId: unknown) => void) => () => void;
+  onChange: (cb: (newId: T[K], oldId: T[K]) => void) => () => void;
   /**
    * Inject (or replace) the persistence driver at runtime.
    * Call this inside your plugin factory so the real driver
@@ -24,7 +24,7 @@ export type ConfigStore<T = unknown> = {
   setDriver: (driver: PersistenceDriver) => void;
 };
 
-export interface ConfigStoreOptions<T = unknown> {
+export interface ConfigStoreOptions<T, K extends keyof T = keyof T> {
   /** Array of available items */
   items: readonly T[];
   /** Storage key used by the persistence driver */
@@ -32,7 +32,7 @@ export interface ConfigStoreOptions<T = unknown> {
   /** Display name for logging (e.g., "Theme", "Language") */
   displayName: string;
   /** Key to use as identifier (e.g., "code", "name") */
-  idKey: keyof T;
+  idKey: K;
   /** Icon for logs */
   icon?: string;
   /** Persistence driver */
@@ -43,27 +43,27 @@ export interface ConfigStoreOptions<T = unknown> {
  * Internal class implementation for configuration stores.
  * Stable class definition avoids potential issues with multiple definitions in SSR.
  */
-class ConfigStoreImpl<T = unknown> {
-  current: unknown = $state(null);
+class ConfigStoreImpl<T, K extends keyof T> {
+  current: T[K] = $state(null!);
   available: T[] = $state([]);
 
-  #options: ConfigStoreOptions<T>;
+  #options: ConfigStoreOptions<T, K>;
   #driver: PersistenceDriver;
-  #callbacks: Set<(newId: unknown, oldId: unknown) => void> = new Set();
+  #callbacks: Set<(newId: T[K], oldId: T[K]) => void> = new Set();
 
-  constructor(options: ConfigStoreOptions<T>) {
+  constructor(options: ConfigStoreOptions<T, K>) {
     this.#options = options;
     const { items, idKey, storageKey, driver = createInMemoryDriver() } =
       options;
     this.#driver = driver;
 
     this.available = [...items] as T[];
-    this.current = items[0]?.[idKey] ?? "";
+    this.current = items[0][idKey];
 
     const saved = this.#driver.get(storageKey);
     // Only load saved if it actually exists in our available items
-    if (saved && this.get(saved)) {
-      this.current = saved;
+    if (saved && this.get(saved as T[K])) {
+      this.current = saved as T[K];
     }
 
     // Only log here if we were initialized with a real driver (not the default in-memory)
@@ -93,8 +93,8 @@ class ConfigStoreImpl<T = unknown> {
     this.#driver = driver;
     // Re-read persisted value now that we have a real driver
     const saved = driver.get(this.#options.storageKey);
-    if (saved && this.get(saved)) {
-      this.current = saved;
+    if (saved && this.get(saved as T[K])) {
+      this.current = saved as T[K];
     }
 
     if (DEV) {
@@ -105,7 +105,7 @@ class ConfigStoreImpl<T = unknown> {
   /**
    * Set current item with validation
    */
-  set(id: unknown): void {
+  set(id: T[K]): void {
     const item = this.get(id);
     if (!item) {
       console.warn(`${this.#options.displayName} "${id}" not found`);
@@ -133,7 +133,7 @@ class ConfigStoreImpl<T = unknown> {
   /**
    * Register a change callback
    */
-  onChange(cb: (newId: unknown, oldId: unknown) => void): () => void {
+  onChange(cb: (newId: T[K], oldId: T[K]) => void): () => void {
     this.#callbacks.add(cb);
     return () => this.#callbacks.delete(cb);
   }
@@ -141,22 +141,19 @@ class ConfigStoreImpl<T = unknown> {
   /**
    * Get item by id
    */
-  get(id: unknown): T | undefined {
+  get(id: T[K]): T | undefined {
     const idKey = this.#options.idKey;
     return this.available.find(
-      (item: T) => (item as Record<string, unknown>)[idKey as string] === id,
+      (item: T) => item[idKey] === id,
     );
   }
 
   /**
    * Get property from current or specified item
    */
-  getProp<K extends keyof T>(prop: K, id?: unknown): T[K] | undefined {
+  getProp<P extends keyof T>(prop: P, id?: T[K]): T[P] | undefined {
     const targetId = id ?? this.current;
-    return (this.get(targetId) as Record<string, unknown> | undefined)
-      ?.[prop as string] as
-        | T[K]
-        | undefined;
+    return this.get(targetId)?.[prop];
   }
 
   /**
@@ -165,7 +162,7 @@ class ConfigStoreImpl<T = unknown> {
   addItems(newItems: T[]): void {
     const idKey = this.#options.idKey;
     for (const item of newItems) {
-      if (!this.get((item as Record<string, unknown>)[idKey as string])) {
+      if (!this.get(item[idKey] as T[K])) {
         this.available.push(item);
       }
     }
@@ -175,8 +172,8 @@ class ConfigStoreImpl<T = unknown> {
 /**
  * Creates a reactive configuration store with persistence
  */
-export function createConfigStore<T = unknown>(
-  options: ConfigStoreOptions<T>,
-): ConfigStore<T> {
-  return new ConfigStoreImpl(options) as unknown as ConfigStore<T>;
+export function createConfigStore<T, K extends keyof T>(
+  options: ConfigStoreOptions<T, K>,
+): ConfigStore<T, K> {
+  return new ConfigStoreImpl(options) as unknown as ConfigStore<T, K>;
 }

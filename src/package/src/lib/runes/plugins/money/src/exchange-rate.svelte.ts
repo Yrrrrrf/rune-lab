@@ -2,23 +2,71 @@
 
 import { getContext } from "svelte";
 import {
-  convertMoney,
-  createMoney,
   CURRENCY_MAP,
-  directConversion,
-  inverseConversion,
   type RateMap,
   resolveRate,
   type ScaledRate,
   scaledRate,
-  toMoneySnapshot,
-  triangularConversion,
 } from "./mod.ts";
 import { RUNE_LAB_CONTEXT } from "../../../../kernel/src/mod.ts";
 
 export class ExchangeRateStore {
   #rates = $state<RateMap>({});
   #baseCurrency = $state<string>("USD");
+
+  /**
+   * Combined reactive cross-rate matrix: from -> to -> floatRate
+   */
+  #matrix = $derived.by(() => {
+    const base = this.#baseCurrency;
+    const rates = this.#rates;
+    if (!rates || Object.keys(rates).length === 0) {
+      return {};
+    }
+
+    const currencies = new Set<string>([base, ...Object.keys(rates)]);
+    const mat: Record<string, Record<string, number>> = {};
+
+    for (const from of currencies) {
+      mat[from] = {};
+      for (const to of currencies) {
+        if (from === to) {
+          mat[from][to] = 1.0;
+          continue;
+        }
+
+        // Direct: base -> to
+        if (from === base) {
+          const rateTo = rates[to];
+          if (rateTo !== undefined) {
+            mat[from][to] = resolveRate(rateTo);
+          }
+        } // Inverse: from -> base
+        else if (to === base) {
+          const rateFrom = rates[from];
+          if (rateFrom !== undefined) {
+            const r = resolveRate(rateFrom);
+            if (r !== 0) {
+              mat[from][to] = 1.0 / r;
+            }
+          }
+        } // Triangular: from -> base -> to
+        else {
+          const rateFrom = rates[from];
+          const rateTo = rates[to];
+          if (rateFrom !== undefined && rateTo !== undefined) {
+            const rFrom = resolveRate(rateFrom);
+            if (rFrom !== 0) {
+              const rTo = resolveRate(rateTo);
+              mat[from][to] = rTo / rFrom;
+            }
+          }
+        }
+      }
+    }
+
+    return mat;
+  });
 
   /**
    * The current exchange rates relative to the base currency.
@@ -76,88 +124,36 @@ export class ExchangeRateStore {
 
     if (!this.hasRates) return undefined;
 
-    try {
-      // 1 unit of fromCode (major unit)
-      const oneUnit = Math.pow(
-        Array.isArray(fromCurrency.base)
-          ? fromCurrency.base[0]
-          : fromCurrency.base,
-        fromCurrency.exponent,
-      );
+    const rate = this.#matrix[fromCode]?.[toCode];
+    if (rate === undefined) return undefined;
 
-      const currentRates = this.#rates;
-      const currentBase = this.#baseCurrency;
-
-      const sourceMoney = createMoney(oneUnit, fromCode);
-
-      let targetMoney;
-      if (fromCode === currentBase) {
-        // Direct: base → target
-        targetMoney = convertMoney(sourceMoney, toCode, currentRates);
-      } else if (toCode === currentBase) {
-        // Inverse: target → base
-        const rateToBase = currentRates[fromCode];
-        if (!rateToBase) return undefined;
-        const r = resolveRate(rateToBase);
-        targetMoney = convertMoney(sourceMoney, toCode, {
-          [toCode]: scaledRate(1 / r, 6),
-        });
-      } else {
-        // Triangular: source → base → target
-        const rateToBase = currentRates[fromCode];
-        const rateToTarget = currentRates[toCode];
-        if (!rateToBase || !rateToTarget) return undefined;
-
-        const r1 = resolveRate(rateToBase);
-        const r2 = resolveRate(rateToTarget);
-
-        targetMoney = convertMoney(sourceMoney, toCode, {
-          [toCode]: scaledRate(r2 / r1, 6),
-        });
-      }
-
-      const snapshot = toMoneySnapshot(targetMoney);
-      return {
-        amount: snapshot.amount,
-        scale: snapshot.scale,
-      };
-    } catch (_err) {
-      return undefined;
+    let scale = 6;
+    if (fromCode === this.#baseCurrency) {
+      const rateEntry = this.#rates[toCode];
+      const rateScale = (rateEntry && typeof rateEntry === "object")
+        ? rateEntry.scale
+        : 4;
+      const exponent = toCurrency.exponent;
+      scale = exponent + rateScale;
+    } else {
+      const exponent = toCurrency.exponent;
+      scale = exponent + 6;
     }
+
+    return scaledRate(rate, scale);
   }
 
   /**
-   * Internal conversion logic that handles triangulation through base currency.
-   * Delegates all math to ConversionStrategies (directConversion, inverseConversion, triangularConversion).
+   * Internal conversion logic that reads directly from the derived cross-rate matrix.
    */
   convertAmount(amount: number, fromCode: string, toCode: string): number {
     if (fromCode === toCode) return amount;
     if (!this.hasRates) return amount;
 
-    // Direct: Base → Target
-    if (fromCode === this.#baseCurrency) {
-      const rateToTarget = this.#rates[toCode];
-      if (!rateToTarget) return amount;
-      return directConversion(amount, resolveRate(rateToTarget));
-    }
+    const rate = this.#matrix[fromCode]?.[toCode];
+    if (rate === undefined) return amount;
 
-    // Inverse: Target → Base
-    if (toCode === this.#baseCurrency) {
-      const rateFromSource = this.#rates[fromCode];
-      if (!rateFromSource) return amount;
-      return inverseConversion(amount, resolveRate(rateFromSource));
-    }
-
-    // Triangulation: From → Base → To
-    const rateFromSource = this.#rates[fromCode];
-    const rateToTarget = this.#rates[toCode];
-    if (!rateFromSource || !rateToTarget) return amount;
-
-    return triangularConversion(
-      amount,
-      resolveRate(rateFromSource),
-      resolveRate(rateToTarget),
-    );
+    return Math.round(amount * rate);
   }
 }
 
@@ -172,5 +168,11 @@ export function createExchangeRateStore(): ExchangeRateStore {
  * Consumer to retrieve the ExchangeRateStore from context.
  */
 export function getExchangeRateStore(): ExchangeRateStore {
-  return getContext<ExchangeRateStore>(RUNE_LAB_CONTEXT.exchangeRate);
+  const store = getContext<ExchangeRateStore>(RUNE_LAB_CONTEXT.exchangeRate);
+  if (!store) {
+    throw new Error(
+      "[rune-lab] getExchangeRateStore() found no ExchangeRateStore. Did you register MoneyPlugin in <RuneProvider plugins={[…]}>?",
+    );
+  }
+  return store;
 }

@@ -1,4 +1,5 @@
 import type { PersistenceDriver } from "../persistence/types.ts";
+import { createInMemoryDriver } from "../persistence/drivers.ts";
 import type { Component } from "svelte";
 
 /**
@@ -204,7 +205,10 @@ export function initializeStores(
       continue;
     }
 
-    const store = entry.factory(pluginConfig, driver, stores);
+    const effectiveDriver = entry.noPersistence
+      ? createInMemoryDriver()
+      : driver;
+    const store = entry.factory(pluginConfig, effectiveDriver, stores);
 
     if (store === null && entry.optional) {
       continue; // Optional store chose not to create
