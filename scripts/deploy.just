@@ -9,7 +9,7 @@ build:
     # * Bundle the svelte package (src → dist)
     deno run -A npm:@sveltejs/package -- -i src -o dist
     # * Post-build cleanup: strip i18n artifacts, rewrite .ts→.js imports, inject version
-    deno run --allow-read --allow-write ../../scripts/build-pkg.ts
+    nu ../../scripts/build.nu
     # * Remove svelte-kit intermediate cache
     rm -rf .svelte-kit
     # * Format dist output
