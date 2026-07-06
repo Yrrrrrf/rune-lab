@@ -1,11 +1,12 @@
 [doc('Run the lab')]
 [group('Dev')]
-run:
-    just --justfile "{{ justfile_directory() }}/scripts/inject.just" --working-directory "{{ justfile_directory() }}" inject "{{ justfile_directory() }}"
-    cd src/lab && deno run -A npm:vite dev --host
+run: inject
+    cd src/lab; deno run -A npm:vite dev --host
 
-[doc('Test the package')]
+[doc('Clean build/cache artifacts')]
 [group('Dev')]
-[working-directory('src/package')]
-test *args:
-    bunx vp test {{ args }}
+clean:
+    rm -rf src/package/dist
+    rm -rf src/lab/.svelte-kit
+    rm -rf src/lab/.vite
+    @echo "✓ cleaned build and cache artifacts"

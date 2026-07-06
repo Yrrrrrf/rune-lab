@@ -1,27 +1,23 @@
-[doc('Format code')]
-[group('CI')]
-fmt:
-    deno fmt .
-    @echo "✓ Code formatted"
+[doc('Run quality gate (check + test)')]
+[group('ci')]
+ci: check test
 
-[doc('Lint code')]
-[group('CI')]
-lint:
-    deno lint .
-    @echo "✓ Code linted"
+[doc('Purge caches & lockfiles, reinstall deps, resync generated code')]
+[group('ci')]
+prepare:
+    fd -u --prune '^(node_modules|\.svelte-kit|\.vite|deno\.lock)$' | lines | each {|p| rm -r -f $p }
+    deno install
+    cd sdk/ui; deno run -A npm:@sveltejs/kit/svelte-kit sync
+    cd apps/vision; deno run -A npm:@sveltejs/kit/svelte-kit syn
 
-[doc('Type-check workspace')]
-[group('CI')]
-typecheck:
-    # Test package
-    # -cd src/package && deno check -c tsconfig.json
-    -cd src/package && bunx svelte-check --tsconfig tsconfig.json
-    # Test lab
-    # -cd src/lab && deno check -c tsconfig.json
-    -cd src/lab && deno run -A npm:svelte-check --tsconfig tsconfig.json
-    @echo "✓ Type-checked"
-
-[doc('Full quality gate')]
-[group('CI')]
-quality: fmt lint typecheck
-    @echo "✓ Quality checks passed"
+[doc('Commit with AI-generated message via azathoth (pass y to auto-accept)')]
+[group('ci')]
+commit answer='': fmt
+    #!/usr/bin/env nu
+    open --raw ("~/Documents/lab/ai/.env" | path expand)
+        | lines
+        | parse "{key}={value}"
+        | reduce -f {} {|it, acc| $acc | insert $it.key $it.value }
+        | load-env
+    git add -A
+    {{ if answer == '' { '' } else { "'" + answer + "' | " } }}uvx azathoth workflow commit

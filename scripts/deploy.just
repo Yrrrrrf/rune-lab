@@ -16,16 +16,26 @@ build:
     deno fmt dist
     @echo "✓ build done"
 
-[doc('Publish package to npm')]
-[group('Deploy')]
-[working-directory('src/package')]
-deploy: build
-    bun publish
-    @echo "✓ deploy done"
-
 [doc('Publish package to npm using brave as default browser')]
 [group('Deploy')]
+[script('nu')]
 [working-directory('src/package')]
 publish:
-    let d = (mktemp -d); '#!/bin/sh
-    exec brave "$@"' | save -f $"($d)/xdg-open"; chmod +x $"($d)/xdg-open"; with-env { PATH: ($env.PATH | prepend $d) } { bun publish }    
+    let d = (mktemp -d | str trim)
+    '#!/bin/sh
+    exec brave "$@"' | save -f $"($d)/xdg-open"
+    chmod +x $"($d)/xdg-open"
+    with-env { PATH: ($env.PATH | prepend $d) } { bun publish }
+    print "✓ deploy done"
+
+[doc('Inject built dist into lab for local testing')]
+[group('Deploy')]
+inject root=justfile_directory():
+    # * Build the package first
+    just build
+    # * Replace lab's installed rune-lab/dist with the freshly built one
+    rm -rf "{{ root }}/src/lab/node_modules/rune-lab/dist"
+    cp -r "{{ root }}/src/package/dist" "{{ root }}/src/lab/node_modules/rune-lab/dist"
+    # * Verify the injection
+    diff -r "{{ root }}/src/package/dist" "{{ root }}/src/lab/node_modules/rune-lab/dist"
+    @echo "✓ injected into src/lab/node_modules/rune-lab/dist"
