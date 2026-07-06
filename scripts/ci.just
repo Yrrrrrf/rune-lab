@@ -10,6 +10,7 @@ prepare:
     cd sdk/ui; deno run -A npm:@sveltejs/kit/svelte-kit sync
     cd apps/vision; deno run -A npm:@sveltejs/kit/svelte-kit syn
 
+# todo: Add just commit to my own personal scripts on main path... It absolutly rocks...
 [doc('Commit with AI-generated message via azathoth (pass y to auto-accept)')]
 [group('ci')]
 commit answer='': fmt
