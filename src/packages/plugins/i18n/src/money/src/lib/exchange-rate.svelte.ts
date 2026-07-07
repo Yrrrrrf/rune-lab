@@ -1,6 +1,5 @@
 // sdk/state/src/exchange-rate.svelte.ts
 
-import { getContext } from "svelte";
 import {
   CURRENCY_MAP,
   type RateMap,
@@ -8,7 +7,6 @@ import {
   scaledRate,
 } from "./money.ts";
 import { resolveRate } from "./strategies.ts";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/svelte";
 
 export class ExchangeRateStore {
   #rates = $state<RateMap>({});
@@ -162,17 +160,4 @@ export class ExchangeRateStore {
  */
 export function createExchangeRateStore(): ExchangeRateStore {
   return new ExchangeRateStore();
-}
-
-/**
- * Consumer to retrieve the ExchangeRateStore from context.
- */
-export function getExchangeRateStore(): ExchangeRateStore {
-  const store = getContext<ExchangeRateStore>(RUNE_LAB_CONTEXT.exchangeRate);
-  if (!store) {
-    throw new Error(
-      "[rune-lab] getExchangeRateStore() found no ExchangeRateStore. Did you register MoneyPlugin in <RuneProvider plugins={[…]}>?",
-    );
-  }
-  return store;
 }

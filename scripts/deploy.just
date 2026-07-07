@@ -9,7 +9,7 @@ build:
     # * Bundle the svelte package (src → dist)
     deno run -A npm:@sveltejs/package -- -i src -o dist
     # * Post-build cleanup: strip i18n artifacts, rewrite .ts→.js imports, inject version
-    nu ../../scripts/build.nu
+    nu ../../../scripts/build.nu
     # * Remove svelte-kit intermediate cache
     rm -rf .svelte-kit
     # * Format dist output
@@ -34,8 +34,9 @@ inject root=justfile_directory():
     # * Build the package first
     just build
     # * Replace lab's installed rune-lab/dist with the freshly built one
-    rm -rf "{{ root }}/apps/lab/node_modules/rune-lab/dist"
-    cp -r "{{ root }}/src/packages/ui/dist" "{{ root }}/apps/lab/node_modules/rune-lab/dist"
+    rm -rf "{{ root }}/node_modules/rune-lab/dist"
+    mkdir "{{ root }}/node_modules/rune-lab"
+    cp -r "{{ root }}/src/packages/ui/dist" "{{ root }}/node_modules/rune-lab/dist"
     # * Verify the injection
-    diff -r "{{ root }}/src/packages/ui/dist" "{{ root }}/apps/lab/node_modules/rune-lab/dist"
-    @echo "✓ injected into src/lab/node_modules/rune-lab/dist"
+    diff -r "{{ root }}/src/packages/ui/dist" "{{ root }}/node_modules/rune-lab/dist"
+    @echo "✓ injected into node_modules/rune-lab/dist"

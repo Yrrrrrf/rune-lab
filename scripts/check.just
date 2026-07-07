@@ -21,8 +21,6 @@ audit:
     deno run -A npm:@inlang/paraglide-js compile --project ./apps/lab/src/lib/i18n/project.inlang --outdir ./apps/lab/src/lib/i18n/paraglide
     deno run -A npm:fallow --skip dupes --skip health
 
-
 [doc('Run all check quality gates')]
 [group('check')]
 check: fmt lint types audit
-

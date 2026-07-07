@@ -1,9 +1,36 @@
+import { Schema } from "effect";
 import type { PersistenceDriver } from "../ports/persistence.ts";
 
+const PluginId = Schema.String.pipe(Schema.brand("PluginId"));
+type PluginId = Schema.Schema.Type<typeof PluginId>;
+
+const RegistryId = Schema.String.pipe(Schema.brand("RegistryId"));
+type RegistryId = Schema.Schema.Type<typeof RegistryId>;
+
+const SymbolSchema = Schema.declare(
+  (input): input is symbol => typeof input === "symbol",
+  { identifier: "Symbol" },
+);
+
+const StoreRegistryEntrySchema = Schema.Struct({
+  id: RegistryId,
+  contextKey: Schema.optional(SymbolSchema),
+  pluginId: Schema.optional(PluginId),
+  factory: Schema.declare(
+    (input): input is (...args: unknown[]) => unknown =>
+      typeof input === "function",
+    { identifier: "Function" },
+  ),
+  optional: Schema.optional(Schema.Boolean),
+  noPersistence: Schema.optional(Schema.Boolean),
+  dependsOn: Schema.optional(Schema.Array(Schema.String)),
+  conditional: Schema.optional(Schema.String),
+});
+
 export interface StoreRegistryEntry<TConfig = unknown, TStore = unknown> {
-  id: string;
+  id: string & { readonly __brand?: "RegistryId" };
   contextKey?: symbol;
-  pluginId?: string;
+  pluginId?: string & { readonly __brand?: "PluginId" };
   factory: (
     config: TConfig,
     driver: PersistenceDriver,
@@ -15,16 +42,23 @@ export interface StoreRegistryEntry<TConfig = unknown, TStore = unknown> {
   conditional?: string;
 }
 
+const RunePluginSchema = Schema.Struct({
+  id: PluginId,
+  stores: Schema.Array(StoreRegistryEntrySchema),
+  overlays: Schema.optional(Schema.Array(Schema.Any)),
+  contributions: Schema.optional(
+    Schema.Record({
+      key: Schema.String,
+      value: Schema.Array(Schema.Any),
+    }),
+  ),
+});
+
 export interface RunePlugin {
-  id: string;
+  id: string & { readonly __brand?: "PluginId" };
   stores: StoreRegistryEntry[];
   overlays?: unknown[];
-  contributions?: {
-    commands?: unknown[];
-    shortcuts?: unknown[];
-    navItems?: unknown[];
-    settingsSections?: unknown[];
-  };
+  contributions?: Record<string, unknown[]>;
 }
 
 export type PluginInput =
@@ -35,7 +69,9 @@ export type PluginInput =
   | boolean;
 
 export function definePlugin(plugin: RunePlugin): RunePlugin {
-  return plugin;
+  return Schema.decodeUnknownSync(RunePluginSchema)(
+    plugin,
+  ) as unknown as RunePlugin;
 }
 
 export function resolvePlugins(input: PluginInput[]): RunePlugin[] {
@@ -47,7 +83,8 @@ export function resolvePlugins(input: PluginInput[]): RunePlugin[] {
         process(sub);
       }
     } else if (typeof item === "object") {
-      flat.push(item);
+      const parsed = Schema.decodeUnknownSync(RunePluginSchema)(item);
+      flat.push(parsed as unknown as RunePlugin);
     }
   }
   for (const item of input) {

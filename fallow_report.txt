@@ -1,0 +1,119 @@
+── Unused Code ─────────────────────────────────────
+
+● Unused files (20)
+  apps/lab/svelte.config.js
+  src/packages/core/src/kernel.test.ts
+  src/packages/plugins/i18n/src/money/src/lib/currency.test.ts
+  src/packages/plugins/i18n/src/money/src/lib/exchange-rate.test.ts
+  src/packages/plugins/i18n/src/money/src/lib/money-primitive.test.ts
+  src/packages/plugins/i18n/src/money/src/lib/money.test.ts
+  src/packages/plugins/i18n/src/money/src/lib/strategies.test.ts
+  src/packages/plugins/i18n/src/money/svelte.config.js
+  src/packages/plugins/i18n/svelte.config.js
+  src/packages/plugins/layout/src/lib/ConnectedWorkspaceStrip.svelte
+  ... and 10 more (--format json for full list)
+  Files not reachable from any entry point — https://docs.fallow.tools/explanations/dead-code#unused-files
+  To suppress: // fallow-ignore-next-line unused-files
+
+● Unused exports (44)
+  src/packages/plugins/i18n/src/money/src/lib/types.ts (19)
+    :2 addMoney (re-export)
+    :3 convertAmount (re-export)
+    :4 convertMoney (re-export)
+    :5 createMoney (re-export)
+    :6 CURRENCY_MAP (re-export)
+    ... and 14 more (--format json for full list)
+  apps/lab/src/lib/i18n/messages.ts (7)
+    :2 baseLocale
+    :2 locales
+    :6 getLocale
+    :7 isLocale
+    :8 setLocale
+    ... and 2 more (--format json for full list)
+  apps/lab/src/lib/components/showcase/shared.ts (5)
+    :14 STYLES
+    :16 BTN_STYLES
+    :26 BADGE_STYLES
+    :28 ALERT_STYLES
+    :30 CARD_STYLES
+  src/packages/core/src/plugin/schemas.ts (5)
+    :4 withFallback
+    :30 ThemeSchema
+    :35 LanguageSchema
+    :40 CurrencySchema
+    :45 ContributionsSchema
+  src/packages/plugins/i18n/src/money/src/lib/mod.ts (2)
+    :20 MoneyDisplay (re-export)
+    :21 MoneyInput (re-export)
+  src/packages/plugins/observer/src/lib/mod.ts (2)
+    :26 CapabilitiesSettings (re-export)
+    :26 ObserverPanel (re-export)
+  src/packages/plugins/i18n/src/money/src/lib/currency.svelte.ts
+    :111 getCurrencyStore (re-export)
+  src/packages/plugins/i18n/src/money/src/lib/exchange-rate.svelte.ts
+    :170 getExchangeRateStore
+  src/packages/plugins/i18n/src/money/src/lib/money.ts
+    :118 safeAmount
+  src/packages/plugins/i18n/src/money/src/lib/useMoneyFilter.svelte.ts
+    :30 useMoneyFilter
+  Exported symbols with no known consumers — https://docs.fallow.tools/explanations/dead-code#unused-exports
+  To auto-fix: fallow fix --dry-run
+  To suppress: // fallow-ignore-next-line unused-exports
+
+● Unused type exports (8)
+  src/packages/plugins/i18n/src/money/src/lib/types.ts (6)
+    :7 Dinero (re-export)
+    :8 DineroCurrency (re-export)
+    :9 DineroSnapshot (re-export)
+    :13 ISO4217Code (re-export)
+    :15 RateMap (re-export)
+    ... and 1 more (--format json for full list)
+  src/packages/core/src/services/layers.ts
+    :21 StateCells
+  src/packages/plugins/i18n/src/money/src/lib/money.ts
+    :382 DineroSnapshot
+  Type exports with no known consumers — https://docs.fallow.tools/explanations/dead-code#unused-types
+  To auto-fix: fallow fix --dry-run
+  To suppress: // fallow-ignore-next-line unused-types
+
+● Unused class members (35)
+  src/packages/plugins/layout/src/lib/store.svelte.ts (10)
+    :24 LayoutStore.init
+    :100 LayoutStore.setDriver
+    :104 LayoutStore.setWorkspaces
+    :115 LayoutStore.activateWorkspaceByIndex
+    :123 LayoutStore.navigate
+    ... and 5 more (--format json for full list)
+  src/packages/plugins/palettes/src/lib/shortcuts/store.svelte.ts (7)
+    :6 ShortcutStore.showPalette
+    :11 ShortcutStore.active
+    :34 ShortcutStore.sortedScopes
+    :48 ShortcutStore.register
+    :58 ShortcutStore.unregister
+    ... and 2 more (--format json for full list)
+  src/packages/core/src/persistence/store.ts (5)
+    :10 StateCell.get
+    :14 StateCell.set
+    :18 StateCell.getVersion
+    :22 StateCell.subscribe
+    :40 StateCell.getStream
+  src/packages/plugins/palettes/src/lib/notifications/store.svelte.ts (4)
+    :101 ToastStore.success
+    :104 ToastStore.error
+    :107 ToastStore.warn
+    :110 ToastStore.info
+  src/packages/ui/src/lib/kernel/src/context/app.svelte.ts (4)
+    :39 AppStore.init
+    :65 AppStore.__reset
+    :72 AppStore.info
+    :87 AppStore.registerIcons
+  src/packages/plugins/palettes/src/lib/commands/store.svelte.ts (3)
+    :35 CommandStore.register
+    :45 CommandStore.unregister
+    :54 CommandStore.search
+  src/packages/plugins/i18n/src/money/src/lib/exchange-rate.svelte.ts (2)
+    :74 ExchangeRateStore.rates
+    :109 ExchangeRateStore.setScaledRates
+  Class methods or properties never referenced outside their class — https://docs.fallow.tools/explanations/dead-code#unused-class-members
+  To suppress: // fallow-ignore-next-line unused-class-members
+

@@ -1,8 +1,4 @@
-import {
-  type ConfigStore,
-  createConfigStore,
-  getCurrencyStore,
-} from "@rune-lab/svelte";
+import { type ConfigStore, createConfigStore } from "@rune-lab/svelte";
 import type { Currency } from "@rune-lab/svelte";
 import { type DineroCurrency, registerCurrency } from "./money.ts";
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
@@ -107,5 +103,3 @@ Object.defineProperty(currencyStore, "canConvert", {
 });
 
 export type CurrencyStore = typeof currencyStore;
-
-export { getCurrencyStore };

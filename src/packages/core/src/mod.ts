@@ -30,4 +30,5 @@ export {
   registerStore,
   unregisterStore,
 } from "./registry/registry.ts";
-export { createKernel, type Kernel } from "./runtime.ts";
+export { createKernel, type Kernel } from "./kernel.ts";
+export { type StateCells } from "./services/layers.ts";
