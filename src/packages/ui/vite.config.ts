@@ -16,7 +16,10 @@ export default defineConfig({
         __dirname,
         "../plugins/layout/src/lib/mod.ts",
       ),
-      "@rune-lab/money": resolve(__dirname, "../plugins/money/src/lib/mod.ts"),
+      "@rune-lab/money": resolve(
+        __dirname,
+        "../plugins/i18n/src/money/src/lib/mod.ts",
+      ),
       "@rune-lab/palettes": resolve(
         __dirname,
         "../plugins/palettes/src/lib/mod.ts",

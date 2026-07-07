@@ -4,5 +4,5 @@ export * from "./kernel/src/mod.ts";
 export * from "./i18n/messages.ts";
 export * from "./i18n/message-resolver.ts";
 
-import pkgConfig from "../../package.json" with { type: "json" };
+import pkgConfig from "../../deno.json" with { type: "json" };
 export const version = (): string => pkgConfig.version;

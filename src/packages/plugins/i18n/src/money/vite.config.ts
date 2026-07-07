@@ -10,11 +10,17 @@ export default defineConfig({
   plugins: [svelte()],
   resolve: {
     alias: {
-      "@rune-lab/core": resolve(__dirname, "../../core/src/mod.ts"),
-      "@rune-lab/svelte": resolve(__dirname, "../../ui/src/lib/mod.ts"),
-      "@rune-lab/layout": resolve(__dirname, "../layout/src/lib/mod.ts"),
-      "@rune-lab/money": resolve(__dirname, "../money/src/lib/mod.ts"),
-      "@rune-lab/palettes": resolve(__dirname, "../palettes/src/lib/mod.ts"),
+      "@rune-lab/core": resolve(__dirname, "../../../../core/src/mod.ts"),
+      "@rune-lab/svelte": resolve(__dirname, "../../../../ui/src/lib/mod.ts"),
+      "@rune-lab/layout": resolve(
+        __dirname,
+        "../../../layout/src/lib/mod.ts",
+      ),
+      "@rune-lab/money": resolve(__dirname, "./src/lib/mod.ts"),
+      "@rune-lab/palettes": resolve(
+        __dirname,
+        "../../../palettes/src/lib/mod.ts",
+      ),
     },
   },
   test: {

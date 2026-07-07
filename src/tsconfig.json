@@ -22,8 +22,9 @@
       "@rune-lab/core": ["./packages/core/src/mod.ts"],
       "@rune-lab/svelte": ["./packages/ui/src/lib/mod.ts"],
       "@rune-lab/layout": ["./packages/plugins/layout/src/lib/mod.ts"],
-      "@rune-lab/money": ["./packages/plugins/money/src/lib/mod.ts"],
-      "@rune-lab/palettes": ["./packages/plugins/palettes/src/lib/mod.ts"]
+      "@rune-lab/money": ["./packages/plugins/i18n/src/money/src/lib/mod.ts"],
+      "@rune-lab/palettes": ["./packages/plugins/palettes/src/lib/mod.ts"],
+      "@rune-lab/i18n": ["./packages/plugins/i18n/src/lang/mod.ts"]
     }
   },
   "exclude": [
