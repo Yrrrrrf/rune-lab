@@ -1,4 +1,4 @@
-# all that start with a dot except .gitignore
+# all that start with a dot except .gitignore, .fallow-baseline.json, and .fallowrc.json
 .*
 !.gitignore
 
@@ -19,3 +19,4 @@ docs
 # two ** means any characters including /
 temp
 translations
+.fallow/

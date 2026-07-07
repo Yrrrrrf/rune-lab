@@ -1,0 +1,37 @@
+{
+  "extends": "./.svelte-kit/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "$lib": ["./src/lib"],
+      "$lib/*": ["./src/lib/*"],
+      "@rune-lab/core": ["../../src/packages/core/src/mod.ts"],
+      "@rune-lab/svelte": ["../../src/packages/ui/src/lib/mod.ts"],
+      "@rune-lab/layout": ["../../src/packages/plugins/layout/src/lib/mod.ts"],
+      "@rune-lab/money": ["../../src/packages/plugins/money/src/lib/mod.ts"],
+      "@rune-lab/palettes": [
+        "../../src/packages/plugins/palettes/src/lib/mod.ts"
+      ],
+      "@rune-lab/i18n": ["../../src/packages/plugins/i18n/src/lib/mod.ts"],
+      "@rune-lab/observer": [
+        "../../src/packages/plugins/observer/src/lib/mod.ts"
+      ]
+    },
+    "allowJs": true,
+    "checkJs": false,
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable",
+      "DOM.AsyncIterable"
+    ],
+    // Set modern JS target
+    "target": "ESNext",
+    "module": "ESNext",
+    // Resolution & Extensions
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "exclude": ["vite.config.ts", "svelte.config.js", ".svelte-kit"]
+}

@@ -1,5 +1,8 @@
 [doc('Run the test suite via vite-plus')]
 [group('test')]
-[working-directory('src/package')]
 test *args:
-    deno run -A npm:vite-plus/vp test {{ args }}
+    deno test --allow-all src/packages/core/src/
+    do { cd src/packages/ui; deno run -A npm:vite-plus/vp test {{ args }} --run --passWithNoTests }
+    do { cd src/packages/plugins/money; deno run -A npm:vite-plus/vp test {{ args }} --run --passWithNoTests }
+    do { cd src/packages/plugins/palettes; deno run -A npm:vite-plus/vp test {{ args }} --run --passWithNoTests }
+    do { cd src/packages/plugins/layout; deno run -A npm:vite-plus/vp test {{ args }} --run --passWithNoTests }

@@ -1,0 +1,21 @@
+{
+  "imports": {
+    "@rune-lab/core": "jsr:@rune-lab/core@^0.5.0",
+    "@rune-lab/svelte": "jsr:@rune-lab/svelte@^0.5.0",
+    "@rune-lab/money": "jsr:@rune-lab/money@^0.5.0",
+    "@rune-lab/palettes": "jsr:@rune-lab/palettes@^0.5.0",
+    "@rune-lab/layout": "jsr:@rune-lab/layout@^0.5.0",
+    "vite-plus": "npm:vite-plus",
+    "svelte": "npm:svelte",
+    "@sveltejs/kit": "npm:@sveltejs/kit",
+    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
+    "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
+    "tailwindcss": "npm:tailwindcss",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite",
+    "esm-env": "npm:esm-env",
+    "@inlang/paraglide-js": "npm:@inlang/paraglide-js",
+    "daisyui": "npm:daisyui",
+    "hotkeys-js": "npm:hotkeys-js",
+    "dinero.js": "npm:dinero.js"
+  }
+}

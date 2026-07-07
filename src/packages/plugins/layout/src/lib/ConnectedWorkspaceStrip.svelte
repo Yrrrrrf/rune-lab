@@ -1,0 +1,24 @@
+<!-- src/lib/features/layout/smart/ConnectedWorkspaceStrip.svelte -->
+<script lang="ts">
+    import { getLayoutStore, type WorkspaceItem } from "@rune-lab/svelte";
+    import WorkspaceStrip from "./WorkspaceStrip.svelte";
+    import { createWorkspaceConnection } from "./connection-factory.ts";
+    import type { Snippet } from "svelte";
+
+    interface Props {
+        items: WorkspaceItem[];
+        globalActions?: Snippet;
+    }
+
+    let { items, globalActions }: Props = $props();
+
+    const layoutStore = getLayoutStore();
+    const connection = createWorkspaceConnection(layoutStore);
+</script>
+
+<WorkspaceStrip
+    {items}
+    {globalActions}
+    activeId={connection.activeId}
+    onSelect={connection.onSelect}
+/>

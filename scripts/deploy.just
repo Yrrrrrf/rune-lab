@@ -1,6 +1,6 @@
 [doc('Build Client')]
 [group('Build')]
-[working-directory('src/package')]
+[working-directory('src/packages/ui')]
 build:
     # * Clean previous build
     rm -rf dist
@@ -19,7 +19,7 @@ build:
 [doc('Publish package to npm using brave as default browser')]
 [group('Deploy')]
 [script('nu')]
-[working-directory('src/package')]
+[working-directory('src/packages/ui')]
 publish:
     let d = (mktemp -d | str trim)
     '#!/bin/sh
@@ -34,8 +34,8 @@ inject root=justfile_directory():
     # * Build the package first
     just build
     # * Replace lab's installed rune-lab/dist with the freshly built one
-    rm -rf "{{ root }}/src/lab/node_modules/rune-lab/dist"
-    cp -r "{{ root }}/src/package/dist" "{{ root }}/src/lab/node_modules/rune-lab/dist"
+    rm -rf "{{ root }}/apps/lab/node_modules/rune-lab/dist"
+    cp -r "{{ root }}/src/packages/ui/dist" "{{ root }}/apps/lab/node_modules/rune-lab/dist"
     # * Verify the injection
-    diff -r "{{ root }}/src/package/dist" "{{ root }}/src/lab/node_modules/rune-lab/dist"
+    diff -r "{{ root }}/src/packages/ui/dist" "{{ root }}/apps/lab/node_modules/rune-lab/dist"
     @echo "✓ injected into src/lab/node_modules/rune-lab/dist"

@@ -1,6 +1,0 @@
-{
-  "extends": [
-    "../tsconfig.json",
-    "../lab/.svelte-kit/tsconfig.json"
-  ]
-}

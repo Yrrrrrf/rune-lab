@@ -1,0 +1,16 @@
+{
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0"
+  },
+  "workspace": [
+    "./apps/lab",
+    "./src/packages/core",
+    "./src/packages/ui",
+    "./src/packages/plugins/money",
+    "./src/packages/plugins/palettes",
+    "./src/packages/plugins/layout",
+    "./src/packages/plugins/i18n",
+    "./src/packages/plugins/observer"
+  ]
+}

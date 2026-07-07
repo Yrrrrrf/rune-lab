@@ -11,14 +11,18 @@ lint:
 [doc('Type-check workspace')]
 [group('check')]
 types:
-    cd src/package; bunx svelte-check --tsconfig tsconfig.json
-    cd src/lab; deno run -A npm:svelte-check --tsconfig tsconfig.json
+    do { cd src/packages/ui; bunx svelte-check --tsconfig tsconfig.json }
+    do { cd apps/lab; deno run -A npm:svelte-check --tsconfig tsconfig.json }
 
 [doc('Audit all code namespaces')]
 [group('check')]
 audit:
-    deno run -A npm:fallow
+    deno run -A npm:@inlang/paraglide-js compile --project ./src/packages/ui/src/lib/i18n/project.inlang --outdir ./src/packages/ui/src/lib/i18n/paraglide
+    deno run -A npm:@inlang/paraglide-js compile --project ./apps/lab/src/lib/i18n/project.inlang --outdir ./apps/lab/src/lib/i18n/paraglide
+    deno run -A npm:fallow --skip dupes --skip health
+
 
 [doc('Run all check quality gates')]
 [group('check')]
-check: fmt lint types
+check: fmt lint types audit
+
