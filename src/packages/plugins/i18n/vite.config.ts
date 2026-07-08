@@ -1,22 +1,37 @@
+import { paraglideVitePlugin } from "@inlang/paraglide-js";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite-plus";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export default defineConfig({
-  plugins: [svelte()],
-  resolve: {
-    alias: {
-      "@rune-lab/core": resolve(__dirname, "../../core/src/mod.ts"),
-      "@rune-lab/svelte": resolve(__dirname, "../../ui/src/lib/mod.ts"),
-      "@rune-lab/layout": resolve(__dirname, "../layout/src/lib/mod.ts"),
-      "@rune-lab/money": resolve(__dirname, "./src/money/src/lib/mod.ts"),
-      "@rune-lab/palettes": resolve(__dirname, "../palettes/src/lib/mod.ts"),
-    },
+  plugins: [
+    svelte(),
+    tailwindcss(),
+    paraglideVitePlugin({
+      project: "./src/i18n/project.inlang",
+      outdir: "./src/lib/paraglide",
+      // first it checks localStorage, then the preferred language of the browser, and finally falls back to the base locale
+      strategy: ["localStorage", "preferredLanguage", "baseLocale"],
+    }),
+  ],
+  optimizeDeps: {
+    // exclude: [
+    //   "rune-lab",
+    // ],
   },
+  ssr: {
+    // noExternal: [
+    //   "rune-lab",
+    // ],
+  },
+  // server: {
+  //   fs: {
+  //     allow: [
+  //       // searchForWorkspaceRoot(process.cwd()),
+  //       // path.resolve(__dirname, "../../node_modules"),
+  //     ],
+  //   },
+  // },
   test: {
     environment: "jsdom",
     setupFiles: ["@testing-library/jest-dom/vitest"],

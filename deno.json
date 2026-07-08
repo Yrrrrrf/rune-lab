@@ -13,6 +13,9 @@
     "./src/packages/plugins/i18n/src/money",
     "./src/packages/plugins/observer"
   ],
+  "imports": {
+    "vite-plus": "npm:vite-plus"
+  },
   "test": {
     "exclude": [
       "apps/**",

@@ -14,5 +14,9 @@
     "noEmit": true,
     "skipLibCheck": true
   },
-  "exclude": ["vite.config.ts", "svelte.config.js", "dist"]
+  "exclude": [
+    "vite.config.ts",
+    "svelte.config.js",
+    "dist"
+  ]
 }
