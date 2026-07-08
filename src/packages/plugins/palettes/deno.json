@@ -5,6 +5,7 @@
     ".": "./src/lib/mod.ts"
   },
   "imports": {
-    "svelte": "npm:svelte@^5"
+    "svelte": "npm:svelte@^5",
+    "hotkeys-js": "npm:hotkeys-js@^4"
   }
 }
