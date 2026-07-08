@@ -130,9 +130,17 @@ export function createStoreLayer(
       const pluginConfig = getPluginConfig(entry, config);
       const driver = yield* getPersistenceDriver(entry);
       const deps = yield* resolveStoreDependencies(entry.dependsOn);
-      const store = entry.factory(pluginConfig, driver, deps);
 
-      yield* registerStoreFinalizer(store, entry.id);
+      let store: unknown = null;
+      try {
+        store = entry.factory(pluginConfig, driver, deps);
+      } catch (e) {
+        console.error(`[Kernel] Failed to initialize store "${entry.id}":`, e);
+      }
+
+      if (store !== null && store !== undefined) {
+        yield* registerStoreFinalizer(store, entry.id);
+      }
 
       return store;
     }),

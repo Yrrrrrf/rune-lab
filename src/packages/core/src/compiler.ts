@@ -5,11 +5,7 @@ import {
   type RunePlugin,
   type StoreRegistryEntry,
 } from "./plugin/manifest.ts";
-import {
-  makeRegistryLayer,
-  registerStore,
-  RegistryService,
-} from "./registry/registry.ts";
+import { makeRegistryLayer, RegistryService } from "./registry/registry.ts";
 import { topologicalSort } from "./utils/graph.ts";
 import {
   createStoreLayer,
@@ -136,11 +132,23 @@ export function compileEnvironment(
         slot.pluginId = plugin.id;
       }
       registry.register(slot);
-      registerStore(slot); // Backward compatibility
     }
   }
 
   const entries = registry.entries();
+
+  // Pre-flight dependency graph validation
+  const entryIds = new Set(entries.map((e) => e.id));
+  for (const entry of entries) {
+    for (const depId of entry.dependsOn ?? []) {
+      if (!entryIds.has(depId)) {
+        throw new Error(
+          `[Kernel] Missing dependency: Store "${entry.id}" depends on "${depId}", but "${depId}" is not registered in the registry.`,
+        );
+      }
+    }
+  }
+
   const sorted = topologicalSort(entries);
 
   // Initialize cells layer with standard keys

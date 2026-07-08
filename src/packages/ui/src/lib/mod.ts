@@ -3,6 +3,7 @@ export * from "@rune-lab/core";
 export * from "./kernel/src/mod.ts";
 export * from "./i18n/messages.ts";
 export * from "./i18n/message-resolver.ts";
+export * from "./tokens/tokens.ts";
 
 import pkgConfig from "../../deno.json" with { type: "json" };
 export const version = (): string => pkgConfig.version;

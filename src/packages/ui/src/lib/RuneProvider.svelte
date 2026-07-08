@@ -20,7 +20,6 @@
     createKernel,
     definePlugin,
     namespaced,
-    getRegisteredStore,
   } from "@rune-lab/core";
   import type { PersistenceDriver, RunePlugin, PluginInput, LocaleAdapter } from "@rune-lab/core";
 
@@ -88,7 +87,7 @@
 
   // 2. Provide all stores as context
   for (const [id, store] of kernel.stores) {
-    const entry = getRegisteredStore(id);
+    const entry = kernel.getStoreEntry(id);
     if (entry?.contextKey && store) {
       setContext(entry.contextKey, store);
     }
@@ -96,7 +95,7 @@
 
   // Also provide the persistence driver itself
   setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
-  setContext(RUNE_LAB_CONTEXT.settingsSections, kernel.getSettingsSections());
+  setContext(RUNE_LAB_CONTEXT.settingsSections, kernel.getContributions("settingsSections"));
 
   // 3. Collect all overlays
   const allOverlays = $derived(kernel.overlays as Component[]);
@@ -113,14 +112,14 @@
     // Sync core kernel cells to Svelte stores
     const shortcutStore = kernel.stores.get("shortcut") as unknown as ShortcutStore;
     if (shortcutStore) {
-      for (const shortcut of kernel.getShortcuts()) {
+      for (const shortcut of kernel.getContributions("shortcuts") as any[]) {
         shortcutStore.register(shortcut as any);
       }
     }
 
     const commandStore = kernel.stores.get("commands") as unknown as ICommandStore;
     if (commandStore) {
-      for (const cmd of kernel.getCommands()) {
+      for (const cmd of kernel.getContributions("commands") as any[]) {
         commandStore.register(cmd as any);
       }
     }

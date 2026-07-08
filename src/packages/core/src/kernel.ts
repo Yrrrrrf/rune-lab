@@ -1,7 +1,7 @@
 import type { PersistenceDriver } from "./ports/persistence.ts";
 import type { LocaleAdapter } from "./ports/locale.ts";
 import type { TextMeasurer } from "./ports/text.ts";
-import type { PluginInput } from "./plugin/manifest.ts";
+import type { PluginInput, StoreRegistryEntry } from "./plugin/manifest.ts";
 import { compileEnvironment } from "./compiler.ts";
 import { Context, Effect, Option, Schema } from "effect";
 import { StateCellsTag } from "./services/layers.ts";
@@ -21,9 +21,7 @@ export interface Kernel<TCells = Record<string, any>> {
   registerContribution(key: string, item: unknown): void;
   unregisterContribution(key: string, id: string): void;
 
-  getSettingsSections(): unknown[];
-  getShortcuts(): unknown[];
-  getCommands(): unknown[];
+  getStoreEntry(id: string): StoreRegistryEntry | undefined;
 
   dispose(): Promise<void>;
 }
@@ -33,17 +31,13 @@ async function writePersistence(
   name: string,
   value: unknown,
 ): Promise<void> {
-  try {
-    const schema = getCellSchema(name, value);
-    const encoded = Schema.encodeSync(schema)(value);
-    const stringValue = typeof encoded === "string"
-      ? encoded
-      : JSON.stringify(encoded);
-    const res = persistence.set(name, stringValue);
-    if (res instanceof Promise) await res;
-  } catch (e) {
-    console.error(`[Kernel] Persistence write failed for ${name}:`, e);
-  }
+  const schema = getCellSchema(name, value);
+  const encoded = Schema.encodeSync(schema)(value);
+  const stringValue = typeof encoded === "string"
+    ? encoded
+    : JSON.stringify(encoded);
+  const res = persistence.set(name, stringValue);
+  if (res instanceof Promise) await res;
 }
 
 async function updateLocale(
@@ -68,10 +62,11 @@ export function createKernel<TCells = Record<string, any>>(
     textMeasurer?: TextMeasurer;
   },
 ): Kernel<TCells> {
-  const { runtime, resolvedPlugins, sortedEntries } = compileEnvironment(
-    pluginsInput,
-    options,
-  );
+  const { runtime, resolvedPlugins, sortedEntries, registry } =
+    compileEnvironment(
+      pluginsInput,
+      options,
+    );
 
   const ctx = runtime.runSync(Effect.context());
 
@@ -140,17 +135,27 @@ export function createKernel<TCells = Record<string, any>>(
     if (!cell) {
       throw new Error(`[Kernel] Cell "${nameStr}" does not exist`);
     }
+    const oldValue = cell.get();
     cell.set(value);
 
     const isStandardPersistenceKey = nameStr === "theme" ||
       nameStr === "language" || nameStr === "currency";
 
-    if (isStandardPersistenceKey) {
-      await writePersistence(options.persistence, nameStr, value);
-    }
+    try {
+      if (isStandardPersistenceKey) {
+        await writePersistence(options.persistence, nameStr, value);
+      }
 
-    if (nameStr === "language" && options.localeAdapter) {
-      await updateLocale(options.localeAdapter, value as string);
+      if (nameStr === "language" && options.localeAdapter) {
+        await updateLocale(options.localeAdapter, value as string);
+      }
+    } catch (e) {
+      cell.set(oldValue);
+      console.error(
+        `[Kernel] Failed to set cell "${nameStr}" (reverted to old value):`,
+        e,
+      );
+      throw e;
     }
   };
 
@@ -198,10 +203,7 @@ export function createKernel<TCells = Record<string, any>>(
     getContributions,
     registerContribution,
     unregisterContribution,
-
-    getSettingsSections: () => getContributions("settingsSections"),
-    getShortcuts: () => getContributions("shortcuts"),
-    getCommands: () => getContributions("commands"),
+    getStoreEntry: (id: string) => registry.get(id),
 
     subscribe: (cellName: keyof TCells, listener: () => void) => {
       const cell = cells[cellName as string];

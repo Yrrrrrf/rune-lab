@@ -30,15 +30,22 @@ export class StateCell<T> {
     };
   }
 
+  private pendingNotify = false;
+
   notify(): void {
     this.version++;
-    for (const listener of this.listeners) {
-      try {
-        listener();
-      } catch (e) {
-        console.error(`[StateCell] Listener error:`, e);
+    if (this.pendingNotify) return;
+    this.pendingNotify = true;
+    queueMicrotask(() => {
+      this.pendingNotify = false;
+      for (const listener of this.listeners) {
+        try {
+          listener();
+        } catch (e) {
+          console.error(`[StateCell] Listener error:`, e);
+        }
       }
-    }
+    });
   }
 
   // fallow-ignore-next-line unused-class-member

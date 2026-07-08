@@ -6,16 +6,7 @@ export {
   inMemoryDriver,
   namespaced,
 } from "./persistence/memory.ts";
-export {
-  resolveSize,
-  resolveVariant,
-  type SizeToken,
-  type VariantToken,
-  type WithClass,
-  type WithDesignTokens,
-  type WithSizing,
-  type WithVariant,
-} from "./tokens/tokens.ts";
+
 export {
   definePlugin,
   type PluginInput,
