@@ -9,5 +9,12 @@
     "./src/packages/plugins/layout",
     "./src/packages/plugins/i18n",
     "./src/packages/plugins/observer"
-  ]
+  ],
+  "test": {
+    "exclude": [
+      "apps/**",
+      "src/packages/ui/**",
+      "src/packages/plugins/**"
+    ]
+  }
 }

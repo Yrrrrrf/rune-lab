@@ -8,6 +8,8 @@
 # web-generated files
 node_modules
 dist
+coverage
+.fallow
 
 # docs & spec files
 docs
@@ -19,4 +21,3 @@ docs
 # two ** means any characters including /
 temp
 translations
-.fallow/

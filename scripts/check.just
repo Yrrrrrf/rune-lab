@@ -18,9 +18,14 @@ types:
 [group('check')]
 [working-directory('src')]
 audit:
-    deno run -A npm:@inlang/paraglide-js compile --project ./packages/ui/src/lib/i18n/project.inlang --outdir ./src/packages/ui/src/lib/i18n/paraglide
+    deno run -A npm:@inlang/paraglide-js compile --project ./packages/ui/src/lib/i18n/project.inlang --outdir ./packages/ui/src/lib/i18n/paraglide
     # deno run -A npm:@inlang/paraglide-js compile --project ./apps/lab/src/lib/i18n/project.inlang --outdir ./apps/lab/src/lib/i18n/paraglide
     deno run -A npm:fallow -c .fallowrc.json
+
+[doc('Test coverage')]
+[group('check')]
+coverage:
+    deno test --coverage
 
 [doc('Run all check quality gates')]
 [group('check')]

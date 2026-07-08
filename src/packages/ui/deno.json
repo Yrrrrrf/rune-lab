@@ -5,7 +5,7 @@
     ".": "./src/lib/mod.ts"
   },
   "imports": {
-    "@rune-lab/core": "jsr:@rune-lab/core@^0.5.0",
+    "@rune-lab/core": "jsr:@rune-lab/core@^0.1.0",
     "esm-env": "npm:esm-env@^1.0.0",
     "hotkeys-js": "npm:hotkeys-js@^4.0.0"
   },
