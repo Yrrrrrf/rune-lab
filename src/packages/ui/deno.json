@@ -7,8 +7,5 @@
   "imports": {
     "@rune-lab/core": "jsr:@rune-lab/core@^0.0.1",
     "esm-env": "npm:esm-env@^1.0.0"
-  },
-  "exclude": [
-    "./src/lib/i18n/paraglide"
-  ]
+  }
 }
