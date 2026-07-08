@@ -95,13 +95,13 @@ Get your application shell running in less than 40 lines. Inside your
 
 ```svelte
 <script lang="ts">
-  import { 
-    RuneProvider, 
-    WorkspaceLayout, 
+  import {
     ConnectedNavigationPanel,
+    cookieDriver,
     LayoutPlugin,
     PalettesPlugin,
-    cookieDriver
+    RuneProvider,
+    WorkspaceLayout,
   } from "rune-lab";
   import type { NavigationSection } from "rune-lab";
   import { setLocale } from "$lib/i18n/paraglide/runtime.js";
@@ -114,9 +114,9 @@ Get your application shell running in less than 40 lines. Inside your
       title: "Main Menu",
       items: [
         { id: "home", label: "Dashboard", icon: "🏠" },
-        { id: "settings", label: "Settings", icon: "⚙️" }
-      ]
-    }
+        { id: "settings", label: "Settings", icon: "⚙️" },
+      ],
+    },
   ];
 </script>
 
@@ -163,11 +163,11 @@ formatting, and live exchange-rate triangulation. To use it, simply register the
   config={{
     "rune-lab.money": {
       defaultCurrency: "USD",
-      exchangeRates: { 
-        base: "USD", 
-        rates: { MXN: 17.23, EUR: 0.91 } 
+      exchangeRates: {
+        base: "USD",
+        rates: { MXN: 17.23, EUR: 0.91 },
       },
-    }
+    },
   }}
   plugins={[LayoutPlugin, PalettesPlugin, MoneyPlugin]}
 >
@@ -179,13 +179,13 @@ formatting, and live exchange-rate triangulation. To use it, simply register the
 
 ```svelte
 <script lang="ts">
-  import { 
-    MoneyDisplay, 
-    MoneyInput, 
-    CurrencySelector, 
-    useMoney 
+  import {
+    CurrencySelector,
+    MoneyDisplay,
+    MoneyInput,
+    useMoney,
   } from "rune-lab";
-  
+
   let price = $state(15000); // Minor units (e.g., cents) -> $150.00
   const { convert, format } = useMoney();
 </script>
@@ -249,7 +249,7 @@ internally, ensuring shortcuts unregister when the component unmounts:
 
 ```svelte
 <script lang="ts">
-  import { useShortcuts, getToastStore } from "rune-lab";
+  import { getToastStore, useShortcuts } from "rune-lab";
 
   const toasts = getToastStore();
 
@@ -263,8 +263,8 @@ internally, ensuring shortcuts unregister when the component unmounts:
       handler: (e) => {
         e.preventDefault();
         toasts.success("Document Saved!");
-      }
-    }
+      },
+    },
   ]);
 </script>
 ```
@@ -276,16 +276,16 @@ router, use an `$effect` inside your `+layout.svelte` right after the provider:
 
 ```svelte
 <script lang="ts">
-    import { page } from "$app/state";
-    import { getLayoutStore } from "rune-lab";
+  import { page } from "$app/state";
+  import { getLayoutStore } from "rune-lab";
 
-    const layoutStore = getLayoutStore();
+  const layoutStore = getLayoutStore();
 
-    $effect(() => {
-        // Automatically open the correct nav tree branch
-        const segment = page.url.pathname.split("/")[1] || "home";
-        layoutStore.navigate(segment);
-    });
+  $effect(() => {
+    // Automatically open the correct nav tree branch
+    const segment = page.url.pathname.split("/")[1] || "home";
+    layoutStore.navigate(segment);
+  });
 </script>
 ```
 

@@ -1,12 +1,14 @@
 {
   "nodeModulesDir": "auto",
+  "unstable": [
+    "fmt-component"
+  ],
   "workspace": [
     "./apps/lab",
     "./src/packages/core",
     "./src/packages/ui",
-    "./src/packages/plugins/i18n/src/money",
-    "./src/packages/plugins/palettes",
     "./src/packages/plugins/layout",
+    "./src/packages/plugins/palettes",
     "./src/packages/plugins/i18n",
     "./src/packages/plugins/observer"
   ],

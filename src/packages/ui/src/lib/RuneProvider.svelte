@@ -1,27 +1,34 @@
 <script lang="ts">
-  import { setContext, untrack, type Snippet, onMount, type Component } from "svelte";
   import {
-    RUNE_LAB_CONTEXT,
-    localStorageDriver,
-    sessionStorageDriver,
-    cookieDriver,
-    createInMemoryDriver,
-    createAppStore,
+    type Component,
+    onMount,
+    setContext,
+    type Snippet,
+    untrack,
+  } from "svelte";
+  import {
     type AppData,
-    type LayoutStore,
     type ConfigStore,
-    type ShortcutStore,
+    cookieDriver,
+    createAppStore,
+    createInMemoryDriver,
     type ICommandStore,
     type ICurrencyStore,
-    type Theme,
     type Language,
+    type LayoutStore,
+    localStorageDriver,
+    RUNE_LAB_CONTEXT,
+    sessionStorageDriver,
+    type ShortcutStore,
+    type Theme,
   } from "./kernel/src/mod.ts";
-  import {
-    createKernel,
-    definePlugin,
-    namespaced,
+  import { createKernel, definePlugin, namespaced } from "@rune-lab/core";
+  import type {
+    LocaleAdapter,
+    PersistenceDriver,
+    PluginInput,
+    RunePlugin,
   } from "@rune-lab/core";
-  import type { PersistenceDriver, RunePlugin, PluginInput, LocaleAdapter } from "@rune-lab/core";
 
   /**
    * Namespaced configuration for Rune Lab plugins.
@@ -60,7 +67,8 @@
   const initialPersistence = untrack(() => {
     let savedDriverType = "local";
     if (typeof window !== "undefined") {
-      savedDriverType = window.localStorage.getItem("rl:persistence:driver") || "local";
+      savedDriverType = window.localStorage.getItem("rl:persistence:driver") ||
+        "local";
     }
     let baseDriver = localStorageDriver;
     if (savedDriverType === "memory") baseDriver = createInMemoryDriver();
@@ -95,29 +103,44 @@
 
   // Also provide the persistence driver itself
   setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
-  setContext(RUNE_LAB_CONTEXT.settingsSections, kernel.getContributions("settingsSections"));
+  setContext(
+    RUNE_LAB_CONTEXT.settingsSections,
+    kernel.getContributions("settingsSections"),
+  );
 
   // 3. Collect all overlays
   const allOverlays = $derived(kernel.overlays as Component[]);
 
   // ── Initialization for layout ──────────────────────────
   const layoutStore = kernel.stores.get("layout") as unknown as LayoutStore;
-  const themeStore = kernel.stores.get("theme") as unknown as ConfigStore<Theme, "name">;
-  const languageStore = kernel.stores.get("language") as unknown as ConfigStore<Language, "code">;
-  const currencyStore = kernel.stores.get("currency") as unknown as ICurrencyStore;
+  const themeStore = kernel.stores.get("theme") as unknown as ConfigStore<
+    Theme,
+    "name"
+  >;
+  const languageStore = kernel.stores.get("language") as unknown as ConfigStore<
+    Language,
+    "code"
+  >;
+  const currencyStore = kernel.stores.get(
+    "currency",
+  ) as unknown as ICurrencyStore;
 
   onMount(() => {
     if (layoutStore) layoutStore.init();
 
     // Sync core kernel cells to Svelte stores
-    const shortcutStore = kernel.stores.get("shortcut") as unknown as ShortcutStore;
+    const shortcutStore = kernel.stores.get(
+      "shortcut",
+    ) as unknown as ShortcutStore;
     if (shortcutStore) {
       for (const shortcut of kernel.getContributions("shortcuts") as any[]) {
         shortcutStore.register(shortcut as any);
       }
     }
 
-    const commandStore = kernel.stores.get("commands") as unknown as ICommandStore;
+    const commandStore = kernel.stores.get(
+      "commands",
+    ) as unknown as ICommandStore;
     if (commandStore) {
       for (const cmd of kernel.getContributions("commands") as any[]) {
         commandStore.register(cmd as any);

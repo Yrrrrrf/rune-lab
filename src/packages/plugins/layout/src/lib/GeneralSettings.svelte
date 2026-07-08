@@ -1,13 +1,13 @@
 <script lang="ts">
   import {
-    getThemeStore,
-    getLanguageStore,
-    getLayoutStore,
-    localStorageDriver,
-    sessionStorageDriver,
     cookieDriver,
     createInMemoryDriver,
+    getLanguageStore,
+    getLayoutStore,
+    getThemeStore,
+    localStorageDriver,
     namespaced,
+    sessionStorageDriver,
   } from "@rune-lab/svelte";
   import ThemeSelector from "./ThemeSelector.svelte";
   import LanguageSelector from "./LanguageSelector.svelte";
@@ -19,7 +19,8 @@
   let selectedDriver = $state("local");
 
   if (typeof window !== "undefined") {
-    selectedDriver = window.localStorage.getItem("rl:persistence:driver") || "local";
+    selectedDriver = window.localStorage.getItem("rl:persistence:driver") ||
+      "local";
   }
 
   function handleDriverChange(event: Event) {
@@ -46,7 +47,9 @@
 <div class="space-y-8 p-6 max-w-2xl">
   <div>
     <h3 class="text-lg font-semibold mb-1">Appearance</h3>
-    <p class="text-sm text-base-content/60 mb-4">Customize how Rune Lab looks on your device.</p>
+    <p class="text-sm text-base-content/60 mb-4">
+      Customize how Rune Lab looks on your device.
+    </p>
     <div class="bg-base-200/50 p-4 rounded-xl border border-base-200/50">
       <ThemeSelector />
     </div>
@@ -56,7 +59,9 @@
 
   <div>
     <h3 class="text-lg font-semibold mb-1">Language</h3>
-    <p class="text-sm text-base-content/60 mb-4">Choose your preferred display language.</p>
+    <p class="text-sm text-base-content/60 mb-4">
+      Choose your preferred display language.
+    </p>
     <div class="bg-base-200/50 p-4 rounded-xl border border-base-200/50">
       <LanguageSelector />
     </div>

@@ -103,7 +103,8 @@
       <!-- Progress Bar (Optional Visual Accent) -->
       <div
         class="absolute bottom-0 left-0 h-0.5 w-full bg-current opacity-10"
-      ></div>
+      >
+      </div>
     </div>
   {/each}
 </div>

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import {
-    getSettingsSections,
-    getShortcutStore,
     getCommandStore,
     getLayoutStore,
+    getSettingsSections,
+    getShortcutStore,
     type SettingsSection,
   } from "@rune-lab/svelte";
 
@@ -60,7 +60,7 @@
     for (const sec of sections) {
       const score = Math.max(
         fuzzyScore(q, sec.label),
-        fuzzyScore(q, sec.id)
+        fuzzyScore(q, sec.id),
       );
       if (score > 0) {
         list.push({
@@ -79,7 +79,7 @@
       const score = Math.max(
         fuzzyScore(q, sh.label || ""),
         fuzzyScore(q, sh.keys || ""),
-        fuzzyScore(q, sh.category || "")
+        fuzzyScore(q, sh.category || ""),
       );
       if (score > 0) {
         list.push({
@@ -97,7 +97,7 @@
     for (const cmd of commandStore.commands) {
       const score = Math.max(
         fuzzyScore(q, cmd.label),
-        fuzzyScore(q, cmd.category || "")
+        fuzzyScore(q, cmd.category || ""),
       );
       if (score > 0) {
         list.push({
@@ -119,7 +119,7 @@
   });
 
   const activeSection = $derived(
-    sections.find((s) => s.id === activeSectionId) || sections[0]
+    sections.find((s) => s.id === activeSectionId) || sections[0],
   );
 
   function handleSectionChange(id: string) {
@@ -139,7 +139,7 @@
       history.pushState(
         null,
         "",
-        window.location.pathname + window.location.search
+        window.location.pathname + window.location.search,
       );
     }
   }
@@ -233,12 +233,18 @@
     if (e.target === dialog) dialog.close();
   }}
 >
-  <div class="modal-box max-w-5xl h-[80vh] flex flex-col p-0 overflow-hidden bg-base-100 border border-base-200 shadow-2xl rounded-2xl">
+  <div
+    class="modal-box max-w-5xl h-[80vh] flex flex-col p-0 overflow-hidden bg-base-100 border border-base-200 shadow-2xl rounded-2xl"
+  >
     <div class="flex flex-1 overflow-hidden">
       <!-- Sidebar -->
-      <div class="w-64 bg-base-200/40 border-r border-base-200 flex flex-col p-4 gap-4">
+      <div
+        class="w-64 bg-base-200/40 border-r border-base-200 flex flex-col p-4 gap-4"
+      >
         <div class="flex items-center justify-between">
-          <span class="font-bold text-sm tracking-wider uppercase text-base-content/50">
+          <span
+            class="font-bold text-sm tracking-wider uppercase text-base-content/50"
+          >
             Settings
           </span>
           <button
@@ -259,9 +265,11 @@
         <div class="flex-1 overflow-y-auto space-y-1">
           {#each sections as sec}
             <button
-              class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2.5 {activeSectionId === sec.id && !searchQuery
+              class="
+                w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2.5 {activeSectionId === sec.id && !searchQuery
                 ? 'bg-primary text-primary-content shadow-sm'
-                : 'hover:bg-base-200 text-base-content/80 hover:text-base-content'}"
+                : 'hover:bg-base-200 text-base-content/80 hover:text-base-content'}
+              "
               onclick={() => handleSectionChange(sec.id)}
             >
               {#if sec.icon}
@@ -277,12 +285,16 @@
       <div class="flex-1 overflow-y-auto bg-base-100">
         {#if searchQuery}
           <div class="p-6 space-y-4">
-            <h3 class="text-sm font-bold uppercase tracking-wider text-base-content/40">
+            <h3
+              class="text-sm font-bold uppercase tracking-wider text-base-content/40"
+            >
               Search Results for "{searchQuery}"
             </h3>
 
             {#if searchResults.length === 0}
-              <div class="text-center py-12 text-base-content/40 border border-dashed border-base-200 rounded-2xl">
+              <div
+                class="text-center py-12 text-base-content/40 border border-dashed border-base-200 rounded-2xl"
+              >
                 No matching settings found.
               </div>
             {:else}
@@ -293,9 +305,13 @@
                     onclick={() => handleResultClick(result)}
                   >
                     <div>
-                      <h4 class="font-medium text-sm text-base-content">{result.title}</h4>
+                      <h4 class="font-medium text-sm text-base-content">
+                        {result.title}
+                      </h4>
                       {#if result.description}
-                        <p class="text-xs text-base-content/50 mt-1">{result.description}</p>
+                        <p class="text-xs text-base-content/50 mt-1">
+                          {result.description}
+                        </p>
                       {/if}
                     </div>
                     <span class="badge badge-outline text-xs px-2.5 py-1">

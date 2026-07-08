@@ -50,7 +50,8 @@
 
   function updateVisibility() {
     if (typeof window !== "undefined") {
-      showPanel = window.localStorage.getItem("rl:observer:showPreview") !== "false";
+      showPanel =
+        window.localStorage.getItem("rl:observer:showPreview") !== "false";
     }
   }
 
@@ -73,12 +74,20 @@
 </script>
 
 {#if showPanel}
-  <div class="fixed bottom-0 left-0 right-0 h-[32vh] bg-base-300 border-t-2 border-primary/20 z-[999] flex flex-col shadow-2xl font-sans">
+  <div
+    class="fixed bottom-0 left-0 right-0 h-[32vh] bg-base-300 border-t-2 border-primary/20 z-[999] flex flex-col shadow-2xl font-sans"
+  >
     <!-- Header/Tab bar -->
-    <div class="bg-base-200 px-4 py-2 flex items-center justify-between border-b border-base-200 shrink-0">
+    <div
+      class="bg-base-200 px-4 py-2 flex items-center justify-between border-b border-base-200 shrink-0"
+    >
       <div class="flex items-center gap-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
-          <span class="inline-block w-2 h-2 rounded-full bg-success animate-ping"></span>
+        <span
+          class="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-1.5"
+        >
+          <span
+            class="inline-block w-2 h-2 rounded-full bg-success animate-ping"
+          ></span>
           Rune Lab Observer
         </span>
         <div class="tabs tabs-boxed tabs-xs bg-base-300">
@@ -115,22 +124,32 @@
         <div class="h-full flex flex-col gap-2.5 overflow-hidden">
           <div class="flex items-center justify-between shrink-0">
             <span class="text-xs text-base-content/60">
-              Inspects key-value entries stored in localStorage under the <code>rl:</code> namespace.
+              Inspects key-value entries stored in localStorage under the <code
+              >rl:</code> namespace.
             </span>
             <div class="flex items-center gap-2">
-              <button class="btn btn-xs btn-outline btn-neutral" onclick={loadKeys}>
+              <button
+                class="btn btn-xs btn-outline btn-neutral"
+                onclick={loadKeys}
+              >
                 Refresh
               </button>
-              <button class="btn btn-xs btn-error btn-outline" onclick={clearAll}>
+              <button
+                class="btn btn-xs btn-error btn-outline"
+                onclick={clearAll}
+              >
                 Clear All
               </button>
             </div>
           </div>
 
-          <div class="flex-1 overflow-y-auto border border-base-200 rounded-lg bg-base-100">
+          <div
+            class="flex-1 overflow-y-auto border border-base-200 rounded-lg bg-base-100"
+          >
             {#if keys.length === 0}
               <div class="text-center py-8 text-base-content/40 text-sm">
-                No persisted keys found. Change settings (e.g. switch theme) to write values!
+                No persisted keys found. Change settings (e.g. switch theme) to
+                write values!
               </div>
             {:else}
               <table class="table table-xs w-full">
@@ -144,8 +163,12 @@
                 <tbody class="divide-y divide-base-200">
                   {#each keys as entry}
                     <tr class="hover:bg-base-200/20">
-                      <td class="font-mono text-primary font-medium">{entry.key}</td>
-                      <td class="font-mono max-w-xs truncate text-base-content/80">
+                      <td class="font-mono text-primary font-medium">
+                        {entry.key}
+                      </td>
+                      <td
+                        class="font-mono max-w-xs truncate text-base-content/80"
+                      >
                         {entry.value}
                       </td>
                       <td class="text-right">
@@ -176,7 +199,9 @@
               Go
             </button>
           </div>
-          <div class="flex-1 border border-base-200 rounded-lg overflow-hidden bg-base-100">
+          <div
+            class="flex-1 border border-base-200 rounded-lg overflow-hidden bg-base-100"
+          >
             <iframe
               src={iframeUrl}
               title="Rune Lab Preview"
