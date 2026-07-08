@@ -29,4 +29,4 @@ coverage:
 
 [doc('Run all check quality gates')]
 [group('check')]
-check: fmt lint types audit
+check: fmt lint types

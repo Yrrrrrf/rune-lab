@@ -10,6 +10,7 @@
     "./src/packages/plugins/layout",
     "./src/packages/plugins/palettes",
     "./src/packages/plugins/i18n",
+    "./src/packages/plugins/i18n/src/money",
     "./src/packages/plugins/observer"
   ],
   "test": {
