@@ -1,5 +1,4 @@
 {
-  "name": "rune-lab",
   "version": "0.5.0",
   "description": "A comprehensive full-stack application template with Tauri integration",
   "license": "MIT",
