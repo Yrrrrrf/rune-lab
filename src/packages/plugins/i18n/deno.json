@@ -4,7 +4,7 @@
   "exports": {
     ".": "./src/mod.ts",
     "./lang": "./src/lang/mod.ts",
-    "./money": "./src/money/src/lib/mod.ts"
+    "./money": "./src/money/mod.ts"
   },
   "imports": {
     "svelte": "npm:svelte@^5",

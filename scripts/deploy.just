@@ -10,10 +10,10 @@ build:
     # * Bundle the svelte package (src/lib → build/dist)
     # deno run -A npm:@sveltejs/package -- -i ./src/packages/ui/src/lib -o ./build/dist
     cd src/packages/ui; deno run -A npm:@sveltejs/package -i src/lib -o ../../../build/dist
-    # * Post-build: strip i18n artifacts, rewrite .ts→.js imports, inline the version
-    nu scripts/build.nu
     # * Format build output
     deno fmt build
+    # * Post-build: strip i18n artifacts, rewrite .ts→.js imports, inline the version
+    nu scripts/build.nu
     @echo "✓ build done"
 
 [doc('Publish build/ to npm using brave as default browser')]

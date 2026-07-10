@@ -26,6 +26,7 @@
           just
           nushell
           deno
+          biome
         ];
         # libraries the build links against
         buildInputs = with pkgs; [
