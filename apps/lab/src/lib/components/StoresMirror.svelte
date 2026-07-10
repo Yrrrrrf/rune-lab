@@ -8,7 +8,7 @@
     getShortcutStore,
     getThemeStore,
     getToastStore,
-  } from "@rune-lab/svelte";
+  } from "@rune-lab";
   import { m } from "$lib/i18n/messages.ts";
 
   const appStore = getAppStore();
@@ -22,9 +22,7 @@
 </script>
 
 <div class="h-full overflow-y-auto p-4">
-  <h2
-    class="text-xs font-black uppercase tracking-widest text-primary/70 mb-4"
-  >
+  <h2 class="text-xs font-black uppercase tracking-widest text-primary/70 mb-4">
     {m.stores_mirror_label()}
   </h2>
 
@@ -54,9 +52,7 @@
           {
             toastStore.toasts.length > 0
             ? m.last_toast_label({
-              type: toastStore.toasts[
-                toastStore.toasts.length - 1
-              ]?.type ?? "",
+              type: toastStore.toasts[toastStore.toasts.length - 1]?.type ?? "",
             })
             : m.no_active_toasts_label()
           }

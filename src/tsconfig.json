@@ -27,7 +27,7 @@
         "./packages/plugins/palettes/src/lib/mod.ts"
       ],
       "@rune-lab/i18n": [
-        "./packages/plugins/i18n/src/lang/mod.ts"
+        "./packages/plugins/i18n/src/mod.ts"
       ]
     }
   },

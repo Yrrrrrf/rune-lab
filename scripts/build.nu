@@ -1,18 +1,76 @@
 #!/usr/bin/env nu
-# Post-build pipeline for the rune-lab package (ui).
+# Build pipeline helpers for the rune-lab package (ui).
 #
-# deno.json is the version source of truth: step 0 mirrors it into
-# package.json, then dist gets cleaned (i18n build artifacts), import
-# specifiers rewritten (.ts -> .js), the dev-time manifest import
-# stripped, and the version inlined as a literal.
+# deno.json is the single source of truth; package.json is a generated,
+# throwaway npm manifest. Two entry points, meant to sandwich svelte-package:
+#
+#   --manifest   deno.json -> package.json (name, version, exports, deps)
+#   --patch      post-build pass over dist: strip i18n artifacts, rewrite
+#                .ts -> .js imports, strip the dev-time manifest import,
+#                inline the version as a literal.
 
-# Mirror the deno.json version into package.json; returns the version.
-def sync-version [pkg_dir: path]: nothing -> string {
-  let version = (open ($pkg_dir | path join "deno.json") | get version)
-  let pkg_json = ($pkg_dir | path join "package.json")
-  open $pkg_json | upsert version $version | save -f $pkg_json
-  print $"  synced   version ($version) -> package.json"
-  $version
+# npm identity of the package; the deno.json `name` (@rune-lab/svelte) is the
+# JSR one. This constant is the single knob if the two ever unify.
+const NPM_NAME = "rune-lab"
+
+# deno.json `imports` mixes dev-time and runtime deps, so the runtime surface
+# is declared here; versions are pulled from deno.json.
+const PEER_IMPORTS = ["svelte"]
+const RUNTIME_IMPORTS = ["esm-env"]
+
+# "npm:@scope/pkg@^1.2" | "npm:pkg@^1" | "npm:pkg" -> {name, range}
+def parse-npm-spec [spec: string]: nothing -> record {
+  $spec
+  | str replace --regex '^npm:' ''
+  | parse -r '^(?P<name>(?:@[^/]+/)?[^@]+)(?:@(?P<range>.+))?$'
+  | first
+  | update range {|r| if ($r.range | is-empty) { "*" } else { $r.range } }
+}
+
+# Pick the listed import keys out of deno.json imports as {pkg: range}.
+def pick-deps [imports: record, keys: list<string>]: nothing -> record {
+  $keys
+  | where {|k| $k in ($imports | columns) }
+  | reduce -f {} {|k, acc|
+    let spec = (parse-npm-spec ($imports | get $k))
+    $acc | insert $spec.name $spec.range
+  }
+}
+
+# Map deno.json exports (./src/lib/*.ts) onto the packaged dist/*.js layout.
+def dist-exports [exports: record]: nothing -> record {
+  $exports | transpose key src | reduce -f {} {|it, acc|
+    let js = ($it.src
+      | str replace --regex '^\./src/lib/' './dist/'
+      | str replace --regex '\.ts$' '.js')
+    $acc | insert $it.key {
+      types: ($js | str replace --regex '\.js$' '.d.ts')
+      svelte: $js
+      default: $js
+    }
+  }
+}
+
+# deno.json -> a minimal package.json for svelte-package, injection & publish.
+def gen-manifest [pkg_dir: path]: nothing -> nothing {
+  let deno = (open ($pkg_dir | path join "deno.json"))
+  let exports = (dist-exports $deno.exports)
+  {
+    name: $NPM_NAME
+    version: $deno.version
+    type: "module"
+    files: ["dist"]
+    svelte: ($exports | get "." | get svelte)
+    exports: $exports
+    peerDependencies: (pick-deps $deno.imports $PEER_IMPORTS)
+    dependencies: (pick-deps $deno.imports $RUNTIME_IMPORTS)
+  } | to json | save -f ($pkg_dir | path join "package.json")
+  print $"  wrote    package.json \(($NPM_NAME)@($deno.version)\)"
+
+  let jsr_only = ($deno.imports | transpose k v | where {|r| $r.v | str starts-with "jsr:" } | get k)
+  if ($jsr_only | is-not-empty) {
+    print $"  note     jsr-only imports skipped in package.json: ($jsr_only | str join ', ')"
+  }
 }
 
 # Remove inlang project files and test output that svelte-package copied into dist.
@@ -56,24 +114,14 @@ def patch-file [file: path, version: string]: nothing -> record {
   {rewrote: ($rewritten != $original), injected: ($patched != $rewritten)}
 }
 
-def main [
-  pkg_dir?: path # The package directory (defaults to current working directory)
-]: nothing -> nothing {
-  let pkg_dir = ($pkg_dir | default $env.PWD | path expand)
+# Post-svelte-package pass over dist.
+def run-patch [pkg_dir: path]: nothing -> nothing {
   let dist = ($pkg_dir | path join "dist")
-
-  for required in ["deno.json" "package.json"] {
-    if not (($pkg_dir | path join $required) | path exists) {
-      error make {msg: $"($required) not found in ($pkg_dir)"}
-    }
-  }
   if not ($dist | path exists) {
     error make {msg: $"dist not found in ($pkg_dir) - run svelte-package first"}
   }
+  let version = (open ($pkg_dir | path join "deno.json") | get version)
 
-  print $"Running post-build for package at: ($pkg_dir)"
-
-  let version = (sync-version $pkg_dir)
   strip-i18n-artifacts $pkg_dir $dist
 
   let results = (
@@ -89,6 +137,23 @@ def main [
   if $injected > 0 {
     print $"  injected version \"($version)\" into ($injected) files"
   }
+}
 
+def main [
+  pkg_dir?: path # The package directory (defaults to current working directory)
+  --manifest     # Generate package.json from deno.json
+  --patch        # Post-build pass over dist (run after svelte-package)
+]: nothing -> nothing {
+  let pkg_dir = ($pkg_dir | default $env.PWD | path expand)
+  if not (($pkg_dir | path join "deno.json") | path exists) {
+    error make {msg: $"deno.json not found in ($pkg_dir)"}
+  }
+  if not ($manifest or $patch) {
+    error make {msg: "nothing to do - pass --manifest and/or --patch"}
+  }
+
+  print $"Running build.nu for package at: ($pkg_dir)"
+  if $manifest { gen-manifest $pkg_dir }
+  if $patch { run-patch $pkg_dir }
   print "✓ build.nu done"
 }

@@ -6,6 +6,12 @@
   },
   "imports": {
     "@rune-lab/core": "jsr:@rune-lab/core@^0.0.1",
+    "svelte": "npm:svelte",
+    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
+    "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
+    "tailwindcss": "npm:tailwindcss",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite",
+    "daisyui": "npm:daisyui",
     "esm-env": "npm:esm-env@^1.0.0"
   }
 }

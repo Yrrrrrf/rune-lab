@@ -1,17 +1,25 @@
 {
+  "name": "rune-lab",
+  "version": "0.5.0",
+  "description": "A comprehensive full-stack application template with Tauri integration",
+  "license": "MIT",
+  "readme": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
+  },
   "nodeModulesDir": "auto",
   "unstable": [
     "fmt-component"
   ],
   "workspace": [
     "./apps/lab",
-    "./src/packages/core",
     "./src/packages/ui",
-    "./src/packages/plugins/layout",
-    "./src/packages/plugins/palettes",
+    "./src/packages/core",
     "./src/packages/plugins/i18n",
-    "./src/packages/plugins/i18n/src/money",
-    "./src/packages/plugins/observer"
+    "./src/packages/plugins/layout",
+    "./src/packages/plugins/observer",
+    "./src/packages/plugins/palettes"
   ],
   "imports": {
     "vite-plus": "npm:vite-plus"
