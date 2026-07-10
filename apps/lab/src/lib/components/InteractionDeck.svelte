@@ -4,7 +4,7 @@
     getLayoutStore,
     getShortcutStore,
     getToastStore,
-  } from "@rune-lab/svelte";
+  } from "rune-lab";
   import { m } from "$lib/i18n/messages.ts";
 
   const toastStore = getToastStore();
@@ -101,9 +101,7 @@
 </script>
 
 <div class="h-full overflow-y-auto p-4 space-y-2">
-  <h2
-    class="text-xs font-black uppercase tracking-widest text-primary/70 mb-3"
-  >
+  <h2 class="text-xs font-black uppercase tracking-widest text-primary/70 mb-3">
     {m.interaction_deck_label()}
   </h2>
 
@@ -138,10 +136,7 @@
         >
           {m.fire_toast_error()}
         </button>
-        <button
-          class="btn btn-xs btn-accent join-item"
-          onclick={floodToasts}
-        >
+        <button class="btn btn-xs btn-accent join-item" onclick={floodToasts}>
           🌊 {m.flood_toasts_label()}
         </button>
       </div>

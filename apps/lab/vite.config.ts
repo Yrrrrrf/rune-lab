@@ -1,16 +1,25 @@
 // vite plus
 import { defineConfig } from "vite-plus";
+// sveltekit
+import adapter from "@sveltejs/adapter-static";
+import { sveltekit } from "@sveltejs/kit/vite";
 // customization
 import tailwindcss from "@tailwindcss/vite";
 // import { paraglideVitePlugin } from "@inlang/paraglide-js";
-// main framework
-// sveltekit for local testing of the main components
-import { sveltekit } from "@sveltejs/kit/vite";
 
 export default defineConfig({
   plugins: [
-    sveltekit(),
     tailwindcss(),
+    sveltekit({
+      compilerOptions: {
+        runes: ({ filename }) =>
+          filename.split(/[/\\]/).includes("node_modules") ? undefined : true,
+      },
+      adapter: adapter({
+        fallback: "index.html",
+        strict: true,
+      }),
+    }),
     // todo: Remove this stuff because the main plugin will handle this
     // todo: Remove this stuff because the main plugin will handle this
     // todo: Remove this stuff because the main plugin will handle this

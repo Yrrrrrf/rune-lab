@@ -8,7 +8,7 @@
     getShortcutStore,
     getThemeStore,
     getToastStore,
-  } from "@rune-lab";
+  } from "rune-lab";
   import { m } from "$lib/i18n/messages.ts";
 
   const appStore = getAppStore();

@@ -30,9 +30,7 @@ publish:
 
 [doc('Inject the built pkg (build/) into lab for local testing')]
 [group('Deploy')]
-inject root=justfile_directory():
-    # * Build the package first
-    just build
+inject root=justfile_directory(): build
     # * Replace lab's installed rune-lab with the freshly built build/ layout
     rm -rf "{{ root }}/node_modules/rune-lab"
     cp -r "{{ root }}/build" "{{ root }}/node_modules/rune-lab"

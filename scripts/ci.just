@@ -6,7 +6,10 @@ ci: check test
 [group('ci')]
 prepare:
     fd -u --prune '^(node_modules|\.svelte-kit|\.vite|deno\.lock)$' | lines | each {|p| rm -r -f $p }
+    # Install on workspace
     deno install
+    # Install on main lab for testing...
+    cd apps/lab; deno install
     cd apps/lab; deno run -A npm:@sveltejs/kit/svelte-kit sync
 
 # todo: Add just commit to my own personal scripts on main path... It absolutly rocks...

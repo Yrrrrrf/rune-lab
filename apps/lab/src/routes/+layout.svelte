@@ -1,20 +1,16 @@
 <script lang="ts">
   import "./layout.css";
-  import {
-    type NavigationSection,
-    RuneProvider,
-    version,
-  } from "@rune-lab/svelte";
-  import { LayoutPlugin } from "@rune-lab/layout";
-  import { PalettesPlugin } from "@rune-lab/palettes";
-  import { MoneyPlugin } from "@rune-lab/money";
-  import { createParaglideAdapter, I18nPlugin } from "@rune-lab/i18n";
-  import { ObserverPlugin } from "@rune-lab/observer";
+  import { type NavigationSection, RuneProvider, version } from "rune-lab";
+  // import { LayoutPlugin } from "rune-lab";
+  // import { PalettesPlugin } from "rune-lab";
+  // import { MoneyPlugin } from "rune-lab";
+  // import { createParaglideAdapter, I18nPlugin } from "rune-lab";
+  // import { ObserverPlugin } from "rune-lab";
   import * as paraglideRuntime from "$lib/i18n/paraglide/runtime.js";
   import { m } from "$lib/i18n/messages.ts";
   import AppLayout from "./AppLayout.svelte";
 
-  const localeAdapter = createParaglideAdapter(paraglideRuntime);
+  // const localeAdapter = createParaglideAdapter(paraglideRuntime);
 
   let { children } = $props();
 
@@ -57,7 +53,7 @@
   ];
 </script>
 
-<RuneProvider
+<!-- <RuneProvider
   config={{
     favicon: "/img/rune.png",
     icons: "material",
@@ -68,10 +64,16 @@
       author: "Yrrrrrf",
     },
   }}
-  plugins={[LayoutPlugin, PalettesPlugin, MoneyPlugin, ObserverPlugin, I18nPlugin]}
+  plugins={[
+    LayoutPlugin,
+    PalettesPlugin,
+    MoneyPlugin,
+    ObserverPlugin,
+    I18nPlugin,
+  ]}
   {localeAdapter}
 >
-  <AppLayout {sections}>
-    {@render children()}
-  </AppLayout>
-</RuneProvider>
+</RuneProvider> -->
+<AppLayout {sections}>
+  {@render children()}
+</AppLayout>

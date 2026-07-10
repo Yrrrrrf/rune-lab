@@ -23,11 +23,17 @@
       "@rune-lab/svelte": [
         "./packages/ui/src/lib/mod.ts"
       ],
-      "@rune-lab/palettes": [
-        "./packages/plugins/palettes/src/lib/mod.ts"
-      ],
       "@rune-lab/i18n": [
         "./packages/plugins/i18n/src/mod.ts"
+      ],
+      "@rune-lab/layout": [
+        "./packages/plugins/layout/src/lib/mod.ts"
+      ],
+      "@rune-lab/observer": [
+        "./packages/plugins/observer/src/lib/mod.ts"
+      ],
+      "@rune-lab/palettes": [
+        "./packages/plugins/palettes/src/lib/mod.ts"
       ]
     }
   },

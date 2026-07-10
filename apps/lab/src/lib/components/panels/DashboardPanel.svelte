@@ -5,7 +5,7 @@
     getShortcutStore,
     getThemeStore,
     getToastStore,
-  } from "@rune-lab/svelte";
+  } from "rune-lab";
   import { onMount, untrack } from "svelte";
   import { m } from "$lib/i18n/messages.ts";
 

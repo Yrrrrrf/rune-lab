@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { getShortcutStore } from "@rune-lab/svelte";
-
-  import type { ShortcutEntry } from "@rune-lab/svelte";
+  import { getShortcutStore } from "rune-lab";
+  import type { ShortcutEntry } from "rune-lab";
 
   const shortcutStore = getShortcutStore();
 
@@ -56,9 +55,9 @@
                     class="badge badge-error badge-sm opacity-80 gap-1 flex items-center"
                     title={item.id}
                   >
-                    <span
-                      class="truncate max-w-[150px] font-mono text-[10px]"
-                    >{item.id}</span>
+                    <span class="truncate max-w-[150px] font-mono text-[10px]">{
+                      item.id
+                    }</span>
                   </div>
                 {/each}
               </div>

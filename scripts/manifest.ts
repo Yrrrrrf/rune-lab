@@ -58,7 +58,7 @@ const repoUrl = root.repository.url.replace(/^git\+/, "").replace(/\.git$/, "");
 const exports = distExports(ui.exports);
 
 const manifest = {
-  name: root.name,
+  name: "rune-lab",
   version: root.version,
   description: root.description,
   license: root.license,
