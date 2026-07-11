@@ -1,13 +1,10 @@
 // @ts-nocheck: legacy daisyui imports and complex ConfigStore typing
 // client/packages/ui/src/state/theme-config.svelte.ts
 
-import { createConfigStore, getThemeStore } from "@rune-lab/svelte";
-import type { Theme } from "@rune-lab/svelte";
+import { createConfigStore } from "@rune-lab/svelte";
+import type { Theme } from "./types.ts";
 import { BROWSER } from "esm-env";
-import { createMessageResolver } from "@rune-lab/svelte";
-import { m } from "@rune-lab/svelte";
-
-export type { Theme };
+import { createMessageResolver, m } from "rune-lab/i18n/lang";
 
 /**
  * Resolver to get the display name of a theme in the current locale
@@ -15,7 +12,7 @@ export type { Theme };
 export const getThemeName: (t: Theme) => string = createMessageResolver<Theme>(
   m,
   {
-    keyExtractor: (t) => t.name,
+    keyExtractor: (t: Theme) => t.name,
   },
 );
 
@@ -85,4 +82,3 @@ if (!themeStore.current && BROWSER) {
 }
 
 export type ThemeStore = ReturnType<typeof createConfigStore<Theme, "name">>;
-export { getThemeStore };

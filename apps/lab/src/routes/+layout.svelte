@@ -1,6 +1,7 @@
 <script lang="ts">
   import "./layout.css";
-  import { type NavigationSection, RuneProvider, version } from "rune-lab";
+  import { RuneProvider, version } from "rune-lab";
+  import type { NavigationSection } from "rune-lab/layout";
   // import { LayoutPlugin } from "rune-lab";
   // import { PalettesPlugin } from "rune-lab";
   // import { MoneyPlugin } from "rune-lab";

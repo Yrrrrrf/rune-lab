@@ -52,10 +52,32 @@ const distExports = (exports: Record<string, string>) =>
 
 const root = JSON.parse(await Deno.readTextFile("deno.json"));
 const ui = JSON.parse(await Deno.readTextFile(`${UI_DIR}/deno.json`));
+const core = JSON.parse(await Deno.readTextFile("src/packages/core/deno.json"));
 
 // "git+https://github.com/user/repo.git" -> "https://github.com/user/repo"
 const repoUrl = root.repository.url.replace(/^git\+/, "").replace(/\.git$/, "");
-const exports = distExports(ui.exports);
+
+// Map core deno.json exports (./src/*.ts) onto the packaged dist/core/*.js layout.
+const coreDistExports = (exports: Record<string, string>) =>
+  Object.fromEntries(
+    Object.entries(exports).map(([key, src]) => {
+      const js = src
+        .replace(/^\.\/src\//, "./dist/core/")
+        .replace(/\.ts$/, ".js");
+      const mappedKey = key === "."
+        ? "./core"
+        : key.replace(/^\.\//, "./core/");
+      return [mappedKey, {
+        types: js.replace(/\.js$/, ".d.ts"),
+        default: js,
+      }];
+    }),
+  );
+
+const exports = {
+  ...distExports(ui.exports),
+  ...coreDistExports(core.exports),
+};
 
 const manifest = {
   name: "rune-lab",
@@ -69,6 +91,9 @@ const manifest = {
   files: ["dist"],
   svelte: exports["."].svelte,
   exports,
+  // NOTE: `workspace:*` dependencies (like `@rune-lab/core`) are dropped by design
+  // because core is folded directly into the `rune-lab` package under `dist/core`
+  // and resolved via self-referencing exports.
   peerDependencies: pickDeps(ui.imports, PEER_IMPORTS),
   dependencies: pickDeps(ui.imports, RUNTIME_IMPORTS),
 };

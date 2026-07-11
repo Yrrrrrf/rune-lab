@@ -1,7 +1,7 @@
 <!-- src/lib/layout/NavigationPanel.svelte -->
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import type { NavigationItem, NavigationSection } from "@rune-lab/svelte";
+  import type { NavigationItem, NavigationSection } from "./types.ts";
 
   interface Props {
     header?: Snippet;

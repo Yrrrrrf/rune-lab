@@ -43,6 +43,9 @@ export function createParaglideAdapter(
   };
 }
 
+export * from "./message-resolver.ts";
+export * from "./messages.ts";
+
 /**
  * i18n Plugin — integrates paraglide-js translations with the microkernel.
  */

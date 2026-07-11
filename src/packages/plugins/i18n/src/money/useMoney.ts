@@ -2,7 +2,9 @@
 // Context-aware money composable that reads CurrencyStore + LanguageStore
 
 import { getContext } from "svelte";
-import { type ConfigStore, RUNE_LAB_CONTEXT } from "@rune-lab/svelte";
+import { type ConfigStore } from "@rune-lab/svelte";
+import { MONEY_CONTEXT } from "./mod.ts";
+import { LAYOUT_CONTEXT } from "rune-lab/layout";
 import {
   addMoney,
   convertMoney,
@@ -82,7 +84,7 @@ export interface UseMoneyReturn {
  *   const display = format(150.00, undefined, 'major'); // "$150.00"
  */
 export function useMoney(): UseMoneyReturn {
-  const currencyStore = getContext<CurrencyStore>(RUNE_LAB_CONTEXT.currency);
+  const currencyStore = getContext<CurrencyStore>(MONEY_CONTEXT.currency);
   if (!currencyStore) {
     throw new Error(
       "[rune-lab] useMoney() found no CurrencyStore. Did you register MoneyPlugin in <RuneProvider plugins={[…]}>?",
@@ -91,7 +93,7 @@ export function useMoney(): UseMoneyReturn {
   const languageStore = getContext<
     ConfigStore<Record<string, unknown>, string>
   >(
-    RUNE_LAB_CONTEXT.language,
+    LAYOUT_CONTEXT.language,
   );
   if (!languageStore) {
     throw new Error(
@@ -99,7 +101,7 @@ export function useMoney(): UseMoneyReturn {
     );
   }
   const exchangeRateStore = getContext<ExchangeRateStore>(
-    RUNE_LAB_CONTEXT.exchangeRate,
+    MONEY_CONTEXT.exchangeRate,
   );
   if (!exchangeRateStore) {
     throw new Error(

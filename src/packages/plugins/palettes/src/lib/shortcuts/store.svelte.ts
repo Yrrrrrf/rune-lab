@@ -1,5 +1,5 @@
 import { untrack } from "svelte";
-import type { ShortcutEntry } from "@rune-lab/svelte";
+import type { ShortcutEntry } from "../types.ts";
 
 export class ShortcutStore {
   entries: ShortcutEntry[] = $state<ShortcutEntry[]>([]);

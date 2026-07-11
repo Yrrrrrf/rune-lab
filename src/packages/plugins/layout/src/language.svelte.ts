@@ -1,15 +1,8 @@
 // sdk/state/src/language.svelte.ts
 
-import {
-  type ConfigStore,
-  createConfigStore,
-  getLanguageStore,
-} from "@rune-lab/svelte";
-import type { Language } from "@rune-lab/svelte";
-import { createMessageResolver } from "@rune-lab/svelte";
-import { m } from "@rune-lab/svelte";
-
-export type { Language };
+import { type ConfigStore, createConfigStore } from "@rune-lab/svelte";
+import type { Language } from "./types.ts";
+import { createMessageResolver, m } from "rune-lab/i18n/lang";
 
 /**
  * Resolver to get the display name of a language in the current locale
@@ -17,7 +10,7 @@ export type { Language };
 export const getLanguageName: (l: Language) => string = createMessageResolver<
   Language
 >(m, {
-  keyExtractor: (l) => l.code,
+  keyExtractor: (l: Language) => l.code,
 });
 
 export const LANGUAGES = [
@@ -55,4 +48,3 @@ export const languageStore: ConfigStore<Language, "code"> = createConfigStore<
 export type LanguageStore = ReturnType<
   typeof createConfigStore<Language, "code">
 >;
-export { getLanguageStore };

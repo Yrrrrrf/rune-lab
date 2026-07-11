@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getShortcutStore } from "@rune-lab/svelte";
+  import { getShortcutStore } from "../mod.ts";
 
   const shortcutStore = getShortcutStore();
 

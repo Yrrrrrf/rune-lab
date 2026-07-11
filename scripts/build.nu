@@ -40,8 +40,12 @@ def patch-file [file: path, version: string]: nothing -> record {
   let with_type_re = "(?m)^\\s*with\\s*\\{\\s*type:\\s*[\"']json[\"']\\s*\\}\\s*;?\\s*\\n?"
   let version_call_re = "pkgConfig\\.version"
 
+  let core_import_re = "@rune-lab/core(\\b|/|$)"
   let original = (open --raw $file)
-  let rewritten = ($original | str replace --all --regex $ts_import_re '$1$2.js$3')
+  let rewritten = ($original
+    | str replace --all --regex $ts_import_re '$1$2.js$3'
+    | str replace --all --regex $core_import_re 'rune-lab/core$1'
+  )
   let patched = ($rewritten
     | str replace --all --regex $manifest_import_re ''
     | str replace --all --regex $with_type_re ''
@@ -64,6 +68,12 @@ def main [
   print $"Patching build/dist at: ($root)"
   strip-i18n-artifacts $root $dist
 
+  # Remove all test files in dist
+  glob ($dist | path join "**" "*.test.*") | each {|p|
+    rm -r -f $p
+    print $"  removed  ($p | path relative-to $root)"
+  } | ignore
+
   let results = (
     glob ($dist | path join "**" "*.{js,ts,svelte}")
     | where {|p| ($p | path type) == "file" }
@@ -71,7 +81,7 @@ def main [
   )
 
   if ($results | any {|r| $r.rewrote }) {
-    print "  rewrote  .ts -> .js imports"
+    print "  rewrote  specifiers and .ts -> .js imports"
   }
   let injected = ($results | where {|r| $r.injected } | length)
   if $injected > 0 {

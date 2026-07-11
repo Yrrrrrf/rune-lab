@@ -2,8 +2,8 @@
 // Declarative shortcut registration with automatic lifecycle cleanup.
 // Bridges ShortcutConfig (sdk/core) → ShortcutStore (sdk/state).
 
-import { getShortcutStore, type ShortcutEntry } from "@rune-lab/svelte";
-import type { ShortcutConfig } from "./types.ts";
+import { getShortcutStore } from "../mod.ts";
+import type { ShortcutConfig, ShortcutEntry } from "./types.ts";
 
 /**
  * Declarative shortcut registration composable.

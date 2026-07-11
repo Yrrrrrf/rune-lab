@@ -1,12 +1,33 @@
-import { definePlugin, RUNE_LAB_CONTEXT } from "@rune-lab/svelte";
-import type { PersistenceDriver, RunePlugin } from "@rune-lab/svelte";
+import { createAccessor, definePlugin } from "@rune-lab/svelte";
+import type {
+  ConfigStore,
+  PersistenceDriver,
+  RunePlugin,
+} from "@rune-lab/svelte";
 import {
   type Currency,
+  type CurrencyStore,
   currencyStore,
   setExchangeRateStore,
 } from "./currency.svelte.ts";
 import { createExchangeRateStore } from "./exchange-rate.svelte.ts";
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
+
+export const MONEY_CONTEXT = {
+  currency: Symbol("rl:currency"),
+  exchangeRate: Symbol("rl:exchange-rate"),
+};
+
+export const getCurrencyStore: () => ConfigStore<Currency, "code"> & {
+  addCurrency: (meta: Currency, dineroDef?: unknown) => void;
+  convertAmount: (amount: number, fromCode: string, toCode?: string) => number;
+  readonly canConvert: boolean;
+} = createAccessor<CurrencyStore>(
+  MONEY_CONTEXT.currency,
+  "getCurrencyStore()",
+  "CurrencyStore",
+  "MoneyPlugin",
+);
 
 export * from "./currency.svelte.ts";
 export * from "./exchange-rate.svelte.ts";
@@ -37,7 +58,7 @@ export const MoneyPlugin: RunePlugin = definePlugin({
   stores: [
     {
       id: "exchangeRate",
-      contextKey: RUNE_LAB_CONTEXT.exchangeRate,
+      contextKey: MONEY_CONTEXT.exchangeRate,
       factory: (config: unknown) => {
         const store = createExchangeRateStore();
         const c = config as MoneyConfig;
@@ -50,7 +71,7 @@ export const MoneyPlugin: RunePlugin = definePlugin({
     },
     {
       id: "currency",
-      contextKey: RUNE_LAB_CONTEXT.currency,
+      contextKey: MONEY_CONTEXT.currency,
       factory: (
         config: unknown,
         driver: PersistenceDriver,

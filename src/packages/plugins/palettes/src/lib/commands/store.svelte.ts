@@ -1,13 +1,14 @@
 import { untrack } from "svelte";
-import { getCommandStore } from "@rune-lab/svelte";
-import type { Command, ConfigStore, IToastStore } from "@rune-lab/svelte";
+import type { ConfigStore } from "@rune-lab/svelte";
+import type { Command } from "../types.ts";
+import type { ToastStore } from "../notifications/store.svelte.ts";
 
 export type { Command };
 
 export interface CommandServices {
   appStore: unknown;
   apiStore: unknown;
-  toastStore: IToastStore;
+  toastStore: ToastStore;
   themeStore: ConfigStore<Record<string, unknown>, string>;
   languageStore: ConfigStore<Record<string, unknown>, string>;
   currencyStore: ConfigStore<Record<string, unknown>, string>;
@@ -81,5 +82,3 @@ export class CommandStore {
 export function createCommandStore(services: CommandServices): CommandStore {
   return new CommandStore(services);
 }
-
-export { getCommandStore };

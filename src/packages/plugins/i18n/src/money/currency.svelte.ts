@@ -1,9 +1,9 @@
 import { type ConfigStore, createConfigStore } from "@rune-lab/svelte";
-import type { Currency } from "@rune-lab/svelte";
+import type { Currency } from "./types.ts";
 import { type DineroCurrency, registerCurrency } from "./money.ts";
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
-import { createMessageResolver } from "@rune-lab/svelte";
-import { m } from "@rune-lab/svelte";
+import { createMessageResolver } from "../lang/message-resolver.ts";
+import { m } from "../lang/messages.ts";
 
 export type { Currency };
 
@@ -13,7 +13,7 @@ export type { Currency };
 export const getCurrencyName: (c: Currency) => string = createMessageResolver<
   Currency
 >(m, {
-  keyExtractor: (c) => c.code,
+  keyExtractor: (c: Currency) => c.code,
 });
 
 /**

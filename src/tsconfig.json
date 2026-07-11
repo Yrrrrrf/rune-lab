@@ -27,7 +27,7 @@
         "./packages/plugins/i18n/src/mod.ts"
       ],
       "@rune-lab/layout": [
-        "./packages/plugins/layout/src/lib/mod.ts"
+        "./packages/plugins/layout/src/mod.ts"
       ],
       "@rune-lab/observer": [
         "./packages/plugins/observer/src/lib/mod.ts"

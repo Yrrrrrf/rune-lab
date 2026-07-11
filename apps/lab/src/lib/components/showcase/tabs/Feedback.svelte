@@ -1,6 +1,6 @@
 <script lang="ts">
   import ShowcaseCard from "../ShowcaseCard.svelte";
-  import { getToastStore } from "rune-lab/svelte";
+  import { getToastStore } from "rune-lab/palettes";
   import { m } from "$lib/i18n/messages.ts";
 
   const toastStore = getToastStore();

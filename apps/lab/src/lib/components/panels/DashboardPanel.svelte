@@ -1,11 +1,7 @@
 <script lang="ts">
-  import {
-    getAppStore,
-    getLanguageStore,
-    getShortcutStore,
-    getThemeStore,
-    getToastStore,
-  } from "rune-lab";
+  import { getAppStore } from "rune-lab/svelte";
+  import { getLanguageStore, getThemeStore } from "rune-lab/layout";
+  import { getShortcutStore, getToastStore } from "rune-lab/palettes";
   import { onMount, untrack } from "svelte";
   import { m } from "$lib/i18n/messages.ts";
 
@@ -143,7 +139,7 @@
           class="btn btn-xs btn-outline col-span-2"
           onclick={() => {
             const currentIndex = themeStore.available.findIndex(
-              (t) => t.name === themeStore.current,
+              (t: { name: string }) => t.name === themeStore.current,
             );
             const nextIndex = (currentIndex + 1) % themeStore.available.length;
             themeStore.set(themeStore.available[nextIndex].name);

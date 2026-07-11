@@ -2,13 +2,11 @@
   import {
     cookieDriver,
     createInMemoryDriver,
-    getLanguageStore,
-    getLayoutStore,
-    getThemeStore,
     localStorageDriver,
     namespaced,
     sessionStorageDriver,
   } from "@rune-lab/svelte";
+  import { getLanguageStore, getLayoutStore, getThemeStore } from "./mod.ts";
   import ThemeSelector from "./ThemeSelector.svelte";
   import LanguageSelector from "./LanguageSelector.svelte";
 

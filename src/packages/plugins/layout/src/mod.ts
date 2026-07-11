@@ -1,9 +1,44 @@
-import { definePlugin, RUNE_LAB_CONTEXT } from "@rune-lab/svelte";
-import type { Language, PersistenceDriver, RunePlugin } from "@rune-lab/svelte";
-import { createLayoutStore } from "./store.svelte.ts";
-import { type Theme, themeStore } from "./theme.svelte.ts";
+import { createAccessor, definePlugin } from "@rune-lab/svelte";
+import type {
+  ConfigStore,
+  PersistenceDriver,
+  RunePlugin,
+} from "@rune-lab/svelte";
+import { createLayoutStore, LayoutStore } from "./store.svelte.ts";
+import { themeStore } from "./theme.svelte.ts";
 import { languageStore } from "./language.svelte.ts";
+import type { Language, Theme } from "./types.ts";
 import GeneralSettings from "./GeneralSettings.svelte";
+
+export const LAYOUT_CONTEXT = {
+  layout: Symbol("rl:layout"),
+  theme: Symbol("rl:theme"),
+  language: Symbol("rl:language"),
+};
+
+export const getLayoutStore: () => LayoutStore = createAccessor<LayoutStore>(
+  LAYOUT_CONTEXT.layout,
+  "getLayoutStore()",
+  "LayoutStore",
+  "LayoutPlugin",
+);
+
+export const getLanguageStore: () => ConfigStore<Language, "code"> =
+  createAccessor<ConfigStore<Language, "code">>(
+    LAYOUT_CONTEXT.language,
+    "getLanguageStore()",
+    "LanguageStore",
+    "LayoutPlugin",
+  );
+
+export const getThemeStore: () => ConfigStore<Theme, "name"> = createAccessor<
+  ConfigStore<Theme, "name">
+>(
+  LAYOUT_CONTEXT.theme,
+  "getThemeStore()",
+  "ThemeStore",
+  "LayoutPlugin",
+);
 
 export * from "./store.svelte.ts";
 export * from "./types.ts";
@@ -33,13 +68,13 @@ export const LayoutPlugin: RunePlugin = definePlugin({
   stores: [
     {
       id: "layout",
-      contextKey: RUNE_LAB_CONTEXT.layout,
+      contextKey: LAYOUT_CONTEXT.layout,
       factory: (_config: unknown, driver: PersistenceDriver) =>
         createLayoutStore(driver),
     },
     {
       id: "theme",
-      contextKey: RUNE_LAB_CONTEXT.theme,
+      contextKey: LAYOUT_CONTEXT.theme,
       factory: (config: unknown, driver: PersistenceDriver) => {
         // FIX: inject the real driver (e.g. localStorageDriver from RuneProvider).
         // The singleton was built at module-load time with createInMemoryDriver(),
@@ -61,7 +96,7 @@ export const LayoutPlugin: RunePlugin = definePlugin({
     },
     {
       id: "language",
-      contextKey: RUNE_LAB_CONTEXT.language,
+      contextKey: LAYOUT_CONTEXT.language,
       factory: (config: unknown, driver: PersistenceDriver) => {
         // FIX: same as theme — swap in the real driver so language choices
         // are persisted to localStorage and survive page reloads.

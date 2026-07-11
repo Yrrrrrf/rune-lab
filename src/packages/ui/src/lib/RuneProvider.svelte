@@ -1,33 +1,17 @@
 <script lang="ts">
+  import { type Component, setContext, type Snippet, untrack } from "svelte";
+  import { type AppData, createAppStore, RUNE_LAB_CONTEXT } from "./mod.ts";
   import {
-    type Component,
-    onMount,
-    setContext,
-    type Snippet,
-    untrack,
-  } from "svelte";
-  import {
-    type AppData,
-    type ConfigStore,
     cookieDriver,
-    createAppStore,
     createInMemoryDriver,
-    type ICommandStore,
-    type ICurrencyStore,
-    type Language,
-    type LayoutStore,
     localStorageDriver,
-    RUNE_LAB_CONTEXT,
     sessionStorageDriver,
-    type ShortcutStore,
-    type Theme,
-  } from "./kernel/src/mod.ts";
-  import { createKernel, definePlugin, namespaced } from "@rune-lab/core";
+  } from "./persistence/drivers.ts";
+  import { createKernel, namespaced } from "@rune-lab/core";
   import type {
     LocaleAdapter,
     PersistenceDriver,
     PluginInput,
-    RunePlugin,
   } from "@rune-lab/core";
 
   /**
@@ -51,17 +35,11 @@
     config = {},
     plugins = [],
     localeAdapter,
-    onThemeChange,
-    onLanguageChange,
-    onCurrencyChange,
   } = $props<{
     children: Snippet;
     config?: RuneLabConfig;
     plugins?: PluginInput[];
     localeAdapter?: LocaleAdapter;
-    onThemeChange?: (newTheme: any, oldTheme: any) => void;
-    onLanguageChange?: (newLang: any, oldLang: any) => void;
-    onCurrencyChange?: (newCurrency: any, oldCurrency: any) => void;
   }>();
 
   const initialPersistence = untrack(() => {
@@ -93,6 +71,9 @@
     localeAdapter,
   });
 
+  // Provide the kernel itself
+  setContext(RUNE_LAB_CONTEXT.kernel, kernel);
+
   // 2. Provide all stores as context
   for (const [id, store] of kernel.stores) {
     const entry = kernel.getStoreEntry(id);
@@ -110,59 +91,6 @@
 
   // 3. Collect all overlays
   const allOverlays = $derived(kernel.overlays as Component[]);
-
-  // ── Initialization for layout ──────────────────────────
-  const layoutStore = kernel.stores.get("layout") as unknown as LayoutStore;
-  const themeStore = kernel.stores.get("theme") as unknown as ConfigStore<
-    Theme,
-    "name"
-  >;
-  const languageStore = kernel.stores.get("language") as unknown as ConfigStore<
-    Language,
-    "code"
-  >;
-  const currencyStore = kernel.stores.get(
-    "currency",
-  ) as unknown as ICurrencyStore;
-
-  onMount(() => {
-    if (layoutStore) layoutStore.init();
-
-    // Sync core kernel cells to Svelte stores
-    const shortcutStore = kernel.stores.get(
-      "shortcut",
-    ) as unknown as ShortcutStore;
-    if (shortcutStore) {
-      for (const shortcut of kernel.getContributions("shortcuts") as any[]) {
-        shortcutStore.register(shortcut as any);
-      }
-    }
-
-    const commandStore = kernel.stores.get(
-      "commands",
-    ) as unknown as ICommandStore;
-    if (commandStore) {
-      for (const cmd of kernel.getContributions("commands") as any[]) {
-        commandStore.register(cmd as any);
-      }
-    }
-
-    const unsubs: (() => void)[] = [];
-
-    if (onThemeChange && themeStore) {
-      unsubs.push(themeStore.onChange(onThemeChange));
-    }
-    if (onLanguageChange && languageStore) {
-      unsubs.push(languageStore.onChange(onLanguageChange));
-    }
-    if (onCurrencyChange && currencyStore) {
-      unsubs.push(currencyStore.onChange(onCurrencyChange));
-    }
-
-    return () => {
-      unsubs.forEach((unsub) => unsub());
-    };
-  });
 
   // Meta tags derived from app store state
   const metaTags = $derived([

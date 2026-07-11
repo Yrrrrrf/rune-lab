@@ -34,7 +34,7 @@
 </script>
 
 <script lang="ts">
-  import { getCurrencyStore } from "@rune-lab/svelte";
+  import { getCurrencyStore } from "./mod.ts";
   import { toMinorUnit } from "./money.ts";
   import { DEV } from "esm-env";
 

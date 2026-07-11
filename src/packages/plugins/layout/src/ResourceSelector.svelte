@@ -1,7 +1,7 @@
 <script lang="ts" generics="T">
   import AppSettingSelector from "./AppSettingSelector.svelte";
   import type { ConfigStore } from "@rune-lab/svelte";
-  import { m } from "@rune-lab/svelte";
+  import { m } from "rune-lab/i18n/lang";
   import { getContext, type Snippet } from "svelte";
 
   interface Props {

@@ -8,8 +8,9 @@ build:
     # * Compile i18n messages → paraglide runtime (returns when ui regains an inlang project)
     # just paraglide ./src/packages/ui/src/lib/i18n/project.inlang ./src/packages/ui/src/lib/i18n/paraglide
     # * Bundle the svelte package (src/lib → build/dist)
-    # deno run -A npm:@sveltejs/package -- -i ./src/packages/ui/src/lib -o ./build/dist
     cd src/packages/ui; deno run -A npm:@sveltejs/package -i src/lib -o ../../../build/dist
+    # * Bundle the core package (src -> build/dist/core)
+    cd src/packages/core; deno run -A npm:@sveltejs/package -i src -o ../../../build/dist/core
     # * Format build output
     deno fmt build
     # * Post-build: strip i18n artifacts, rewrite .ts→.js imports, inline the version

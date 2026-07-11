@@ -1,7 +1,7 @@
 <!-- src/lib/layout/WorkspaceStrip.svelte -->
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import type { WorkspaceItem } from "@rune-lab/svelte";
+  import type { WorkspaceItem } from "./types.ts";
 
   interface Props {
     items: WorkspaceItem[];

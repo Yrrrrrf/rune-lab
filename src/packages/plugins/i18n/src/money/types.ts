@@ -25,3 +25,9 @@ export {
   toSquareMoney,
   toStripeMoney,
 } from "./money.ts";
+
+export interface Currency {
+  code: string;
+  symbol: string;
+  decimals: number;
+}

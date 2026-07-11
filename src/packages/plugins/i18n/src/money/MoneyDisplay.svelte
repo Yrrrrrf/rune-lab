@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { getCurrencyStore, getLanguageStore } from "@rune-lab/svelte";
+  import { getCurrencyStore } from "./mod.ts";
+  import { getLanguageStore } from "rune-lab/layout";
   import { formatAmount, type ISO4217Code, toMinorUnit } from "./money.ts";
   import { MoneyPrimitive } from "./money-primitive.ts";
   import { DEV } from "esm-env";

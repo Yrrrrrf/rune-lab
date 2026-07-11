@@ -1,8 +1,7 @@
 /**
  * Toast notification store
  */
-import { getToastStore } from "@rune-lab/svelte";
-import type { Toast, ToastType } from "@rune-lab/svelte";
+import type { Toast, ToastType } from "../types.ts";
 
 export type { Toast, ToastType };
 
@@ -115,5 +114,3 @@ export class ToastStore {
 export function createToastStore(): ToastStore {
   return new ToastStore();
 }
-
-export { getToastStore };

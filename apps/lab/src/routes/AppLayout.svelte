@@ -2,14 +2,14 @@
   import {
     ConnectedNavigationPanel,
     DetailPanel,
+    getLayoutStore,
     WorkspaceLayout,
   } from "rune-lab/layout";
   import {
     getCommandStore,
-    getLayoutStore,
     getShortcutStore,
     getToastStore,
-  } from "rune-lab/svelte";
+  } from "rune-lab/palettes";
   import DashboardPanel from "../lib/components/panels/DashboardPanel.svelte";
   import ShortcutsPanel from "../lib/components/panels/ShortcutsPanel.svelte";
   import { type Snippet, untrack } from "svelte";

@@ -1,8 +1,8 @@
 <!-- src/client/sdk/ui/src/features/config/CommandPalette.svelte -->
 <script lang="ts">
   import { tick } from "svelte";
-  import { type Command, getCommandStore } from "@rune-lab/svelte";
-  import { getShortcutStore } from "@rune-lab/svelte";
+  import type { Command } from "../types.ts";
+  import { getCommandStore, getShortcutStore } from "../mod.ts";
   import { Icon } from "@rune-lab/layout";
 
   interface Props {

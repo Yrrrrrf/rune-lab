@@ -1,13 +1,44 @@
-import { definePlugin, RUNE_LAB_CONTEXT } from "@rune-lab/svelte";
+import { createAccessor, definePlugin } from "@rune-lab/svelte";
 import type { ConfigStore, RunePlugin } from "@rune-lab/svelte";
 import { createCommandStore } from "./commands/store.svelte.ts";
 import { createShortcutStore } from "./shortcuts/store.svelte.ts";
 import { createToastStore } from "./notifications/store.svelte.ts";
 import type { ToastStore } from "./notifications/store.svelte.ts";
+import type { CommandStore } from "./commands/store.svelte.ts";
+import type { ShortcutStore } from "./shortcuts/store.svelte.ts";
 import CommandPalette from "./commands/CommandPalette.svelte";
 import ShortcutPalette from "./shortcuts/ShortcutPalette.svelte";
 import Toaster from "./notifications/Toaster.svelte";
 import SettingsModal from "./SettingsModal.svelte";
+
+export const PALETTES_CONTEXT = {
+  shortcut: Symbol("rl:shortcut"),
+  toast: Symbol("rl:toast"),
+  commands: Symbol("rl:commands"),
+};
+
+export const getShortcutStore: () => ShortcutStore = createAccessor<
+  ShortcutStore
+>(
+  PALETTES_CONTEXT.shortcut,
+  "getShortcutStore()",
+  "ShortcutStore",
+  "PalettesPlugin",
+);
+
+export const getCommandStore: () => CommandStore = createAccessor<CommandStore>(
+  PALETTES_CONTEXT.commands,
+  "getCommandStore()",
+  "CommandStore",
+  "PalettesPlugin",
+);
+
+export const getToastStore: () => ToastStore = createAccessor<ToastStore>(
+  PALETTES_CONTEXT.toast,
+  "getToastStore()",
+  "ToastStore",
+  "PalettesPlugin",
+);
 
 import { ShortcutSettings } from "./shortcuts/mod.ts";
 
@@ -24,7 +55,7 @@ export const PalettesPlugin: RunePlugin = definePlugin({
   stores: [
     {
       id: "commands",
-      contextKey: RUNE_LAB_CONTEXT.commands,
+      contextKey: PALETTES_CONTEXT.commands,
       factory: (_config, _driver, stores) =>
         createCommandStore({
           appStore: stores.get("app"),
@@ -48,13 +79,13 @@ export const PalettesPlugin: RunePlugin = definePlugin({
     },
     {
       id: "shortcut",
-      contextKey: RUNE_LAB_CONTEXT.shortcut,
+      contextKey: PALETTES_CONTEXT.shortcut,
       factory: () => createShortcutStore(),
       noPersistence: true,
     },
     {
       id: "toast",
-      contextKey: RUNE_LAB_CONTEXT.toast,
+      contextKey: PALETTES_CONTEXT.toast,
       factory: () => createToastStore(),
       noPersistence: true,
     },
