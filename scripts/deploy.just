@@ -15,6 +15,10 @@ build:
     deno fmt build
     # * Post-build: strip i18n artifacts, rewrite .ts→.js imports, inline the version
     nu scripts/build.nu
+    # * Specifier-leak gate
+    do { rg "@rune-lab" build/ } | complete | if $in.exit_code == 0 { error make { msg: "Specifier-leak gate violation: '@rune-lab' references found in build/" } }
+    # * Augmentation-survival gate
+    do { rg "@rune-lab/core" build/dist/ } | complete | if $in.exit_code == 0 { error make { msg: "Augmentation-survival gate violation: '@rune-lab/core' references found in build/dist/" } }
     @echo "✓ build done"
 
 [doc('Publish build/ to npm using brave as default browser')]

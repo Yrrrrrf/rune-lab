@@ -23,3 +23,4 @@ export {
 } from "./registry/registry.ts";
 export { createKernel, type Kernel } from "./kernel.ts";
 export { type StateCells } from "./services/layers.ts";
+export { type RuneLabCells } from "./cells.ts";

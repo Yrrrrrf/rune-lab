@@ -6,9 +6,9 @@ import { compileEnvironment } from "./compiler.ts";
 import { Context, Effect, Option, Schema } from "effect";
 import { StateCellsTag } from "./services/layers.ts";
 import { getCellSchema } from "./plugin/schemas.ts";
+import type { RuneLabCells } from "./cells.ts";
 
-// deno-lint-ignore no-explicit-any
-export interface Kernel<TCells = Record<string, any>> {
+export interface Kernel<TCells = RuneLabCells> {
   stores: Map<string, unknown>;
   overlays: unknown[];
 
@@ -52,8 +52,7 @@ async function updateLocale(
   }
 }
 
-// deno-lint-ignore no-explicit-any
-export function createKernel<TCells = Record<string, any>>(
+export function createKernel<TCells = RuneLabCells>(
   pluginsInput: PluginInput[],
   options: {
     config: Record<string, unknown>;

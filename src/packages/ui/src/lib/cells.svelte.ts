@@ -1,9 +1,10 @@
 import { createSubscriber } from "svelte/reactivity";
 import { getContext } from "svelte";
-import type { Kernel } from "@rune-lab/core";
+import type { Kernel, RuneLabCells } from "@rune-lab/core";
 import { RUNE_LAB_CONTEXT } from "./context.ts";
+import { BROWSER } from "esm-env";
 
-export function getKernel<TCells = any>(): Kernel<TCells> {
+export function getKernel<TCells = RuneLabCells>(): Kernel<TCells> {
   const kernel = getContext<Kernel<TCells>>(RUNE_LAB_CONTEXT.kernel);
   if (!kernel) {
     throw new Error(
@@ -13,10 +14,45 @@ export function getKernel<TCells = any>(): Kernel<TCells> {
   return kernel;
 }
 
-export function useCell<TCells = any, K extends keyof TCells = any>(
+/**
+ * A reactive read/write view over a kernel cell.
+ *
+ * Behavioral facts:
+ * 1. Cells carry `$state.raw` semantics: reassign `.current`, do not mutate properties directly (nested mutations are invisible).
+ * 2. The context-resolving form `useCell(cellName)` must be called during component initialization (uses Svelte's `getContext`).
+ * 3. SSR reads are plain, unsubscribed reads (reactivity registration is bypassed on the server).
+ */
+export function useCell<
+  TCells = RuneLabCells,
+  K extends keyof TCells = keyof TCells,
+>(
+  cellName: K,
+): { current: TCells[K] };
+export function useCell<
+  TCells = RuneLabCells,
+  K extends keyof TCells = keyof TCells,
+>(
   kernel: Kernel<TCells>,
   cellName: K,
+): { current: TCells[K] };
+export function useCell<
+  TCells = RuneLabCells,
+  K extends keyof TCells = keyof TCells,
+>(
+  first: Kernel<TCells> | K,
+  second?: K,
 ): { current: TCells[K] } {
+  let kernel: Kernel<TCells>;
+  let cellName: K;
+
+  if (second !== undefined) {
+    kernel = first as Kernel<TCells>;
+    cellName = second;
+  } else {
+    kernel = getKernel<TCells>();
+    cellName = first as K;
+  }
+
   // Fail-fast if cell doesn't exist by attempting to get its version
   kernel.getCellVersion(cellName);
 
@@ -26,7 +62,7 @@ export function useCell<TCells = any, K extends keyof TCells = any>(
 
   return {
     get current(): TCells[K] {
-      if (typeof window !== "undefined") {
+      if (BROWSER) {
         subscribe();
       }
       return kernel.getCell(cellName);

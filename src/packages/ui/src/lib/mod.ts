@@ -6,7 +6,6 @@ export * from "./persistence/provider.ts";
 export * from "./persistence/usePersistence.ts";
 export * from "./persistence/createConfigStore.svelte.ts";
 export * from "./actions/portal.ts";
-export * from "./actions/shortcut-listener.svelte.ts";
 export * from "./cells.svelte.ts";
 // export * from "../../../plugins/i18n/src/lang/messages.ts";
 // export * from "../../../plugins/i18n/src/lang/message-resolver.ts";

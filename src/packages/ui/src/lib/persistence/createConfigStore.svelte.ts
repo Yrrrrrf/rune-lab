@@ -29,7 +29,7 @@ export interface ConfigStoreOptions<T, K extends keyof T = keyof T> {
   items: readonly T[];
   /** Storage key used by the persistence driver */
   storageKey: string;
-  /** Display name for logging (e.g., "Theme", "Language") */
+  /** Display name for logging (e.g., "Config", "Language") */
   displayName: string;
   /** Key to use as identifier (e.g., "code", "name") */
   idKey: K;

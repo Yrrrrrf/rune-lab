@@ -30,8 +30,8 @@ export const withFallback = <A, I>(
 
 // fallow-ignore-next-line unused-export
 export const ThemeSchema = withFallback(
-  Schema.Union(Schema.Literal("light"), Schema.Literal("dark")),
-  "light" as const,
+  Schema.String,
+  "light",
 );
 
 // fallow-ignore-next-line unused-export

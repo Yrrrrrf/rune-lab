@@ -168,3 +168,19 @@ Deno.test("Kernel - declarative and imperative contributions", async () => {
 
   await kernel.dispose();
 });
+
+Deno.test("Kernel - non-default persisted theme survives load", async () => {
+  const driver = createInMemoryDriver();
+  driver.set("theme", "cupcake");
+
+  const kernel = await createKernel([], {
+    config: {},
+    persistence: driver,
+  });
+
+  // Wait for the async load synchronizer
+  await new Promise((r) => setTimeout(r, 10));
+
+  assertEquals(kernel.getCell("theme"), "cupcake");
+  await kernel.dispose();
+});
