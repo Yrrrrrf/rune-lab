@@ -11,7 +11,7 @@ lint:
 [doc('Type-check workspace')]
 [group('check')]
 types:
-    do { cd src/packages/ui; bunx svelte-check --tsconfig tsconfig.json }
+    do { cd src/packages/ui; deno run -A npm:svelte-check --tsconfig tsconfig.json }
     do { cd apps/lab; deno run -A npm:svelte-check --tsconfig tsconfig.json }
 
 [doc('Audit all code namespaces')]
