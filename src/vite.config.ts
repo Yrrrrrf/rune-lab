@@ -3,7 +3,8 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import tailwindcss from "@tailwindcss/vite";
 
-const PKGS = "./src/packages";
+// const SRC = new URL(".", import.meta.url).pathname;
+const PKGS = `./packages`;
 const PLUGINS = `${PKGS}/plugins`;
 
 // why `as any`: the svelte plugin types against upstream `vite`, while vite-plus
@@ -33,7 +34,7 @@ export default defineConfig({
       svelteProject("i18n", `${PLUGINS}`, [
         tailwindcss(),
         paraglideVitePlugin({
-          project: `${PLUGINS}/i18n/project.inlang`,
+          project: `${PLUGINS}/i18n/src/lang/project.inlang`,
           outdir: `${PLUGINS}/i18n/src/lib/paraglide`,
           // localStorage first, then browser language, then base locale
           strategy: ["localStorage", "preferredLanguage", "baseLocale"],

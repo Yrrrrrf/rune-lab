@@ -21,7 +21,9 @@
     "./src/packages/plugins/palettes"
   ],
   "imports": {
-    "vite-plus": "npm:vite-plus"
+    "vite-plus": "npm:vite-plus",
+    "@vitest/utils": "npm:vitest/utils",
+    "@testing-library/jest-dom": "npm:@testing-library/jest-dom"
   },
   "test": {
     "exclude": [

@@ -12,6 +12,10 @@ lint:
 [group('check')]
 types:
     do { cd src/packages/ui; deno run -A npm:svelte-check --tsconfig tsconfig.json }
+    # do { cd src/packages/plugins/palettes; deno run -A npm:svelte-check --tsconfig ../../../tsconfig.json }
+    # do { cd src/packages/plugins/layout; deno run -A npm:svelte-check --tsconfig ../../../tsconfig.json }
+    # do { cd src/packages/plugins/observer; deno run -A npm:svelte-check --tsconfig ../../../tsconfig.json }
+    # do { cd src/packages/plugins/i18n; deno run -A npm:svelte-check --tsconfig ../../../../tsconfig.json }
     do { cd apps/lab; deno run -A npm:svelte-check --tsconfig tsconfig.json }
 
 [doc('Audit all code namespaces')]
