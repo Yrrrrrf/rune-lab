@@ -1,23 +1,13 @@
 #!/usr/bin/env -S deno run -A
 // Assemble the publishable npm layout at build/:
 //
-//   build/package.json  <- root deno.json (identity) + ui deno.json (exports, deps)
+//   build/package.json  <- root deno.json (identity) + ui/plugin deno.jsons (exports, deps)
 //   build/README.md     <- copied from repo root
 //   build/LICENSE       <- copied from repo root
 //
 // Run from the repo root. svelte-package fills build/dist afterwards.
 // The root deno.json is the canonical source for name/version/description/
-// license/repository; the ui deno.json only contributes exports and the
-// concrete dependency ranges (the workspace root has no per-package deps).
-
-const UI_DIR = "src/packages/ui";
-
-// deno.json `imports` mixes dev-time and runtime deps, so the runtime surface
-// is declared here; versions are pulled from the ui deno.json.
-const PEER_IMPORTS = ["svelte"];
-const RUNTIME_IMPORTS = ["esm-env"];
-
-type Imports = Record<string, string>;
+// license/repository.
 
 // "npm:@scope/pkg@^1.2" | "npm:pkg@^1" | "npm:pkg" -> { name, range }
 const parseNpmSpec = (spec: string): { name: string; range: string } => {
@@ -26,64 +16,82 @@ const parseNpmSpec = (spec: string): { name: string; range: string } => {
   return { name: m[1], range: m[2] ?? "*" };
 };
 
-// Pick the listed import keys out of deno.json imports as { pkg: range }.
-const pickDeps = (imports: Imports, keys: string[]): Imports =>
-  Object.fromEntries(
-    keys
-      .filter((k) => k in imports)
-      .map((k) => parseNpmSpec(imports[k]))
-      .map(({ name, range }) => [name, range]),
-  );
-
-// Map ui deno.json exports (./src/lib/*.ts) onto the packaged dist/*.js layout.
-const distExports = (exports: Record<string, string>) =>
-  Object.fromEntries(
-    Object.entries(exports).map(([key, src]) => {
-      const js = src
-        .replace(/^\.\/src\/lib\//, "./dist/")
-        .replace(/\.ts$/, ".js");
-      return [
-        key,
-        {
-          types: js.replace(/\.js$/, ".d.ts"),
-          svelte: js,
-          default: js,
-        },
-      ];
-    }),
-  );
-
 const root = JSON.parse(await Deno.readTextFile("deno.json"));
-const ui = JSON.parse(await Deno.readTextFile(`${UI_DIR}/deno.json`));
-const core = JSON.parse(await Deno.readTextFile("src/packages/core/deno.json"));
 
 // "git+https://github.com/user/repo.git" -> "https://github.com/user/repo"
 const repoUrl = root.repository.url.replace(/^git\+/, "").replace(/\.git$/, "");
 
-// Map core deno.json exports (./src/*.ts) onto the packaged dist/core/*.js layout.
-const coreDistExports = (exports: Record<string, string>) =>
-  Object.fromEntries(
-    Object.entries(exports).map(([key, src]) => {
-      const js = src
-        .replace(/^\.\/src\//, "./dist/core/")
-        .replace(/\.ts$/, ".js");
-      const mappedKey = key === "."
-        ? "./core"
-        : key.replace(/^\.\//, "./core/");
-      return [
-        mappedKey,
-        {
-          types: js.replace(/\.js$/, ".d.ts"),
-          default: js,
-        },
-      ];
-    }),
-  );
-
+// Define the canonical nested exports map
 const exports = {
-  ...distExports(ui.exports),
-  ...coreDistExports(core.exports),
+  ".": {
+    types: "./dist/mod.d.ts",
+    svelte: "./dist/mod.js",
+    default: "./dist/mod.js",
+  },
+  "./core": {
+    types: "./dist/src/core/mod.d.ts",
+    default: "./dist/src/core/mod.js",
+  },
+  "./layout": {
+    types: "./dist/src/plugins/layout/mod.d.ts",
+    svelte: "./dist/src/plugins/layout/mod.js",
+    default: "./dist/src/plugins/layout/mod.js",
+  },
+  "./palettes": {
+    types: "./dist/src/plugins/palettes/mod.d.ts",
+    svelte: "./dist/src/plugins/palettes/mod.js",
+    default: "./dist/src/plugins/palettes/mod.js",
+  },
+  "./money": {
+    types: "./dist/src/plugins/money/mod.d.ts",
+    svelte: "./dist/src/plugins/money/mod.js",
+    default: "./dist/src/plugins/money/mod.js",
+  },
+  "./i18n/lang": {
+    types: "./dist/src/plugins/lang/mod.d.ts",
+    svelte: "./dist/src/plugins/lang/mod.js",
+    default: "./dist/src/plugins/lang/mod.js",
+  },
 };
+
+// Gather dependencies dynamically from all packages in the workspace
+const packages = [
+  "src/packages/ui",
+  "src/packages/core",
+  "src/packages/plugins/layout",
+  "src/packages/plugins/palettes",
+  "src/packages/plugins/i18n",
+  "src/packages/plugins/observer",
+];
+
+const DEV_DEPS = new Set([
+  "svelte",
+  "@sveltejs/vite-plugin-svelte",
+  "@sveltejs/adapter-static",
+  "tailwindcss",
+  "@tailwindcss/vite",
+  "daisyui",
+  "@inlang/paraglide-js",
+]);
+
+const dependencies: Record<string, string> = {};
+
+for (const pkgPath of packages) {
+  try {
+    const pkgDeno = JSON.parse(await Deno.readTextFile(`${pkgPath}/deno.json`));
+    const imports = pkgDeno.imports || {};
+    for (const [key, val] of Object.entries(imports)) {
+      if (typeof val === "string" && val.startsWith("npm:")) {
+        const { name, range } = parseNpmSpec(val);
+        if (!DEV_DEPS.has(name) && !name.startsWith("@rune-lab/")) {
+          dependencies[name] = range;
+        }
+      }
+    }
+  } catch (e) {
+    console.error(`Warning: failed to read dependencies for ${pkgPath}`, e);
+  }
+}
 
 const manifest = {
   name: "rune-lab",
@@ -97,11 +105,10 @@ const manifest = {
   files: ["dist"],
   svelte: exports["."].svelte,
   exports,
-  // NOTE: `workspace:*` dependencies (like `@rune-lab/core`) are dropped by design
-  // because core is folded directly into the `rune-lab` package under `dist/core`
-  // and resolved via self-referencing exports.
-  peerDependencies: pickDeps(ui.imports, PEER_IMPORTS),
-  dependencies: pickDeps(ui.imports, RUNTIME_IMPORTS),
+  peerDependencies: {
+    svelte: "*",
+  },
+  dependencies,
 };
 
 await Deno.mkdir("build", { recursive: true });
@@ -116,17 +123,4 @@ console.log(
 for (const file of ["README.md", "LICENSE"]) {
   await Deno.copyFile(file, `build/${file}`);
   console.log(`  copied   ${file} -> build/${file}`);
-}
-
-const jsrOnly = Object.entries(ui.imports as Imports)
-  .filter(([, v]) => v.startsWith("jsr:"))
-  .map(([k]) => k);
-if (jsrOnly.length > 0) {
-  console.log(
-    `  note     jsr-only imports skipped in package.json: ${
-      jsrOnly.join(
-        ", ",
-      )
-    }`,
-  );
 }

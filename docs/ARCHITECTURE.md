@@ -133,18 +133,25 @@ itself by name for any subpath in its own `exports` map; Vite honors this).
 
 ### 2.1 Canonical specifier table
 
-| dev-time (workspace)     | dist rewrite target                            | exports entry | dist location            |
-| ------------------------ | ---------------------------------------------- | ------------- | ------------------------ |
-| `@rune-lab/svelte`       | `rune-lab` (bare root — NOT `rune-lab/svelte`) | `.`           | `dist/`                  |
-| `@rune-lab/core`         | `rune-lab/core`                                | `./core`      | `dist/core/`             |
-| `@rune-lab/layout`       | `rune-lab/layout`                              | `./layout`    | `dist/plugins/layout/`   |
-| `@rune-lab/palettes`     | `rune-lab/palettes`                            | `./palettes`  | `dist/plugins/palettes/` |
-| `@rune-lab/i18n` (money) | `rune-lab/money`                               | `./money`     | `dist/plugins/money/`    |
+| dev-time (workspace)     | dist rewrite target                            | exports entry | dist location                |
+| ------------------------ | ---------------------------------------------- | ------------- | ---------------------------- |
+| `@rune-lab/svelte`       | `rune-lab` (bare root — NOT `rune-lab/svelte`) | `.`           | `dist/` (entry file only)    |
+| `@rune-lab/core`         | `rune-lab/core`                                | `./core`      | `dist/src/core/`             |
+| `@rune-lab/layout`       | `rune-lab/layout`                              | `./layout`    | `dist/src/plugins/layout/`   |
+| `@rune-lab/palettes`     | `rune-lab/palettes`                            | `./palettes`  | `dist/src/plugins/palettes/` |
+| `@rune-lab/i18n` (money) | `rune-lab/money`                               | `./money`     | `dist/src/plugins/money/`    |
 
 This table is the contract between three parties that must stay in sync:
 **source imports** (dev), **`scripts/manifest.ts`** (exports map + folding
 plugin deps into `dependencies`), and **`scripts/build.nu`** (the specifier
 rewrite in `patch-file`). Any change touches all three or breaks the dist.
+
+**Dist layout note (current):** the root ring is split across two locations —
+ui's single entry file (`mod.js` / `mod.d.ts`) stays at the true root `dist/` so
+the package's main entry point never moves, while every other ui file it imports
+lives one level down at `dist/src/ui/`. Every other ring (core, each plugin)
+sits entirely under `dist/src/<ring>/`. See `BUILD-MIGRATION-SPEC.md` for the
+mechanics of how `build.nu` produces this shape.
 
 ### 2.2 Build pipeline (`just build` → `deploy.just`)
 
@@ -153,13 +160,20 @@ rewrite in `patch-file`). Any change touches all three or breaks the dist.
    `types`/`svelte`/`default`), peer deps (`svelte`), runtime deps (`esm-env`
    - every folded plugin's npm deps via `pickDeps`). `workspace:*` entries are
      dropped _by design_ — the fold replaces them.
-2. `svelte-package` per member → `dist/`, `dist/core/`, `dist/plugins/<name>/`.
-   (The "no package.json / no exports field" warnings are cosmetic; silence them
-   with a minimal stub `package.json` per member dir if they annoy.)
+2. `svelte-package` per member → per-member output directories, then a
+   **reshuffle step** moves each into its final nested location: core into
+   `dist/src/core/`, each plugin into `dist/src/plugins/<name>/`, and ui's
+   output is split — its entry file (`mod.js`/`mod.d.ts`) stays at `dist/` root,
+   everything else moves into `dist/src/ui/`. (The "no package.json / no exports
+   field" warnings are cosmetic; silence them with a minimal stub `package.json`
+   per member dir if they annoy.)
 3. `deno fmt build`.
 4. `build.nu` patch pass — per file: strip tests/i18n artifacts, rewrite
-   `.ts → .js` relative imports, rewrite every `@rune-lab/<x>` per the table,
-   inline the version literal.
+   `.ts → .js` relative imports (including the new `./src/ui/…` prefix on
+   `mod.js`'s relative specifiers, post-reshuffle), rewrite every
+   `@rune-lab/<x>` per the table, inline the version literal. The reshuffle in
+   step 2 runs **before** this pass, so the `@rune-lab/*` rewrite always
+   operates on final file locations.
 5. `just inject` copies `build/` over `node_modules/rune-lab`; the lab app then
    consumes it exactly like a real npm user. **`just run lab` can be shadowed by
    workspace resolution — the honest gate is a tarball install into a scratch
@@ -168,9 +182,15 @@ rewrite in `patch-file`). Any change touches all three or breaks the dist.
 ### 2.3 Verification gates (permanent)
 
 - `rg "@rune-lab" build/` → **zero hits** (specifier leak gate).
-- Every specifier in the table has a matching exports entry (export-map gate).
+- Every specifier in the table has a matching exports entry, and that entry's
+  path resolves to an existing file at its nested `dist/src/...` location
+  (export-map gate).
 - `rg -l "Theme|Shortcut|Command|Toast|Currency|hotkeys" src/packages/ui/` →
-  zero hits (boundary gate).
+  zero hits (boundary gate — runs against source, unaffected by the dist
+  reshuffle).
+- **New: reshuffle integrity gate** — every relative import under `dist/src/**`
+  (and inside the root `mod.js`) resolves to a file that actually exists after
+  the move; catches a `../` depth left over from the pre-reshuffle flat layout.
 - `just inject` diff clean; lab boots; theme/language/persistence switching
   works; overlays render.
 - Clean-room: pack `build/`, install in a scratch Svelte app, import root +
@@ -192,38 +212,28 @@ rewrite in `patch-file`). Any change touches all three or breaks the dist.
 
 ---
 
-## 4. Current status & known gaps (as of the 2026-07-10 build log)
+## 4. Current status (as of July 2026)
 
-The fold and ui slim-down are executed; the lab already imports plugin subpaths.
-The build currently fails on four identified gaps — fix in this order, each is
-small:
+The single-package nested distribution layout migration is fully complete:
 
-- **G1 — exports map incomplete.** Lab requests `./layout`, `./palettes`,
-  `./money`, `./svelte`; generated `package.json` has only `.` and `./core`.
-  Fix: `manifest.ts` emits the full table (§2.1) and `deploy.just` packages each
-  plugin into `dist/plugins/<name>/` (svelte-package per plugin, same pattern as
-  core).
-- **G2 — `rune-lab/svelte` requested.** The rewrite currently maps
-  `@rune-lab/svelte` → `rune-lab/svelte`. Per the table, the target is the bare
-  root `rune-lab`. Fix in `build.nu`'s rewrite (order matters: rewrite the
-  longer `@rune-lab/<sub>` specifiers first, then `@rune-lab/svelte` →
-  `rune-lab`). Alternative (worse): add a `./svelte` alias export — rejected
-  because two names for one module invites drift.
-- **G3 — stale re-export.** `dist/mod.js` line
-  `export * from "./actions/shortcut-listener.svelte.js"` — the file moved to
-  palettes but ui's source `mod.ts` kept the line. Fix: delete the export from
-  `src/packages/ui/src/lib/mod.ts` (and any sibling stragglers — audit every
-  `export *` in that file against the ui tree).
-- **G4 — plugin deps not folded.** Once plugins package into dist, `hotkeys-js`
-  (palettes) and `dinero.js` (money) must appear in the manifest's
-  `dependencies` via `pickDeps` over each plugin's `deno.json`. Until then the
-  installed package would fail at import time in a clean consumer even though
-  the workspace hides it.
+- The package builds all submodules (`core`, `ui`, `plugins`) under the nested
+  `dist/src/` path, leaving only the primary UI entry point `mod.js`/`mod.d.ts`
+  at the root of `dist/`.
+- All specifiers (`@rune-lab/*`) are correctly rewritten to public subpaths of
+  the `rune-lab` package.
+- All gaps (G1-G4) have been resolved:
+  - **G1 (incomplete exports):** All submodules (`core`, `layout`, `palettes`,
+    `money`, `i18n/lang`) are correctly registered under `exports` in the
+    generated `package.json`.
+  - **G2 (svelte entry point):** `@rune-lab/svelte` is mapped directly to the
+    bare root `rune-lab`.
+  - **G3 (stale re-export):** The `shortcut-listener` re-export was removed from
+    UI's source `mod.ts`.
+  - **G4 (unfolded dependencies):** Runtime dependencies from all plugins
+    (`esm-env`, `@chenglou/pretext`, `hotkeys-js`, `dinero.js`) are dynamically
+    gathered and declared in the package manifest.
 
-Cosmetic: svelte-package per-member warnings (stub `package.json`s), and the
-`deno fmt build` workspace warning (harmless; `build/` is not a member).
-
-Open questions carried from SPEC-0.5 §8: `createConfigStore`'s long-term home
-(ui vs core); whether `api`/`cart`/`session`/`exchangeRate` context concepts
-have any live consumer (if not: dead, delete); unifying the `AppStore.version`
-vs package `version()` duo.
+Open questions carried forward: `createConfigStore`'s long-term home (ui vs
+core); whether `api`/`cart`/`session`/`exchangeRate` context concepts have any
+live consumer (if not: dead, delete); unifying the `AppStore.version` vs package
+`version()` duo.

@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { getLayoutStore } from "rune-lab/layout";
   import {
     getCommandStore,
-    getLayoutStore,
     getShortcutStore,
     getToastStore,
-  } from "rune-lab";
+  } from "rune-lab/palettes";
   import { m } from "$lib/i18n/messages.ts";
 
   const toastStore = getToastStore();

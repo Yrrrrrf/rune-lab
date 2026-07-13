@@ -11,6 +11,11 @@ build:
     cd src/packages/ui; deno run -A npm:@sveltejs/package -i src/lib -o ../../../build/dist
     # * Bundle the core package (src -> build/dist/core)
     cd src/packages/core; deno run -A npm:@sveltejs/package -i src -o ../../../build/dist/core
+    # * Bundle the plugins
+    cd src/packages/plugins/layout; deno run -A npm:@sveltejs/package -i src -o ../../../../build/dist/plugins/layout
+    cd src/packages/plugins/palettes; deno run -A npm:@sveltejs/package -i src/lib -o ../../../../build/dist/plugins/palettes
+    cd src/packages/plugins/observer; deno run -A npm:@sveltejs/package -i src/lib -o ../../../../build/dist/plugins/observer
+    cd src/packages/plugins/i18n; deno run -A npm:@sveltejs/package -i src -o ../../../../build/dist/plugins/i18n
     # * Format build output
     deno fmt build
     # * Post-build: strip i18n artifacts, rewrite .ts→.js imports, inline the version
