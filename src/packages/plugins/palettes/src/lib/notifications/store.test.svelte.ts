@@ -34,7 +34,7 @@ describe("ToastStore", () => {
     const store = new ToastStore();
     const originalCrypto = globalThis.crypto;
     // Temporarily hide crypto
-    // @ts-ignore: Mocking globalThis.crypto for test
+    // @ts-expect-error: Mocking globalThis.crypto for test
     delete globalThis.crypto;
 
     try {

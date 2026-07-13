@@ -1,7 +1,7 @@
 <script lang="ts">
-  import ResourceSelector from "./ResourceSelector.svelte";
-  import { getLanguageStore } from "./mod.ts";
   import { getLanguageName } from "./language.svelte.ts";
+  import { getLanguageStore } from "./mod.ts";
+  import ResourceSelector from "./ResourceSelector.svelte";
 
   const languageStore = getLanguageStore();
 

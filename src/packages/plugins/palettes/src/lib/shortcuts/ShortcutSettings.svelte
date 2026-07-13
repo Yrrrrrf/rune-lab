@@ -100,6 +100,7 @@
 
   // Ensure listener is cleaned up if component is destroyed
   import { onDestroy } from "svelte";
+
   onDestroy(stopRecording);
 </script>
 

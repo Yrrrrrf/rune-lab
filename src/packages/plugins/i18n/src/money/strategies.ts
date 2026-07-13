@@ -17,7 +17,7 @@ export type ConversionFn = (amount: number, ...rates: number[]) => number;
  */
 export function resolveRate(rate: ScaledRate | number): number {
   if (typeof rate === "number") return rate;
-  return rate.amount / Math.pow(10, rate.scale);
+  return rate.amount / 10 ** rate.scale;
 }
 
 // ── Strategy Functions ─────────────────────────────────────────────────────────

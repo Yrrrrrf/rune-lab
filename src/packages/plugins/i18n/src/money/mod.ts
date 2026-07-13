@@ -1,17 +1,17 @@
-import { createAccessor, definePlugin } from "@rune-lab/svelte";
 import type {
   ConfigStore,
   PersistenceDriver,
   RunePlugin,
 } from "@rune-lab/svelte";
+import { createAccessor, definePlugin } from "@rune-lab/svelte";
 import {
   type Currency,
   type CurrencyStore,
   currencyStore,
   setExchangeRateStore,
 } from "./currency.svelte.ts";
-import { createExchangeRateStore } from "./exchange-rate.svelte.ts";
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
+import { createExchangeRateStore } from "./exchange-rate.svelte.ts";
 
 export const MONEY_CONTEXT = {
   currency: Symbol("rl:currency"),
@@ -29,17 +29,17 @@ export const getCurrencyStore: () => ConfigStore<Currency, "code"> & {
   "MoneyPlugin",
 );
 
+export { default as CurrencySelector } from "./CurrencySelector.svelte";
 export * from "./currency.svelte.ts";
 export * from "./exchange-rate.svelte.ts";
-export * from "./types.ts";
-export * from "./money.ts";
-export * from "./strategies.ts";
-export * from "./money-primitive.ts";
-export * from "./useMoney.ts";
-export * from "./useMoneyFilter.svelte.ts";
-export { default as CurrencySelector } from "./CurrencySelector.svelte";
 export { default as MoneyDisplay } from "./MoneyDisplay.svelte";
 export { default as MoneyInput } from "./MoneyInput.svelte";
+export * from "./money.ts";
+export * from "./money-primitive.ts";
+export * from "./strategies.ts";
+export * from "./types.ts";
+export * from "./useMoney.ts";
+export * from "./useMoneyFilter.svelte.ts";
 
 interface MoneyConfig {
   exchangeRates?: {

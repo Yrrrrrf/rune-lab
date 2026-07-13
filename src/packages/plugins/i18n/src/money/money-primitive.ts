@@ -71,7 +71,7 @@ export class MoneyPrimitive {
     currencyCode: ISO4217Code | string,
   ): MoneyPrimitive {
     const scale = MoneyPrimitive.resolveScale(currencyCode);
-    const factor = Math.pow(10, scale);
+    const factor = 10 ** scale;
     return new MoneyPrimitive(Math.round(amount * factor), currencyCode, scale);
   }
 
@@ -92,7 +92,7 @@ export class MoneyPrimitive {
   /** Amount in major units (e.g., 12.99 for 1299 cents). */
   get major(): number {
     if (this.scale === 0) return this.amount;
-    return this.amount / Math.pow(10, this.scale);
+    return this.amount / 10 ** this.scale;
   }
 
   // ── Formatting ───────────────────────────────────────────────────────────

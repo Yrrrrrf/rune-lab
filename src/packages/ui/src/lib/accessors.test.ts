@@ -6,6 +6,7 @@ vi.mock("svelte", () => ({
   getContext: () => undefined,
 }));
 
+import { getAppStore } from "./app.svelte.ts";
 import {
   getCommandStore,
   getCurrencyStore,
@@ -15,7 +16,6 @@ import {
   getThemeStore,
   getToastStore,
 } from "./stores.svelte.ts";
-import { getAppStore } from "./app.svelte.ts";
 
 describe("Fail-fast context accessors", () => {
   it("should throw a helpful error for getAppStore", () => {

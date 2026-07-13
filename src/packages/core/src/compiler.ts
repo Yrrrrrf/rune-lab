@@ -1,12 +1,15 @@
-import { Effect, Layer, ManagedRuntime } from "effect";
+import { Effect, Layer, ManagedRuntime, Schema } from "effect";
 import {
   type PluginInput,
   resolvePlugins,
   type RunePlugin,
   type StoreRegistryEntry,
 } from "./plugin/manifest.ts";
+import { getCellSchema } from "./plugin/schemas.ts";
+import type { LocaleAdapter } from "./ports/locale.ts";
+import type { PersistenceDriver } from "./ports/persistence.ts";
+import type { TextMeasurer } from "./ports/text.ts";
 import { makeRegistryLayer, RegistryService } from "./registry/registry.ts";
-import { topologicalSort } from "./utils/graph.ts";
 import {
   createStoreLayer,
   makeLocaleAdapterLayer,
@@ -15,11 +18,7 @@ import {
   makeTextMeasurerLayer,
   StateCellsTag,
 } from "./services/layers.ts";
-import type { PersistenceDriver } from "./ports/persistence.ts";
-import type { LocaleAdapter } from "./ports/locale.ts";
-import type { TextMeasurer } from "./ports/text.ts";
-import { getCellSchema } from "./plugin/schemas.ts";
-import { Schema } from "effect";
+import { topologicalSort } from "./utils/graph.ts";
 
 function makeBackgroundSynchronizersLayer(options: {
   persistence: PersistenceDriver;

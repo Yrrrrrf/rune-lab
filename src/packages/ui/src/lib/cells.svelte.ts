@@ -1,8 +1,8 @@
-import { createSubscriber } from "svelte/reactivity";
-import { getContext } from "svelte";
 import type { Kernel, RuneLabCells } from "@rune-lab/core";
-import { RUNE_LAB_CONTEXT } from "./context.ts";
 import { BROWSER } from "esm-env";
+import { getContext } from "svelte";
+import { createSubscriber } from "svelte/reactivity";
+import { RUNE_LAB_CONTEXT } from "./context.ts";
 
 export function getKernel<TCells = RuneLabCells>(): Kernel<TCells> {
   const kernel = getContext<Kernel<TCells>>(RUNE_LAB_CONTEXT.kernel);

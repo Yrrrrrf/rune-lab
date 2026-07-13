@@ -1,10 +1,10 @@
 <!-- src/lib/features/shortcuts/ShortcutPalette.svelte -->
 <script lang="ts">
-  import { tick } from "svelte";
-  import type { ShortcutEntry } from "../types.ts";
   import { getAppStore } from "@rune-lab/svelte";
-  import { getShortcutStore } from "../mod.ts";
   import { LAYOUT_SHORTCUTS } from "rune-lab/layout";
+  import { tick } from "svelte";
+  import { getShortcutStore } from "../mod.ts";
+  import type { ShortcutEntry } from "../types.ts";
 
   const appStore = getAppStore();
   const shortcutStore = getShortcutStore();

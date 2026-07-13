@@ -1,6 +1,6 @@
 import type { PersistenceDriver } from "@rune-lab/core";
-import { createInMemoryDriver } from "./drivers.ts";
 import { DEV } from "esm-env";
+import { createInMemoryDriver } from "./drivers.ts";
 
 export type ConfigStore<T, K extends keyof T = keyof T> = {
   current: T[K];

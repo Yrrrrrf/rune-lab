@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from "vite-plus/test";
-import { ExchangeRateStore } from "./exchange-rate.svelte.ts";
-import { currencyStore, setExchangeRateStore } from "./currency.svelte.ts";
-import { RUNE_LAB_CONTEXT } from "@rune-lab/svelte";
 import { languageStore } from "@rune-lab/layout";
+import { RUNE_LAB_CONTEXT } from "@rune-lab/svelte";
+import { describe, expect, it, vi } from "vite-plus/test";
+import { currencyStore, setExchangeRateStore } from "./currency.svelte.ts";
+import { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 
 // Mock useMoney since it uses getContext and other stores
 vi.mock("./useMoney.ts", () => ({

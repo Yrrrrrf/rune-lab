@@ -26,7 +26,7 @@ export function shortcutListener(
 
       // We read entries here, so this effect re-runs when entries change.
       for (const entry of shortcutStore.entries) {
-        // @ts-ignore: enabled might not be on the interface but we check it anyway
+        // @ts-expect-error: enabled might not be on the interface but we check it anyway
         if (entry.enabled === false) continue;
 
         hotkeys(entry.keys, "all", (event, _handler) => {

@@ -1,4 +1,10 @@
 <script lang="ts">
+  import type {
+    LocaleAdapter,
+    PersistenceDriver,
+    PluginInput,
+  } from "@rune-lab/core";
+  import { createKernel, namespaced } from "@rune-lab/core";
   import { type Component, setContext, type Snippet, untrack } from "svelte";
   import { type AppData, createAppStore, RUNE_LAB_CONTEXT } from "./mod.ts";
   import {
@@ -7,12 +13,6 @@
     localStorageDriver,
     sessionStorageDriver,
   } from "./persistence/drivers.ts";
-  import { createKernel, namespaced } from "@rune-lab/core";
-  import type {
-    LocaleAdapter,
-    PersistenceDriver,
-    PluginInput,
-  } from "@rune-lab/core";
 
   /**
    * Namespaced configuration for Rune Lab plugins.

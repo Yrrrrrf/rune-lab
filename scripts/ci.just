@@ -2,10 +2,13 @@
 [group('ci')]
 ci: check test
 
+[doc('Prune all node_modules, .svelte-kit, .vite, deno.lock')]
+prune:
+    fd -u --prune '^(node_modules|\.svelte-kit|\.vite|deno\.lock)$' | lines | each {|p| rm -r -f $p }
+
 [doc('Purge caches & lockfiles, reinstall deps, resync generated code')]
 [group('ci')]
-prepare:
-    fd -u --prune '^(node_modules|\.svelte-kit|\.vite|deno\.lock)$' | lines | each {|p| rm -r -f $p }
+prepare: prune
     # Install on workspace
     deno install
     # Install on main lab for testing...

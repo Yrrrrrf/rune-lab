@@ -1,10 +1,10 @@
 import { Context, Effect, Layer, Stream, SubscriptionRef } from "effect";
-import type { PersistenceDriver } from "../ports/persistence.ts";
-import type { LocaleAdapter } from "../ports/locale.ts";
-import type { TextMeasurer } from "../ports/text.ts";
-import type { StoreRegistryEntry } from "../plugin/manifest.ts";
 import { createInMemoryDriver } from "../persistence/memory.ts";
 import { StateCell } from "../persistence/store.ts";
+import type { StoreRegistryEntry } from "../plugin/manifest.ts";
+import type { LocaleAdapter } from "../ports/locale.ts";
+import type { PersistenceDriver } from "../ports/persistence.ts";
+import type { TextMeasurer } from "../ports/text.ts";
 
 const PersistenceDriverTag = Context.GenericTag<PersistenceDriver>(
   "@rune-lab/core/PersistenceDriver",

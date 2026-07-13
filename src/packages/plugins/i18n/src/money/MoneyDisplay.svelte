@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { getCurrencyStore } from "./mod.ts";
-  import { getLanguageStore } from "rune-lab/layout";
-  import { formatAmount, type ISO4217Code, toMinorUnit } from "./money.ts";
-  import { MoneyPrimitive } from "./money-primitive.ts";
   import { DEV } from "esm-env";
+  import { getLanguageStore } from "rune-lab/layout";
+  import { getCurrencyStore } from "./mod.ts";
+  import { formatAmount, type ISO4217Code, toMinorUnit } from "./money.ts";
+  import type { MoneyPrimitive } from "./money-primitive.ts";
 
   let {
     amount: amountProp,
@@ -116,7 +116,7 @@
 
     if (compact) {
       const displayDecimals = currencyStore.get(displayCurrency)?.decimals ?? 2;
-      const majorUnits = displayAmount / Math.pow(10, displayDecimals);
+      const majorUnits = displayAmount / 10 ** displayDecimals;
       return new Intl.NumberFormat(resolvedLocale, {
         style: "currency",
         currency: displayCurrency,

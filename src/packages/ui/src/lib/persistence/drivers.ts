@@ -1,10 +1,10 @@
-import { BROWSER as browser } from "esm-env";
 import {
   createInMemoryDriver,
   inMemoryDriver,
   namespaced,
   type PersistenceDriver,
 } from "@rune-lab/core";
+import { BROWSER as browser } from "esm-env";
 
 export { createInMemoryDriver, inMemoryDriver, namespaced };
 

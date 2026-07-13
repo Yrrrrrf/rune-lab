@@ -1,6 +1,6 @@
 <script lang="ts">
-  import ShowcaseCard from "../ShowcaseCard.svelte";
   import { m } from "$lib/i18n/messages.ts";
+  import ShowcaseCard from "../ShowcaseCard.svelte";
 </script>
 
 <div class="space-y-6">

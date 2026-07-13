@@ -1,7 +1,6 @@
+import { createInMemoryDriver, createKernel } from "@rune-lab/core";
 import { describe, expect, it } from "vite-plus/test";
-import { createKernel } from "@rune-lab/core";
 import { useCell } from "./cells.svelte.ts";
-import { createInMemoryDriver } from "@rune-lab/core";
 
 describe("useCell reactivity bridge", () => {
   it("should read, write, and subscribe to a cell against a bare kernel", async () => {

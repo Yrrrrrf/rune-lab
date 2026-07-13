@@ -2,9 +2,9 @@
 // client/packages/ui/src/state/theme-config.svelte.ts
 
 import { createConfigStore } from "@rune-lab/svelte";
-import type { Theme } from "./types.ts";
 import { BROWSER } from "esm-env";
 import { createMessageResolver, m } from "rune-lab/i18n/lang";
+import type { Theme } from "./types.ts";
 
 /**
  * Resolver to get the display name of a theme in the current locale

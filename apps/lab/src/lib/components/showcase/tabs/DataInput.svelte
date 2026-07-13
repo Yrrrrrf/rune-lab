@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { m } from "$lib/i18n/messages.ts";
   import ShowcaseCard from "../ShowcaseCard.svelte";
   import { COLORS } from "../shared";
-  import { m } from "$lib/i18n/messages.ts";
 
   let rangeVal = $state(40);
   let toggleChecked = $state(true);

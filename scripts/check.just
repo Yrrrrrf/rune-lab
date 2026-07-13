@@ -6,17 +6,12 @@ fmt:
 [doc('Lint workspace')]
 [group('check')]
 lint:
-    deno lint .
-
-# [doc('svelte-check one workspace (shims svelte.config.js when missing)')]
-# [group('check')]
-# svelte-check dir tsconfig=TSCONFIG:
-#     just with-shim "{{ dir }}" "{{ SVELTE_SHIM }}" deno run -A npm:svelte-check --tsconfig "{{ tsconfig }}"
+    -deno lint .
 
 [doc('Type-check workspace')]
 [group('check')]
 types:
-    deno run -A npm:svelte-check
+    -deno run -A npm:svelte-check
 
 [doc('Audit all code namespaces')]
 [group('check')]
@@ -39,3 +34,10 @@ check-boundary:
 [doc('Run all check quality gates')]
 [group('check')]
 check: fmt lint types
+
+[doc('Run biome check. This one is even stricter than deno!')]
+biome:
+    just prune
+    -biome format --write .
+    -biome check --fix .
+    just fmt

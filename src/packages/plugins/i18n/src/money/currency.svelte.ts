@@ -1,9 +1,9 @@
 import { type ConfigStore, createConfigStore } from "@rune-lab/svelte";
-import type { Currency } from "./types.ts";
-import { type DineroCurrency, registerCurrency } from "./money.ts";
-import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 import { createMessageResolver } from "../lang/message-resolver.ts";
 import { m } from "../lang/messages.ts";
+import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
+import { type DineroCurrency, registerCurrency } from "./money.ts";
+import type { Currency } from "./types.ts";
 
 export type { Currency };
 

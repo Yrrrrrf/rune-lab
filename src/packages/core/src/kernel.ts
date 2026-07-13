@@ -1,12 +1,12 @@
-import type { PersistenceDriver } from "./ports/persistence.ts";
-import type { LocaleAdapter } from "./ports/locale.ts";
-import type { TextMeasurer } from "./ports/text.ts";
-import type { PluginInput, StoreRegistryEntry } from "./plugin/manifest.ts";
-import { compileEnvironment } from "./compiler.ts";
 import { Context, Effect, Option, Schema } from "effect";
-import { StateCellsTag } from "./services/layers.ts";
-import { getCellSchema } from "./plugin/schemas.ts";
 import type { RuneLabCells } from "./cells.ts";
+import { compileEnvironment } from "./compiler.ts";
+import type { PluginInput, StoreRegistryEntry } from "./plugin/manifest.ts";
+import { getCellSchema } from "./plugin/schemas.ts";
+import type { LocaleAdapter } from "./ports/locale.ts";
+import type { PersistenceDriver } from "./ports/persistence.ts";
+import type { TextMeasurer } from "./ports/text.ts";
+import { StateCellsTag } from "./services/layers.ts";
 
 export interface Kernel<TCells = RuneLabCells> {
   stores: Map<string, unknown>;

@@ -1,14 +1,14 @@
-import { createAccessor, definePlugin } from "@rune-lab/svelte";
 import type {
   ConfigStore,
   PersistenceDriver,
   RunePlugin,
 } from "@rune-lab/svelte";
-import { createLayoutStore, LayoutStore } from "./store.svelte.ts";
-import { themeStore } from "./theme.svelte.ts";
-import { languageStore } from "./language.svelte.ts";
-import type { Language, Theme } from "./types.ts";
+import { createAccessor, definePlugin } from "@rune-lab/svelte";
 import GeneralSettings from "./GeneralSettings.svelte";
+import { languageStore } from "./language.svelte.ts";
+import { createLayoutStore, type LayoutStore } from "./store.svelte.ts";
+import { themeStore } from "./theme.svelte.ts";
+import type { Language, Theme } from "./types.ts";
 
 export const LAYOUT_CONTEXT = {
   layout: Symbol("rl:layout"),
@@ -35,24 +35,24 @@ export const getThemeStore: () => ConfigStore<Theme, "name"> = createAccessor<
   ConfigStore<Theme, "name">
 >(LAYOUT_CONTEXT.theme, "getThemeStore()", "ThemeStore", "LayoutPlugin");
 
+export * from "./APP_CONFIGURATIONS.ts";
+export { default as AppSettingSelector } from "./AppSettingSelector.svelte";
+export { default as ConnectedNavigationPanel } from "./ConnectedNavigationPanel.svelte";
+export { default as ContentArea } from "./ContentArea.svelte";
+export * from "./connection-factory.ts";
+export { default as DetailPanel } from "./DetailPanel.svelte";
+export { default as GeneralSettings } from "./GeneralSettings.svelte";
+export { default as Icon } from "./Icon.svelte";
+export { default as LanguageSelector } from "./LanguageSelector.svelte";
+export * from "./language.svelte.ts";
+export { default as NavigationPanel } from "./NavigationPanel.svelte";
+export { default as ResourceSelector } from "./ResourceSelector.svelte";
 export * from "./store.svelte.ts";
+export { default as ThemeSelector } from "./ThemeSelector.svelte";
+export * from "./theme.svelte.ts";
 export * from "./types.ts";
 export { default as WorkspaceLayout } from "./WorkspaceLayout.svelte";
-export * from "./language.svelte.ts";
-export * from "./theme.svelte.ts";
-export * from "./APP_CONFIGURATIONS.ts";
-export * from "./connection-factory.ts";
-export { default as LanguageSelector } from "./LanguageSelector.svelte";
-export { default as ThemeSelector } from "./ThemeSelector.svelte";
-export { default as ResourceSelector } from "./ResourceSelector.svelte";
-export { default as AppSettingSelector } from "./AppSettingSelector.svelte";
-export { default as NavigationPanel } from "./NavigationPanel.svelte";
-export { default as ConnectedNavigationPanel } from "./ConnectedNavigationPanel.svelte";
 export { default as WorkspaceStrip } from "./WorkspaceStrip.svelte";
-export { default as ContentArea } from "./ContentArea.svelte";
-export { default as DetailPanel } from "./DetailPanel.svelte";
-export { default as Icon } from "./Icon.svelte";
-export { default as GeneralSettings } from "./GeneralSettings.svelte";
 
 /**
  * Layout Plugin — manages the primary workspace layout, theme, and language.

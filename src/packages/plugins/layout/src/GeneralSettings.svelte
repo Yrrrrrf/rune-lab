@@ -6,9 +6,9 @@
     namespaced,
     sessionStorageDriver,
   } from "@rune-lab/svelte";
+  import LanguageSelector from "./LanguageSelector.svelte";
   import { getLanguageStore, getLayoutStore, getThemeStore } from "./mod.ts";
   import ThemeSelector from "./ThemeSelector.svelte";
-  import LanguageSelector from "./LanguageSelector.svelte";
 
   const themeStore = getThemeStore();
   const languageStore = getLanguageStore();

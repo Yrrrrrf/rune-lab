@@ -3,8 +3,8 @@
 // Resolves the driver once (handling function-vs-instance duality)
 // and guarantees a concrete PersistenceDriver is always available.
 
-import { getContext, setContext } from "svelte";
 import type { PersistenceDriver } from "@rune-lab/core";
+import { getContext, setContext } from "svelte";
 import { createInMemoryDriver } from "./drivers.ts";
 
 const DRIVER_CONTEXT_KEY = Symbol("rl:driver-provider");

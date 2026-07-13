@@ -1,5 +1,5 @@
-import { definePlugin } from "@rune-lab/core";
 import type { LocaleAdapter, RunePlugin } from "@rune-lab/core";
+import { definePlugin } from "@rune-lab/core";
 
 interface ParaglideRuntime {
   languageTag?(): string;

@@ -1,5 +1,5 @@
-import { Effect, SubscriptionRef } from "effect";
 import type { Stream } from "effect";
+import { Effect, SubscriptionRef } from "effect";
 
 export class StateCell<T> {
   version = 0;

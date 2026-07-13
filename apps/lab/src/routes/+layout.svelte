@@ -2,13 +2,13 @@
   import "./layout.css";
   import { RuneProvider, version } from "rune-lab";
   import type { NavigationSection } from "rune-lab/layout";
+  import { m } from "$lib/i18n/messages.ts";
   // import { LayoutPlugin } from "rune-lab";
   // import { PalettesPlugin } from "rune-lab";
   // import { MoneyPlugin } from "rune-lab";
   // import { createParaglideAdapter, I18nPlugin } from "rune-lab";
   // import { ObserverPlugin } from "rune-lab";
   import * as paraglideRuntime from "$lib/i18n/paraglide/runtime.js";
-  import { m } from "$lib/i18n/messages.ts";
   import AppLayout from "./AppLayout.svelte";
 
   // const localeAdapter = createParaglideAdapter(paraglideRuntime);

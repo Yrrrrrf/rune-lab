@@ -1,7 +1,7 @@
-import { definePlugin } from "@rune-lab/core";
 import type { RunePlugin } from "@rune-lab/core";
-import ObserverPanel from "./ObserverPanel.svelte";
+import { definePlugin } from "@rune-lab/core";
 import CapabilitiesSettings from "./CapabilitiesSettings.svelte";
+import ObserverPanel from "./ObserverPanel.svelte";
 
 /**
  * Observer Plugin — provides docked developer tools, same-origin iframe preview,

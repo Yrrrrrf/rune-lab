@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onMount, tick } from "svelte";
   import { getSettingsSections, type SettingsSection } from "@rune-lab/svelte";
-  import { getCommandStore, getShortcutStore } from "./mod.ts";
   import { getLayoutStore } from "rune-lab/layout";
+  import { onMount, tick } from "svelte";
+  import { getCommandStore, getShortcutStore } from "./mod.ts";
 
   const sections = getSettingsSections();
   const shortcutStore = getShortcutStore();

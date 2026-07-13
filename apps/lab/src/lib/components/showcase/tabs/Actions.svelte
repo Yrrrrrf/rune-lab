@@ -1,8 +1,8 @@
 <script lang="ts">
-  import ShowcaseCard from "../ShowcaseCard.svelte";
-  import { COLORS, SIZES } from "../shared";
   import { Icon } from "rune-lab/layout";
   import { m } from "$lib/i18n/messages.ts";
+  import ShowcaseCard from "../ShowcaseCard.svelte";
+  import { COLORS, SIZES } from "../shared";
 </script>
 
 <div class="space-y-6">

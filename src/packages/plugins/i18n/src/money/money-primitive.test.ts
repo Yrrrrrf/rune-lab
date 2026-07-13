@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
-import { MoneyPrimitive } from "./money-primitive.ts";
 import { registerCurrency } from "./money.ts";
+import { MoneyPrimitive } from "./money-primitive.ts";
 
 describe("MoneyPrimitive", () => {
   describe("Construction", () => {

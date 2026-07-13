@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { getAppStore } from "rune-lab/svelte";
   import {
     getLanguageStore,
     getLayoutStore,
@@ -11,6 +10,7 @@
     getShortcutStore,
     getToastStore,
   } from "rune-lab/palettes";
+  import { getAppStore } from "rune-lab/svelte";
   import { m } from "$lib/i18n/messages.ts";
 
   const appStore = getAppStore();

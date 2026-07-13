@@ -1,10 +1,10 @@
 <!-- src/lib/features/layout/smart/ConnectedWorkspaceStrip.svelte -->
 <script lang="ts">
+  import type { Snippet } from "svelte";
+  import { createWorkspaceConnection } from "./connection-factory.ts";
   import { getLayoutStore } from "./mod.ts";
   import type { WorkspaceItem } from "./types.ts";
   import WorkspaceStrip from "./WorkspaceStrip.svelte";
-  import { createWorkspaceConnection } from "./connection-factory.ts";
-  import type { Snippet } from "svelte";
 
   interface Props {
     items: WorkspaceItem[];

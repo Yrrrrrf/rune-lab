@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { showcaseState } from "./state.svelte";
   import { m } from "$lib/i18n/messages.ts";
+  import { showcaseState } from "./state.svelte";
 
   // Tab definitions mapping to our 6 categories
   import Actions from "./tabs/Actions.svelte";

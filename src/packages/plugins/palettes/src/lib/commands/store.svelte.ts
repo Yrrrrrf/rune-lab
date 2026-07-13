@@ -1,7 +1,7 @@
-import { untrack } from "svelte";
 import type { ConfigStore } from "@rune-lab/svelte";
-import type { Command } from "../types.ts";
+import { untrack } from "svelte";
 import type { ToastStore } from "../notifications/store.svelte.ts";
+import type { Command } from "../types.ts";
 
 export type { Command };
 

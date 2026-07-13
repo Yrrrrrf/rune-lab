@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { tick } from "svelte";
-  import type { Command } from "../types.ts";
-  import { getCommandStore, getShortcutStore } from "../mod.ts";
   import { Icon } from "@rune-lab/layout";
+  import { tick } from "svelte";
+  import { getCommandStore, getShortcutStore } from "../mod.ts";
+  import type { Command } from "../types.ts";
 
   interface Props {
     shortcutKey?: string;

@@ -1,8 +1,8 @@
 // sdk/state/src/language.svelte.ts
 
 import { type ConfigStore, createConfigStore } from "@rune-lab/svelte";
-import type { Language } from "./types.ts";
 import { createMessageResolver, m } from "rune-lab/i18n/lang";
+import type { Language } from "./types.ts";
 
 /**
  * Resolver to get the display name of a language in the current locale

@@ -68,7 +68,7 @@ export type RateMap = Record<string, ScaledRate | number>;
  * Defaults to 4 decimal places of precision if not specified.
  */
 export function scaledRate(float: number, precision: number = 4): ScaledRate {
-  const factor = Math.pow(10, precision);
+  const factor = 10 ** precision;
   return {
     amount: Math.round(float * factor),
     scale: precision,
@@ -134,7 +134,7 @@ export function toMinorUnit(
     );
   }
   const base = Array.isArray(currency.base) ? currency.base[0] : currency.base;
-  const factor = Math.pow(Number(base), Number(currency.exponent));
+  const factor = Number(base) ** Number(currency.exponent);
   return Math.round(toNumber(amount) * factor);
 }
 

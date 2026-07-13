@@ -1,7 +1,7 @@
-import { defineConfig } from "vite-plus";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite-plus";
 
 // const SRC = new URL(".", import.meta.url).pathname;
 const PKGS = `./packages`;

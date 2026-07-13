@@ -12,6 +12,6 @@
     "tailwindcss": "npm:tailwindcss",
     "@tailwindcss/vite": "npm:@tailwindcss/vite",
     "daisyui": "npm:daisyui",
-    "esm-env": "npm:esm-env@^1.0.0"
+    "esm-env": "npm:esm-env@^1"
   }
 }

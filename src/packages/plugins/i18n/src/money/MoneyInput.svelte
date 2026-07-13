@@ -1,6 +1,6 @@
 <script module lang="ts">
   import type { ISO4217Code } from "./money.ts";
-  import { MoneyPrimitive } from "./money-primitive.ts";
+  import type { MoneyPrimitive } from "./money-primitive.ts";
 
   export interface MoneyInputProps {
     /** Current value in minor or major units (see unit prop) */

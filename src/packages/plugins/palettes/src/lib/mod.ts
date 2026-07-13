@@ -1,15 +1,15 @@
-import { createAccessor, definePlugin } from "@rune-lab/svelte";
 import type { ConfigStore, RunePlugin } from "@rune-lab/svelte";
-import { createCommandStore } from "./commands/store.svelte.ts";
-import { createShortcutStore } from "./shortcuts/store.svelte.ts";
-import { createToastStore } from "./notifications/store.svelte.ts";
-import type { ToastStore } from "./notifications/store.svelte.ts";
-import type { CommandStore } from "./commands/store.svelte.ts";
-import type { ShortcutStore } from "./shortcuts/store.svelte.ts";
+import { createAccessor, definePlugin } from "@rune-lab/svelte";
 import CommandPalette from "./commands/CommandPalette.svelte";
-import ShortcutPalette from "./shortcuts/ShortcutPalette.svelte";
+import type { CommandStore } from "./commands/store.svelte.ts";
+import { createCommandStore } from "./commands/store.svelte.ts";
+import type { ToastStore } from "./notifications/store.svelte.ts";
+import { createToastStore } from "./notifications/store.svelte.ts";
 import Toaster from "./notifications/Toaster.svelte";
 import SettingsModal from "./SettingsModal.svelte";
+import ShortcutPalette from "./shortcuts/ShortcutPalette.svelte";
+import type { ShortcutStore } from "./shortcuts/store.svelte.ts";
+import { createShortcutStore } from "./shortcuts/store.svelte.ts";
 
 export const PALETTES_CONTEXT = {
   shortcut: Symbol("rl:shortcut"),
@@ -43,8 +43,8 @@ export const getToastStore: () => ToastStore = createAccessor<ToastStore>(
 import { ShortcutSettings } from "./shortcuts/mod.ts";
 
 export * from "./commands/mod.ts";
-export * from "./shortcuts/mod.ts";
 export * from "./notifications/mod.ts";
+export * from "./shortcuts/mod.ts";
 
 /**
  * Palettes Plugin — provides the command palette, shortcut manager, and toast system.
