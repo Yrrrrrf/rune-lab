@@ -8,15 +8,15 @@ fmt:
 lint:
     deno lint .
 
-[doc('svelte-check one workspace (shims svelte.config.js when missing)')]
-[group('check')]
-svelte-check dir tsconfig=TSCONFIG:
-    just with-shim "{{ dir }}" "{{ SVELTE_SHIM }}" deno run -A npm:svelte-check --tsconfig "{{ tsconfig }}"
+# [doc('svelte-check one workspace (shims svelte.config.js when missing)')]
+# [group('check')]
+# svelte-check dir tsconfig=TSCONFIG:
+#     just with-shim "{{ dir }}" "{{ SVELTE_SHIM }}" deno run -A npm:svelte-check --tsconfig "{{ tsconfig }}"
 
 [doc('Type-check workspace')]
 [group('check')]
 types:
-    "{{ SVELTE_WORKSPACES }}" | split row " " | each {|dir| just svelte-check $dir } | ignore
+    deno run -A npm:svelte-check
 
 [doc('Audit all code namespaces')]
 [group('check')]
