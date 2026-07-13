@@ -8,9 +8,7 @@
     "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
   },
   "nodeModulesDir": "auto",
-  "unstable": [
-    "fmt-component"
-  ],
+  "unstable": ["fmt-component"],
   "workspace": [
     "./apps/lab",
     "./src/packages/ui",
@@ -27,10 +25,6 @@
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom"
   },
   "test": {
-    "exclude": [
-      "apps/**",
-      "src/packages/ui/**",
-      "src/packages/plugins/**"
-    ]
+    "exclude": ["apps/**", "src/packages/ui/**", "src/packages/plugins/**"]
   }
 }

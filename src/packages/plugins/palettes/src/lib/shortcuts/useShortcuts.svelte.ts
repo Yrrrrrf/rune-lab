@@ -33,9 +33,9 @@ import type { ShortcutConfig, ShortcutEntry } from "./types.ts";
  * </script>
  * ```
  */
-export function useShortcuts(
-  configs: ShortcutConfig[],
-): { readonly registered: string[] } {
+export function useShortcuts(configs: ShortcutConfig[]): {
+  readonly registered: string[];
+} {
   const shortcutStore = getShortcutStore();
 
   // Convert ShortcutConfig[] to ShortcutEntry[] respecting the `when` predicate

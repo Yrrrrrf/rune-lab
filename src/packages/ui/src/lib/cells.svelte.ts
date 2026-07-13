@@ -25,23 +25,15 @@ export function getKernel<TCells = RuneLabCells>(): Kernel<TCells> {
 export function useCell<
   TCells = RuneLabCells,
   K extends keyof TCells = keyof TCells,
->(
-  cellName: K,
-): { current: TCells[K] };
+>(cellName: K): { current: TCells[K] };
 export function useCell<
   TCells = RuneLabCells,
   K extends keyof TCells = keyof TCells,
->(
-  kernel: Kernel<TCells>,
-  cellName: K,
-): { current: TCells[K] };
+>(kernel: Kernel<TCells>, cellName: K): { current: TCells[K] };
 export function useCell<
   TCells = RuneLabCells,
   K extends keyof TCells = keyof TCells,
->(
-  first: Kernel<TCells> | K,
-  second?: K,
-): { current: TCells[K] } {
+>(first: Kernel<TCells> | K, second?: K): { current: TCells[K] } {
   let kernel: Kernel<TCells>;
   let cellName: K;
 

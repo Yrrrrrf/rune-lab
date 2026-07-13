@@ -128,7 +128,7 @@ export class ExchangeRateStore {
     let scale = 6;
     if (fromCode === this.#baseCurrency) {
       const rateEntry = this.#rates[toCode];
-      const rateScale = (rateEntry && typeof rateEntry === "object")
+      const rateScale = rateEntry && typeof rateEntry === "object"
         ? rateEntry.scale
         : 4;
       const exponent = toCurrency.exponent;

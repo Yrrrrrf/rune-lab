@@ -53,8 +53,12 @@ class ConfigStoreImpl<T, K extends keyof T> {
 
   constructor(options: ConfigStoreOptions<T, K>) {
     this.#options = options;
-    const { items, idKey, storageKey, driver = createInMemoryDriver() } =
-      options;
+    const {
+      items,
+      idKey,
+      storageKey,
+      driver = createInMemoryDriver(),
+    } = options;
     this.#driver = driver;
 
     this.available = [...items] as T[];
@@ -143,9 +147,7 @@ class ConfigStoreImpl<T, K extends keyof T> {
    */
   get(id: T[K]): T | undefined {
     const idKey = this.#options.idKey;
-    return this.available.find(
-      (item: T) => item[idKey] === id,
-    );
+    return this.available.find((item: T) => item[idKey] === id);
   }
 
   /**

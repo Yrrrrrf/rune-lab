@@ -92,9 +92,7 @@ export function useMoney(): UseMoneyReturn {
   }
   const languageStore = getContext<
     ConfigStore<Record<string, unknown>, string>
-  >(
-    LAYOUT_CONTEXT.language,
-  );
+  >(LAYOUT_CONTEXT.language);
   if (!languageStore) {
     throw new Error(
       "[rune-lab] useMoney() found no LanguageStore. Did you register LayoutPlugin in <RuneProvider plugins={[…]}>?",
@@ -135,7 +133,8 @@ export function useMoney(): UseMoneyReturn {
     localeOverride?: string,
   ): string {
     if (
-      amount === null || amount === undefined ||
+      amount === null ||
+      amount === undefined ||
       (typeof amount === "number" && isNaN(amount))
     ) {
       return "—";

@@ -42,11 +42,14 @@ const distExports = (exports: Record<string, string>) =>
       const js = src
         .replace(/^\.\/src\/lib\//, "./dist/")
         .replace(/\.ts$/, ".js");
-      return [key, {
-        types: js.replace(/\.js$/, ".d.ts"),
-        svelte: js,
-        default: js,
-      }];
+      return [
+        key,
+        {
+          types: js.replace(/\.js$/, ".d.ts"),
+          svelte: js,
+          default: js,
+        },
+      ];
     }),
   );
 
@@ -67,10 +70,13 @@ const coreDistExports = (exports: Record<string, string>) =>
       const mappedKey = key === "."
         ? "./core"
         : key.replace(/^\.\//, "./core/");
-      return [mappedKey, {
-        types: js.replace(/\.js$/, ".d.ts"),
-        default: js,
-      }];
+      return [
+        mappedKey,
+        {
+          types: js.replace(/\.js$/, ".d.ts"),
+          default: js,
+        },
+      ];
     }),
   );
 
@@ -118,7 +124,9 @@ const jsrOnly = Object.entries(ui.imports as Imports)
 if (jsrOnly.length > 0) {
   console.log(
     `  note     jsr-only imports skipped in package.json: ${
-      jsrOnly.join(", ")
+      jsrOnly.join(
+        ", ",
+      )
     }`,
   );
 }

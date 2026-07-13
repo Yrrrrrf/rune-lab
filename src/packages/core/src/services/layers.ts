@@ -90,9 +90,7 @@ function resolveStoreDependencies(dependsOn: string[] | undefined) {
         return [depId, depStore] as const;
       }),
     { concurrency: "unbounded" },
-  ).pipe(
-    Effect.map((results) => new Map(results)),
-  );
+  ).pipe(Effect.map((results) => new Map(results)));
 }
 
 function registerStoreFinalizer(store: unknown, storeId: string) {

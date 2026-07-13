@@ -169,8 +169,9 @@ export function formatMoney(
 ): string {
   return toDecimal(money, ({ value, currency }) => {
     const code = currencyCode ??
-      Object.entries(CURRENCY_MAP).find(([, c]) => c.code === currency.code)
-        ?.[0] ??
+      Object.entries(CURRENCY_MAP).find(
+        ([, c]) => c.code === currency.code,
+      )?.[0] ??
       currency.code;
 
     return new Intl.NumberFormat(locale, {

@@ -1,16 +1,17 @@
 import { Context, Layer } from "effect";
 import type { StoreRegistryEntry } from "../plugin/manifest.ts";
 
-export class RegistryService
-  extends Context.Tag("@rune-lab/core/RegistryService")<
-    RegistryService,
-    {
-      register(entry: StoreRegistryEntry): void;
-      get(id: string): StoreRegistryEntry | undefined;
-      entries(): StoreRegistryEntry[];
-      clear(): void;
-    }
-  >() {}
+export class RegistryService extends Context.Tag(
+  "@rune-lab/core/RegistryService",
+)<
+  RegistryService,
+  {
+    register(entry: StoreRegistryEntry): void;
+    get(id: string): StoreRegistryEntry | undefined;
+    entries(): StoreRegistryEntry[];
+    clear(): void;
+  }
+>() {}
 
 export const makeRegistryLayer = (): Layer.Layer<
   RegistryService,

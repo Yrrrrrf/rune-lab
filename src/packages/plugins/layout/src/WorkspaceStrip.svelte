@@ -10,12 +10,7 @@
     onSelect?: (id: string, item: WorkspaceItem) => void;
   }
 
-  let {
-    items = [],
-    globalActions,
-    activeId,
-    onSelect,
-  }: Props = $props();
+  let { items = [], globalActions, activeId, onSelect }: Props = $props();
 
   function handleWorkspaceClick(item: WorkspaceItem) {
     onSelect?.(item.id, item);

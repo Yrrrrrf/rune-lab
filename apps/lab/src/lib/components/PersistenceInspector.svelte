@@ -31,10 +31,7 @@
     const entries: [string, string][] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (
-        key &&
-        (RL_KEYS.includes(key) || key.startsWith(RL_LAYOUT_PREFIX))
-      ) {
+      if (key && (RL_KEYS.includes(key) || key.startsWith(RL_LAYOUT_PREFIX))) {
         entries.push([key, localStorage.getItem(key) ?? ""]);
       }
     }
@@ -46,10 +43,7 @@
     const entries: [string, string][] = [];
     for (let i = 0; i < sessionStorage.length; i++) {
       const key = sessionStorage.key(i);
-      if (
-        key &&
-        (RL_KEYS.includes(key) || key.startsWith(RL_LAYOUT_PREFIX))
-      ) {
+      if (key && (RL_KEYS.includes(key) || key.startsWith(RL_LAYOUT_PREFIX))) {
         entries.push([key, sessionStorage.getItem(key) ?? ""]);
       }
     }

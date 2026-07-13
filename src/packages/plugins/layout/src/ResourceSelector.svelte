@@ -37,7 +37,8 @@
   const userDictionary =
     getContext<Record<string, (...args: unknown[]) => string>>(
       "rl:dictionary",
-    ) ?? {};
+    ) ??
+      {};
 
   /**
    * Resolve a label for an item through the message chain:
@@ -53,7 +54,9 @@
     if (
       typeof (m as Record<string, (...args: unknown[]) => string>)[key] ===
         "function"
-    ) return (m as Record<string, (...args: unknown[]) => string>)[key]();
+    ) {
+      return (m as Record<string, (...args: unknown[]) => string>)[key]();
+    }
     return key;
   }
 

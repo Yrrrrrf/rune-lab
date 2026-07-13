@@ -54,10 +54,7 @@
 
     // 1. Match sections
     for (const sec of sections) {
-      const score = Math.max(
-        fuzzyScore(q, sec.label),
-        fuzzyScore(q, sec.id),
-      );
+      const score = Math.max(fuzzyScore(q, sec.label), fuzzyScore(q, sec.id));
       if (score > 0) {
         list.push({
           type: "section",

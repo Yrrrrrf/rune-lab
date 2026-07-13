@@ -20,8 +20,10 @@
   });
 
   const groupedEntries = $derived.by(() => {
-    const groups: Record<string, Record<string, typeof shortcutStore.entries>> =
-      {};
+    const groups: Record<
+      string,
+      Record<string, typeof shortcutStore.entries>
+    > = {};
     for (const entry of filteredEntries) {
       const scope = entry.scope ?? "global";
       const category = entry.category ?? "General";
@@ -70,8 +72,8 @@
 
     const combo = parts.join("+");
     if (combo && recordingId) {
-      const original = shortcutStore.entries.find((entry) =>
-        entry.id === recordingId
+      const original = shortcutStore.entries.find(
+        (entry) => entry.id === recordingId,
       );
       if (original) {
         // Exercise register/unregister

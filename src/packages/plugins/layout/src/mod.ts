@@ -33,12 +33,7 @@ export const getLanguageStore: () => ConfigStore<Language, "code"> =
 
 export const getThemeStore: () => ConfigStore<Theme, "name"> = createAccessor<
   ConfigStore<Theme, "name">
->(
-  LAYOUT_CONTEXT.theme,
-  "getThemeStore()",
-  "ThemeStore",
-  "LayoutPlugin",
-);
+>(LAYOUT_CONTEXT.theme, "getThemeStore()", "ThemeStore", "LayoutPlugin");
 
 export * from "./store.svelte.ts";
 export * from "./types.ts";

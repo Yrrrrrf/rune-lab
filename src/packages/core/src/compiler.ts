@@ -83,9 +83,7 @@ function makeBackgroundSynchronizersLayer(options: {
             });
           }),
           (unsubscribe) => Effect.sync(() => unsubscribe()),
-        ).pipe(
-          Effect.flatMap(() => Effect.never),
-        );
+        ).pipe(Effect.flatMap(() => Effect.never));
 
         yield* Effect.forkScoped(localeEffect);
       }

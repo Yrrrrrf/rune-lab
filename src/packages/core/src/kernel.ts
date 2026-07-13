@@ -62,10 +62,7 @@ export function createKernel<TCells = RuneLabCells>(
   },
 ): Kernel<TCells> {
   const { runtime, resolvedPlugins, sortedEntries, registry } =
-    compileEnvironment(
-      pluginsInput,
-      options,
-    );
+    compileEnvironment(pluginsInput, options);
 
   const ctx = runtime.runSync(Effect.context());
 

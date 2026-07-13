@@ -19,9 +19,7 @@ import { getAppStore } from "./app.svelte.ts";
 
 describe("Fail-fast context accessors", () => {
   it("should throw a helpful error for getAppStore", () => {
-    expect(() => getAppStore()).toThrow(
-      /getAppStore\(\) found no AppStore/i,
-    );
+    expect(() => getAppStore()).toThrow(/getAppStore\(\) found no AppStore/i);
   });
 
   it("should throw a helpful error for getLayoutStore", () => {

@@ -32,11 +32,14 @@ export class ToastStore {
     // Generate id: use crypto.randomUUID if available, else fallback
     let id: string;
     if (
-      typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+      typeof crypto !== "undefined" &&
+      typeof crypto.randomUUID === "function"
     ) {
       id = crypto.randomUUID();
     } else {
-      id = "toast-" + Math.random().toString(36).substring(2, 9) + "-" +
+      id = "toast-" +
+        Math.random().toString(36).substring(2, 9) +
+        "-" +
         Date.now();
     }
 

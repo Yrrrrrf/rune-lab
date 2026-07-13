@@ -9,8 +9,6 @@
     "@std/assert": "jsr:@std/assert"
   },
   "publish": {
-    "exclude": [
-      "**/*.test.ts"
-    ]
+    "exclude": ["**/*.test.ts"]
   }
 }

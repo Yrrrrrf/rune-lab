@@ -73,8 +73,9 @@ export const themeStore: ConfigStore<Theme, "name"> = createConfigStore<
 
 // System preference detection — only if no persisted value was loaded
 if (!themeStore.current && BROWSER) {
-  const prefersDark =
-    globalThis.matchMedia("(prefers-color-scheme: dark)").matches;
+  const prefersDark = globalThis.matchMedia(
+    "(prefers-color-scheme: dark)",
+  ).matches;
   const systemDefault = prefersDark ? "dark" : "light";
   if (themeStore.get(systemDefault)) {
     themeStore.set(systemDefault);
