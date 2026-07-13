@@ -1,4 +1,3 @@
-<!-- src/client/sdk/ui/src/features/config/CommandPalette.svelte -->
 <script lang="ts">
   import { tick } from "svelte";
   import type { Command } from "../types.ts";
@@ -21,9 +20,7 @@
   let selectedIndex = $state(0);
   let navigationStack = $state<string[]>([]);
 
-  const currentParentId = $derived(
-    navigationStack[navigationStack.length - 1],
-  );
+  const currentParentId = $derived(navigationStack[navigationStack.length - 1]);
   const filtered = $derived(commandStore.search(query, currentParentId));
 
   $effect(() => {
@@ -56,9 +53,7 @@
     if (isOpen && filtered.length > 0) {
       // Use a small delay to ensure the DOM has updated
       tick().then(() => {
-        const selectedElement = dialog?.querySelector(
-          ".menu li button.active",
-        );
+        const selectedElement = dialog?.querySelector(".menu li button.active");
         selectedElement?.scrollIntoView({ block: "nearest" });
       });
     }
@@ -170,8 +165,7 @@
               <button
                 onclick={() => handleAction(cmd)}
                 class="
-                  flex justify-between items-center py-3 {i ===
-                  selectedIndex
+                  flex justify-between items-center py-3 {i === selectedIndex
                   ? 'active bg-primary text-primary-content'
                   : ''}
                 "
@@ -189,9 +183,9 @@
                 </div>
                 <div class="flex items-center gap-2">
                   {#if cmd.children && cmd.children.length > 0}
-                    <span
-                      class="badge badge-sm badge-outline opacity-50"
-                    >{cmd.children.length}</span>
+                    <span class="badge badge-sm badge-outline opacity-50">{
+                      cmd.children.length
+                    }</span>
                     <span class="text-xs opacity-40">→</span>
                   {:else}
                     <span class="text-xs opacity-40">↵</span>

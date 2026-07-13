@@ -22,6 +22,7 @@
   ],
   "imports": {
     "vite-plus": "npm:vite-plus",
+    "typescript": "npm:typescript@6",
     "@vitest/utils": "npm:vitest/utils",
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom"
   },
