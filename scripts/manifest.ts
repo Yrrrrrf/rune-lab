@@ -80,7 +80,7 @@ for (const pkgPath of packages) {
   try {
     const pkgDeno = JSON.parse(await Deno.readTextFile(`${pkgPath}/deno.json`));
     const imports = pkgDeno.imports || {};
-    for (const [key, val] of Object.entries(imports)) {
+    for (const [_, val] of Object.entries(imports)) {
       if (typeof val === "string" && val.startsWith("npm:")) {
         const { name, range } = parseNpmSpec(val);
         if (!DEV_DEPS.has(name) && !name.startsWith("@rune-lab/")) {
