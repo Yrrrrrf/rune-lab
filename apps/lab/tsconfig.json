@@ -18,6 +18,5 @@
       "@rune-lab/observer": ["../../src/packages/plugins/observer/src/mod.ts"],
       "@rune-lab/palettes": ["../../src/packages/plugins/palettes/src/mod.ts"]
     }
-  },
-  "exclude": ["build/**", "dist/**", ".svelte-kit/**", "node_modules/**"]
+  }
 }

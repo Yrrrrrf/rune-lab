@@ -1,13 +1,13 @@
 <script lang="ts">
   import "./layout.css";
-  import { RuneProvider, version } from "rune-lab";
-  import type { NavigationSection } from "rune-lab/layout";
+  import { RuneProvider, version } from "@rune-lab/svelte";
+  import type { NavigationSection } from "@rune-lab/layout";
   import { m } from "$lib/i18n/messages.ts";
-  // import { LayoutPlugin } from "rune-lab";
-  // import { PalettesPlugin } from "rune-lab";
-  // import { MoneyPlugin } from "rune-lab";
-  // import { createParaglideAdapter, I18nPlugin } from "rune-lab";
-  // import { ObserverPlugin } from "rune-lab";
+  // import { LayoutPlugin } from "@rune-lab/svelte";
+  // import { PalettesPlugin } from "@rune-lab/svelte";
+  // import { MoneyPlugin } from "@rune-lab/svelte";
+  // import { createParaglideAdapter, I18nPlugin } from "@rune-lab/svelte";
+  // import { ObserverPlugin } from "@rune-lab/svelte";
   import * as paraglideRuntime from "$lib/i18n/paraglide/runtime.js";
   import AppLayout from "./AppLayout.svelte";
 

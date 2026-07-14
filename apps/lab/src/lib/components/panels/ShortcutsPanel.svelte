@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { ShortcutEntry } from "rune-lab/palettes";
-  import { getShortcutStore } from "rune-lab/palettes";
+  import type { ShortcutEntry } from "@rune-lab/palettes";
+  import { getShortcutStore } from "@rune-lab/palettes";
 
   const shortcutStore = getShortcutStore();
 
