@@ -1,4 +1,4 @@
-<!-- src/lib/layout/WorkspaceLayout.svelte -->
+<!-- src/layout/WorkspaceLayout.svelte -->
 <script module lang="ts">
   import type { Snippet } from "svelte";
   import type { LayoutConfig } from "./types.ts";

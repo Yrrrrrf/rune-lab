@@ -1,3 +1,8 @@
+[doc('Package one workspace member: src/packages/<dir>/src → build/dist/<out>')]
+[group('Build')]
+svelte-package dir out=dir:
+    cd src/packages/{{ dir }}; deno run -A npm:@sveltejs/package -i src -o "{{ justfile_directory() }}/build/dist/{{ out }}"
+
 [doc('Build the rune-lab package (ui): deno.json -> build/{dist, package.json, README, LICENSE}')]
 [group('Build')]
 build:
@@ -6,16 +11,14 @@ build:
     # * Generate build/package.json from root + ui deno.json, copy README & LICENSE
     deno run -A scripts/manifest.ts
     # * Compile i18n messages → paraglide runtime (returns when ui regains an inlang project)
-    # just paraglide ./src/packages/ui/src/lib/i18n/project.inlang ./src/packages/ui/src/lib/i18n/paraglide
-    # * Bundle the svelte package (src/lib → build/dist)
-    cd src/packages/ui; deno run -A npm:@sveltejs/package -i src/lib -o ../../../build/dist
-    # * Bundle the core package (src -> build/dist/core)
-    cd src/packages/core; deno run -A npm:@sveltejs/package -i src -o ../../../build/dist/core
-    # * Bundle the plugins
-    cd src/packages/plugins/layout; deno run -A npm:@sveltejs/package -i src -o ../../../../build/dist/plugins/layout
-    cd src/packages/plugins/palettes; deno run -A npm:@sveltejs/package -i src/lib -o ../../../../build/dist/plugins/palettes
-    cd src/packages/plugins/observer; deno run -A npm:@sveltejs/package -i src/lib -o ../../../../build/dist/plugins/observer
-    cd src/packages/plugins/i18n; deno run -A npm:@sveltejs/package -i src -o ../../../../build/dist/plugins/i18n
+    # just paraglide ./src/packages/ui/src/i18n/project.inlang ./src/packages/ui/src/i18n/paraglide
+    # * Bundle workspace members
+    just svelte-package ui ""
+    just svelte-package core
+    just svelte-package plugins/layout
+    just svelte-package plugins/palettes
+    just svelte-package plugins/observer
+    just svelte-package plugins/i18n
     # * Format build output
     deno fmt build
     # * Post-build: strip i18n artifacts, rewrite .ts→.js imports, inline the version

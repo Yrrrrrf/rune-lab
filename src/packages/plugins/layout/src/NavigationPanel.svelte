@@ -1,4 +1,4 @@
-<!-- src/lib/layout/NavigationPanel.svelte -->
+<!-- src/layout/NavigationPanel.svelte -->
 <script lang="ts">
   import type { Snippet } from "svelte";
   import type { NavigationItem, NavigationSection } from "./types.ts";

@@ -1,4 +1,4 @@
-<!-- src/lib/layout/DetailPanel.svelte -->
+<!-- src/layout/DetailPanel.svelte -->
 <script lang="ts">
   import type { Snippet } from "svelte";
 

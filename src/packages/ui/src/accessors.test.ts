@@ -8,14 +8,16 @@ vi.mock("svelte", () => ({
 
 import { getAppStore } from "./app.svelte.ts";
 import {
-  getCommandStore,
-  getCurrencyStore,
   getLanguageStore,
   getLayoutStore,
-  getShortcutStore,
   getThemeStore,
+} from "../../plugins/layout/src/mod.ts";
+import {
+  getCommandStore,
+  getShortcutStore,
   getToastStore,
-} from "./stores.svelte.ts";
+} from "../../plugins/palettes/src/mod.ts";
+import { getCurrencyStore } from "../../plugins/i18n/src/money/mod.ts";
 
 describe("Fail-fast context accessors", () => {
   it("should throw a helpful error for getAppStore", () => {

@@ -2,7 +2,7 @@
   "name": "@rune-lab/svelte",
   "version": "0.5.0",
   "exports": {
-    ".": "./src/lib/mod.ts"
+    ".": "./src/mod.ts"
   },
   "imports": {
     "@rune-lab/core": "workspace:*",

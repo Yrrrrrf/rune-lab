@@ -1,4 +1,4 @@
-// sdk/ui/src/lib/features/config/APP_CONFIGURATIONS.ts
+// sdk/ui/src/features/config/APP_CONFIGURATIONS.ts
 // Single source of truth for all configuration dimensions.
 // Frozen at import time — must not be mutated at runtime.
 

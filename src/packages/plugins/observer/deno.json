@@ -2,7 +2,7 @@
   "name": "@rune-lab/observer",
   "version": "0.0.1",
   "exports": {
-    ".": "./src/lib/mod.ts"
+    ".": "./src/mod.ts"
   },
   "imports": {
     "svelte": "npm:svelte@^5"

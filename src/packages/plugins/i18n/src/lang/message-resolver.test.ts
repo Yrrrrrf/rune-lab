@@ -7,7 +7,7 @@ import {
   batchResolveMessages,
   createMessageResolver,
   hasMessage,
-} from "../../../../ui/src/lib/i18n/message-resolver.ts";
+} from "./message-resolver.ts";
 
 describe("MessageResolver", () => {
   const mockMessages = {

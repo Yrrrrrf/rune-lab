@@ -25,8 +25,8 @@ export default defineConfig({
     // todo: Remove this stuff because the main plugin will handle this
     // todo: Remove this stuff because the main plugin will handle this
     // paraglideVitePlugin({
-    //   project: "./src/lib/i18n/project.inlang",
-    //   outdir: "./src/lib/i18n/paraglide",
+    //   project: "./src/i18n/project.inlang",
+    //   outdir: "./src/i18n/paraglide",
     // }),
   ],
 });

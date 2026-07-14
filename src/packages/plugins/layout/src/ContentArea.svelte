@@ -1,4 +1,4 @@
-<!-- src/lib/layout/ContentArea.svelte -->
+<!-- src/layout/ContentArea.svelte -->
 <script lang="ts">
   import type { Snippet } from "svelte";
 

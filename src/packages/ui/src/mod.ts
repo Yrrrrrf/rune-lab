@@ -12,5 +12,5 @@ export * from "./persistence/usePersistence.ts";
 
 export { default as RuneProvider } from "./RuneProvider.svelte";
 
-import pkgConfig from "../../deno.json" with { type: "json" };
+import pkgConfig from "../deno.json" with { type: "json" };
 export const version = (): string => pkgConfig.version;

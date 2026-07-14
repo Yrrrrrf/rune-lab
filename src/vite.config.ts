@@ -35,7 +35,7 @@ export default defineConfig({
         tailwindcss(),
         paraglideVitePlugin({
           project: `${PLUGINS}/i18n/src/lang/project.inlang`,
-          outdir: `${PLUGINS}/i18n/src/lib/paraglide`,
+          outdir: `${PLUGINS}/i18n/src/lang/paraglide`,
           // localStorage first, then browser language, then base locale
           strategy: ["localStorage", "preferredLanguage", "baseLocale"],
         }),

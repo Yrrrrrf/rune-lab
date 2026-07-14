@@ -1,4 +1,4 @@
-// sdk/ui/src/lib/layout/connection-factory.ts
+// sdk/ui/src/layout/connection-factory.ts
 // Connection functions that generate reactive prop bindings from LayoutStore.
 // Svelte 5 doesn't support React-style HOCs — this is the idiomatic alternative.
 

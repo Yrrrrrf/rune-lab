@@ -1,4 +1,4 @@
-<!-- src/lib/features/layout/smart/ConnectedWorkspaceStrip.svelte -->
+<!-- src/features/layout/smart/ConnectedWorkspaceStrip.svelte -->
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { createWorkspaceConnection } from "./connection-factory.ts";

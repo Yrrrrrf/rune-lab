@@ -1,4 +1,4 @@
-<!-- src/lib/features/shortcuts/ShortcutPalette.svelte -->
+<!-- src/features/shortcuts/ShortcutPalette.svelte -->
 <script lang="ts">
   import { getAppStore } from "@rune-lab/svelte";
   import { LAYOUT_SHORTCUTS } from "rune-lab/layout";

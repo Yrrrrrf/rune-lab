@@ -1,4 +1,4 @@
-<!-- src/lib/features/layout/smart/ConnectedNavigationPanel.svelte -->
+<!-- src/features/layout/smart/ConnectedNavigationPanel.svelte -->
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { createNavigationConnection } from "./connection-factory.ts";

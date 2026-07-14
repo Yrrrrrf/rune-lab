@@ -80,8 +80,8 @@ Source: `src/packages/core/src/`. Public surface (`mod.ts`):
 
 ### 1.2 Ui — the adapter
 
-Source: `src/packages/ui/src/lib/` (flat — the old `kernel/src/` nesting is
-gone). Exactly seven concerns, none of them a domain:
+Source: `src/packages/ui/src/` (flat — the old `kernel/src/` nesting is gone).
+Exactly seven concerns, none of them a domain:
 
 | Export                                          | Job                                                                                                                                                                                                                                                                                      |
 | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
