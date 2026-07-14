@@ -1,219 +1,219 @@
 <script lang="ts">
-  import { getLayoutStore } from "@rune-lab/layout";
-  import { getSettingsSections, type SettingsSection } from "@rune-lab/svelte";
-  import { onMount, tick } from "svelte";
-  import { getCommandStore, getShortcutStore } from "./mod.ts";
+import { getLayoutStore } from "@rune-lab/layout";
+import { getSettingsSections, type SettingsSection } from "@rune-lab/svelte";
+import { onMount, tick } from "svelte";
+import { getCommandStore, getShortcutStore } from "./mod.ts";
 
-  const sections = getSettingsSections();
-  const shortcutStore = getShortcutStore();
-  const commandStore = getCommandStore();
-  const layoutStore = getLayoutStore();
+const sections = getSettingsSections();
+const shortcutStore = getShortcutStore();
+const commandStore = getCommandStore();
+const layoutStore = getLayoutStore();
 
-  let dialog: HTMLDialogElement;
-  let isOpen = $state(false);
-  let activeSectionId = $state("general");
-  let searchQuery = $state("");
+let dialog: HTMLDialogElement;
+let isOpen = $state(false);
+let activeSectionId = $state("general");
+let searchQuery = $state("");
 
-  // Subsequence scoring fuzzy matcher
-  function fuzzyScore(query: string, text: string): number {
-    const q = query.toLowerCase();
-    const t = text.toLowerCase();
-    if (!q) return 0;
-    if (t.includes(q)) return 100 - t.indexOf(q);
+// Subsequence scoring fuzzy matcher
+function fuzzyScore(query: string, text: string): number {
+  const q = query.toLowerCase();
+  const t = text.toLowerCase();
+  if (!q) return 0;
+  if (t.includes(q)) return 100 - t.indexOf(q);
 
-    let score = 0;
-    let qIdx = 0;
-    for (let i = 0; i < t.length && qIdx < q.length; i++) {
-      if (t[i] === q[qIdx]) {
-        score += 10;
-        qIdx++;
-        if (i > 0 && t[i - 1] === q[qIdx - 2]) {
-          score += 5;
-        }
+  let score = 0;
+  let qIdx = 0;
+  for (let i = 0; i < t.length && qIdx < q.length; i++) {
+    if (t[i] === q[qIdx]) {
+      score += 10;
+      qIdx++;
+      if (i > 0 && t[i - 1] === q[qIdx - 2]) {
+        score += 5;
       }
     }
-    return qIdx === q.length ? score : 0;
   }
+  return qIdx === q.length ? score : 0;
+}
 
-  // Reactive search results
-  interface SearchResult {
-    type: "section" | "shortcut" | "command";
-    title: string;
-    description?: string;
-    badge?: string;
-    sectionId: string;
-    action?: () => void;
-    score: number;
-  }
+// Reactive search results
+interface SearchResult {
+  type: "section" | "shortcut" | "command";
+  title: string;
+  description?: string;
+  badge?: string;
+  sectionId: string;
+  action?: () => void;
+  score: number;
+}
 
-  const searchResults = $derived.by(() => {
-    const q = searchQuery.trim();
-    if (!q) return [];
+const searchResults = $derived.by(() => {
+  const q = searchQuery.trim();
+  if (!q) return [];
 
-    const list: SearchResult[] = [];
+  const list: SearchResult[] = [];
 
-    // 1. Match sections
-    for (const sec of sections) {
-      const score = Math.max(fuzzyScore(q, sec.label), fuzzyScore(q, sec.id));
-      if (score > 0) {
-        list.push({
-          type: "section",
-          title: sec.label,
-          description: `Go to ${sec.label} settings section`,
-          badge: "Section",
-          sectionId: sec.id,
-          score,
-        });
-      }
-    }
-
-    // 2. Match shortcuts
-    for (const sh of shortcutStore.entries) {
-      const score = Math.max(
-        fuzzyScore(q, sh.label || ""),
-        fuzzyScore(q, sh.keys || ""),
-        fuzzyScore(q, sh.category || ""),
-      );
-      if (score > 0) {
-        list.push({
-          type: "shortcut",
-          title: sh.label || "",
-          description: `Shortcut: ${sh.keys || ""}`,
-          badge: sh.category || "Shortcut",
-          sectionId: "shortcuts",
-          score,
-        });
-      }
-    }
-
-    // 3. Match commands
-    for (const cmd of commandStore.commands) {
-      const score = Math.max(
-        fuzzyScore(q, cmd.label),
-        fuzzyScore(q, cmd.category || ""),
-      );
-      if (score > 0) {
-        list.push({
-          type: "command",
-          title: cmd.label,
-          description: `Command Category: ${cmd.category || "General"}`,
-          badge: "Command",
-          sectionId: "commands", // fallback or map
-          action: () => {
-            // execute command if it has action
-            if (cmd.action) cmd.action();
-          },
-          score,
-        });
-      }
-    }
-
-    return list.sort((a, b) => b.score - a.score);
-  });
-
-  const activeSection = $derived(
-    sections.find((s) => s.id === activeSectionId) || sections[0],
-  );
-
-  function handleSectionChange(id: string) {
-    activeSectionId = id;
-    searchQuery = ""; // Clear search when switching tab
-    const newHash = `#settings/${id}`;
-    if (window.location.hash !== newHash) {
-      history.replaceState(null, "", newHash);
+  // 1. Match sections
+  for (const sec of sections) {
+    const score = Math.max(fuzzyScore(q, sec.label), fuzzyScore(q, sec.id));
+    if (score > 0) {
+      list.push({
+        type: "section",
+        title: sec.label,
+        description: `Go to ${sec.label} settings section`,
+        badge: "Section",
+        sectionId: sec.id,
+        score,
+      });
     }
   }
 
-  function handleDialogClose() {
-    isOpen = false;
-    searchQuery = "";
-    // Strip hash from URL cleanly
-    if (window.location.hash.startsWith("#settings")) {
-      history.pushState(
-        null,
-        "",
-        window.location.pathname + window.location.search,
-      );
+  // 2. Match shortcuts
+  for (const sh of shortcutStore.entries) {
+    const score = Math.max(
+      fuzzyScore(q, sh.label || ""),
+      fuzzyScore(q, sh.keys || ""),
+      fuzzyScore(q, sh.category || ""),
+    );
+    if (score > 0) {
+      list.push({
+        type: "shortcut",
+        title: sh.label || "",
+        description: `Shortcut: ${sh.keys || ""}`,
+        badge: sh.category || "Shortcut",
+        sectionId: "shortcuts",
+        score,
+      });
     }
   }
 
-  function handleResultClick(result: SearchResult) {
-    if (result.type === "command" && result.action) {
-      result.action();
+  // 3. Match commands
+  for (const cmd of commandStore.commands) {
+    const score = Math.max(
+      fuzzyScore(q, cmd.label),
+      fuzzyScore(q, cmd.category || ""),
+    );
+    if (score > 0) {
+      list.push({
+        type: "command",
+        title: cmd.label,
+        description: `Command Category: ${cmd.category || "General"}`,
+        badge: "Command",
+        sectionId: "commands", // fallback or map
+        action: () => {
+          // execute command if it has action
+          if (cmd.action) cmd.action();
+        },
+        score,
+      });
+    }
+  }
+
+  return list.sort((a, b) => b.score - a.score);
+});
+
+const activeSection = $derived(
+  sections.find((s) => s.id === activeSectionId) || sections[0],
+);
+
+function handleSectionChange(id: string) {
+  activeSectionId = id;
+  searchQuery = ""; // Clear search when switching tab
+  const newHash = `#settings/${id}`;
+  if (window.location.hash !== newHash) {
+    history.replaceState(null, "", newHash);
+  }
+}
+
+function handleDialogClose() {
+  isOpen = false;
+  searchQuery = "";
+  // Strip hash from URL cleanly
+  if (window.location.hash.startsWith("#settings")) {
+    history.pushState(
+      null,
+      "",
+      window.location.pathname + window.location.search,
+    );
+  }
+}
+
+function handleResultClick(result: SearchResult) {
+  if (result.type === "command" && result.action) {
+    result.action();
+    dialog.close();
+  } else {
+    handleSectionChange(result.sectionId);
+  }
+}
+
+function updateFromHash() {
+  const hash = window.location.hash;
+  if (hash.startsWith("#settings")) {
+    const parts = hash.split("/");
+    const section = parts[1] || "general";
+    activeSectionId = section;
+    if (!isOpen) {
+      isOpen = true;
+      dialog?.showModal();
+    }
+  } else {
+    if (isOpen) {
+      isOpen = false;
+      dialog?.close();
+    }
+  }
+}
+
+onMount(() => {
+  // Check initial hash
+  updateFromHash();
+
+  window.addEventListener("hashchange", updateFromHash);
+  return () => {
+    window.removeEventListener("hashchange", updateFromHash);
+  };
+});
+
+// Track state changes to open/close native dialog
+$effect(() => {
+  if (isOpen) {
+    if (dialog && !dialog.open) {
+      dialog.showModal();
+    }
+  } else {
+    if (dialog && dialog.open) {
       dialog.close();
-    } else {
-      handleSectionChange(result.sectionId);
     }
   }
+});
 
-  function updateFromHash() {
-    const hash = window.location.hash;
-    if (hash.startsWith("#settings")) {
-      const parts = hash.split("/");
-      const section = parts[1] || "general";
-      activeSectionId = section;
-      if (!isOpen) {
+// Register command to open settings
+$effect(() => {
+  commandStore.register({
+    id: "rl:settings:open",
+    label: "Preferences: Open Settings",
+    category: "Preferences",
+    action: () => {
+      const targetHash = `#settings/${activeSectionId}`;
+      if (window.location.hash === targetHash) {
         isOpen = true;
         dialog?.showModal();
+      } else {
+        window.location.hash = targetHash;
       }
-    } else {
-      if (isOpen) {
-        isOpen = false;
-        dialog?.close();
-      }
-    }
+    },
+  });
+
+  return () => commandStore.unregister("rl:settings:open");
+});
+
+// Watch for layout navigation changes to open settings
+$effect(() => {
+  if (layoutStore.activeNavItemId === "system.settings") {
+    window.location.hash = `#settings/general`;
+    layoutStore.navigate("");
   }
-
-  onMount(() => {
-    // Check initial hash
-    updateFromHash();
-
-    window.addEventListener("hashchange", updateFromHash);
-    return () => {
-      window.removeEventListener("hashchange", updateFromHash);
-    };
-  });
-
-  // Track state changes to open/close native dialog
-  $effect(() => {
-    if (isOpen) {
-      if (dialog && !dialog.open) {
-        dialog.showModal();
-      }
-    } else {
-      if (dialog && dialog.open) {
-        dialog.close();
-      }
-    }
-  });
-
-  // Register command to open settings
-  $effect(() => {
-    commandStore.register({
-      id: "rl:settings:open",
-      label: "Preferences: Open Settings",
-      category: "Preferences",
-      action: () => {
-        const targetHash = `#settings/${activeSectionId}`;
-        if (window.location.hash === targetHash) {
-          isOpen = true;
-          dialog?.showModal();
-        } else {
-          window.location.hash = targetHash;
-        }
-      },
-    });
-
-    return () => commandStore.unregister("rl:settings:open");
-  });
-
-  // Watch for layout navigation changes to open settings
-  $effect(() => {
-    if (layoutStore.activeNavItemId === "system.settings") {
-      window.location.hash = `#settings/general`;
-      layoutStore.navigate("");
-    }
-  });
+});
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->

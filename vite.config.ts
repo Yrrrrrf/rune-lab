@@ -17,19 +17,13 @@ const svelteProject = (
   root: `${root}/${name}`,
   // deno-lint-ignore no-explicit-any
   plugins: [svelte() as any, ...extraPlugins],
-  server: {
-    fs: {
-      allow: [resolve(".")],
-    },
-  },
+  // server: {
+  //   fs: {
+  //     allow: [resolve(".")],
+  //   },
+  // },
   resolve: {
     alias: {
-      "@rune-lab/i18n/money": resolve(
-        "./src/packages/plugins/i18n/src/money/mod.ts",
-      ),
-      "@rune-lab/i18n/lang": resolve(
-        "./src/packages/plugins/i18n/src/lang/mod.ts",
-      ),
       "@rune-lab/core": resolve("./src/packages/core/src/mod.ts"),
       "@rune-lab/svelte": resolve("./src/packages/ui/src/mod.ts"),
       "@rune-lab/i18n": resolve("./src/packages/plugins/i18n/src/mod.ts"),

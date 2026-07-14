@@ -1,19 +1,19 @@
 <script lang="ts">
-  import { getThemeStore } from "./mod.ts";
-  import ResourceSelector from "./ResourceSelector.svelte";
-  import { getThemeName } from "./theme.svelte.ts";
+import { getThemeStore } from "./mod.ts";
+import ResourceSelector from "./ResourceSelector.svelte";
+import { getThemeName } from "./theme.svelte.ts";
 
-  const themeStore = getThemeStore();
+const themeStore = getThemeStore();
 
-  let {
-    themes = [],
-    current = $bindable(String(themeStore.current)),
-    onchange,
-  }: {
-    themes?: string[];
-    current?: string;
-    onchange?: (value: string) => void;
-  } = $props();
+let {
+  themes = [],
+  current = $bindable(String(themeStore.current)),
+  onchange,
+}: {
+  themes?: string[];
+  current?: string;
+  onchange?: (value: string) => void;
+} = $props();
 </script>
 
 <ResourceSelector

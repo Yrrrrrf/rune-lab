@@ -1,45 +1,45 @@
 <script lang="ts">
-  import {
-    cookieDriver,
-    createInMemoryDriver,
-    localStorageDriver,
-    namespaced,
-    sessionStorageDriver,
-  } from "@rune-lab/svelte";
-  import LanguageSelector from "./LanguageSelector.svelte";
-  import { getLanguageStore, getLayoutStore, getThemeStore } from "./mod.ts";
-  import ThemeSelector from "./ThemeSelector.svelte";
+import {
+  cookieDriver,
+  createInMemoryDriver,
+  localStorageDriver,
+  namespaced,
+  sessionStorageDriver,
+} from "@rune-lab/svelte";
+import LanguageSelector from "./LanguageSelector.svelte";
+import { getLanguageStore, getLayoutStore, getThemeStore } from "./mod.ts";
+import ThemeSelector from "./ThemeSelector.svelte";
 
-  const themeStore = getThemeStore();
-  const languageStore = getLanguageStore();
-  const layoutStore = getLayoutStore();
+const themeStore = getThemeStore();
+const languageStore = getLanguageStore();
+const layoutStore = getLayoutStore();
 
-  let selectedDriver = $state("local");
+let selectedDriver = $state("local");
+
+if (typeof window !== "undefined") {
+  selectedDriver = window.localStorage.getItem("rl:persistence:driver") ||
+    "local";
+}
+
+function handleDriverChange(event: Event) {
+  const select = event.target as HTMLSelectElement;
+  const value = select.value;
+  selectedDriver = value;
 
   if (typeof window !== "undefined") {
-    selectedDriver = window.localStorage.getItem("rl:persistence:driver") ||
-      "local";
+    window.localStorage.setItem("rl:persistence:driver", value);
   }
 
-  function handleDriverChange(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    const value = select.value;
-    selectedDriver = value;
+  let driver = localStorageDriver;
+  if (value === "memory") driver = createInMemoryDriver();
+  else if (value === "session") driver = sessionStorageDriver;
+  else if (value === "cookie") driver = cookieDriver;
 
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("rl:persistence:driver", value);
-    }
-
-    let driver = localStorageDriver;
-    if (value === "memory") driver = createInMemoryDriver();
-    else if (value === "session") driver = sessionStorageDriver;
-    else if (value === "cookie") driver = cookieDriver;
-
-    const wrapped = namespaced(driver, "rl:");
-    themeStore.setDriver(wrapped);
-    languageStore.setDriver(wrapped);
-    layoutStore.setDriver(wrapped);
-  }
+  const wrapped = namespaced(driver, "rl:");
+  themeStore.setDriver(wrapped);
+  languageStore.setDriver(wrapped);
+  layoutStore.setDriver(wrapped);
+}
 </script>
 
 <div class="space-y-8 p-6 max-w-2xl">

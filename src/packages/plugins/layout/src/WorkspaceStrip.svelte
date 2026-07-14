@@ -1,21 +1,21 @@
 <!-- src/layout/WorkspaceStrip.svelte -->
 <script lang="ts">
-  import type { Snippet } from "svelte";
-  import type { WorkspaceItem } from "./types.ts";
+import type { Snippet } from "svelte";
+import type { WorkspaceItem } from "./types.ts";
 
-  interface Props {
-    items: WorkspaceItem[];
-    globalActions?: Snippet;
-    activeId?: string | null;
-    onSelect?: (id: string, item: WorkspaceItem) => void;
-  }
+interface Props {
+  items: WorkspaceItem[];
+  globalActions?: Snippet;
+  activeId?: string | null;
+  onSelect?: (id: string, item: WorkspaceItem) => void;
+}
 
-  let { items = [], globalActions, activeId, onSelect }: Props = $props();
+let { items = [], globalActions, activeId, onSelect }: Props = $props();
 
-  function handleWorkspaceClick(item: WorkspaceItem) {
-    onSelect?.(item.id, item);
-    item.onClick?.();
-  }
+function handleWorkspaceClick(item: WorkspaceItem) {
+  onSelect?.(item.id, item);
+  item.onClick?.();
+}
 </script>
 
 <div class="flex flex-col gap-2 w-full items-center">

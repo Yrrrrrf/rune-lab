@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { getAppStore } from "@rune-lab/svelte";
-  import { CurrencySelector } from "@rune-lab/i18n/money";
-  import { LanguageSelector, ThemeSelector } from "@rune-lab/layout";
-  import { m } from "$lib/i18n/messages.ts";
+import { CurrencySelector } from "@rune-lab/i18n";
+import { LanguageSelector, ThemeSelector } from "@rune-lab/layout";
+import { getAppStore } from "@rune-lab/svelte";
+import { m } from "$lib/i18n/messages.ts";
 
-  const appStore = getAppStore();
-  const isDev = true; // esm-env DEV not available in consumer, but we're always dev here
+const appStore = getAppStore();
+const isDev = true; // esm-env DEV not available in consumer, but we're always dev here
 </script>
 
 <header

@@ -44,14 +44,9 @@ def reshuffle [dist: path]: nothing -> nothing {
       mv $observer_src ($plugins_dest | path join "observer")
     }
 
-    let lang_src = ($plugins_src | path join "i18n" "lang")
-    if ($lang_src | path exists) {
-      mv $lang_src ($plugins_dest | path join "lang")
-    }
-
-    let money_src = ($plugins_src | path join "i18n" "money")
-    if ($money_src | path exists) {
-      mv $money_src ($plugins_dest | path join "money")
+    let i18n_src = ($plugins_src | path join "i18n")
+    if ($i18n_src | path exists) {
+      mv $i18n_src ($plugins_dest | path join "i18n")
     }
 
     rm -rf $plugins_src
@@ -69,29 +64,22 @@ def reshuffle [dist: path]: nothing -> nothing {
 # Remove inlang project files and test output that svelte-package copied into dist.
 def strip-i18n-artifacts [root: path, dist: path]: nothing -> nothing {
   let removals = [
-    ($dist | path join "src" "plugins" "money" "project.inlang")
-    ($dist | path join "src" "plugins" "money" "translations")
-    ($dist | path join "src" "plugins" "money" "paraglide" ".gitignore")
-    ($dist | path join "src" "plugins" "lang" "project.inlang")
-    ($dist | path join "src" "plugins" "lang" "translations")
-    ($dist | path join "src" "plugins" "lang" "paraglide" ".gitignore")
+    ($dist | path join "src" "plugins" "i18n" "lang" "project.inlang")
+    ($dist | path join "src" "plugins" "i18n" "lang" "translations")
+    ($dist | path join "src" "plugins" "i18n" "lang" "paraglide" ".gitignore")
   ]
   $removals | where {|p| $p | path exists } | each {|p|
     rm -r -f $p
     print $"  removed  ($p | path relative-to $root)"
   } | ignore
 
-  let money_dir = ($dist | path join "src" "plugins" "money")
-  if ($money_dir | path exists) {
-    glob ($money_dir | path join "**" "*.test.js") | each {|p|
+  let i18n_dir = ($dist | path join "src" "plugins" "i18n")
+  if ($i18n_dir | path exists) {
+    glob ($i18n_dir | path join "**" "*.test.js") | each {|p|
       rm -f $p
       print $"  removed  ($p | path relative-to $root)"
     } | ignore
-  }
-
-  let lang_dir = ($dist | path join "src" "plugins" "lang")
-  if ($lang_dir | path exists) {
-    glob ($lang_dir | path join "**" "*.test.js") | each {|p|
+    glob ($i18n_dir | path join "**" "*.test.d.ts") | each {|p|
       rm -f $p
       print $"  removed  ($p | path relative-to $root)"
     } | ignore
@@ -114,8 +102,7 @@ def patch-file [file: path, dist: path, version: string]: nothing -> record {
     | str replace --all --regex "@rune-lab/layout(\\b|/|$)" 'rune-lab/layout$1'
     | str replace --all --regex "@rune-lab/palettes(\\b|/|$)" 'rune-lab/palettes$1'
     | str replace --all --regex "@rune-lab/observer(\\b|/|$)" 'rune-lab/observer$1'
-    | str replace --all --regex "@rune-lab/i18n/money(\\b|/|$)" 'rune-lab/i18n/money$1'
-    | str replace --all --regex "@rune-lab/i18n(\\b|/|$)" 'rune-lab/i18n/money$1'
+    | str replace --all --regex "@rune-lab/i18n(\\b|/|$)" 'rune-lab/i18n$1'
     | str replace --all --regex "@rune-lab/svelte(\\b|/|$)" 'rune-lab$1'
     | str replace --all "@rune-lab" "rune-lab"
   )

@@ -1,103 +1,102 @@
 <script lang="ts">
-  import { getLayoutStore } from "@rune-lab/layout";
-  import {
-    getCommandStore,
-    getShortcutStore,
-    getToastStore,
-  } from "@rune-lab/palettes";
-  import { m } from "$lib/i18n/messages.ts";
+import { getLayoutStore } from "@rune-lab/layout";
+import {
+  getCommandStore,
+  getShortcutStore,
+  getToastStore,
+} from "@rune-lab/palettes";
+import { m } from "$lib/i18n/messages.ts";
 
-  const toastStore = getToastStore();
-  const shortcutStore = getShortcutStore();
-  const commandStore = getCommandStore();
-  const layoutStore = getLayoutStore();
+const toastStore = getToastStore();
+const shortcutStore = getShortcutStore();
+const commandStore = getCommandStore();
+const layoutStore = getLayoutStore();
 
-  // ── Toast Cannon ─────────────────────────────────────────
-  let toastDuration = $state(3000);
+// ── Toast Cannon ─────────────────────────────────────────
+let toastDuration = $state(3000);
 
-  function fireToast(type: "info" | "success" | "warning" | "error") {
-    toastStore.send(
-      `Test ${type} toast at ${new Date().toLocaleTimeString()}`,
-      type,
-      toastDuration,
-    );
-  }
+function fireToast(type: "info" | "success" | "warning" | "error") {
+  toastStore.send(
+    `Test ${type} toast at ${new Date().toLocaleTimeString()}`,
+    type,
+    toastDuration,
+  );
+}
 
-  function floodToasts() {
-    const types = ["info", "success", "warning", "error", "info"] as const;
-    types.forEach((t, i) => {
-      setTimeout(() => fireToast(t), i * 100);
-    });
-  }
+function floodToasts() {
+  const types = ["info", "success", "warning", "error", "info"] as const;
+  types.forEach((t, i) => {
+    setTimeout(() => fireToast(t), i * 100);
+  });
+}
 
-  // ── Shortcut Lab ─────────────────────────────────────────
-  let testShortcutKey = $state("ctrl+alt+h");
-  let testShortcutLabel = $state("Test Shortcut");
-  let testShortcutRegistered = $state(false);
+// ── Shortcut Lab ─────────────────────────────────────────
+let testShortcutKey = $state("ctrl+alt+h");
+let testShortcutLabel = $state("Test Shortcut");
+let testShortcutRegistered = $state(false);
 
-  function registerTestShortcut() {
-    shortcutStore.register({
-      id: "lab:test-shortcut",
-      keys: testShortcutKey,
-      label: testShortcutLabel,
-      category: m.lab_label(),
-      scope: "global",
-      handler: () => toastStore.success(`"${testShortcutLabel}" fired!`),
-    });
-    testShortcutRegistered = true;
-  }
+function registerTestShortcut() {
+  shortcutStore.register({
+    id: "lab:test-shortcut",
+    keys: testShortcutKey,
+    label: testShortcutLabel,
+    category: m.lab_label(),
+    scope: "global",
+    handler: () => toastStore.success(`"${testShortcutLabel}" fired!`),
+  });
+  testShortcutRegistered = true;
+}
 
-  function unregisterTestShortcut() {
-    shortcutStore.unregister("lab:test-shortcut");
-    testShortcutRegistered = false;
-  }
+function unregisterTestShortcut() {
+  shortcutStore.unregister("lab:test-shortcut");
+  testShortcutRegistered = false;
+}
 
-  // ── Command Palette ──────────────────────────────────────
-  let commandsRegistered = $state(false);
+// ── Command Palette ──────────────────────────────────────
+let commandsRegistered = $state(false);
 
-  function registerMockCommands() {
-    commandStore.register({
-      id: "lab:greet",
-      label: "Say Hello",
-      category: m.lab_label(),
-      icon: "👋",
-      action: () => toastStore.success("Hello from the Lab!"),
-    });
-    commandStore.register({
-      id: "lab:random",
-      label: "Random Number",
-      category: m.lab_label(),
-      icon: "🎲",
-      action: () =>
-        toastStore.info(`Random: ${Math.floor(Math.random() * 100)}`),
-    });
-    commandStore.register({
-      id: "lab:nested",
-      label: "Nested Commands",
-      category: m.lab_label(),
-      icon: "📂",
-      children: [
-        {
-          id: "lab:nested:a",
-          label: "Sub-command A",
-          action: () => toastStore.info("Sub A executed"),
-        },
-        {
-          id: "lab:nested:b",
-          label: "Sub-command B",
-          action: () => toastStore.info("Sub B executed"),
-        },
-      ],
-    });
-    commandsRegistered = true;
-  }
+function registerMockCommands() {
+  commandStore.register({
+    id: "lab:greet",
+    label: "Say Hello",
+    category: m.lab_label(),
+    icon: "👋",
+    action: () => toastStore.success("Hello from the Lab!"),
+  });
+  commandStore.register({
+    id: "lab:random",
+    label: "Random Number",
+    category: m.lab_label(),
+    icon: "🎲",
+    action: () => toastStore.info(`Random: ${Math.floor(Math.random() * 100)}`),
+  });
+  commandStore.register({
+    id: "lab:nested",
+    label: "Nested Commands",
+    category: m.lab_label(),
+    icon: "📂",
+    children: [
+      {
+        id: "lab:nested:a",
+        label: "Sub-command A",
+        action: () => toastStore.info("Sub A executed"),
+      },
+      {
+        id: "lab:nested:b",
+        label: "Sub-command B",
+        action: () => toastStore.info("Sub B executed"),
+      },
+    ],
+  });
+  commandsRegistered = true;
+}
 
-  function unregisterMockCommands() {
-    commandStore.unregister("lab:greet");
-    commandStore.unregister("lab:random");
-    commandStore.unregister("lab:nested");
-    commandsRegistered = false;
-  }
+function unregisterMockCommands() {
+  commandStore.unregister("lab:greet");
+  commandStore.unregister("lab:random");
+  commandStore.unregister("lab:nested");
+  commandsRegistered = false;
+}
 </script>
 
 <div class="h-full overflow-y-auto p-4 space-y-2">

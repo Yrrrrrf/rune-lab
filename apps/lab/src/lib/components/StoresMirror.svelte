@@ -1,26 +1,26 @@
 <script lang="ts">
-  import { getAppStore } from "@rune-lab/svelte";
-  import { getCurrencyStore } from "@rune-lab/i18n/money";
-  import {
-    getLanguageStore,
-    getLayoutStore,
-    getThemeStore,
-  } from "@rune-lab/layout";
-  import {
-    getCommandStore,
-    getShortcutStore,
-    getToastStore,
-  } from "@rune-lab/palettes";
-  import { m } from "$lib/i18n/messages.ts";
+import { getCurrencyStore } from "@rune-lab/i18n";
+import {
+  getLanguageStore,
+  getLayoutStore,
+  getThemeStore,
+} from "@rune-lab/layout";
+import {
+  getCommandStore,
+  getShortcutStore,
+  getToastStore,
+} from "@rune-lab/palettes";
+import { getAppStore } from "@rune-lab/svelte";
+import { m } from "$lib/i18n/messages.ts";
 
-  const appStore = getAppStore();
-  const toastStore = getToastStore();
-  const themeStore = getThemeStore();
-  const languageStore = getLanguageStore();
-  const currencyStore = getCurrencyStore();
-  const shortcutStore = getShortcutStore();
-  const layoutStore = getLayoutStore();
-  const commandStore = getCommandStore();
+const appStore = getAppStore();
+const toastStore = getToastStore();
+const themeStore = getThemeStore();
+const languageStore = getLanguageStore();
+const currencyStore = getCurrencyStore();
+const shortcutStore = getShortcutStore();
+const layoutStore = getLayoutStore();
+const commandStore = getCommandStore();
 </script>
 
 <div class="h-full overflow-y-auto p-4">
@@ -132,8 +132,7 @@
             class="status status-sm"
             class:status-success={layoutStore.navOpen}
             class:status-warning={!layoutStore.navOpen}
-          >
-          </div>
+          ></div>
         </div>
         <p class="text-xs opacity-50">
           {

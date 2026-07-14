@@ -1,52 +1,52 @@
 <script lang="ts">
-  import {
-    ConnectedNavigationPanel,
-    DetailPanel,
-    getLayoutStore,
-    WorkspaceLayout,
-  } from "@rune-lab/layout";
-  import {
-    getCommandStore,
-    getShortcutStore,
-    getToastStore,
-  } from "@rune-lab/palettes";
-  import { type Snippet, untrack } from "svelte";
-  import DashboardPanel from "../lib/components/panels/DashboardPanel.svelte";
-  import ShortcutsPanel from "../lib/components/panels/ShortcutsPanel.svelte";
+import {
+  ConnectedNavigationPanel,
+  DetailPanel,
+  getLayoutStore,
+  WorkspaceLayout,
+} from "@rune-lab/layout";
+import {
+  getCommandStore,
+  getShortcutStore,
+  getToastStore,
+} from "@rune-lab/palettes";
+import { type Snippet, untrack } from "svelte";
+import DashboardPanel from "../lib/components/panels/DashboardPanel.svelte";
+import ShortcutsPanel from "../lib/components/panels/ShortcutsPanel.svelte";
 
-  let { children, sections } = $props<{
-    children: Snippet;
-    sections: any[];
-  }>();
+let { children, sections } = $props<{
+  children: Snippet;
+  sections: any[];
+}>();
 
-  const commands = getCommandStore();
-  const shortcuts = getShortcutStore();
-  const toasts = getToastStore();
-  const layout = getLayoutStore();
+const commands = getCommandStore();
+const shortcuts = getShortcutStore();
+const toasts = getToastStore();
+const layout = getLayoutStore();
 
-  let activeDetailTab = $state("inspector");
+let activeDetailTab = $state("inspector");
 
-  $effect(() => {
-    untrack(() => {
-      // Default Layout Commands
-      commands.register({
-        id: "view.toggleNav",
-        label: "Toggle Navigation Panel",
-        category: "View",
-        action: () => layout.toggleNav(),
-      });
-      commands.register({
-        id: "view.toggleDetail",
-        label: "Toggle Detail Panel",
-        category: "View",
-        action: () => layout.toggleDetail(),
-      });
+$effect(() => {
+  untrack(() => {
+    // Default Layout Commands
+    commands.register({
+      id: "view.toggleNav",
+      label: "Toggle Navigation Panel",
+      category: "View",
+      action: () => layout.toggleNav(),
     });
-
-    return () => {
-      shortcuts.unregister("shortcut.new");
-    };
+    commands.register({
+      id: "view.toggleDetail",
+      label: "Toggle Detail Panel",
+      category: "View",
+      action: () => layout.toggleDetail(),
+    });
   });
+
+  return () => {
+    shortcuts.unregister("shortcut.new");
+  };
+});
 </script>
 
 <WorkspaceLayout>

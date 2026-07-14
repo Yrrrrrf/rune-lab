@@ -95,29 +95,29 @@ Get your application shell running in less than 40 lines. Inside your
 
 ```svelte
 <script lang="ts">
-  import {
-    ConnectedNavigationPanel,
-    cookieDriver,
-    LayoutPlugin,
-    PalettesPlugin,
-    RuneProvider,
-    WorkspaceLayout,
-  } from "rune-lab";
-  import type { NavigationSection } from "rune-lab";
-  import { setLocale } from "$lib/i18n/paraglide/runtime.js";
+import {
+  ConnectedNavigationPanel,
+  cookieDriver,
+  LayoutPlugin,
+  PalettesPlugin,
+  RuneProvider,
+  WorkspaceLayout,
+} from "rune-lab";
+import type { NavigationSection } from "rune-lab";
+import { setLocale } from "$lib/i18n/paraglide/runtime.js";
 
-  let { children } = $props();
+let { children } = $props();
 
-  const sections: NavigationSection[] = [
-    {
-      id: "main",
-      title: "Main Menu",
-      items: [
-        { id: "home", label: "Dashboard", icon: "🏠" },
-        { id: "settings", label: "Settings", icon: "⚙️" },
-      ],
-    },
-  ];
+const sections: NavigationSection[] = [
+  {
+    id: "main",
+    title: "Main Menu",
+    items: [
+      { id: "home", label: "Dashboard", icon: "🏠" },
+      { id: "settings", label: "Settings", icon: "⚙️" },
+    ],
+  },
+];
 </script>
 
 <!-- Initialize the system with your required plugins and callbacks -->
@@ -156,7 +156,7 @@ formatting, and live exchange-rate triangulation. To use it, simply register the
 
 ```svelte
 <script lang="ts">
-  import { MoneyPlugin } from "rune-lab";
+import { MoneyPlugin } from "rune-lab";
 </script>
 
 <RuneProvider
@@ -179,15 +179,10 @@ formatting, and live exchange-rate triangulation. To use it, simply register the
 
 ```svelte
 <script lang="ts">
-  import {
-    CurrencySelector,
-    MoneyDisplay,
-    MoneyInput,
-    useMoney,
-  } from "rune-lab";
+import { CurrencySelector, MoneyDisplay, MoneyInput, useMoney } from "rune-lab";
 
-  let price = $state(15000); // Minor units (e.g., cents) -> $150.00
-  const { convert, format } = useMoney();
+let price = $state(15000); // Minor units (e.g., cents) -> $150.00
+const { convert, format } = useMoney();
 </script>
 
 <!-- Select from available currencies -->
@@ -216,7 +211,7 @@ Pass one to `config.persistence` on `<RuneProvider>`:
 
 ```svelte
 <script lang="ts">
-  import { cookieDriver } from "rune-lab";
+import { cookieDriver } from "rune-lab";
 </script>
 
 <RuneProvider config={{ persistence: cookieDriver }} plugins={[...]}>
@@ -249,23 +244,23 @@ internally, ensuring shortcuts unregister when the component unmounts:
 
 ```svelte
 <script lang="ts">
-  import { getToastStore, useShortcuts } from "rune-lab";
+import { getToastStore, useShortcuts } from "rune-lab";
 
-  const toasts = getToastStore();
+const toasts = getToastStore();
 
-  useShortcuts([
-    {
-      id: "feature.save",
-      keys: "ctrl+s, cmd+s", // Comma-separated alternative keys
-      label: "Save Document",
-      category: "Editor",
-      scope: "global",
-      handler: (e) => {
-        e.preventDefault();
-        toasts.success("Document Saved!");
-      },
+useShortcuts([
+  {
+    id: "feature.save",
+    keys: "ctrl+s, cmd+s", // Comma-separated alternative keys
+    label: "Save Document",
+    category: "Editor",
+    scope: "global",
+    handler: (e) => {
+      e.preventDefault();
+      toasts.success("Document Saved!");
     },
-  ]);
+  },
+]);
 </script>
 ```
 
@@ -276,16 +271,16 @@ router, use an `$effect` inside your `+layout.svelte` right after the provider:
 
 ```svelte
 <script lang="ts">
-  import { page } from "$app/state";
-  import { getLayoutStore } from "rune-lab";
+import { page } from "$app/state";
+import { getLayoutStore } from "rune-lab";
 
-  const layoutStore = getLayoutStore();
+const layoutStore = getLayoutStore();
 
-  $effect(() => {
-    // Automatically open the correct nav tree branch
-    const segment = page.url.pathname.split("/")[1] || "home";
-    layoutStore.navigate(segment);
-  });
+$effect(() => {
+  // Automatically open the correct nav tree branch
+  const segment = page.url.pathname.split("/")[1] || "home";
+  layoutStore.navigate(segment);
+});
 </script>
 ```
 

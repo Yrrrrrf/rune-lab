@@ -1,105 +1,105 @@
 <!-- src/features/shortcuts/ShortcutPalette.svelte -->
 <script lang="ts">
-  import { LAYOUT_SHORTCUTS } from "@rune-lab/layout";
-  import { getAppStore } from "@rune-lab/svelte";
-  import { tick } from "svelte";
-  import { getShortcutStore } from "../mod.ts";
-  import type { ShortcutEntry } from "../types.ts";
+import { LAYOUT_SHORTCUTS } from "@rune-lab/layout";
+import { getAppStore } from "@rune-lab/svelte";
+import { tick } from "svelte";
+import { getShortcutStore } from "../mod.ts";
+import type { ShortcutEntry } from "../types.ts";
 
-  const appStore = getAppStore();
-  const shortcutStore = getShortcutStore();
+const appStore = getAppStore();
+const shortcutStore = getShortcutStore();
 
-  let dialog = $state<HTMLDialogElement>();
-  let input = $state<HTMLInputElement>();
-  let query = $state("");
-  let isOpen = $state(false);
+let dialog = $state<HTMLDialogElement>();
+let input = $state<HTMLInputElement>();
+let query = $state("");
+let isOpen = $state(false);
 
-  // Filtered entries
-  const filtered = $derived.by(() => {
-    if (!query) return shortcutStore.active;
-    const q = query.toLowerCase();
-    return shortcutStore.active.filter(
-      (e) =>
-        (e.label ?? "").toLowerCase().includes(q) ||
-        (e.category ?? "").toLowerCase().includes(q) ||
-        e.keys.toLowerCase().includes(q),
-    );
-  });
-
-  // Grouping logic - simplified by using store's grouping
-  const groups = $derived.by(() => {
-    if (!query) return shortcutStore.byScopeAndCategory;
-
-    const result: Record<string, Record<string, ShortcutEntry[]>> = {};
-    for (const entry of filtered) {
-      const scope = entry.scope ?? "global";
-      const category = entry.category ?? "General";
-      if (!result[scope]) result[scope] = {};
-      if (!result[scope][category]) result[scope][category] = [];
-      result[scope][category].push(entry);
-    }
-    return result;
-  });
-
-  // Scopes are now provided by the store
-  const sortedScopes = $derived(
-    query
-      ? Object.keys(groups).sort((a, b) => {
-        if (a === "global") return -1;
-        if (b === "global") return 1;
-        if (a === "layout") return -1;
-        if (b === "layout") return 1;
-        return a.localeCompare(b);
-      })
-      : shortcutStore.sortedScopes,
+// Filtered entries
+const filtered = $derived.by(() => {
+  if (!query) return shortcutStore.active;
+  const q = query.toLowerCase();
+  return shortcutStore.active.filter(
+    (e) =>
+      (e.label ?? "").toLowerCase().includes(q) ||
+      (e.category ?? "").toLowerCase().includes(q) ||
+      e.keys.toLowerCase().includes(q),
   );
+});
 
-  export function open() {
-    isOpen = true;
-    shortcutStore.showPalette = true;
-    tick().then(() => input?.focus());
+// Grouping logic - simplified by using store's grouping
+const groups = $derived.by(() => {
+  if (!query) return shortcutStore.byScopeAndCategory;
+
+  const result: Record<string, Record<string, ShortcutEntry[]>> = {};
+  for (const entry of filtered) {
+    const scope = entry.scope ?? "global";
+    const category = entry.category ?? "General";
+    if (!result[scope]) result[scope] = {};
+    if (!result[scope][category]) result[scope][category] = [];
+    result[scope][category].push(entry);
   }
+  return result;
+});
 
-  export function close() {
-    isOpen = false;
-    shortcutStore.showPalette = false;
+// Scopes are now provided by the store
+const sortedScopes = $derived(
+  query
+    ? Object.keys(groups).sort((a, b) => {
+      if (a === "global") return -1;
+      if (b === "global") return 1;
+      if (a === "layout") return -1;
+      if (b === "layout") return 1;
+      return a.localeCompare(b);
+    })
+    : shortcutStore.sortedScopes,
+);
+
+export function open() {
+  isOpen = true;
+  shortcutStore.showPalette = true;
+  tick().then(() => input?.focus());
+}
+
+export function close() {
+  isOpen = false;
+  shortcutStore.showPalette = false;
+}
+
+$effect(() => {
+  if (shortcutStore.showPalette && !isOpen) {
+    open();
+  } else if (!shortcutStore.showPalette && isOpen) {
+    close();
   }
+});
 
-  $effect(() => {
-    if (shortcutStore.showPalette && !isOpen) {
+function handleKeydown(e: KeyboardEvent) {
+  if (e.key === "Escape") {
+    close();
+  }
+}
+
+function formatKeys(keys: string) {
+  return keys.split(",")[0].split("+");
+}
+
+$effect(() => {
+  shortcutStore.register({
+    ...LAYOUT_SHORTCUTS.OPEN_SHORTCUTS,
+    handler: (e) => {
+      // If we are already in an input, don't open
+      const target = e.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
+        return;
+      }
+
+      e.preventDefault();
       open();
-    } else if (!shortcutStore.showPalette && isOpen) {
-      close();
-    }
+    },
   });
 
-  function handleKeydown(e: KeyboardEvent) {
-    if (e.key === "Escape") {
-      close();
-    }
-  }
-
-  function formatKeys(keys: string) {
-    return keys.split(",")[0].split("+");
-  }
-
-  $effect(() => {
-    shortcutStore.register({
-      ...LAYOUT_SHORTCUTS.OPEN_SHORTCUTS,
-      handler: (e) => {
-        // If we are already in an input, don't open
-        const target = e.target as HTMLElement;
-        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
-          return;
-        }
-
-        e.preventDefault();
-        open();
-      },
-    });
-
-    return () => shortcutStore.unregister(LAYOUT_SHORTCUTS.OPEN_SHORTCUTS.id);
-  });
+  return () => shortcutStore.unregister(LAYOUT_SHORTCUTS.OPEN_SHORTCUTS.id);
+});
 </script>
 
 <dialog

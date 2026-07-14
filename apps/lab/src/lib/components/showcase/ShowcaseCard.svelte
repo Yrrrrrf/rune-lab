@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
+import type { Snippet } from "svelte";
 
-  let {
-    title,
-    icon,
-    children,
-  }: {
-    title: string;
-    icon?: string;
-    children: Snippet;
-  } = $props();
+let {
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon?: string;
+  children: Snippet;
+} = $props();
 </script>
 
 <div class="card bg-base-100 shadow-xl border border-base-content/5">

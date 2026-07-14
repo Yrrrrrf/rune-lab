@@ -1,76 +1,76 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+import { onMount } from "svelte";
 
-  let showPanel = $state(false);
-  let activeTab = $state<"preview" | "persistence">("persistence");
+let showPanel = $state(false);
+let activeTab = $state<"preview" | "persistence">("persistence");
 
-  // Iframe state
-  let urlInput = $state("/lab");
-  let iframeUrl = $state("/lab");
+// Iframe state
+let urlInput = $state("/lab");
+let iframeUrl = $state("/lab");
 
-  // Persistence inspector state
-  let keys = $state<{ key: string; value: string | null }[]>([]);
+// Persistence inspector state
+let keys = $state<{ key: string; value: string | null }[]>([]);
 
-  function loadKeys() {
-    if (typeof window === "undefined") return;
-    const list: typeof keys = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith("rl:")) {
-        list.push({
-          key: k,
-          value: localStorage.getItem(k),
-        });
-      }
-    }
-    keys = list.sort((a, b) => a.key.localeCompare(b.key));
-  }
+function loadKeys() {
+	if (typeof window === "undefined") return;
+	const list: typeof keys = [];
+	for (let i = 0; i < localStorage.length; i++) {
+		const k = localStorage.key(i);
+		if (k && k.startsWith("rl:")) {
+			list.push({
+				key: k,
+				value: localStorage.getItem(k),
+			});
+		}
+	}
+	keys = list.sort((a, b) => a.key.localeCompare(b.key));
+}
 
-  function deleteKey(key: string) {
-    if (typeof window === "undefined") return;
-    localStorage.removeItem(key);
-    loadKeys();
-    // Dispatch standard storage event to trigger Svelte store updates
-    window.dispatchEvent(new Event("storage"));
-  }
+function deleteKey(key: string) {
+	if (typeof window === "undefined") return;
+	localStorage.removeItem(key);
+	loadKeys();
+	// Dispatch standard storage event to trigger Svelte store updates
+	window.dispatchEvent(new Event("storage"));
+}
 
-  function clearAll() {
-    if (typeof window === "undefined") return;
-    const toRemove: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith("rl:")) {
-        toRemove.push(k);
-      }
-    }
-    toRemove.forEach((k) => localStorage.removeItem(k));
-    loadKeys();
-    window.dispatchEvent(new Event("storage"));
-  }
+function clearAll() {
+	if (typeof window === "undefined") return;
+	const toRemove: string[] = [];
+	for (let i = 0; i < localStorage.length; i++) {
+		const k = localStorage.key(i);
+		if (k && k.startsWith("rl:")) {
+			toRemove.push(k);
+		}
+	}
+	toRemove.forEach((k) => localStorage.removeItem(k));
+	loadKeys();
+	window.dispatchEvent(new Event("storage"));
+}
 
-  function updateVisibility() {
-    if (typeof window !== "undefined") {
-      showPanel =
-        window.localStorage.getItem("rl:observer:showPreview") !== "false";
-    }
-  }
+function updateVisibility() {
+	if (typeof window !== "undefined") {
+		showPanel =
+			window.localStorage.getItem("rl:observer:showPreview") !== "false";
+	}
+}
 
-  function handleGo() {
-    iframeUrl = urlInput;
-  }
+function handleGo() {
+	iframeUrl = urlInput;
+}
 
-  onMount(() => {
-    updateVisibility();
-    loadKeys();
+onMount(() => {
+	updateVisibility();
+	loadKeys();
 
-    window.addEventListener("rl:observer:toggle", updateVisibility);
-    window.addEventListener("storage", loadKeys);
+	window.addEventListener("rl:observer:toggle", updateVisibility);
+	window.addEventListener("storage", loadKeys);
 
-    return () => {
-      window.removeEventListener("rl:observer:toggle", updateVisibility);
-      window.removeEventListener("storage", loadKeys);
-    };
-  });
+	return () => {
+		window.removeEventListener("rl:observer:toggle", updateVisibility);
+		window.removeEventListener("storage", loadKeys);
+	};
+});
 </script>
 
 {#if showPanel}

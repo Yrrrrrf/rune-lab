@@ -1,11 +1,11 @@
 <!-- src/layout/ContentArea.svelte -->
 <script lang="ts">
-  import type { Snippet } from "svelte";
+import type { Snippet } from "svelte";
 
-  let { header, children } = $props<{
-    header?: Snippet;
-    children: Snippet;
-  }>();
+let { header, children } = $props<{
+	header?: Snippet;
+	children: Snippet;
+}>();
 </script>
 
 {#if header}

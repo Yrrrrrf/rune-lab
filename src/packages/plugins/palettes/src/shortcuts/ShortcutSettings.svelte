@@ -1,107 +1,107 @@
 <script lang="ts">
-  import { getShortcutStore } from "../mod.ts";
+import { getShortcutStore } from "../mod.ts";
 
-  const shortcutStore = getShortcutStore();
+const shortcutStore = getShortcutStore();
 
-  let searchQuery = $state("");
-  let recordingId = $state<string | null>(null);
-  let recordedKeys = $state("");
+let searchQuery = $state("");
+let recordingId = $state<string | null>(null);
+let recordedKeys = $state("");
 
-  const filteredEntries = $derived.by(() => {
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) return shortcutStore.entries;
-    return shortcutStore.entries.filter(
-      (e) =>
-        e.label?.toLowerCase().includes(q) ||
-        e.keys?.toLowerCase().includes(q) ||
-        e.category?.toLowerCase().includes(q) ||
-        e.scope?.toLowerCase().includes(q),
+const filteredEntries = $derived.by(() => {
+  const q = searchQuery.toLowerCase().trim();
+  if (!q) return shortcutStore.entries;
+  return shortcutStore.entries.filter(
+    (e) =>
+      e.label?.toLowerCase().includes(q) ||
+      e.keys?.toLowerCase().includes(q) ||
+      e.category?.toLowerCase().includes(q) ||
+      e.scope?.toLowerCase().includes(q),
+  );
+});
+
+const groupedEntries = $derived.by(() => {
+  const groups: Record<
+    string,
+    Record<string, typeof shortcutStore.entries>
+  > = {};
+  for (const entry of filteredEntries) {
+    const scope = entry.scope ?? "global";
+    const category = entry.category ?? "General";
+    if (!groups[scope]) groups[scope] = {};
+    if (!groups[scope][category]) groups[scope][category] = [];
+    groups[scope][category].push(entry);
+  }
+  return groups;
+});
+
+function startRecording(id: string) {
+  recordingId = id;
+  recordedKeys = "";
+  window.addEventListener("keydown", handleKeyDown, true);
+}
+
+function stopRecording() {
+  if (recordingId) {
+    window.removeEventListener("keydown", handleKeyDown, true);
+    recordingId = null;
+  }
+}
+
+function handleKeyDown(e: KeyboardEvent) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  const key = e.key.toLowerCase();
+  if (["control", "alt", "shift", "meta"].includes(key)) {
+    // Just modifiers, show feedback or update draft
+    return;
+  }
+
+  const parts: string[] = [];
+  if (e.ctrlKey) parts.push("ctrl");
+  if (e.altKey) parts.push("alt");
+  if (e.shiftKey) parts.push("shift");
+  if (e.metaKey) parts.push("meta");
+
+  if (key === " ") parts.push("space");
+  else if (key === "arrowup") parts.push("up");
+  else if (key === "arrowdown") parts.push("down");
+  else if (key === "arrowleft") parts.push("left");
+  else if (key === "arrowright") parts.push("right");
+  else parts.push(key);
+
+  const combo = parts.join("+");
+  if (combo && recordingId) {
+    const original = shortcutStore.entries.find(
+      (entry) => entry.id === recordingId,
     );
-  });
-
-  const groupedEntries = $derived.by(() => {
-    const groups: Record<
-      string,
-      Record<string, typeof shortcutStore.entries>
-    > = {};
-    for (const entry of filteredEntries) {
-      const scope = entry.scope ?? "global";
-      const category = entry.category ?? "General";
-      if (!groups[scope]) groups[scope] = {};
-      if (!groups[scope][category]) groups[scope][category] = [];
-      groups[scope][category].push(entry);
-    }
-    return groups;
-  });
-
-  function startRecording(id: string) {
-    recordingId = id;
-    recordedKeys = "";
-    window.addEventListener("keydown", handleKeyDown, true);
-  }
-
-  function stopRecording() {
-    if (recordingId) {
-      window.removeEventListener("keydown", handleKeyDown, true);
-      recordingId = null;
-    }
-  }
-
-  function handleKeyDown(e: KeyboardEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const key = e.key.toLowerCase();
-    if (["control", "alt", "shift", "meta"].includes(key)) {
-      // Just modifiers, show feedback or update draft
-      return;
-    }
-
-    const parts: string[] = [];
-    if (e.ctrlKey) parts.push("ctrl");
-    if (e.altKey) parts.push("alt");
-    if (e.shiftKey) parts.push("shift");
-    if (e.metaKey) parts.push("meta");
-
-    if (key === " ") parts.push("space");
-    else if (key === "arrowup") parts.push("up");
-    else if (key === "arrowdown") parts.push("down");
-    else if (key === "arrowleft") parts.push("left");
-    else if (key === "arrowright") parts.push("right");
-    else parts.push(key);
-
-    const combo = parts.join("+");
-    if (combo && recordingId) {
-      const original = shortcutStore.entries.find(
-        (entry) => entry.id === recordingId,
-      );
-      if (original) {
-        // Exercise register/unregister
-        shortcutStore.unregister(original.id);
-        shortcutStore.register({
-          ...original,
-          keys: combo,
-        });
-      }
-    }
-    stopRecording();
-  }
-
-  function resetShortcut(id: string, defaultKeys: string) {
-    const original = shortcutStore.entries.find((entry) => entry.id === id);
     if (original) {
+      // Exercise register/unregister
       shortcutStore.unregister(original.id);
       shortcutStore.register({
         ...original,
-        keys: defaultKeys,
+        keys: combo,
       });
     }
   }
+  stopRecording();
+}
 
-  // Ensure listener is cleaned up if component is destroyed
-  import { onDestroy } from "svelte";
+function resetShortcut(id: string, defaultKeys: string) {
+  const original = shortcutStore.entries.find((entry) => entry.id === id);
+  if (original) {
+    shortcutStore.unregister(original.id);
+    shortcutStore.register({
+      ...original,
+      keys: defaultKeys,
+    });
+  }
+}
 
-  onDestroy(stopRecording);
+// Ensure listener is cleaned up if component is destroyed
+import { onDestroy } from "svelte";
+
+onDestroy(stopRecording);
 </script>
 
 <div class="p-6 space-y-6 max-w-4xl">

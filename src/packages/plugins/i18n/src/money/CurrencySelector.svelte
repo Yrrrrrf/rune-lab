@@ -1,19 +1,19 @@
 <script lang="ts">
-  import { ResourceSelector } from "@rune-lab/layout";
-  import { getCurrencyName } from "./currency.svelte.ts";
-  import { getCurrencyStore } from "./mod.ts";
+import { ResourceSelector } from "@rune-lab/layout";
+import { getCurrencyName } from "./currency.svelte.ts";
+import { getCurrencyStore } from "./mod.ts";
 
-  const currencyStore = getCurrencyStore();
+const currencyStore = getCurrencyStore();
 
-  let {
-    codes = [],
-    current = $bindable(String(currencyStore.current)),
-    onchange,
-  }: {
-    codes?: string[];
-    current?: string;
-    onchange?: (value: string) => void;
-  } = $props();
+let {
+  codes = [],
+  current = $bindable(String(currencyStore.current)),
+  onchange,
+}: {
+  codes?: string[];
+  current?: string;
+  onchange?: (value: string) => void;
+} = $props();
 </script>
 
 <ResourceSelector

@@ -31,8 +31,6 @@
     "@rune-lab/palettes": "./src/packages/plugins/palettes/src/mod.ts",
     "@rune-lab/observer": "./src/packages/plugins/observer/src/mod.ts",
     "@rune-lab/i18n": "./src/packages/plugins/i18n/src/mod.ts",
-    "@rune-lab/i18n/lang": "./src/packages/plugins/i18n/src/lang/mod.ts",
-    "@rune-lab/i18n/money": "./src/packages/plugins/i18n/src/money/mod.ts",
     "esm-env": "npm:esm-env@^1"
   },
   "test": {

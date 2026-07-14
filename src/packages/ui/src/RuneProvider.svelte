@@ -1,102 +1,102 @@
 <script lang="ts">
-  import type {
-    LocaleAdapter,
-    PersistenceDriver,
-    PluginInput,
-  } from "@rune-lab/core";
-  import { createKernel, namespaced } from "@rune-lab/core";
-  import { type Component, setContext, type Snippet, untrack } from "svelte";
-  import { type AppData, createAppStore, RUNE_LAB_CONTEXT } from "./mod.ts";
-  import {
-    cookieDriver,
-    createInMemoryDriver,
-    localStorageDriver,
-    sessionStorageDriver,
-  } from "./persistence/drivers.ts";
+import type {
+	LocaleAdapter,
+	PersistenceDriver,
+	PluginInput,
+} from "@rune-lab/core";
+import { createKernel, namespaced } from "@rune-lab/core";
+import { type Component, type Snippet, setContext, untrack } from "svelte";
+import { type AppData, createAppStore, RUNE_LAB_CONTEXT } from "./mod.ts";
+import {
+	cookieDriver,
+	createInMemoryDriver,
+	localStorageDriver,
+	sessionStorageDriver,
+} from "./persistence/drivers.ts";
 
-  /**
-   * Namespaced configuration for Rune Lab plugins.
-   * Keyed by plugin.id.
-   */
-  export interface RuneLabConfig {
-    persistence?: PersistenceDriver;
-    /** Optional head management properties */
-    favicon?: string;
-    manageHead?: boolean;
-    icons?: "material" | "none";
-    /** App metadata — passed to AppStore.init() */
-    app?: Partial<AppData>;
-    /** Namespaced config for plugins */
-    [pluginId: string]: unknown;
-  }
+/**
+ * Namespaced configuration for Rune Lab plugins.
+ * Keyed by plugin.id.
+ */
+export interface RuneLabConfig {
+	persistence?: PersistenceDriver;
+	/** Optional head management properties */
+	favicon?: string;
+	manageHead?: boolean;
+	icons?: "material" | "none";
+	/** App metadata — passed to AppStore.init() */
+	app?: Partial<AppData>;
+	/** Namespaced config for plugins */
+	[pluginId: string]: unknown;
+}
 
-  let {
-    children,
-    config = {},
-    plugins = [],
-    localeAdapter,
-  } = $props<{
-    children: Snippet;
-    config?: RuneLabConfig;
-    plugins?: PluginInput[];
-    localeAdapter?: LocaleAdapter;
-  }>();
+let {
+	children,
+	config = {},
+	plugins = [],
+	localeAdapter,
+} = $props<{
+	children: Snippet;
+	config?: RuneLabConfig;
+	plugins?: PluginInput[];
+	localeAdapter?: LocaleAdapter;
+}>();
 
-  const initialPersistence = untrack(() => {
-    let savedDriverType = "local";
-    if (typeof window !== "undefined") {
-      savedDriverType = window.localStorage.getItem("rl:persistence:driver") ||
-        "local";
-    }
-    let baseDriver = localStorageDriver;
-    if (savedDriverType === "memory") baseDriver = createInMemoryDriver();
-    else if (savedDriverType === "session") baseDriver = sessionStorageDriver;
-    else if (savedDriverType === "cookie") baseDriver = cookieDriver;
-    return namespaced(config.persistence ?? baseDriver, "rl:");
-  });
+const initialPersistence = untrack(() => {
+	let savedDriverType = "local";
+	if (typeof window !== "undefined") {
+		savedDriverType =
+			window.localStorage.getItem("rl:persistence:driver") || "local";
+	}
+	let baseDriver = localStorageDriver;
+	if (savedDriverType === "memory") baseDriver = createInMemoryDriver();
+	else if (savedDriverType === "session") baseDriver = sessionStorageDriver;
+	else if (savedDriverType === "cookie") baseDriver = cookieDriver;
+	return namespaced(config.persistence ?? baseDriver, "rl:");
+});
 
-  // 0. Create and provide the built-in AppStore
-  const appStore = createAppStore();
-  untrack(() => {
-    if (config.app) {
-      appStore.init(config.app);
-    }
-  });
-  setContext(RUNE_LAB_CONTEXT.app, appStore);
+// 0. Create and provide the built-in AppStore
+const appStore = createAppStore();
+untrack(() => {
+	if (config.app) {
+		appStore.init(config.app);
+	}
+});
+setContext(RUNE_LAB_CONTEXT.app, appStore);
 
-  // 1. Construct the kernel
-  const kernel = createKernel(plugins, {
-    config: untrack(() => config as Record<string, unknown>),
-    persistence: initialPersistence,
-    localeAdapter,
-  });
+// 1. Construct the kernel
+const kernel = createKernel(plugins, {
+	config: untrack(() => config as Record<string, unknown>),
+	persistence: initialPersistence,
+	localeAdapter,
+});
 
-  // Provide the kernel itself
-  setContext(RUNE_LAB_CONTEXT.kernel, kernel);
+// Provide the kernel itself
+setContext(RUNE_LAB_CONTEXT.kernel, kernel);
 
-  // 2. Provide all stores as context
-  for (const [id, store] of kernel.stores) {
-    const entry = kernel.getStoreEntry(id);
-    if (entry?.contextKey && store) {
-      setContext(entry.contextKey, store);
-    }
-  }
+// 2. Provide all stores as context
+for (const [id, store] of kernel.stores) {
+	const entry = kernel.getStoreEntry(id);
+	if (entry?.contextKey && store) {
+		setContext(entry.contextKey, store);
+	}
+}
 
-  // Also provide the persistence driver itself
-  setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
-  setContext(
-    RUNE_LAB_CONTEXT.settingsSections,
-    kernel.getContributions("settingsSections"),
-  );
+// Also provide the persistence driver itself
+setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
+setContext(
+	RUNE_LAB_CONTEXT.settingsSections,
+	kernel.getContributions("settingsSections"),
+);
 
-  // 3. Collect all overlays
-  const allOverlays = $derived(kernel.overlays as Component[]);
+// 3. Collect all overlays
+const allOverlays = $derived(kernel.overlays as Component[]);
 
-  // Meta tags derived from app store state
-  const metaTags = $derived([
-    { name: "description", content: appStore.description },
-    { name: "author", content: appStore.author },
-  ]);
+// Meta tags derived from app store state
+const metaTags = $derived([
+	{ name: "description", content: appStore.description },
+	{ name: "author", content: appStore.author },
+]);
 </script>
 
 <svelte:head>

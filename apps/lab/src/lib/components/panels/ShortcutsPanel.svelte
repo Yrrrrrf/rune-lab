@@ -1,22 +1,22 @@
 <script lang="ts">
-  import type { ShortcutEntry } from "@rune-lab/palettes";
-  import { getShortcutStore } from "@rune-lab/palettes";
+import type { ShortcutEntry } from "@rune-lab/palettes";
+import { getShortcutStore } from "@rune-lab/palettes";
 
-  const shortcutStore = getShortcutStore();
+const shortcutStore = getShortcutStore();
 
-  function formatKeys(keys: string): string[] {
-    return keys.split("+").map((k) => k.trim());
+function formatKeys(keys: string): string[] {
+  return keys.split("+").map((k) => k.trim());
+}
+
+let conflicts = $derived.by(() => {
+  const keyMap: Record<string, ShortcutEntry[]> = {};
+  for (const entry of shortcutStore.entries) {
+    const scopeKey = `${entry.keys}_${entry.scope ?? "global"}`;
+    if (!keyMap[scopeKey]) keyMap[scopeKey] = [];
+    keyMap[scopeKey].push(entry);
   }
-
-  let conflicts = $derived.by(() => {
-    const keyMap: Record<string, ShortcutEntry[]> = {};
-    for (const entry of shortcutStore.entries) {
-      const scopeKey = `${entry.keys}_${entry.scope ?? "global"}`;
-      if (!keyMap[scopeKey]) keyMap[scopeKey] = [];
-      keyMap[scopeKey].push(entry);
-    }
-    return Object.entries(keyMap).filter(([_, items]) => items.length > 1);
-  });
+  return Object.entries(keyMap).filter(([_, items]) => items.length > 1);
+});
 </script>
 
 <div class="flex flex-col gap-4 h-full relative">

@@ -1,15 +1,15 @@
 <script lang="ts" module>
-  import type { Snippet } from "svelte";
+import type { Snippet } from "svelte";
 
-  export interface AppSettingSelectorProps<T> {
-    options: T[];
-    value: T;
-    item: Snippet<[T]>;
-    triggerLabel: Snippet<[T]>;
-    tooltip?: string;
-    direction?: "top" | "bottom" | "left" | "right" | "end" | "auto";
-    responsive?: boolean;
-  }
+export interface AppSettingSelectorProps<T> {
+	options: T[];
+	value: T;
+	item: Snippet<[T]>;
+	triggerLabel: Snippet<[T]>;
+	tooltip?: string;
+	direction?: "top" | "bottom" | "left" | "right" | "end" | "auto";
+	responsive?: boolean;
+}
 </script>
 
 <script lang="ts" generics="T">

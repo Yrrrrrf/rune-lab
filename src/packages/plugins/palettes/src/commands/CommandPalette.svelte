@@ -1,118 +1,118 @@
 <script lang="ts">
-  import { Icon } from "@rune-lab/layout";
-  import { tick } from "svelte";
-  import { getCommandStore, getShortcutStore } from "../mod.ts";
-  import type { Command } from "../types.ts";
+import { Icon } from "@rune-lab/layout";
+import { tick } from "svelte";
+import { getCommandStore, getShortcutStore } from "../mod.ts";
+import type { Command } from "../types.ts";
 
-  interface Props {
-    shortcutKey?: string;
-  }
+interface Props {
+  shortcutKey?: string;
+}
 
-  let { shortcutKey = "shift+k" }: Props = $props();
+let { shortcutKey = "shift+k" }: Props = $props();
 
-  const commandStore = getCommandStore();
-  const shortcutStore = getShortcutStore();
+const commandStore = getCommandStore();
+const shortcutStore = getShortcutStore();
 
-  let dialog: HTMLDialogElement;
-  let input: HTMLInputElement;
-  let query = $state("");
-  let isOpen = $state(false);
-  let selectedIndex = $state(0);
-  let navigationStack = $state<string[]>([]);
+let dialog: HTMLDialogElement;
+let input: HTMLInputElement;
+let query = $state("");
+let isOpen = $state(false);
+let selectedIndex = $state(0);
+let navigationStack = $state<string[]>([]);
 
-  const currentParentId = $derived(navigationStack[navigationStack.length - 1]);
-  const filtered = $derived(commandStore.search(query, currentParentId));
+const currentParentId = $derived(navigationStack[navigationStack.length - 1]);
+const filtered = $derived(commandStore.search(query, currentParentId));
 
-  $effect(() => {
-    // Register shortcut
-    shortcutStore.register({
-      id: "rl:cmd:open",
-      keys: `cmd+${shortcutKey},ctrl+${shortcutKey}`,
-      label: "Open Command Palette",
-      category: "General",
-      scope: "global",
-      handler: (e) => {
-        e.preventDefault();
-        toggle();
-      },
+$effect(() => {
+  // Register shortcut
+  shortcutStore.register({
+    id: "rl:cmd:open",
+    keys: `cmd+${shortcutKey},ctrl+${shortcutKey}`,
+    label: "Open Command Palette",
+    category: "General",
+    scope: "global",
+    handler: (e) => {
+      e.preventDefault();
+      toggle();
+    },
+  });
+
+  return () => shortcutStore.unregister("rl:cmd:open");
+});
+
+$effect(() => {
+  // Reset selection when query or navigation changes
+  // Accessing these ensures the effect re-runs when they change
+  query;
+  navigationStack.length;
+  selectedIndex = 0;
+});
+
+$effect(() => {
+  // Ensure selected item is visible
+  if (isOpen && filtered.length > 0) {
+    // Use a small delay to ensure the DOM has updated
+    tick().then(() => {
+      const selectedElement = dialog?.querySelector(".menu li button.active");
+      selectedElement?.scrollIntoView({ block: "nearest" });
     });
+  }
+});
 
-    return () => shortcutStore.unregister("rl:cmd:open");
-  });
-
-  $effect(() => {
-    // Reset selection when query or navigation changes
-    // Accessing these ensures the effect re-runs when they change
-    query;
-    navigationStack.length;
+function toggle() {
+  isOpen = !isOpen;
+  if (isOpen) {
+    query = "";
+    navigationStack = [];
     selectedIndex = 0;
-  });
-
-  $effect(() => {
-    // Ensure selected item is visible
-    if (isOpen && filtered.length > 0) {
-      // Use a small delay to ensure the DOM has updated
-      tick().then(() => {
-        const selectedElement = dialog?.querySelector(".menu li button.active");
-        selectedElement?.scrollIntoView({ block: "nearest" });
-      });
-    }
-  });
-
-  function toggle() {
-    isOpen = !isOpen;
-    if (isOpen) {
-      query = "";
-      navigationStack = [];
-      selectedIndex = 0;
-      tick().then(() => input?.focus());
-    }
+    tick().then(() => input?.focus());
   }
+}
 
-  function handleAction(cmd: Command) {
-    if (cmd.children && cmd.children.length > 0) {
-      navigationStack.push(cmd.id);
-      query = "";
-      selectedIndex = 0;
-    } else if (cmd.action) {
-      cmd.action();
-      isOpen = false;
-    }
+function handleAction(cmd: Command) {
+  if (cmd.children && cmd.children.length > 0) {
+    navigationStack.push(cmd.id);
+    query = "";
+    selectedIndex = 0;
+  } else if (cmd.action) {
+    cmd.action();
+    isOpen = false;
   }
+}
 
-  function goBack() {
-    if (navigationStack.length > 0) {
-      navigationStack.pop();
-      query = "";
-      selectedIndex = 0;
-    }
+function goBack() {
+  if (navigationStack.length > 0) {
+    navigationStack.pop();
+    query = "";
+    selectedIndex = 0;
   }
+}
 
-  function handleKeyDown(e: KeyboardEvent) {
-    if (filtered.length === 0) return;
+function handleKeyDown(e: KeyboardEvent) {
+  if (filtered.length === 0) return;
 
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      selectedIndex = (selectedIndex + 1) % filtered.length;
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      selectedIndex = (selectedIndex - 1 + filtered.length) % filtered.length;
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (filtered[selectedIndex]) {
-        handleAction(filtered[selectedIndex]);
-      }
-    } else if (
-      e.key === "Backspace" &&
-      query === "" &&
-      navigationStack.length > 0
-    ) {
-      e.preventDefault();
-      goBack();
-    } else if (e.key === "Escape") {
-      isOpen = false;
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    selectedIndex = (selectedIndex + 1) % filtered.length;
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    selectedIndex = (selectedIndex - 1 + filtered.length) % filtered.length;
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (filtered[selectedIndex]) {
+      handleAction(filtered[selectedIndex]);
     }
+  } else if (
+    e.key === "Backspace" &&
+    query === "" &&
+    navigationStack.length > 0
+  ) {
+    e.preventDefault();
+    goBack();
+  } else if (e.key === "Escape") {
+    isOpen = false;
   }
+}
 </script>
 
 <dialog

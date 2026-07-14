@@ -1,59 +1,59 @@
 <script lang="ts">
-  import { getAppStore } from "@rune-lab/svelte";
-  import { getLanguageStore, getThemeStore } from "@rune-lab/layout";
-  import { getShortcutStore, getToastStore } from "@rune-lab/palettes";
-  import { onMount, untrack } from "svelte";
-  import { m } from "$lib/i18n/messages.ts";
+import { getLanguageStore, getThemeStore } from "@rune-lab/layout";
+import { getShortcutStore, getToastStore } from "@rune-lab/palettes";
+import { getAppStore } from "@rune-lab/svelte";
+import { onMount, untrack } from "svelte";
+import { m } from "$lib/i18n/messages.ts";
 
-  const appStore = getAppStore();
-  const themeStore = getThemeStore();
-  const languageStore = getLanguageStore();
-  const toastStore = getToastStore();
-  const shortcutStore = getShortcutStore();
+const appStore = getAppStore();
+const themeStore = getThemeStore();
+const languageStore = getLanguageStore();
+const toastStore = getToastStore();
+const shortcutStore = getShortcutStore();
 
-  let isBeating = $state(false);
-  let stateHash = $derived(
-    [
-      appStore.name,
-      themeStore.current,
-      toastStore.toasts.length,
-      shortcutStore.entries.length,
-    ].join("-"),
-  );
+let isBeating = $state(false);
+let stateHash = $derived(
+  [
+    appStore.name,
+    themeStore.current,
+    toastStore.toasts.length,
+    shortcutStore.entries.length,
+  ].join("-"),
+);
 
-  // Activity Log
-  let logs: Array<{ id: number; time: Date; message: string }> = $state([]);
-  let logId = 0;
+// Activity Log
+let logs: Array<{ id: number; time: Date; message: string }> = $state([]);
+let logId = 0;
 
-  // Track state changes to add logs
-  let previousHash = untrack(() => stateHash);
+// Track state changes to add logs
+let previousHash = untrack(() => stateHash);
 
-  $effect(() => {
-    const currentHash = stateHash;
-    if (currentHash !== previousHash) {
-      untrack(() => {
-        isBeating = true;
-        logs.unshift({
-          id: ++logId,
-          time: new Date(),
-          message: m.state_updated_msg(),
-        });
-        if (logs.length > 10) logs.pop();
-        setTimeout(() => {
-          isBeating = false;
-        }, 300);
+$effect(() => {
+  const currentHash = stateHash;
+  if (currentHash !== previousHash) {
+    untrack(() => {
+      isBeating = true;
+      logs.unshift({
+        id: ++logId,
+        time: new Date(),
+        message: m.state_updated_msg(),
       });
-      previousHash = currentHash;
-    }
-  });
-
-  onMount(() => {
-    logs.push({
-      id: ++logId,
-      time: new Date(),
-      message: m.dashboard_initialized_msg(),
+      if (logs.length > 10) logs.pop();
+      setTimeout(() => {
+        isBeating = false;
+      }, 300);
     });
+    previousHash = currentHash;
+  }
+});
+
+onMount(() => {
+  logs.push({
+    id: ++logId,
+    time: new Date(),
+    message: m.dashboard_initialized_msg(),
   });
+});
 </script>
 
 <div class="flex flex-col gap-4 h-full relative">

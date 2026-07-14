@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { getLanguageName } from "./language.svelte.ts";
-  import { getLanguageStore } from "./mod.ts";
-  import ResourceSelector from "./ResourceSelector.svelte";
+import { getLanguageName } from "./language.svelte.ts";
+import { getLanguageStore } from "./mod.ts";
+import ResourceSelector from "./ResourceSelector.svelte";
 
-  const languageStore = getLanguageStore();
+const languageStore = getLanguageStore();
 
-  let {
-    languages: allowedLocales = languageStore.available.map((l) =>
-      String(l.code)
-    ),
-    current = $bindable(String(languageStore.current)),
-    onchange,
-  }: {
-    languages?: string[];
-    current?: string;
-    onchange?: (value: string) => void;
-  } = $props();
+let {
+  languages: allowedLocales = languageStore.available.map((l) =>
+    String(l.code)
+  ),
+  current = $bindable(String(languageStore.current)),
+  onchange,
+}: {
+  languages?: string[];
+  current?: string;
+  onchange?: (value: string) => void;
+} = $props();
 </script>
 
 <ResourceSelector

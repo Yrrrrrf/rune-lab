@@ -15,8 +15,6 @@
       "@rune-lab/core": ["./packages/core/src/mod.ts"],
       "@rune-lab/svelte": ["./packages/ui/src/mod.ts"],
       "@rune-lab/i18n": ["./packages/plugins/i18n/src/mod.ts"],
-      "@rune-lab/i18n/lang": ["./packages/plugins/i18n/src/lang/mod.ts"],
-      "@rune-lab/i18n/money": ["./packages/plugins/i18n/src/money/mod.ts"],
       "@rune-lab/layout": ["./packages/plugins/layout/src/mod.ts"],
       "@rune-lab/observer": ["./packages/plugins/observer/src/mod.ts"],
       "@rune-lab/palettes": ["./packages/plugins/palettes/src/mod.ts"]

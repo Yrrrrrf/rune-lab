@@ -1,132 +1,132 @@
 <!-- src/layout/WorkspaceLayout.svelte -->
 <script module lang="ts">
-  import type { Snippet } from "svelte";
-  import type { LayoutConfig } from "./types.ts";
+import type { Snippet } from "svelte";
+import type { LayoutConfig } from "./types.ts";
 
-  export interface WorkspaceLayoutProps {
-    /** Content for the far-left vertical strip */
-    workspaceStrip?: Snippet;
-    /** Main navigation tree panel */
-    navigationPanel?: Snippet;
-    /** The primary application view */
-    content?: Snippet;
-    /** Right-side contextual detail panel */
-    detailPanel?: Snippet;
-    namespace?: string;
-
-    /**
-     * Declarative layout configuration.
-     * When provided, zones can be rendered from config entries.
-     * Snippet props take priority when both are provided.
-     */
-    config?: LayoutConfig;
-
-    /** Width of the left workspace strip */
-    stripWidth?: string;
-    /** Width of the navigation tree panel */
-    navWidth?: string;
-    /** Width of the contextual detail panel */
-    detailWidth?: string;
-
-    /** Controlled override for navigation panel visibility */
-    navOpen?: boolean;
-    /** Controlled override for detail panel visibility */
-    detailOpen?: boolean;
-  }
-</script>
-<script lang="ts">
-  import { getLanguageStore, getLayoutStore } from "./mod.ts";
-  import { getShortcutStore, shortcutListener } from "@rune-lab/palettes";
-  import { LAYOUT_SHORTCUTS } from "./types.ts";
-  import { onMount } from "svelte";
+export interface WorkspaceLayoutProps {
+  /** Content for the far-left vertical strip */
+  workspaceStrip?: Snippet;
+  /** Main navigation tree panel */
+  navigationPanel?: Snippet;
+  /** The primary application view */
+  content?: Snippet;
+  /** Right-side contextual detail panel */
+  detailPanel?: Snippet;
+  namespace?: string;
 
   /**
-   * @component WorkspaceLayout
-   * The main application shell managing navigational zones.
+   * Declarative layout configuration.
+   * When provided, zones can be rendered from config entries.
+   * Snippet props take priority when both are provided.
    */
-  const layoutStore = getLayoutStore();
-  const languageStore = getLanguageStore();
+  config?: LayoutConfig;
 
-  /** RTL languages (ISO 639-1 codes) */
-  const RTL_LANGUAGES = new Set(["ar", "he", "fa", "ur"]);
-  const dir = $derived(
-    RTL_LANGUAGES.has(String(languageStore.current)) ? "rtl" : "ltr",
-  );
+  /** Width of the left workspace strip */
+  stripWidth?: string;
+  /** Width of the navigation tree panel */
+  navWidth?: string;
+  /** Width of the contextual detail panel */
+  detailWidth?: string;
 
-  let {
-    /** Content for the far-left vertical strip */
-    workspaceStrip,
-    /** Main navigation tree panel */
-    navigationPanel,
-    /** The primary application view */
-    content,
-    /** Right-side contextual detail panel */
-    detailPanel,
-    namespace = "default",
+  /** Controlled override for navigation panel visibility */
+  navOpen?: boolean;
+  /** Controlled override for detail panel visibility */
+  detailOpen?: boolean;
+}
+</script>
+<script lang="ts">
+import { getLanguageStore, getLayoutStore } from "./mod.ts";
+import { getShortcutStore, shortcutListener } from "@rune-lab/palettes";
+import { LAYOUT_SHORTCUTS } from "./types.ts";
+import { onMount } from "svelte";
 
-    /** Width of the left workspace strip */
-    stripWidth = "72px",
-    /** Width of the navigation tree panel */
-    navWidth = "240px",
-    /** Width of the contextual detail panel */
-    detailWidth = "320px",
+/**
+ * @component WorkspaceLayout
+ * The main application shell managing navigational zones.
+ */
+const layoutStore = getLayoutStore();
+const languageStore = getLanguageStore();
 
-    /** Controlled override for navigation panel visibility */
-    navOpen = $bindable(layoutStore.navOpen),
-    /** Controlled override for detail panel visibility */
-    detailOpen = $bindable(layoutStore.detailOpen),
-  }: WorkspaceLayoutProps = $props();
+/** RTL languages (ISO 639-1 codes) */
+const RTL_LANGUAGES = new Set(["ar", "he", "fa", "ur"]);
+const dir = $derived(
+  RTL_LANGUAGES.has(String(languageStore.current)) ? "rtl" : "ltr",
+);
 
-  const shortcutStore = getShortcutStore();
+let {
+  /** Content for the far-left vertical strip */
+  workspaceStrip,
+  /** Main navigation tree panel */
+  navigationPanel,
+  /** The primary application view */
+  content,
+  /** Right-side contextual detail panel */
+  detailPanel,
+  namespace = "default",
 
-  // Initial configuration based on props
-  onMount(() => {
-    layoutStore.init({ namespace });
+  /** Width of the left workspace strip */
+  stripWidth = "72px",
+  /** Width of the navigation tree panel */
+  navWidth = "240px",
+  /** Width of the contextual detail panel */
+  detailWidth = "320px",
 
-    // Apply global scroll lock while WorkspaceLayout is mounted
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalHtmlHeight = document.documentElement.style.height;
-    const originalBodyHeight = document.body.style.height;
+  /** Controlled override for navigation panel visibility */
+  navOpen = $bindable(layoutStore.navOpen),
+  /** Controlled override for detail panel visibility */
+  detailOpen = $bindable(layoutStore.detailOpen),
+}: WorkspaceLayoutProps = $props();
 
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.height = "100%";
-    document.body.style.height = "100%";
+const shortcutStore = getShortcutStore();
 
-    // Register default layout shortcuts
-    const shortcuts = [
-      {
-        ...LAYOUT_SHORTCUTS.TOGGLE_NAV,
-        handler: (e: KeyboardEvent) => {
-          e.preventDefault();
-          navOpen = !navOpen;
-        },
+// Initial configuration based on props
+onMount(() => {
+  layoutStore.init({ namespace });
+
+  // Apply global scroll lock while WorkspaceLayout is mounted
+  const originalHtmlOverflow = document.documentElement.style.overflow;
+  const originalBodyOverflow = document.body.style.overflow;
+  const originalHtmlHeight = document.documentElement.style.height;
+  const originalBodyHeight = document.body.style.height;
+
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.height = "100%";
+  document.body.style.height = "100%";
+
+  // Register default layout shortcuts
+  const shortcuts = [
+    {
+      ...LAYOUT_SHORTCUTS.TOGGLE_NAV,
+      handler: (e: KeyboardEvent) => {
+        e.preventDefault();
+        navOpen = !navOpen;
       },
-      {
-        ...LAYOUT_SHORTCUTS.TOGGLE_DETAIL,
-        handler: (e: KeyboardEvent) => {
-          e.preventDefault();
-          detailOpen = !detailOpen;
-        },
+    },
+    {
+      ...LAYOUT_SHORTCUTS.TOGGLE_DETAIL,
+      handler: (e: KeyboardEvent) => {
+        e.preventDefault();
+        detailOpen = !detailOpen;
       },
-    ];
+    },
+  ];
 
-    for (const s of shortcuts) {
-      shortcutStore.register(s);
-    }
+  for (const s of shortcuts) {
+    shortcutStore.register(s);
+  }
 
-    return () => {
-      // Restore original styles
-      document.documentElement.style.overflow = originalHtmlOverflow;
-      document.body.style.overflow = originalBodyOverflow;
-      document.documentElement.style.height = originalHtmlHeight;
-      document.body.style.height = originalBodyHeight;
+  return () => {
+    // Restore original styles
+    document.documentElement.style.overflow = originalHtmlOverflow;
+    document.body.style.overflow = originalBodyOverflow;
+    document.documentElement.style.height = originalHtmlHeight;
+    document.body.style.height = originalBodyHeight;
 
-      shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_NAV.id);
-      shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_DETAIL.id);
-    };
-  });
+    shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_NAV.id);
+    shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_DETAIL.id);
+  };
+});
 </script>
 
 <div
@@ -216,23 +216,23 @@
 </div>
 
 <style>
-  :global(.rl-layout) {
-    --rl-strip-width: 72px;
-    --rl-nav-width: 240px;
-    --rl-detail-width: 320px;
-  }
+:global(.rl-layout) {
+  --rl-strip-width: 72px;
+  --rl-nav-width: 240px;
+  --rl-detail-width: 320px;
+}
 
-  /* Scrollbar styling */
-  .rl-strip::-webkit-scrollbar,
-  .rl-nav::-webkit-scrollbar,
-  .rl-detail::-webkit-scrollbar {
-    width: 4px;
-  }
+/* Scrollbar styling */
+.rl-strip::-webkit-scrollbar,
+.rl-nav::-webkit-scrollbar,
+.rl-detail::-webkit-scrollbar {
+  width: 4px;
+}
 
-  .rl-strip::-webkit-scrollbar-thumb,
-  .rl-nav::-webkit-scrollbar-thumb,
-  .rl-detail::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-  }
+.rl-strip::-webkit-scrollbar-thumb,
+.rl-nav::-webkit-scrollbar-thumb,
+.rl-detail::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
 </style>

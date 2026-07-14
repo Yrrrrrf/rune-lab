@@ -1,94 +1,94 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { m } from "$lib/i18n/messages.ts";
+import { onMount } from "svelte";
+import { m } from "$lib/i18n/messages.ts";
 
-  // Persistence keys that rune-lab stores use
-  const RL_KEYS = ["theme", "language", "currency", "cart"];
-  const RL_LAYOUT_PREFIX = "rl:layout:";
+// Persistence keys that rune-lab stores use
+const RL_KEYS = ["theme", "language", "currency", "cart"];
+const RL_LAYOUT_PREFIX = "rl:layout:";
 
-  // Reactive state for each driver's contents
-  let cookieEntries = $state<[string, string][]>([]);
-  let localStorageEntries = $state<[string, string][]>([]);
-  let sessionStorageEntries = $state<[string, string][]>([]);
+// Reactive state for each driver's contents
+let cookieEntries = $state<[string, string][]>([]);
+let localStorageEntries = $state<[string, string][]>([]);
+let sessionStorageEntries = $state<[string, string][]>([]);
 
-  // Snapshot of persisted values before reload
-  let preReloadSnapshot = $state<Record<string, string>>({});
+// Snapshot of persisted values before reload
+let preReloadSnapshot = $state<Record<string, string>>({});
 
-  function readCookies(): [string, string][] {
-    if (typeof document === "undefined") return [];
-    return document.cookie
-      .split(";")
-      .map((c) => c.trim())
-      .filter((c) => c.length > 0)
-      .map((c) => {
-        const [k, ...v] = c.split("=");
-        return [k, decodeURIComponent(v.join("="))] as [string, string];
-      });
-  }
+function readCookies(): [string, string][] {
+  if (typeof document === "undefined") return [];
+  return document.cookie
+    .split(";")
+    .map((c) => c.trim())
+    .filter((c) => c.length > 0)
+    .map((c) => {
+      const [k, ...v] = c.split("=");
+      return [k, decodeURIComponent(v.join("="))] as [string, string];
+    });
+}
 
-  function readLocalStorage(): [string, string][] {
-    if (typeof localStorage === "undefined") return [];
-    const entries: [string, string][] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && (RL_KEYS.includes(key) || key.startsWith(RL_LAYOUT_PREFIX))) {
-        entries.push([key, localStorage.getItem(key) ?? ""]);
-      }
+function readLocalStorage(): [string, string][] {
+  if (typeof localStorage === "undefined") return [];
+  const entries: [string, string][] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && (RL_KEYS.includes(key) || key.startsWith(RL_LAYOUT_PREFIX))) {
+      entries.push([key, localStorage.getItem(key) ?? ""]);
     }
-    return entries;
   }
+  return entries;
+}
 
-  function readSessionStorage(): [string, string][] {
-    if (typeof sessionStorage === "undefined") return [];
-    const entries: [string, string][] = [];
-    for (let i = 0; i < sessionStorage.length; i++) {
-      const key = sessionStorage.key(i);
-      if (key && (RL_KEYS.includes(key) || key.startsWith(RL_LAYOUT_PREFIX))) {
-        entries.push([key, sessionStorage.getItem(key) ?? ""]);
-      }
+function readSessionStorage(): [string, string][] {
+  if (typeof sessionStorage === "undefined") return [];
+  const entries: [string, string][] = [];
+  for (let i = 0; i < sessionStorage.length; i++) {
+    const key = sessionStorage.key(i);
+    if (key && (RL_KEYS.includes(key) || key.startsWith(RL_LAYOUT_PREFIX))) {
+      entries.push([key, sessionStorage.getItem(key) ?? ""]);
     }
-    return entries;
+  }
+  return entries;
+}
+
+function refresh() {
+  cookieEntries = readCookies();
+  localStorageEntries = readLocalStorage();
+  sessionStorageEntries = readSessionStorage();
+}
+
+function takeSnapshot() {
+  const snap: Record<string, string> = {};
+  for (const [k, v] of cookieEntries) snap[`cookie:${k}`] = v;
+  for (const [k, v] of localStorageEntries) snap[`ls:${k}`] = v;
+  preReloadSnapshot = snap;
+}
+
+function hardReload() {
+  takeSnapshot();
+  // Store snapshot in sessionStorage so we can compare after reload
+  sessionStorage.setItem(
+    "__rl_lab_snapshot",
+    JSON.stringify(preReloadSnapshot),
+  );
+  window.location.reload();
+}
+
+// On mount, check for pre-reload snapshot
+onMount(() => {
+  refresh();
+
+  const raw = sessionStorage.getItem("__rl_lab_snapshot");
+  if (raw) {
+    try {
+      preReloadSnapshot = JSON.parse(raw);
+    } catch {}
+    sessionStorage.removeItem("__rl_lab_snapshot");
   }
 
-  function refresh() {
-    cookieEntries = readCookies();
-    localStorageEntries = readLocalStorage();
-    sessionStorageEntries = readSessionStorage();
-  }
-
-  function takeSnapshot() {
-    const snap: Record<string, string> = {};
-    for (const [k, v] of cookieEntries) snap[`cookie:${k}`] = v;
-    for (const [k, v] of localStorageEntries) snap[`ls:${k}`] = v;
-    preReloadSnapshot = snap;
-  }
-
-  function hardReload() {
-    takeSnapshot();
-    // Store snapshot in sessionStorage so we can compare after reload
-    sessionStorage.setItem(
-      "__rl_lab_snapshot",
-      JSON.stringify(preReloadSnapshot),
-    );
-    window.location.reload();
-  }
-
-  // On mount, check for pre-reload snapshot
-  onMount(() => {
-    refresh();
-
-    const raw = sessionStorage.getItem("__rl_lab_snapshot");
-    if (raw) {
-      try {
-        preReloadSnapshot = JSON.parse(raw);
-      } catch {}
-      sessionStorage.removeItem("__rl_lab_snapshot");
-    }
-
-    // Poll every second for changes
-    const interval = setInterval(refresh, 1000);
-    return () => clearInterval(interval);
-  });
+  // Poll every second for changes
+  const interval = setInterval(refresh, 1000);
+  return () => clearInterval(interval);
+});
 </script>
 
 <div class="h-full overflow-y-auto p-4 space-y-4">

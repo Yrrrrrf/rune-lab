@@ -1,33 +1,33 @@
 <!-- src/layout/NavigationPanel.svelte -->
 <script lang="ts">
-  import type { Snippet } from "svelte";
-  import type { NavigationItem, NavigationSection } from "./types.ts";
+import type { Snippet } from "svelte";
+import type { NavigationItem, NavigationSection } from "./types.ts";
 
-  interface Props {
-    header?: Snippet;
-    sections: NavigationSection[];
-    footer?: Snippet;
-    activeId?: string | null;
-    collapsedIds?: Set<string>;
-    onSelect?: (item: NavigationItem) => void;
-    onToggle?: (id: string, isOpen: boolean) => void;
-  }
+interface Props {
+	header?: Snippet;
+	sections: NavigationSection[];
+	footer?: Snippet;
+	activeId?: string | null;
+	collapsedIds?: Set<string>;
+	onSelect?: (item: NavigationItem) => void;
+	onToggle?: (id: string, isOpen: boolean) => void;
+}
 
-  let {
-    header,
-    sections = [],
-    footer,
-    activeId,
-    collapsedIds = new Set(),
-    onSelect,
-    onToggle,
-  }: Props = $props();
+let {
+	header,
+	sections = [],
+	footer,
+	activeId,
+	collapsedIds = new Set(),
+	onSelect,
+	onToggle,
+}: Props = $props();
 
-  function handleItemClick(item: NavigationItem) {
-    onSelect?.(item);
-    // Only trigger click handler, don't auto-navigate here (let parent handle it)
-    item.onClick?.();
-  }
+function handleItemClick(item: NavigationItem) {
+	onSelect?.(item);
+	// Only trigger click handler, don't auto-navigate here (let parent handle it)
+	item.onClick?.();
+}
 </script>
 
 {#snippet navItem(item: NavigationItem)}

@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { m } from "$lib/i18n/messages.ts";
-  import ShowcaseCard from "../ShowcaseCard.svelte";
-  import { COLORS } from "../shared";
+import { m } from "$lib/i18n/messages.ts";
+import ShowcaseCard from "../ShowcaseCard.svelte";
+import { COLORS } from "../shared";
 
-  let rangeVal = $state(40);
-  let toggleChecked = $state(true);
-  let checkboxChecked = $state(false);
-  let ratingVal = $state(3);
+let rangeVal = $state(40);
+let toggleChecked = $state(true);
+let checkboxChecked = $state(false);
+let ratingVal = $state(3);
 </script>
 
 <div class="space-y-6">

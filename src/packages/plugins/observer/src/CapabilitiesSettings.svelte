@@ -1,28 +1,25 @@
 <script lang="ts">
-  import { getCommandStore, getShortcutStore } from "@rune-lab/palettes";
-  import { getSettingsSections } from "@rune-lab/svelte";
+import { getCommandStore, getShortcutStore } from "@rune-lab/palettes";
+import { getSettingsSections } from "@rune-lab/svelte";
 
-  const shortcutStore = getShortcutStore();
-  const commandStore = getCommandStore();
-  const sections = getSettingsSections();
+const shortcutStore = getShortcutStore();
+const commandStore = getCommandStore();
+const sections = getSettingsSections();
 
-  let showPreview = $state(true);
+let showPreview = $state(true);
 
+if (typeof window !== "undefined") {
+  showPreview =
+    window.localStorage.getItem("rl:observer:showPreview") !== "false";
+}
+
+function handleToggle() {
+  showPreview = !showPreview;
   if (typeof window !== "undefined") {
-    showPreview =
-      window.localStorage.getItem("rl:observer:showPreview") !== "false";
+    window.localStorage.setItem("rl:observer:showPreview", String(showPreview));
+    window.dispatchEvent(new Event("rl:observer:toggle"));
   }
-
-  function handleToggle() {
-    showPreview = !showPreview;
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(
-        "rl:observer:showPreview",
-        String(showPreview),
-      );
-      window.dispatchEvent(new Event("rl:observer:toggle"));
-    }
-  }
+}
 </script>
 
 <div class="p-6 space-y-6 max-w-2xl">

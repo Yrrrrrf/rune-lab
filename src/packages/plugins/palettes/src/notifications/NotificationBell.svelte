@@ -3,25 +3,25 @@
   Purely presentational: takes props, emits events, knows nothing about routing or domain.
 -->
 <script module lang="ts">
-  export interface NotificationBellProps {
-    /** Number of unread notifications (badge hides when 0) */
-    unreadCount?: number;
-    /** Click handler */
-    onclick?: () => void;
-    /** Enable shake animation to draw attention */
-    animate?: boolean;
-  }
+export interface NotificationBellProps {
+  /** Number of unread notifications (badge hides when 0) */
+  unreadCount?: number;
+  /** Click handler */
+  onclick?: () => void;
+  /** Enable shake animation to draw attention */
+  animate?: boolean;
+}
 </script>
 
 <script lang="ts">
-  let {
-    unreadCount = 0,
-    onclick,
-    animate = false,
-  }: NotificationBellProps = $props();
+let {
+  unreadCount = 0,
+  onclick,
+  animate = false,
+}: NotificationBellProps = $props();
 
-  const showBadge = $derived(unreadCount > 0);
-  const badgeText = $derived(unreadCount > 99 ? "99+" : String(unreadCount));
+const showBadge = $derived(unreadCount > 0);
+const badgeText = $derived(unreadCount > 99 ? "99+" : String(unreadCount));
 </script>
 
 <button
@@ -56,32 +56,32 @@
 </button>
 
 <style>
-  @keyframes rl-bell-shake {
-    0%,
-    100% {
-      transform: rotate(0deg);
-    }
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-      transform: rotate(-6deg);
-    }
-    20%,
-    40%,
-    60%,
-    80% {
-      transform: rotate(6deg);
-    }
+@keyframes rl-bell-shake {
+  0%,
+  100% {
+    transform: rotate(0deg);
   }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: rotate(-6deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: rotate(6deg);
+  }
+}
 
-  .rl-bell-animate {
-    animation: rl-bell-shake 0.8s ease-in-out infinite;
-    animation-delay: 2s;
-  }
+.rl-bell-animate {
+  animation: rl-bell-shake 0.8s ease-in-out infinite;
+  animation-delay: 2s;
+}
 
-  .rl-bell-animate:hover {
-    animation: none;
-  }
+.rl-bell-animate:hover {
+  animation: none;
+}
 </style>

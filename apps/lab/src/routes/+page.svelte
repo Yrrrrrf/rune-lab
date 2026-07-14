@@ -1,9 +1,9 @@
 <script lang="ts">
-  import InteractionDeck from "$lib/components/InteractionDeck.svelte";
-  import LabHeader from "$lib/components/LabHeader.svelte";
-  import PersistenceInspector from "$lib/components/PersistenceInspector.svelte";
-  import StoresMirror from "$lib/components/StoresMirror.svelte";
-  import Showcase from "$lib/components/showcase/Showcase.svelte";
+import InteractionDeck from "$lib/components/InteractionDeck.svelte";
+import LabHeader from "$lib/components/LabHeader.svelte";
+import PersistenceInspector from "$lib/components/PersistenceInspector.svelte";
+import StoresMirror from "$lib/components/StoresMirror.svelte";
+import Showcase from "$lib/components/showcase/Showcase.svelte";
 </script>
 
 <div class="flex flex-col h-full w-full overflow-hidden">

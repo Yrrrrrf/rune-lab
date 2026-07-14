@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { getToastStore } from "@rune-lab/palettes";
-  import { m } from "$lib/i18n/messages.ts";
-  import ShowcaseCard from "../ShowcaseCard.svelte";
+import { getToastStore } from "@rune-lab/palettes";
+import { m } from "$lib/i18n/messages.ts";
+import ShowcaseCard from "../ShowcaseCard.svelte";
 
-  const toastStore = getToastStore();
+const toastStore = getToastStore();
 
-  function fireToast(type: "info" | "success" | "warning" | "error") {
-    toastStore.send(m.toast_context_msg({ type }), type, 3000);
-  }
+function fireToast(type: "info" | "success" | "warning" | "error") {
+  toastStore.send(m.toast_context_msg({ type }), type, 3000);
+}
 </script>
 
 <div class="space-y-6">
