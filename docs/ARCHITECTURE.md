@@ -133,13 +133,13 @@ itself by name for any subpath in its own `exports` map; Vite honors this).
 
 ### 2.1 Canonical specifier table
 
-| dev-time (workspace)     | dist rewrite target                            | exports entry | dist location                |
-| ------------------------ | ---------------------------------------------- | ------------- | ---------------------------- |
-| `@rune-lab/svelte`       | `rune-lab` (bare root — NOT `rune-lab/svelte`) | `.`           | `dist/` (entry file only)    |
-| `@rune-lab/core`         | `rune-lab/core`                                | `./core`      | `dist/src/core/`             |
-| `@rune-lab/layout`       | `rune-lab/layout`                              | `./layout`    | `dist/src/plugins/layout/`   |
-| `@rune-lab/palettes`     | `rune-lab/palettes`                            | `./palettes`  | `dist/src/plugins/palettes/` |
-| `@rune-lab/i18n` (money) | `rune-lab/money`                               | `./money`     | `dist/src/plugins/money/`    |
+| dev-time (workspace)     | dist rewrite target                            | exports entry  | dist location                |
+| ------------------------ | ---------------------------------------------- | -------------- | ---------------------------- |
+| `@rune-lab/svelte`       | `rune-lab` (bare root — NOT `rune-lab/svelte`) | `.`            | `dist/` (entry file only)    |
+| `@rune-lab/core`         | `rune-lab/core`                                | `./core`       | `dist/src/core/`             |
+| `@rune-lab/layout`       | `rune-lab/layout`                              | `./layout`     | `dist/src/plugins/layout/`   |
+| `@rune-lab/palettes`     | `rune-lab/palettes`                            | `./palettes`   | `dist/src/plugins/palettes/` |
+| `@rune-lab/i18n` (money) | `rune-lab/i18n/money`                          | `./i18n/money` | `dist/src/plugins/money/`    |
 
 This table is the contract between three parties that must stay in sync:
 **source imports** (dev), **`scripts/manifest.ts`** (exports map + folding

@@ -42,7 +42,7 @@ const exports = {
     svelte: "./dist/src/plugins/palettes/mod.js",
     default: "./dist/src/plugins/palettes/mod.js",
   },
-  "./money": {
+  "./i18n/money": {
     types: "./dist/src/plugins/money/mod.d.ts",
     svelte: "./dist/src/plugins/money/mod.js",
     default: "./dist/src/plugins/money/mod.js",

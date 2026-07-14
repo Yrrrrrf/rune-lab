@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getAppStore } from "rune-lab";
   import { LanguageSelector, ThemeSelector } from "rune-lab/layout";
-  import { CurrencySelector } from "rune-lab/money";
+  import { CurrencySelector } from "rune-lab/i18n/money";
   import { m } from "$lib/i18n/messages.ts";
 
   const appStore = getAppStore();

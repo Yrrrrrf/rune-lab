@@ -23,9 +23,10 @@ rings in one npm package:
 - **The adapter** (`rune-lab`) — the Svelte 5 binding. One provider, one
   reactivity bridge (`useCell`), one accessor factory, browser persistence
   drivers. It knows nothing about themes, shortcuts, commands, toasts, or money.
-- **The plugins** (`rune-lab/layout`, `rune-lab/palettes`, `rune-lab/money`, …)
-  — the domains. Each owns its types, its stores, its context symbols, its
-  accessors, its overlays, and its third-party dependencies.
+- **The plugins** (`rune-lab/layout`, `rune-lab/palettes`,
+  `rune-lab/i18n/money`, …) — the domains. Each owns its types, its stores, its
+  context symbols, its accessors, its overlays, and its third-party
+  dependencies.
 
 It is not a component zoo. It is the _skeleton_ you hang an app on. You register
 the plugins you want, and you have a reactive shell that never fights you.

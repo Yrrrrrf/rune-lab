@@ -114,8 +114,8 @@ def patch-file [file: path, dist: path, version: string]: nothing -> record {
     | str replace --all --regex "@rune-lab/layout(\\b|/|$)" 'rune-lab/layout$1'
     | str replace --all --regex "@rune-lab/palettes(\\b|/|$)" 'rune-lab/palettes$1'
     | str replace --all --regex "@rune-lab/observer(\\b|/|$)" 'rune-lab/observer$1'
-    | str replace --all --regex "@rune-lab/i18n/money(\\b|/|$)" 'rune-lab/money$1'
-    | str replace --all --regex "@rune-lab/i18n(\\b|/|$)" 'rune-lab/money$1'
+    | str replace --all --regex "@rune-lab/i18n/money(\\b|/|$)" 'rune-lab/i18n/money$1'
+    | str replace --all --regex "@rune-lab/i18n(\\b|/|$)" 'rune-lab/i18n/money$1'
     | str replace --all --regex "@rune-lab/svelte(\\b|/|$)" 'rune-lab$1'
     | str replace --all "@rune-lab" "rune-lab"
   )

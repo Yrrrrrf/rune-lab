@@ -12,6 +12,7 @@
     "tailwindcss": "npm:tailwindcss",
     "@tailwindcss/vite": "npm:@tailwindcss/vite",
     "daisyui": "npm:daisyui",
-    "async_hooks": "node:async_hooks"
+    "async_hooks": "node:async_hooks",
+    "typescript": "npm:typescript@6"
   }
 }

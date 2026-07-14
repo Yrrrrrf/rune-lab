@@ -33,14 +33,14 @@ build/
 The package exposes the following entry points through its `package.json`
 `exports` map:
 
-| Public Import Path   | Internal Target                    | Purpose                                      |
-| -------------------- | ---------------------------------- | -------------------------------------------- |
-| `rune-lab`           | `dist/mod.js`                      | Svelte 5 UI adapter components & hooks       |
-| `rune-lab/core`      | `dist/src/core/mod.js`             | Kernel & Dependency Injection API            |
-| `rune-lab/layout`    | `dist/src/plugins/layout/mod.js`   | Layout components & language/theme selection |
-| `rune-lab/palettes`  | `dist/src/plugins/palettes/mod.js` | Command palette, shortcut list, toaster      |
-| `rune-lab/money`     | `dist/src/plugins/money/mod.js`    | Currency stores & selections                 |
-| `rune-lab/i18n/lang` | `dist/src/plugins/lang/mod.js`     | Internal localization / paraglide entry      |
+| Public Import Path    | Internal Target                    | Purpose                                      |
+| --------------------- | ---------------------------------- | -------------------------------------------- |
+| `rune-lab`            | `dist/mod.js`                      | Svelte 5 UI adapter components & hooks       |
+| `rune-lab/core`       | `dist/src/core/mod.js`             | Kernel & Dependency Injection API            |
+| `rune-lab/layout`     | `dist/src/plugins/layout/mod.js`   | Layout components & language/theme selection |
+| `rune-lab/palettes`   | `dist/src/plugins/palettes/mod.js` | Command palette, shortcut list, toaster      |
+| `rune-lab/i18n/money` | `dist/src/plugins/money/mod.js`    | Currency stores & selections                 |
+| `rune-lab/i18n/lang`  | `dist/src/plugins/lang/mod.js`     | Internal localization / paraglide entry      |
 
 ## 3. Build & Packaging Pipeline (`just build`)
 

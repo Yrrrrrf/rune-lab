@@ -5,7 +5,7 @@
     getLayoutStore,
     getThemeStore,
   } from "rune-lab/layout";
-  import { getCurrencyStore } from "rune-lab/money";
+  import { getCurrencyStore } from "rune-lab/i18n/money";
   import {
     getCommandStore,
     getShortcutStore,
