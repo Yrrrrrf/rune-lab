@@ -21,7 +21,7 @@ _clean-tree:
 [group('Build')]
 [no-cd]
 paraglide project outdir:
-    deno run -A npm:@inlang/paraglide-js compile --project "{{ project }}" --outdir "{{ outdir }}"
+    deno run -A npm:@inlang/paraglide-js compile --project "{{ project }}" --outdir "{{ outdir }}" --emit-ts-declarations
 
 [doc('Package one workspace member: src/packages/<dir>/src → build/dist/<out>')]
 [group('Build')]

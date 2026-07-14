@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { getLanguageStore } from "@rune-lab/layout";
   import { DEV } from "esm-env";
-  import { getLanguageStore } from "rune-lab/layout";
   import { getCurrencyStore } from "./mod.ts";
   import { formatAmount, type ISO4217Code, toMinorUnit } from "./money.ts";
   import type { MoneyPrimitive } from "./money-primitive.ts";

@@ -20,9 +20,20 @@
   ],
   "imports": {
     "vite-plus": "npm:vite-plus",
+    "vite": "npm:vite",
     "typescript": "npm:typescript@6",
     "@vitest/utils": "npm:vitest/utils",
-    "@testing-library/jest-dom": "npm:@testing-library/jest-dom"
+    "@testing-library/jest-dom": "npm:@testing-library/jest-dom",
+    "jsdom": "npm:jsdom",
+    "@rune-lab/core": "./src/packages/core/src/mod.ts",
+    "@rune-lab/svelte": "./src/packages/ui/src/mod.ts",
+    "@rune-lab/layout": "./src/packages/plugins/layout/src/mod.ts",
+    "@rune-lab/palettes": "./src/packages/plugins/palettes/src/mod.ts",
+    "@rune-lab/observer": "./src/packages/plugins/observer/src/mod.ts",
+    "@rune-lab/i18n": "./src/packages/plugins/i18n/src/mod.ts",
+    "@rune-lab/i18n/lang": "./src/packages/plugins/i18n/src/lang/mod.ts",
+    "@rune-lab/i18n/money": "./src/packages/plugins/i18n/src/money/mod.ts",
+    "esm-env": "npm:esm-env@^1"
   },
   "test": {
     "exclude": ["apps/**", "src/packages/ui/**", "src/packages/plugins/**"]

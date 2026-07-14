@@ -4,7 +4,6 @@
   "license": "MIT",
   "authors": ["Yrrrrrf <fer.rezac@outlook.com>"],
   "imports": {
-    "rune-lab": "npm:rune-lab",
     "svelte": "npm:svelte@^5",
     "@sveltejs/kit": "npm:@sveltejs/kit",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",

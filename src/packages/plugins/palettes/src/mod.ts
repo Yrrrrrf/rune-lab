@@ -11,7 +11,11 @@ import ShortcutPalette from "./shortcuts/ShortcutPalette.svelte";
 import type { ShortcutStore } from "./shortcuts/store.svelte.ts";
 import { createShortcutStore } from "./shortcuts/store.svelte.ts";
 
-export const PALETTES_CONTEXT = {
+export const PALETTES_CONTEXT: {
+  shortcut: symbol;
+  toast: symbol;
+  commands: symbol;
+} = {
   shortcut: Symbol("rl:shortcut"),
   toast: Symbol("rl:toast"),
   commands: Symbol("rl:commands"),

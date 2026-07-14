@@ -1,7 +1,7 @@
 // sdk/state/src/language.svelte.ts
 
+import { createMessageResolver, m } from "@rune-lab/i18n/lang";
 import { type ConfigStore, createConfigStore } from "@rune-lab/svelte";
-import { createMessageResolver, m } from "rune-lab/i18n/lang";
 import type { Language } from "./types.ts";
 
 /**

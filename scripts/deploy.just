@@ -5,8 +5,8 @@ build:
     rm -rf build
     # * Generate build/package.json from root + ui deno.json, copy README & LICENSE
     deno run -A scripts/manifest.ts
-    # * Compile i18n messages → paraglide runtime (returns when ui regains an inlang project)
-    # just paraglide ./src/packages/ui/src/i18n/project.inlang ./src/packages/ui/src/i18n/paraglide
+    # * Compile i18n messages → paraglide runtime
+    just paraglide src/packages/plugins/i18n/src/lang/project.inlang src/packages/plugins/i18n/src/lang/paraglide
     # * Bundle workspace members
     just svelte-package ui ""
     just svelte-package core

@@ -1,6 +1,7 @@
 // src/state/layout.svelte.ts
-import type { PersistenceDriver, WorkspaceItem } from "@rune-lab/svelte";
+import type { PersistenceDriver } from "@rune-lab/svelte";
 import { resolveDriver } from "@rune-lab/svelte";
+import type { WorkspaceItem } from "./types.ts";
 
 export class LayoutStore {
   workspaces: WorkspaceItem[] = $state<WorkspaceItem[]>([]);

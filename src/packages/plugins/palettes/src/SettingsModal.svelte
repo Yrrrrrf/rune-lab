@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { getLayoutStore } from "@rune-lab/layout";
   import { getSettingsSections, type SettingsSection } from "@rune-lab/svelte";
-  import { getLayoutStore } from "rune-lab/layout";
   import { onMount, tick } from "svelte";
   import { getCommandStore, getShortcutStore } from "./mod.ts";
 

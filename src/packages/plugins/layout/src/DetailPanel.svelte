@@ -2,9 +2,11 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  let { children } = $props<{
+  export interface DetailPanelProps {
     children: Snippet;
-  }>();
+  }
+
+  let { children }: DetailPanelProps = $props();
 </script>
 
 <div class="p-6">

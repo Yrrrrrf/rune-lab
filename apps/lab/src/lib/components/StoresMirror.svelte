@@ -1,11 +1,11 @@
 <script lang="ts">
   import { getAppStore } from "rune-lab";
+  import { getCurrencyStore } from "rune-lab/i18n/money";
   import {
     getLanguageStore,
     getLayoutStore,
     getThemeStore,
   } from "rune-lab/layout";
-  import { getCurrencyStore } from "rune-lab/i18n/money";
   import {
     getCommandStore,
     getShortcutStore,

@@ -11,7 +11,8 @@ lint:
 [doc('Type-check workspace')]
 [group('check')]
 types:
-    -deno run -A npm:svelte-check
+    -deno run -A npm:svelte-check --tsconfig ./src/tsconfig.json
+    -deno run -A npm:svelte-check --tsconfig ./apps/lab/tsconfig.json
 
 [doc('Audit all code namespaces')]
 [group('check')]

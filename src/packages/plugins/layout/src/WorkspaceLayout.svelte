@@ -36,7 +36,7 @@
 </script>
 <script lang="ts">
   import { getLanguageStore, getLayoutStore } from "./mod.ts";
-  import { getShortcutStore, shortcutListener } from "rune-lab/palettes";
+  import { getShortcutStore, shortcutListener } from "@rune-lab/palettes";
   import { LAYOUT_SHORTCUTS } from "./types.ts";
   import { onMount } from "svelte";
 

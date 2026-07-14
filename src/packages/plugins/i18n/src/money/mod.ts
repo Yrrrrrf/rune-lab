@@ -13,7 +13,7 @@ import {
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 import { createExchangeRateStore } from "./exchange-rate.svelte.ts";
 
-export const MONEY_CONTEXT = {
+export const MONEY_CONTEXT: { currency: symbol; exchangeRate: symbol } = {
   currency: Symbol("rl:currency"),
   exchangeRate: Symbol("rl:exchange-rate"),
 };

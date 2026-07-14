@@ -1,8 +1,8 @@
 // sdk/state/src/composables/useMoney.ts
 // Context-aware money composable that reads CurrencyStore + LanguageStore
 
+import { LAYOUT_CONTEXT } from "@rune-lab/layout";
 import type { ConfigStore } from "@rune-lab/svelte";
-import { LAYOUT_CONTEXT } from "rune-lab/layout";
 import { getContext } from "svelte";
 import type { CurrencyStore } from "./currency.svelte.ts";
 import type { ExchangeRateStore } from "./exchange-rate.svelte.ts";

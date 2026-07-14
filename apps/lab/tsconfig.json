@@ -1,3 +1,23 @@
 {
-  "extends": ["../../src/tsconfig.json", "./.svelte-kit/tsconfig.json"]
+  "extends": ["../../src/tsconfig.json", "./.svelte-kit/tsconfig.json"],
+  "compilerOptions": {
+    "paths": {
+      "$lib": ["./src/lib"],
+      "$lib/*": ["./src/lib/*"],
+      "$app/types": ["./.svelte-kit/types/index.d.ts"],
+      "@rune-lab/core": ["../../src/packages/core/src/mod.ts"],
+      "@rune-lab/svelte": ["../../src/packages/ui/src/mod.ts"],
+      "@rune-lab/i18n": ["../../src/packages/plugins/i18n/src/mod.ts"],
+      "@rune-lab/i18n/lang": [
+        "../../src/packages/plugins/i18n/src/lang/mod.ts"
+      ],
+      "@rune-lab/i18n/money": [
+        "../../src/packages/plugins/i18n/src/money/mod.ts"
+      ],
+      "@rune-lab/layout": ["../../src/packages/plugins/layout/src/mod.ts"],
+      "@rune-lab/observer": ["../../src/packages/plugins/observer/src/mod.ts"],
+      "@rune-lab/palettes": ["../../src/packages/plugins/palettes/src/mod.ts"]
+    }
+  },
+  "exclude": ["build/**", "dist/**", ".svelte-kit/**", "node_modules/**"]
 }

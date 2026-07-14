@@ -1,7 +1,7 @@
 <!-- src/features/shortcuts/ShortcutPalette.svelte -->
 <script lang="ts">
+  import { LAYOUT_SHORTCUTS } from "@rune-lab/layout";
   import { getAppStore } from "@rune-lab/svelte";
-  import { LAYOUT_SHORTCUTS } from "rune-lab/layout";
   import { tick } from "svelte";
   import { getShortcutStore } from "../mod.ts";
   import type { ShortcutEntry } from "../types.ts";

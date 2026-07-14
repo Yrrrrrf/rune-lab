@@ -10,7 +10,11 @@ import { createLayoutStore, type LayoutStore } from "./store.svelte.ts";
 import { themeStore } from "./theme.svelte.ts";
 import type { Language, Theme } from "./types.ts";
 
-export const LAYOUT_CONTEXT = {
+export const LAYOUT_CONTEXT: {
+  layout: symbol;
+  theme: symbol;
+  language: symbol;
+} = {
   layout: Symbol("rl:layout"),
   theme: Symbol("rl:theme"),
   language: Symbol("rl:language"),

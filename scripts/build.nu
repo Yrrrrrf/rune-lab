@@ -140,6 +140,10 @@ def patch-file [file: path, dist: path, version: string]: nothing -> record {
     $rewritten
   })
 
+  let rewritten = ($rewritten
+    | str replace --all --regex "type\\s+([A-Za-z0-9_]+)Props_\\s*=\\s*typeof\\s+__propDef\\.props\\s*;" 'type ${1}Props_ = ${1}Props;'
+  )
+
   let patched = ($rewritten
     | str replace --all --regex $manifest_import_re ''
     | str replace --all --regex $with_type_re ''
