@@ -12,7 +12,8 @@ coverage
 .fallow
 
 # docs & spec files
-# docs
+docs
+apps
 
 # ide configuration files 
 **.code-workspace

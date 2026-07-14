@@ -1,8 +1,3 @@
-[doc('Package one workspace member: src/packages/<dir>/src → build/dist/<out>')]
-[group('Build')]
-svelte-package dir out=dir:
-    cd src/packages/{{ dir }}; deno run -A npm:@sveltejs/package -i src -o "{{ justfile_directory() }}/build/dist/{{ out }}"
-
 [doc('Build the rune-lab package (ui): deno.json -> build/{dist, package.json, README, LICENSE}')]
 [group('Build')]
 build:

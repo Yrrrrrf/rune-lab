@@ -2,7 +2,6 @@ PROJECT := "rune-lab"
 VERSION := `git describe --tags --always`
 
 TSCONFIG := justfile_directory() / "src/tsconfig.json"
-SVELTE_SHIM := justfile_directory() / "scripts/shims/svelte.config.js"
 PKG_SHIM := justfile_directory() / "scripts/shims/package.json"
 
 SVELTE_WORKSPACES := "src/packages/ui src/packages/plugins/palettes src/packages/plugins/layout src/packages/plugins/observer src/packages/plugins/i18n apps/lab"
@@ -23,6 +22,11 @@ _clean-tree:
 [no-cd]
 paraglide project outdir:
     deno run -A npm:@inlang/paraglide-js compile --project "{{ project }}" --outdir "{{ outdir }}"
+
+[doc('Package one workspace member: src/packages/<dir>/src → build/dist/<out>')]
+[group('Build')]
+svelte-package dir out=dir:
+    cd src/packages/{{ dir }}; deno run -A npm:@sveltejs/package -i src -o "{{ justfile_directory() }}/build/dist/{{ out }}"
 
 # closure-as-data: shim in, run, shim out — skips the copy when the
 # workspace ships its own real config (e.g. ui's svelte.config.js)
