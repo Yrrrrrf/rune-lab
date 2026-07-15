@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import { Schema } from "effect";
 import type { PersistenceHandle } from "./descriptors.ts";
 

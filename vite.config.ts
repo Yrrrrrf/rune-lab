@@ -34,6 +34,8 @@ const svelteProject = (
       "@rune-lab/palettes": resolve(
         "./src/packages/plugins/palettes/src/mod.ts",
       ),
+      pretext: "@chenglou/pretext",
+      "pretext/rich-inline": "@chenglou/pretext/rich-inline",
     },
   },
   test: {

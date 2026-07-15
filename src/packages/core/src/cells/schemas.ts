@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import { Schema } from "effect";
 
 export const withFallback = <A, I>(
@@ -38,9 +37,6 @@ export function getCellSchema(
   key: string,
   fallback: unknown,
 ): Schema.Schema<any, any, never> {
-  if (key === "theme") return ThemeSchema;
-  if (key === "language") return LanguageSchema;
-  if (key === "currency") return CurrencySchema;
   if (key === "contributions") return ContributionsSchema;
   return withFallback(Schema.Any, fallback);
 }

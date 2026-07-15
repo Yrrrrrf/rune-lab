@@ -1,12 +1,12 @@
 <script lang="ts">
-import { getLanguageName } from "./language.svelte.ts";
-import { getLanguageStore } from "./mod.ts";
-import ResourceSelector from "./ResourceSelector.svelte";
+import { ResourceSelector } from "@rune-lab/layout";
+import { getLanguageStore } from "./lang/mod.ts";
+import { getLanguageName } from "./lang/store.svelte.ts";
 
 const languageStore = getLanguageStore();
 
 let {
-  languages: allowedLocales = languageStore.available.map((l) =>
+  languages: allowedLocales = languageStore.available.map((l: any) =>
     String(l.code)
   ),
   current = $bindable(String(languageStore.current)),

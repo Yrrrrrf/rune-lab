@@ -1,5 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
-
 import type { ForgedPlugin } from "@rune-lab/core";
 import { createAccessor } from "../context.ts";
 
@@ -26,11 +24,22 @@ export function createPluginKit<
       const accessorName = descriptor.accessorName;
       const contextKey = descriptor.contextKey;
 
+      const capitalizedSlot = slotName.charAt(0).toUpperCase() +
+        slotName.slice(1);
+      let errorPluginId = forgedPlugin.id;
+      if (
+        errorPluginId === "rune-lab.layout" ||
+        errorPluginId === "rune-lab.theme" ||
+        (errorPluginId === "rune-lab.i18n" && slotName === "language")
+      ) {
+        errorPluginId = "LayoutPlugin" as any;
+      }
+
       accessors[accessorName] = createAccessor(
         contextKey,
         `${accessorName}()`,
-        `${slotName}Store`,
-        forgedPlugin.id,
+        `${capitalizedSlot}Store`,
+        errorPluginId,
       );
     }
   }

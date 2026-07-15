@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 export type { RuneLabCells } from "./cells/cells.ts";
 export {
   type ConfigStore,
@@ -24,7 +23,29 @@ export {
   namespaced,
 } from "./ports/memory.ts";
 export type { PersistenceDriver } from "./ports/persistence.ts";
-export type { TextMeasurer } from "./ports/text.ts";
+export type {
+  LayoutCursor,
+  LayoutLine,
+  LayoutLineRange,
+  LayoutLinesResult,
+  LayoutResult,
+  LineStats,
+  PreparedRichInline,
+  PreparedText,
+  PreparedTextWithSegments,
+  PrepareOptions,
+  RichInlineCursor,
+  RichInlineFragment,
+  RichInlineFragmentRange,
+  RichInlineItem,
+  RichInlineLine,
+  RichInlineLineRange,
+  RichInlineStats,
+  TextMeasurer,
+  WhiteSpaceMode,
+  WordBreakMode,
+} from "./ports/text.ts";
+export { FakeTextMeasurer } from "./ports/text-fake.ts";
 export {
   clearRegistry,
   getAllRegisteredStores,

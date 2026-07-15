@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import { Context, Effect, Layer, ManagedRuntime, Schema } from "effect";
 import type { ForgedPlugin, PluginInput } from "../forge/define-plugin.ts";
 import type { PersistenceHandle } from "../forge/descriptors.ts";

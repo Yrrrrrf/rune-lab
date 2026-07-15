@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import type { PersistenceDriver } from "@rune-lab/core";
 import {
   type ConfigStore,

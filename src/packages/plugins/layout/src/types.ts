@@ -1,5 +1,7 @@
-// sdk/core/src/layout/types.ts
-// Framework-agnostic layout configuration types.
+import type { Language } from "@rune-lab/i18n";
+import type { Theme } from "@rune-lab/palettes";
+
+export type { Language, Theme };
 
 export interface LayoutZone {
   id: string;
@@ -40,16 +42,6 @@ export interface NavigationSection {
   items: NavigationItem[];
 }
 
-export interface Language {
-  code: string;
-  flag?: string;
-}
-
-export interface Theme {
-  name: string;
-  icon?: string;
-}
-
 export const LAYOUT_SHORTCUTS = {
   TOGGLE_NAV: {
     id: "layout:toggle-nav",
@@ -70,3 +62,19 @@ export const LAYOUT_SHORTCUTS = {
     category: "Layout",
   },
 } as const;
+
+export type LayoutPreset = "page" | "docs" | "workspace";
+
+export interface ZoneState {
+  visible: boolean;
+  size?: number;
+}
+
+export interface PresetState {
+  nav: ZoneState;
+  strip: ZoneState;
+  content: ZoneState;
+  detail: ZoneState;
+  statusbar: ZoneState;
+  "overlay-anchor": ZoneState;
+}

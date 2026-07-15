@@ -1,5 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
-
 import type { Kernel, RuneLabCells } from "@rune-lab/core";
 import { getContext } from "svelte";
 

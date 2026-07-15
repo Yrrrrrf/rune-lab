@@ -1,7 +1,7 @@
 <script lang="ts">
+import { ResourceSelector } from "@rune-lab/layout";
 import { getThemeStore } from "./mod.ts";
-import ResourceSelector from "./ResourceSelector.svelte";
-import { getThemeName } from "./theme.svelte.ts";
+import { getThemeName } from "./theme/store.svelte.ts";
 
 const themeStore = getThemeStore();
 

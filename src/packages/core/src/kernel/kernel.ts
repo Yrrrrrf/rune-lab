@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import { Context, Effect, Option, Schema } from "effect";
 import type { RuneLabCells } from "../cells/cells.ts";
 import { getCellSchema } from "../cells/schemas.ts";

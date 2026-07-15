@@ -19,7 +19,6 @@ const TextMeasurerTag = Context.GenericTag<TextMeasurer>(
 );
 
 export interface StateCells {
-  // deno-lint-ignore no-explicit-any
   readonly cells: Record<string, StateCell<any>>;
 }
 

@@ -1,7 +1,5 @@
-// deno-lint-ignore-file no-explicit-any
 import { Schema } from "effect";
 
-// fallow-ignore-next-line unused-export
 export const withFallback = <A, I>(
   schema: Schema.Schema<A, I, never>,
   fallback: A,

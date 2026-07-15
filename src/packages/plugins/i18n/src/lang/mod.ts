@@ -1,5 +1,8 @@
-import type { LocaleAdapter, RunePlugin } from "@rune-lab/core";
-import { definePlugin } from "@rune-lab/core";
+import type { LocaleAdapter } from "@rune-lab/core";
+import { definePlugin, defineSettings } from "@rune-lab/core";
+import { createPluginKit } from "@rune-lab/svelte";
+import { Schema } from "effect";
+import { createLanguageStore } from "./store.svelte.ts";
 
 interface ParaglideRuntime {
   languageTag?(): string;
@@ -9,10 +12,6 @@ interface ParaglideRuntime {
   setLocale?(locale: string): void | Promise<void>;
 }
 
-/**
- * Creates a LocaleAdapter that wraps any paraglide runtime.
- * Bridges paraglide tag changes and Svelte stores.
- */
 export function createParaglideAdapter(
   paraglideRuntime: ParaglideRuntime,
 ): LocaleAdapter {
@@ -45,11 +44,48 @@ export function createParaglideAdapter(
 
 export * from "./message-resolver.ts";
 export * from "./messages.ts";
+export * from "./store.svelte.ts";
 
-/**
- * i18n Plugin — integrates paraglide-js translations with the microkernel.
- */
-export const I18nPlugin: RunePlugin = definePlugin({
+export const i18nPluginSpec = definePlugin({
   id: "rune-lab.i18n",
-  stores: [],
+  slots: {
+    language: {
+      create: (ctx: any) => createLanguageStore(ctx),
+      contextKey: Symbol.for("rl:language"),
+      persist: true,
+      config: Schema.Struct({
+        defaultLanguage: Schema.optional(Schema.String),
+        locales: Schema.optional(Schema.Array(Schema.String)),
+      }),
+      expose: true,
+    },
+  },
+  settings: defineSettings({
+    id: "i18n",
+    label: "Language Settings",
+    icon: "translate",
+    fields: [
+      {
+        id: "language",
+        label: "Language",
+        type: "select",
+        target: {
+          type: "store",
+          storeId: "language",
+          property: "current",
+        },
+        options: [
+          { value: "en", label: "English" },
+          { value: "fr", label: "French" },
+          { value: "de", label: "German" },
+          { value: "es", label: "Spanish" },
+        ],
+      },
+    ],
+  }),
 });
+
+const kit = createPluginKit(i18nPluginSpec);
+
+export const I18nPlugin = kit.plugin;
+export const { getLanguageStore } = kit.accessors;

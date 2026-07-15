@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import type { SettingsSchema } from "./define-settings.ts";
 import type { SlotSpec } from "./define-slot.ts";
 import {

@@ -17,7 +17,11 @@
       "@rune-lab/i18n": ["./packages/plugins/i18n/src/mod.ts"],
       "@rune-lab/layout": ["./packages/plugins/layout/src/mod.ts"],
       "@rune-lab/observer": ["./packages/plugins/observer/src/mod.ts"],
-      "@rune-lab/palettes": ["./packages/plugins/palettes/src/mod.ts"]
+      "@rune-lab/palettes": ["./packages/plugins/palettes/src/mod.ts"],
+      "pretext": ["../node_modules/@chenglou/pretext/dist/layout.d.ts"],
+      "pretext/rich-inline": [
+        "../node_modules/@chenglou/pretext/dist/rich-inline.d.ts"
+      ]
     }
   },
   "exclude": [

@@ -1,10 +1,9 @@
-<!-- src/features/layout/smart/ConnectedNavigationPanel.svelte -->
 <script lang="ts">
 import type { Snippet } from "svelte";
+import { getLayoutStore } from "../plugin.ts";
+import type { NavigationSection } from "../types.ts";
 import { createNavigationConnection } from "./connection-factory.ts";
-import { getLayoutStore } from "./mod.ts";
 import NavigationPanel from "./NavigationPanel.svelte";
-import type { NavigationSection } from "./types.ts";
 
 interface Props {
   sections: NavigationSection[];

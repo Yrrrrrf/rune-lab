@@ -1,6 +1,6 @@
 <script lang="ts" generics="T">
+import type { ConfigStore } from "@rune-lab/core";
 import { m } from "@rune-lab/i18n";
-import type { ConfigStore } from "@rune-lab/svelte";
 import { getContext, type Snippet } from "svelte";
 import AppSettingSelector from "./AppSettingSelector.svelte";
 
@@ -29,7 +29,6 @@ let {
 	filterKeys = [],
 	triggerLabel,
 	item,
-	onchange,
 	direction = "bottom",
 	responsive = true,
 }: Props = $props();

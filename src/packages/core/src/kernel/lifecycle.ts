@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import { Schema } from "effect";
 import type { StateCell } from "../cells/define-cell.ts";
 import { getCellSchema } from "../cells/schemas.ts";

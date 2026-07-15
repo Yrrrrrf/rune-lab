@@ -1,5 +1,5 @@
 import type { ConfigStore, RunePlugin } from "@rune-lab/svelte";
-import { createAccessor, definePlugin } from "@rune-lab/svelte";
+import { createAccessor, definePlugin, defineSettings } from "@rune-lab/svelte";
 import CommandPalette from "./commands/CommandPalette.svelte";
 import type { CommandStore } from "./commands/store.svelte.ts";
 import { createCommandStore } from "./commands/store.svelte.ts";
@@ -49,10 +49,10 @@ import { ShortcutSettings } from "./shortcuts/mod.ts";
 export * from "./commands/mod.ts";
 export * from "./notifications/mod.ts";
 export * from "./shortcuts/mod.ts";
+export * from "./theme/plugin.ts";
 
 /**
  * Palettes Plugin — provides the command palette, shortcut manager, and toast system.
- * Always included by default in RuneProvider.
  */
 export const PalettesPlugin: RunePlugin = definePlugin({
   id: "rune-lab.palettes",
@@ -60,23 +60,14 @@ export const PalettesPlugin: RunePlugin = definePlugin({
     {
       id: "commands",
       contextKey: PALETTES_CONTEXT.commands,
-      factory: (_config, _driver, stores) =>
+      factory: (_config: any, _driver: any, stores: any) =>
         createCommandStore({
           appStore: stores.get("app"),
           apiStore: stores.get("api"),
           toastStore: stores.get("toast") as ToastStore,
-          themeStore: stores.get("theme") as ConfigStore<
-            Record<string, unknown>,
-            string
-          >,
-          languageStore: stores.get("language") as ConfigStore<
-            Record<string, unknown>,
-            string
-          >,
-          currencyStore: stores.get("currency") as ConfigStore<
-            Record<string, unknown>,
-            string
-          >,
+          themeStore: stores.get("theme") as any,
+          languageStore: stores.get("language") as any,
+          currencyStore: stores.get("currency") as any,
         }),
       dependsOn: ["app", "api", "toast", "theme", "language", "currency"],
       noPersistence: true,
