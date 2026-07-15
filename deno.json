@@ -20,7 +20,6 @@
   ],
   "imports": {
     "vite-plus": "npm:vite-plus",
-    "vite": "npm:vite",
     "typescript": "npm:typescript@6",
     "@vitest/utils": "npm:vitest/utils",
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom",
@@ -31,9 +30,7 @@
     "@rune-lab/palettes": "./src/packages/plugins/palettes/src/mod.ts",
     "@rune-lab/observer": "./src/packages/plugins/observer/src/mod.ts",
     "@rune-lab/i18n": "./src/packages/plugins/i18n/src/mod.ts",
-    "esm-env": "npm:esm-env@^1",
-    "pretext": "npm:@chenglou/pretext",
-    "pretext/rich-inline": "npm:@chenglou/pretext/rich-inline"
+    "esm-env": "npm:esm-env@^1"
   },
   "test": {
     "exclude": ["apps/**", "src/packages/ui/**", "src/packages/plugins/**"]

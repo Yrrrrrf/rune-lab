@@ -5,7 +5,7 @@ import adapter from "@sveltejs/adapter-static";
 import { sveltekit } from "@sveltejs/kit/vite";
 // customization
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { defineConfig, type PluginOption } from "vite-plus";
 
 export default defineConfig({
   plugins: [
@@ -20,6 +20,5 @@ export default defineConfig({
         strict: true,
       }),
     }),
-    // deno-lint-ignore no-explicit-any
-  ] as any,
+  ] as PluginOption[],
 });

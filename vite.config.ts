@@ -1,7 +1,7 @@
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite-plus";
+import { defineConfig, PluginOption } from "vite-plus";
 
 const resolve = (p: string) => new URL(p, import.meta.url).pathname;
 const PKGS = `./src/packages`;
@@ -12,11 +12,10 @@ const PLUGINS = `${PKGS}/plugins`;
 const svelteProject = (
   name: string,
   root: string,
-  extraPlugins: unknown[] = [],
+  extraPlugins: PluginOption[] = [],
 ) => ({
   root: `${root}/${name}`,
-  // deno-lint-ignore no-explicit-any
-  plugins: [svelte() as any, ...extraPlugins],
+  plugins: [svelte() as PluginOption, ...extraPlugins],
   // server: {
   //   fs: {
   //     allow: [resolve(".")],
@@ -57,9 +56,8 @@ export default defineConfig({
       compilerOptions: {
         runes: true,
       },
-      // deno-lint-ignore no-explicit-any
-    }) as any,
-  ],
+    }),
+  ] as PluginOption[],
   test: {
     projects: [
       svelteProject("ui", `${PKGS}`),
