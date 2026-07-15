@@ -1,3 +1,4 @@
+import type { ConfigStore, SlotContext } from "@rune-lab/core";
 import { createConfigStore } from "@rune-lab/svelte";
 import { createMessageResolver } from "./message-resolver.ts";
 import { m } from "./messages.ts";
@@ -7,9 +8,12 @@ export interface Language {
   flag?: string;
 }
 
-export const getLanguageName = createMessageResolver(m, {
-  keyExtractor: (l: Language) => l.code,
-});
+export const getLanguageName: (l: Language) => string = createMessageResolver(
+  m,
+  {
+    keyExtractor: (l: Language) => l.code,
+  },
+);
 
 export const LANGUAGES = [
   { code: "es", flag: "🇲🇽" },
@@ -27,7 +31,9 @@ export const LANGUAGES = [
   { code: "vi", flag: "🇻🇳" },
 ] as const;
 
-export function createLanguageStore(ctx: any) {
+export function createLanguageStore(
+  ctx: SlotContext<unknown>,
+): ConfigStore<Language, "code"> {
   return createConfigStore<Language, "code">({
     items: LANGUAGES as unknown as Language[],
     storageKey: "language",

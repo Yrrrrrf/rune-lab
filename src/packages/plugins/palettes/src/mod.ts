@@ -1,5 +1,6 @@
+import type { PersistenceDriver } from "@rune-lab/core";
 import type { ConfigStore, RunePlugin } from "@rune-lab/svelte";
-import { createAccessor, definePlugin, defineSettings } from "@rune-lab/svelte";
+import { createAccessor, definePlugin } from "@rune-lab/svelte";
 import CommandPalette from "./commands/CommandPalette.svelte";
 import type { CommandStore } from "./commands/store.svelte.ts";
 import { createCommandStore } from "./commands/store.svelte.ts";
@@ -60,14 +61,27 @@ export const PalettesPlugin: RunePlugin = definePlugin({
     {
       id: "commands",
       contextKey: PALETTES_CONTEXT.commands,
-      factory: (_config: any, _driver: any, stores: any) =>
+      factory: (
+        _config: unknown,
+        _driver: PersistenceDriver,
+        stores: Map<string, unknown>,
+      ) =>
         createCommandStore({
           appStore: stores.get("app"),
           apiStore: stores.get("api"),
           toastStore: stores.get("toast") as ToastStore,
-          themeStore: stores.get("theme") as any,
-          languageStore: stores.get("language") as any,
-          currencyStore: stores.get("currency") as any,
+          themeStore: stores.get("theme") as ConfigStore<
+            Record<string, unknown>,
+            string
+          >,
+          languageStore: stores.get("language") as ConfigStore<
+            Record<string, unknown>,
+            string
+          >,
+          currencyStore: stores.get("currency") as ConfigStore<
+            Record<string, unknown>,
+            string
+          >,
         }),
       dependsOn: ["app", "api", "toast", "theme", "language", "currency"],
       noPersistence: true,

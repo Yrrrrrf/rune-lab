@@ -1,15 +1,18 @@
+import type { PersistenceDriver, SlotContext } from "@rune-lab/core";
 import { PRESETS } from "../presets.ts";
 import type { PresetState, WorkspaceItem } from "../types.ts";
 
 export class LayoutStore {
-  workspaces = $state<WorkspaceItem[]>([]);
-  activeWorkspaceId = $state<string | null>(null);
-  activeNavItemId = $state<string | null>(null);
-  collapsedSections = $state<Set<string>>(new Set());
+  workspaces: WorkspaceItem[] = $state<WorkspaceItem[]>([]);
+  activeWorkspaceId: string | null = $state<string | null>(null);
+  activeNavItemId: string | null = $state<string | null>(null);
+  collapsedSections: Set<string> = $state<Set<string>>(new Set());
 
   // Zone & Preset state
-  preset = $state<string>("workspace");
-  zones = $state<Record<string, { visible: boolean; size?: number }>>({
+  preset: string = $state<string>("workspace");
+  zones: Record<string, { visible: boolean; size?: number }> = $state<
+    Record<string, { visible: boolean; size?: number }>
+  >({
     nav: { visible: true, size: 280 },
     strip: { visible: true, size: 64 },
     content: { visible: true },
@@ -20,28 +23,28 @@ export class LayoutStore {
 
   #storageNamespace = "default";
   #initialized = false;
-  #driver: any;
+  #driver: PersistenceDriver | undefined;
 
-  constructor(ctx?: any) {
+  constructor(ctx?: SlotContext<unknown>) {
     this.#driver = ctx?.persistence;
   }
 
   // Getters for legacy compatibility
-  get navOpen() {
+  get navOpen(): boolean {
     return this.zones.nav.visible;
   }
   set navOpen(v: boolean) {
     this.zones.nav.visible = v;
   }
 
-  get detailOpen() {
+  get detailOpen(): boolean {
     return this.zones.detail.visible;
   }
   set detailOpen(v: boolean) {
     this.zones.detail.visible = v;
   }
 
-  init(options?: { namespace?: string; driver?: any }) {
+  init(options?: { namespace?: string; driver?: PersistenceDriver }) {
     if (this.#initialized) return;
     if (options?.namespace) this.#storageNamespace = options.namespace;
     if (options?.driver) this.#driver = options.driver;
@@ -72,7 +75,9 @@ export class LayoutStore {
   }
 
   #loadWorkspace() {
-    const saved = this.#driver.get(
+    const driver = this.#driver;
+    if (!driver) return;
+    const saved = driver.get(
       `rl:layout:${this.#storageNamespace}:workspace`,
     );
     if (saved instanceof Promise) {
@@ -85,7 +90,9 @@ export class LayoutStore {
   }
 
   #loadSections() {
-    const saved = this.#driver.get(
+    const driver = this.#driver;
+    if (!driver) return;
+    const saved = driver.get(
       `rl:layout:${this.#storageNamespace}:sections`,
     );
     const applySections = (val: string | null) => {
@@ -105,7 +112,9 @@ export class LayoutStore {
   }
 
   #loadPreset() {
-    const saved = this.#driver.get(
+    const driver = this.#driver;
+    if (!driver) return;
+    const saved = driver.get(
       `rl:layout:${this.#storageNamespace}:preset`,
     );
     const applyPresetVal = (val: string | null) => {
@@ -220,6 +229,6 @@ export class LayoutStore {
   }
 }
 
-export function createLayoutStore(ctx?: any): LayoutStore {
+export function createLayoutStore(ctx?: SlotContext<unknown>): LayoutStore {
   return new LayoutStore(ctx);
 }

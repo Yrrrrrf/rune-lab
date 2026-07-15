@@ -1,3 +1,4 @@
+import type { SlotContext } from "@rune-lab/core";
 import { BROWSER } from "esm-env";
 import { PretextTextMeasurer } from "../text/adapter.ts";
 import { resolveFontShorthand } from "../text/fonts.ts";
@@ -5,17 +6,17 @@ import { resolveFontShorthand } from "../text/fonts.ts";
 export class TextStoreFacade {
   #ready = $state(false);
   #epoch = $state(0);
-  #engine: any = null;
+  #engine: PretextTextMeasurer | null = null;
 
-  get ready() {
+  get ready(): boolean {
     return this.#ready;
   }
 
-  get epoch() {
+  get epoch(): number {
     return this.#epoch;
   }
 
-  get engine() {
+  get engine(): PretextTextMeasurer {
     if (!this.#ready || !this.#engine) {
       throw new Error(
         "[Layout Text] pretext engine is not available on server-side. Guard usage with the ready flag.",
@@ -24,11 +25,11 @@ export class TextStoreFacade {
     return this.#engine;
   }
 
-  constructor(ctx: any) {
+  constructor(ctx: SlotContext<unknown>) {
     if (!BROWSER) return;
 
-    const themeStore = ctx.stores.get("theme");
-    const languageStore = ctx.stores.get("language");
+    const themeStore = ctx.stores.get("theme") as { current: string };
+    const languageStore = ctx.stores.get("language") as { current: string };
 
     this.#engine = new PretextTextMeasurer();
     this.#ready = true;
@@ -38,8 +39,8 @@ export class TextStoreFacade {
       $effect(() => {
         const lang = languageStore.current;
         if (lang) {
-          this.#engine.setLocale(lang);
-          this.#engine.clearCache();
+          this.#engine!.setLocale(lang);
+          this.#engine!.clearCache();
           this.#epoch++;
         }
       });
@@ -50,7 +51,7 @@ export class TextStoreFacade {
         if (themeName) {
           // Resolve computed font styles for the theme to invalidate caches
           resolveFontShorthand(themeName);
-          this.#engine.clearCache();
+          this.#engine!.clearCache();
           this.#epoch++;
         }
       });
@@ -58,6 +59,6 @@ export class TextStoreFacade {
   }
 }
 
-export function createTextStore(ctx: any): TextStoreFacade {
+export function createTextStore(ctx: SlotContext<unknown>): TextStoreFacade {
   return new TextStoreFacade(ctx);
 }

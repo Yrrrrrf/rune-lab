@@ -1,7 +1,14 @@
-import type { LocaleAdapter } from "@rune-lab/core";
+import type {
+  ConfigStore,
+  ForgedPlugin,
+  LocaleAdapter,
+  SlotContext,
+  SlotSpec,
+} from "@rune-lab/core";
 import { definePlugin, defineSettings } from "@rune-lab/core";
 import { createPluginKit } from "@rune-lab/svelte";
-import { Schema } from "effect";
+import type { Language } from "./store.svelte.ts";
+// import { Schema } from "effect";
 import { createLanguageStore } from "./store.svelte.ts";
 
 interface ParaglideRuntime {
@@ -46,17 +53,22 @@ export * from "./message-resolver.ts";
 export * from "./messages.ts";
 export * from "./store.svelte.ts";
 
-export const i18nPluginSpec = definePlugin({
+export const i18nPluginSpec: ForgedPlugin<
+  "rune-lab.i18n",
+  {
+    language: SlotSpec<unknown, ConfigStore<Language, "code">>;
+  }
+> = definePlugin({
   id: "rune-lab.i18n",
   slots: {
     language: {
-      create: (ctx: any) => createLanguageStore(ctx),
+      create: (ctx: SlotContext<unknown>) => createLanguageStore(ctx),
       contextKey: Symbol.for("rl:language"),
       persist: true,
-      config: Schema.Struct({
-        defaultLanguage: Schema.optional(Schema.String),
-        locales: Schema.optional(Schema.Array(Schema.String)),
-      }),
+      // config: Schema.Struct({
+      //   defaultLanguage: Schema.optional(Schema.String),
+      //   locales: Schema.optional(Schema.Array(Schema.String)),
+      // }),
       expose: true,
     },
   },
@@ -87,5 +99,12 @@ export const i18nPluginSpec = definePlugin({
 
 const kit = createPluginKit(i18nPluginSpec);
 
-export const I18nPlugin = kit.plugin;
-export const { getLanguageStore } = kit.accessors;
+export const I18nPlugin: ForgedPlugin<
+  "rune-lab.i18n",
+  {
+    language: SlotSpec<unknown, ConfigStore<Language, "code">>;
+  }
+> = kit.plugin;
+
+export const getLanguageStore: () => ConfigStore<Language, "code"> =
+  kit.accessors.getLanguageStore;

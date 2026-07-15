@@ -56,7 +56,7 @@ const RunePluginSchema = Schema.Struct({
 
 export interface RunePlugin {
   id: string & { readonly __brand?: "PluginId" };
-  stores: StoreRegistryEntry[];
+  stores?: StoreRegistryEntry[];
   overlays?: unknown[];
   contributions?: Record<string, unknown[]>;
 }

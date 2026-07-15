@@ -1,7 +1,9 @@
 import { Context, Effect, Option, Schema } from "effect";
 import type { RuneLabCells } from "../cells/cells.ts";
+import type { StateCell } from "../cells/define-cell.ts";
 import { getCellSchema } from "../cells/schemas.ts";
-import type { PluginInput } from "../forge/define-plugin.ts";
+import type { ForgedPlugin, PluginInput } from "../forge/define-plugin.ts";
+import type { SlotSpec } from "../forge/define-slot.ts";
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceDriver } from "../ports/persistence.ts";
 import type { TextMeasurer } from "../ports/text.ts";
@@ -26,7 +28,9 @@ export interface Kernel<TCells = RuneLabCells> {
   registerContribution(key: string, item: unknown): void;
   unregisterContribution(key: string, id: string): void;
 
-  getStoreEntry(id: string): any;
+  getStoreEntry(
+    id: string,
+  ): { contextKey?: symbol; expose?: boolean } | undefined;
 
   dispose(): Promise<void>;
 }
@@ -87,7 +91,7 @@ export function createKernel<TCells = RuneLabCells>(
       if (!cell) {
         throw new Error(`[Kernel] Cell "${cellName as string}" does not exist`);
       }
-      return cell.get() as any;
+      return cell.get() as TCells[typeof cellName];
     },
     setCell: (cellName, value) =>
       setCellLifecycle(
@@ -139,7 +143,9 @@ function extractStores(
   return stores;
 }
 
-function extractOverlays(plugins: any[]): unknown[] {
+function extractOverlays(
+  plugins: ForgedPlugin<string, Record<string, SlotSpec>>[],
+): unknown[] {
   const overlays: unknown[] = [];
   for (const plugin of plugins) {
     if (plugin.overlays) {
@@ -150,14 +156,14 @@ function extractOverlays(plugins: any[]): unknown[] {
 }
 
 function extractInitialContributions(
-  plugins: any[],
+  plugins: ForgedPlugin<string, Record<string, SlotSpec>>[],
 ): Record<string, unknown[]> {
   const contributions: Record<string, unknown[]> = {};
   for (const plugin of plugins) {
     if (plugin.contributions) {
       for (const [key, items] of Object.entries(plugin.contributions)) {
         if (!contributions[key]) contributions[key] = [];
-        contributions[key].push(...(items as any[]));
+        contributions[key].push(...(items as unknown[]));
       }
     }
     // Automatically register settings schemas as contributions to "settingsSections"
@@ -172,7 +178,7 @@ function extractInitialContributions(
 }
 
 function loadPersistedCells(
-  cells: Record<string, any>,
+  cells: Record<string, StateCell<unknown>>,
   persistence: PersistenceDriver,
 ): void {
   const keys = ["theme", "language", "currency"];
@@ -200,7 +206,7 @@ function loadPersistedCells(
 }
 
 function bindLocaleAdapter(
-  cells: Record<string, any>,
+  cells: Record<string, StateCell<unknown>>,
   adapter: LocaleAdapter,
 ): void {
   const initial = adapter.getLocale();

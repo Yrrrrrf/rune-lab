@@ -1,9 +1,9 @@
-import type { ForgedPlugin } from "@rune-lab/core";
+import type { ForgedPlugin, SlotSpec } from "@rune-lab/core";
 import { createAccessor } from "../context.ts";
 
 export function createPluginKit<
   TId extends string,
-  TSlots extends Record<string, any>,
+  TSlots extends Record<string, SlotSpec>,
 >(
   forgedPlugin: ForgedPlugin<TId, TSlots>,
 ): {
@@ -15,7 +15,7 @@ export function createPluginKit<
       >;
   };
 } {
-  const accessors = {} as any;
+  const accessors = {} as Record<string, () => unknown>;
   const descriptors = forgedPlugin.descriptors || {};
 
   for (const [slotName, descriptor] of Object.entries(descriptors)) {

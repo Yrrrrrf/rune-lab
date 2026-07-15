@@ -1,5 +1,6 @@
 import type { SettingsSchema } from "./define-settings.ts";
 import type { SlotSpec } from "./define-slot.ts";
+import type { RunePlugin, StoreRegistryEntry } from "../plugin/manifest.ts";
 import {
   getAccessorName,
   getContextSymbol,
@@ -18,11 +19,12 @@ export interface ForgedPlugin<
   contributions?: Record<string, unknown[]>;
   descriptors: Record<keyof TSlots, SlotDescriptor>;
   isLegacy?: boolean;
-  stores?: any[];
+  stores?: StoreRegistryEntry[];
 }
 
 export type PluginInput =
-  | ForgedPlugin<any, any>
+  | ForgedPlugin<string, Record<string, SlotSpec>>
+  | RunePlugin
   | PluginInput[]
   | null
   | undefined
@@ -40,13 +42,29 @@ export function definePlugin<
   contributions?: Record<string, unknown[]>;
 }): ForgedPlugin<TId, TSlots>;
 
-export function definePlugin(plugin: any): any;
+export function definePlugin(
+  plugin: { id: string; stores?: StoreRegistryEntry[]; [key: string]: unknown },
+): ForgedPlugin<string, Record<string, SlotSpec>>;
 
-export function definePlugin(spec: any): any {
-  if (spec.stores && Array.isArray(spec.stores)) {
+export function definePlugin(
+  spec:
+    | { id: string; stores?: StoreRegistryEntry[]; [key: string]: unknown }
+    | { id: string; slots?: Record<string, SlotSpec>; [key: string]: unknown },
+): ForgedPlugin<string, Record<string, SlotSpec>> {
+  const s = spec as {
+    id: string;
+    stores?: StoreRegistryEntry[];
+    slots?: Record<string, SlotSpec>;
+    requires?: string[];
+    settings?: SettingsSchema;
+    overlays?: unknown[];
+    contributions?: Record<string, unknown[]>;
+  };
+
+  if (s.stores && Array.isArray(s.stores)) {
     // Legacy plugin format
     const descriptors: Record<string, SlotDescriptor> = {};
-    for (const store of spec.stores) {
+    for (const store of s.stores) {
       descriptors[store.id] = {
         slotName: store.id,
         contextKey: store.contextKey || Symbol.for(`rl:${store.id}`),
@@ -54,30 +72,31 @@ export function definePlugin(spec: any): any {
       };
     }
     return {
-      ...spec,
-      isLegacy: true,
+      ...s,
+      slots: {} as Record<string, SlotSpec>,
       descriptors,
+      isLegacy: true,
     };
   }
 
   // New plugin format
-  const slots = spec.slots || {};
+  const slots: Record<string, SlotSpec> = s.slots || {};
   const descriptors: Record<string, SlotDescriptor> = {};
   for (const slotName of Object.keys(slots)) {
     descriptors[slotName] = {
       slotName,
-      contextKey: getContextSymbol(spec.id, slotName),
+      contextKey: getContextSymbol(s.id, slotName),
       accessorName: getAccessorName(slotName),
     };
   }
 
   return {
-    id: spec.id,
-    requires: spec.requires,
+    id: s.id,
+    requires: s.requires,
     slots,
-    settings: spec.settings,
-    overlays: spec.overlays,
-    contributions: spec.contributions,
+    settings: s.settings,
+    overlays: s.overlays,
+    contributions: s.contributions,
     descriptors,
   };
 }

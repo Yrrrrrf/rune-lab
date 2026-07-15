@@ -16,6 +16,7 @@ export type { SlotContext, SlotSpec } from "./forge/define-slot.ts";
 export type { PersistenceHandle, SlotDescriptor } from "./forge/descriptors.ts";
 export { createKernel, type Kernel } from "./kernel/kernel.ts";
 export { normalizePlugins as resolvePlugins } from "./kernel/wiring.ts";
+export type { RunePlugin, StoreRegistryEntry } from "./plugin/manifest.ts";
 export type { LocaleAdapter } from "./ports/locale.ts";
 export {
   createInMemoryDriver,
@@ -54,5 +55,3 @@ export {
   unregisterStore,
 } from "./registry/registry.ts";
 export type { StateCells } from "./services/layers.ts";
-export type RunePlugin = any;
-export type StoreRegistryEntry = any;

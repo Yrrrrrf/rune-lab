@@ -16,6 +16,6 @@ export { getLayoutStore, getTextStore, LayoutPlugin } from "./plugin.ts";
 export { PRESETS } from "./presets.ts";
 export * from "./types.ts";
 
-export const LAYOUT_CONTEXT = {
+export const LAYOUT_CONTEXT: { readonly layout: symbol } = {
   layout: Symbol.for("rl:layout"),
 } as const;

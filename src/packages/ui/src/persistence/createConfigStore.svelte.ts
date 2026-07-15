@@ -8,8 +8,8 @@ import {
 class ReactiveConfigStoreImpl<T, K extends keyof T>
   implements ConfigStore<T, K> {
   #vanilla: VanillaConfigStoreImpl<T, K>;
-  #current = $state<any>(null!);
-  #available = $state<any[]>([]);
+  #current = $state<T[K]>(null!);
+  #available = $state<T[]>([]);
 
   constructor(options: ConfigStoreOptions<T, K>) {
     this.#vanilla = new VanillaConfigStoreImpl(options);

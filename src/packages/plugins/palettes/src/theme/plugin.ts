@@ -1,12 +1,24 @@
+import type {
+  ConfigStore,
+  ForgedPlugin,
+  SlotContext,
+  SlotSpec,
+} from "@rune-lab/core";
 import { definePlugin, defineSettings } from "@rune-lab/core";
 import { createPluginKit } from "@rune-lab/svelte";
+import type { Theme } from "./store.svelte.ts";
 import { createThemeStore } from "./store.svelte.ts";
 
-export const themePluginSpec = definePlugin({
+export const themePluginSpec: ForgedPlugin<
+  "rune-lab.theme",
+  {
+    theme: SlotSpec<unknown, ConfigStore<Theme, "name">>;
+  }
+> = definePlugin({
   id: "rune-lab.theme",
   slots: {
     theme: {
-      create: (ctx: any) => createThemeStore(ctx),
+      create: (ctx: SlotContext<unknown>) => createThemeStore(ctx),
       contextKey: Symbol.for("rl:theme"),
       persist: true,
     },
@@ -36,7 +48,13 @@ export const themePluginSpec = definePlugin({
 });
 
 const kit = createPluginKit(themePluginSpec);
-export const ThemePlugin = kit.plugin;
-export const { getThemeStore } = kit.accessors;
+export const ThemePlugin: ForgedPlugin<
+  "rune-lab.theme",
+  {
+    theme: SlotSpec<unknown, ConfigStore<Theme, "name">>;
+  }
+> = kit.plugin;
+export const getThemeStore: () => ConfigStore<Theme, "name"> =
+  kit.accessors.getThemeStore;
 export { default as ThemeSelector } from "../ThemeSelector.svelte";
 export type { Theme } from "./store.svelte.ts";

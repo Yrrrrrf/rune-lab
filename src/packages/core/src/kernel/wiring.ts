@@ -1,5 +1,7 @@
 import { Context, Effect, Layer, ManagedRuntime, Schema } from "effect";
 import type { ForgedPlugin, PluginInput } from "../forge/define-plugin.ts";
+import type { RunePlugin } from "../plugin/manifest.ts";
+import type { SlotContext } from "../forge/define-slot.ts";
 import type { PersistenceHandle } from "../forge/descriptors.ts";
 import { createInMemoryDriver } from "../persistence/memory.ts";
 import type { LocaleAdapter } from "../ports/locale.ts";
@@ -21,31 +23,35 @@ export interface NormalizedSlot {
   dependsOn: string[];
   expose: boolean;
   persist?: boolean | string[];
-  configSchema?: any;
-  create: (context: any) => any;
+  configSchema?: unknown;
+  create: (context: SlotContext<unknown>) => unknown;
   isLegacy: boolean;
-  legacyFactory?: any;
+  legacyFactory?: (
+    config: unknown,
+    driver: PersistenceDriver,
+    stores: Map<string, unknown>,
+  ) => unknown;
 }
 
 export function normalizePlugins(inputs: PluginInput[]): ForgedPlugin[] {
-  const flat: ForgedPlugin[] = [];
-  function process(item: any) {
+  const flat: Array<ForgedPlugin | RunePlugin> = [];
+  function process(item: PluginInput) {
     if (!item) return;
     if (Array.isArray(item)) {
       for (const sub of item) {
         process(sub);
       }
     } else if (typeof item === "object") {
-      flat.push(item);
+      flat.push(item as ForgedPlugin | RunePlugin);
     }
   }
   for (const item of inputs) {
     process(item);
   }
   const seen = new Set<string>();
-  return flat.filter((p) => {
-    if (seen.has(p.id)) return false;
-    seen.add(p.id);
+  return flat.filter((p): p is ForgedPlugin => {
+    if (seen.has(p.id as string)) return false;
+    seen.add(p.id as string);
     return true;
   });
 }
@@ -69,6 +75,7 @@ export function compileEnvironment(
     textMeasurer?: TextMeasurer;
   },
 ): {
+  // deno-lint-ignore no-explicit-any
   runtime: ManagedRuntime.ManagedRuntime<any, any>;
   resolvedPlugins: ForgedPlugin[];
   sortedSlots: NormalizedSlot[];
@@ -98,9 +105,10 @@ export function compileEnvironment(
   try {
     const sortedNodes = topologicalSort(graphNodes);
     sortedPlugins = sortedNodes.map((node) => pluginMap.get(node.id)!);
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
     throw new Error(
-      `[Kernel] Circular dependency detected in plugins: ${e.message}`,
+      `[Kernel] Circular dependency detected in plugins: ${msg}`,
     );
   }
 
@@ -205,6 +213,7 @@ export function compileEnvironment(
   });
 
   // Assemble base environment layers
+  // deno-lint-ignore no-explicit-any
   let env: Layer.Layer<any, any, any> = Layer.merge(
     makePersistenceLayer(options.persistence),
     cellsLayer,
@@ -233,12 +242,15 @@ export function compileEnvironment(
           // Usually pluginConfig is the whole plugin's config slice. Let's validate it if slot.configSchema exists.
           if (slot.configSchema) {
             try {
-              configSlice = Schema.decodeUnknownSync(slot.configSchema)(
-                pluginConfig,
-              );
-            } catch (err: any) {
+              configSlice = Schema.decodeUnknownSync(
+                slot.configSchema as Parameters<
+                  typeof Schema.decodeUnknownSync
+                >[0],
+              )(pluginConfig);
+            } catch (err: unknown) {
+              const errMsg = err instanceof Error ? err.message : String(err);
               throw new Error(
-                `[Kernel] Config validation failed for plugin "${slot.pluginId}", slot "${slot.slotName}": ${err.message}`,
+                `[Kernel] Config validation failed for plugin "${slot.pluginId}", slot "${slot.slotName}": ${errMsg}`,
               );
             }
           }
@@ -276,7 +288,7 @@ export function compileEnvironment(
           }
         }
 
-        let store: any = null;
+        let store: unknown = null;
         try {
           if (slot.isLegacy) {
             store = slot.create({
@@ -298,12 +310,13 @@ export function compileEnvironment(
 
         if (store !== null && store !== undefined) {
           // Register store finalizer if it has a dispose method
-          const hasDispose = typeof store.dispose === "function";
+          const storeObj = store as Record<string, unknown>;
+          const hasDispose = typeof storeObj.dispose === "function";
           if (hasDispose) {
             yield* Effect.addFinalizer(() =>
               Effect.tryPromise({
                 try: async () => {
-                  const res = store.dispose();
+                  const res = (storeObj.dispose as () => unknown)();
                   if (res instanceof Promise) await res;
                 },
                 catch: (e) => e,
@@ -329,6 +342,7 @@ export function compileEnvironment(
   }
 
   // Create runtime
+  // deno-lint-ignore no-explicit-any
   const runtime = ManagedRuntime.make(env as Layer.Layer<any, any, never>);
 
   return {

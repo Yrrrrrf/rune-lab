@@ -6,8 +6,8 @@ vi.mock("svelte", () => ({
   getContext: () => undefined,
 }));
 
-import { getCurrencyStore } from "../../plugins/i18n/src/money/mod.ts";
 import { getLanguageStore } from "../../plugins/i18n/src/lang/mod.ts";
+import { getCurrencyStore } from "../../plugins/i18n/src/money/mod.ts";
 import { getLayoutStore } from "../../plugins/layout/src/mod.ts";
 import {
   getCommandStore,

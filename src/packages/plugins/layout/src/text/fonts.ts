@@ -11,7 +11,7 @@ export function resolveFontShorthand(themeName: string): string {
   el.style.pointerEvents = "none";
   document.body.appendChild(el);
 
-  const style = window.getComputedStyle(el);
+  const style = globalThis.getComputedStyle(el);
   const fontSize = style.fontSize || "14px";
   const fontFamily = style.fontFamily || "sans-serif";
   document.body.removeChild(el);

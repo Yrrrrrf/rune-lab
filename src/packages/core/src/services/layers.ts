@@ -19,7 +19,7 @@ const TextMeasurerTag = Context.GenericTag<TextMeasurer>(
 );
 
 export interface StateCells {
-  readonly cells: Record<string, StateCell<any>>;
+  readonly cells: Record<string, StateCell<unknown>>;
 }
 
 export const StateCellsTag = Context.GenericTag<StateCells>(

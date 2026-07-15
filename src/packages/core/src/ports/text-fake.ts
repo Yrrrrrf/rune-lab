@@ -25,6 +25,10 @@ interface FakePreparedText {
   segments: string[];
 }
 
+interface FakePreparedRichInline {
+  items: RichInlineItem[];
+}
+
 export class FakeTextMeasurer implements TextMeasurer {
   prepare(text: string, font: string, options?: PrepareOptions): PreparedText {
     return {
@@ -32,7 +36,7 @@ export class FakeTextMeasurer implements TextMeasurer {
       font,
       options,
       segments: text.split(/(\s+)/).filter(Boolean),
-    } as any;
+    } as unknown as PreparedText;
   }
 
   prepareWithSegments(
@@ -45,7 +49,7 @@ export class FakeTextMeasurer implements TextMeasurer {
       font,
       options,
       segments: text.split(/(\s+)/).filter(Boolean),
-    } as any;
+    } as unknown as PreparedTextWithSegments;
   }
 
   layout(
@@ -53,7 +57,10 @@ export class FakeTextMeasurer implements TextMeasurer {
     maxWidth: number,
     lineHeight: number,
   ): { lineCount: number; height: number } {
-    const stats = this.measureLineStats(prepared as any, maxWidth);
+    const stats = this.measureLineStats(
+      prepared as unknown as PreparedTextWithSegments,
+      maxWidth,
+    );
     return { lineCount: stats.lineCount, height: stats.lineCount * lineHeight };
   }
 
@@ -119,7 +126,7 @@ export class FakeTextMeasurer implements TextMeasurer {
   layoutNextLine(
     prepared: PreparedTextWithSegments,
     maxWidth: number,
-    lineHeight: number,
+    _lineHeight: number,
     start: LayoutCursor,
   ): LayoutLine | null {
     const range = this.layoutNextLineRange(prepared, maxWidth, start);
@@ -188,7 +195,7 @@ export class FakeTextMeasurer implements TextMeasurer {
 
   // Rich inline text layout
   prepareRichInline(items: RichInlineItem[]): PreparedRichInline {
-    return { items } as any;
+    return { items } as unknown as PreparedRichInline;
   }
 
   layoutNextRichInlineLineRange(
@@ -196,8 +203,8 @@ export class FakeTextMeasurer implements TextMeasurer {
     maxWidth: number,
     start?: RichInlineCursor,
   ): RichInlineLineRange | null {
-    const fake = prepared as any;
-    const items = fake.items as RichInlineItem[];
+    const fake = prepared as unknown as FakePreparedRichInline;
+    const items = fake.items;
     const startIndex = start ? start.itemIndex : 0;
     if (startIndex >= items.length) return null;
 
@@ -238,8 +245,8 @@ export class FakeTextMeasurer implements TextMeasurer {
     prepared: PreparedRichInline,
     line: RichInlineLineRange,
   ): RichInlineLine {
-    const fake = prepared as any;
-    const items = fake.items as RichInlineItem[];
+    const fake = prepared as unknown as FakePreparedRichInline;
+    const items = fake.items;
     const fragments: RichInlineFragment[] = line.fragments.map((frag) => {
       const item = items[frag.itemIndex];
       return {

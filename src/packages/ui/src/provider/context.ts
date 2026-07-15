@@ -1,4 +1,4 @@
-import type { Kernel, RuneLabCells } from "@rune-lab/core";
+import type { Kernel, RuneLabCells, SettingsFieldSchema } from "@rune-lab/core";
 import { getContext } from "svelte";
 
 export const RUNE_LAB_CONTEXT: {
@@ -44,7 +44,7 @@ export interface SettingsSection {
   id: string;
   label: string;
   icon?: string;
-  fields?: any[];
+  fields?: SettingsFieldSchema[];
   component?: unknown;
 }
 

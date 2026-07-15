@@ -11,8 +11,6 @@ import type {
   PreparedTextWithSegments,
   PrepareOptions,
   RichInlineCursor,
-  RichInlineFragment,
-  RichInlineFragmentRange,
   RichInlineItem,
   RichInlineLine,
   RichInlineLineRange,
@@ -72,7 +70,7 @@ export class PretextTextMeasurer implements TextMeasurer {
   layoutNextLine(
     prepared: PreparedTextWithSegments,
     maxWidth: number,
-    lineHeight: number,
+    _lineHeight: number,
     start: LayoutCursor,
   ): LayoutLine | null {
     // Library signature: layoutNextLine(prepared, cursor, maxWidth)

@@ -31,7 +31,7 @@ async function updateLocale(
 }
 
 export async function setCellLifecycle<TCells>(
-  cells: Record<string, StateCell<any>>,
+  cells: Record<string, StateCell<unknown>>,
   cellName: keyof TCells,
   value: TCells[keyof TCells],
   persistence: PersistenceDriver,
@@ -67,7 +67,7 @@ export async function setCellLifecycle<TCells>(
 }
 
 export function registerContributionLifecycle(
-  cells: Record<string, StateCell<any>>,
+  cells: Record<string, StateCell<unknown>>,
   key: string,
   item: unknown,
 ): void {
@@ -83,7 +83,7 @@ export function registerContributionLifecycle(
 }
 
 export function unregisterContributionLifecycle(
-  cells: Record<string, StateCell<any>>,
+  cells: Record<string, StateCell<unknown>>,
   key: string,
   id: string,
 ): void {

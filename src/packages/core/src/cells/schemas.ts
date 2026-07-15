@@ -36,7 +36,17 @@ export const ContributionsSchema = withFallback(
 export function getCellSchema(
   key: string,
   fallback: unknown,
-): Schema.Schema<any, any, never> {
-  if (key === "contributions") return ContributionsSchema;
-  return withFallback(Schema.Any, fallback);
+): Schema.Schema<unknown, unknown, never> {
+  if (key === "contributions") {
+    return ContributionsSchema as unknown as Schema.Schema<
+      unknown,
+      unknown,
+      never
+    >;
+  }
+  return withFallback(Schema.Any, fallback) as unknown as Schema.Schema<
+    unknown,
+    unknown,
+    never
+  >;
 }

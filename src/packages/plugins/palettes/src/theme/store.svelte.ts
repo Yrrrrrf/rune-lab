@@ -1,3 +1,4 @@
+import type { ConfigStore, SlotContext } from "@rune-lab/core";
 import { createConfigStore } from "@rune-lab/svelte";
 import { BROWSER } from "esm-env";
 import { createMessageResolver } from "../../../i18n/src/lang/message-resolver.ts";
@@ -8,7 +9,7 @@ export interface Theme {
   icon?: string;
 }
 
-export const getThemeName = createMessageResolver(m, {
+export const getThemeName: (t: Theme) => string = createMessageResolver(m, {
   keyExtractor: (t: Theme) => t.name,
 });
 
@@ -55,8 +56,10 @@ const THEMES = Object.keys(THEME_ICONS).map((name: string) => ({
   icon: THEME_ICONS[name] ?? "🎨",
 })) as Theme[];
 
-export function createThemeStore(ctx: any) {
-  const store = createConfigStore({
+export function createThemeStore(
+  ctx: SlotContext<unknown>,
+): ConfigStore<Theme, "name"> {
+  const store = createConfigStore<Theme, "name">({
     items: THEMES,
     storageKey: "theme",
     displayName: "Theme",
