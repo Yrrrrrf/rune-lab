@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getLanguageStore } from "@rune-lab/layout";
+import { getLanguageStore } from "@rune-lab/i18n";
 import { DEV } from "esm-env";
 import { getCurrencyStore } from "./mod.ts";
 import { formatAmount, type ISO4217Code, toMinorUnit } from "./money.ts";

@@ -1,8 +1,3 @@
-import type { Language } from "@rune-lab/i18n";
-import type { Theme } from "@rune-lab/palettes";
-
-export type { Language, Theme };
-
 export interface LayoutZone {
   id: string;
   component?: unknown;

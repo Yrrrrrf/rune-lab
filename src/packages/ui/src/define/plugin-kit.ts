@@ -26,20 +26,11 @@ export function createPluginKit<
 
       const capitalizedSlot = slotName.charAt(0).toUpperCase() +
         slotName.slice(1);
-      let errorPluginId = forgedPlugin.id;
-      if (
-        errorPluginId === "rune-lab.layout" ||
-        errorPluginId === "rune-lab.theme" ||
-        (errorPluginId === "rune-lab.i18n" && slotName === "language")
-      ) {
-        errorPluginId = "LayoutPlugin" as any;
-      }
-
       accessors[accessorName] = createAccessor(
         contextKey,
         `${accessorName}()`,
         `${capitalizedSlot}Store`,
-        errorPluginId,
+        forgedPlugin.id,
       );
     }
   }

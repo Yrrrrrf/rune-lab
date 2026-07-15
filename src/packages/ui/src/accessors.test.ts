@@ -7,14 +7,12 @@ vi.mock("svelte", () => ({
 }));
 
 import { getCurrencyStore } from "../../plugins/i18n/src/money/mod.ts";
-import {
-  getLanguageStore,
-  getLayoutStore,
-  getThemeStore,
-} from "../../plugins/layout/src/mod.ts";
+import { getLanguageStore } from "../../plugins/i18n/src/lang/mod.ts";
+import { getLayoutStore } from "../../plugins/layout/src/mod.ts";
 import {
   getCommandStore,
   getShortcutStore,
+  getThemeStore,
   getToastStore,
 } from "../../plugins/palettes/src/mod.ts";
 import { getAppStore } from "./app.svelte.ts";
@@ -26,19 +24,19 @@ describe("Fail-fast context accessors", () => {
 
   it("should throw a helpful error for getLayoutStore", () => {
     expect(() => getLayoutStore()).toThrow(
-      /getLayoutStore\(\) found no LayoutStore.*LayoutPlugin/i,
+      /getLayoutStore\(\) found no LayoutStore.*rune-lab\.layout/i,
     );
   });
 
   it("should throw a helpful error for getLanguageStore", () => {
     expect(() => getLanguageStore()).toThrow(
-      /getLanguageStore\(\) found no LanguageStore.*LayoutPlugin/i,
+      /getLanguageStore\(\) found no LanguageStore.*rune-lab\.i18n/i,
     );
   });
 
   it("should throw a helpful error for getThemeStore", () => {
     expect(() => getThemeStore()).toThrow(
-      /getThemeStore\(\) found no ThemeStore.*LayoutPlugin/i,
+      /getThemeStore\(\) found no ThemeStore.*rune-lab\.theme/i,
     );
   });
 

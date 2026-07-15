@@ -1,5 +1,3 @@
-export { getLanguageStore } from "@rune-lab/i18n";
-export { getThemeStore } from "@rune-lab/palettes";
 export { default as AppSettingSelector } from "./components/AppSettingSelector.svelte";
 export { default as ConnectedNavigationPanel } from "./components/ConnectedNavigationPanel.svelte";
 export { default as ConnectedWorkspaceStrip } from "./components/ConnectedWorkspaceStrip.svelte";
@@ -20,6 +18,4 @@ export * from "./types.ts";
 
 export const LAYOUT_CONTEXT = {
   layout: Symbol.for("rl:layout"),
-  theme: Symbol.for("rl:theme"),
-  language: Symbol.for("rl:language"),
 } as const;
