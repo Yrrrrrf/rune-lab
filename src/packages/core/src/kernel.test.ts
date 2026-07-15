@@ -1,7 +1,7 @@
 import { assertEquals, assertExists } from "@std/assert";
-import { createKernel } from "./kernel.ts";
-import { createInMemoryDriver } from "./persistence/memory.ts";
-import type { RunePlugin } from "./plugin/manifest.ts";
+import { createKernel } from "./kernel/kernel.ts";
+import type { RunePlugin } from "./mod.ts";
+import { createInMemoryDriver } from "./ports/memory.ts";
 
 Deno.test("Kernel - manifest resolution and store topological sort initialization", async () => {
   const driver = createInMemoryDriver();

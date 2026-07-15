@@ -1,6 +1,6 @@
 import { Context, Effect, Layer, Stream, SubscriptionRef } from "effect";
+import { StateCell } from "../cells/define-cell.ts";
 import { createInMemoryDriver } from "../persistence/memory.ts";
-import { StateCell } from "../persistence/store.ts";
 import type { StoreRegistryEntry } from "../plugin/manifest.ts";
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceDriver } from "../ports/persistence.ts";
