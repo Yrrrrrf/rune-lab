@@ -38,7 +38,7 @@ export function definePlugin<
   contributions?: Record<string, unknown[]>;
 }): ForgedPlugin<TId, TSlots> {
   const slots: Record<string, SlotSpec> = spec.slots ||
-    {} as Record<string, SlotSpec>;
+    ({} as Record<string, SlotSpec>);
   const descriptors: Record<string, SlotDescriptor> = {};
   for (const slotName of Object.keys(slots)) {
     descriptors[slotName] = {

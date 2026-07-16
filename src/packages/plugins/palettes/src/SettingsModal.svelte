@@ -1,22 +1,22 @@
 <script lang="ts">
 import { getSettingsSections } from "@rune-lab/svelte";
+import { onMount } from "svelte";
 import {
   getCommandStore,
   getRegistryStore,
   getShortcutStore,
 } from "./context.ts";
 import {
-  computeSearchResults,
-  type SearchResult,
-} from "./settings-modal/search.ts";
-import {
   syncHashToState,
   updateHashFromState,
 } from "./settings-modal/hash-routing.ts";
-import SettingsSidebar from "./settings-modal/SettingsSidebar.svelte";
 import SettingsSearchResults from "./settings-modal/SettingsSearchResults.svelte";
 import SettingsSectionContent from "./settings-modal/SettingsSectionContent.svelte";
-import { onMount } from "svelte";
+import SettingsSidebar from "./settings-modal/SettingsSidebar.svelte";
+import {
+  computeSearchResults,
+  type SearchResult,
+} from "./settings-modal/search.ts";
 
 const sections = getSettingsSections();
 const shortcutStore = getShortcutStore();

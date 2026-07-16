@@ -1,7 +1,5 @@
 import type { ConfigStore } from "@rune-lab/svelte";
 import { getContext } from "svelte";
-import type { CurrencyStore } from "../stores/currency.svelte.ts";
-import type { ExchangeRateStore } from "../stores/exchange-rate.svelte.ts";
 import { MONEY_CONTEXT } from "../mod.ts";
 import type { Dinero, ISO4217Code } from "../primitives/money.ts";
 import {
@@ -18,6 +16,8 @@ import {
   toSquareMoney,
   toStripeMoney,
 } from "../primitives/money.ts";
+import type { CurrencyStore } from "../stores/currency.svelte.ts";
+import type { ExchangeRateStore } from "../stores/exchange-rate.svelte.ts";
 
 export interface UseMoneyReturn {
   toDinero: (

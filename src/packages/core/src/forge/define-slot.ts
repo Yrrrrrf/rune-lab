@@ -1,6 +1,6 @@
 import { Schema } from "effect";
-import type { PersistenceHandle } from "./descriptors.ts";
 import type { LocaleAdapter } from "../ports/locale.ts";
+import type { PersistenceHandle } from "./descriptors.ts";
 
 export interface SlotContext<TConfig = unknown> {
   config: TConfig;

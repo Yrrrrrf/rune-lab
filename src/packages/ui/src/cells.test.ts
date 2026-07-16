@@ -4,9 +4,9 @@ import {
   definePlugin,
   StateCell,
 } from "@rune-lab/core";
+import { Effect, SubscriptionRef } from "effect";
 import { describe, expect, it } from "vite-plus/test";
 import { useCell } from "./reactivity/use-cell.svelte.ts";
-import { Effect, SubscriptionRef } from "effect";
 
 describe("useCell reactivity bridge", () => {
   it("should read, write, and subscribe to a cell against a kernel slot", async () => {

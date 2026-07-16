@@ -10,9 +10,7 @@ export interface ShortcutStoreLike {
   }[];
 }
 
-export function bindShortcuts(
-  shortcutStore: ShortcutStoreLike,
-): () => void {
+export function bindShortcuts(shortcutStore: ShortcutStoreLike): () => void {
   const cleanup = $effect.root(() => {
     $effect(() => {
       hotkeys.unbind();

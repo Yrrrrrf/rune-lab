@@ -1,7 +1,7 @@
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig, PluginOption } from "vite-plus";
+import { defineConfig, type PluginOption } from "vite-plus";
 
 const resolve = (p: string) => new URL(p, import.meta.url).pathname;
 const PKGS = `./src/packages`;
@@ -34,7 +34,7 @@ const svelteProject = (
       "pretext/rich-inline": resolve(
         "./node_modules/@chenglou/pretext/dist/rich-inline.js",
       ),
-      "pretext": resolve("./node_modules/@chenglou/pretext/dist/layout.js"),
+      pretext: resolve("./node_modules/@chenglou/pretext/dist/layout.js"),
     },
   },
   test: {

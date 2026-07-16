@@ -82,8 +82,9 @@ describe("Public registry contract smoke test", () => {
     };
 
     registryStore.register(toyPalette);
-    expect(registryStore.palettes.find((p: any) => p.id === "toy-palette"))
-      .toBeDefined();
+    expect(
+      registryStore.palettes.find((p: any) => p.id === "toy-palette"),
+    ).toBeDefined();
 
     registryStore.open("toy-palette");
     expect(registryStore.activePaletteId).toBe("toy-palette");
@@ -92,7 +93,8 @@ describe("Public registry contract smoke test", () => {
     expect(registryStore.activePaletteId).toBeNull();
 
     registryStore.unregister("toy-palette");
-    expect(registryStore.palettes.find((p: any) => p.id === "toy-palette"))
-      .toBeUndefined();
+    expect(
+      registryStore.palettes.find((p: any) => p.id === "toy-palette"),
+    ).toBeUndefined();
   });
 });

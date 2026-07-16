@@ -1,7 +1,6 @@
-import { Schema } from "effect";
-import { StateCell } from "./define-cell.ts";
+import { Effect, Schema, SubscriptionRef } from "effect";
 import type { PersistenceHandle } from "../forge/descriptors.ts";
-import { Effect, SubscriptionRef } from "effect";
+import { StateCell } from "./define-cell.ts";
 
 export function createPersistedCell<T>(
   schema: Schema.Schema<T, any, never>,

@@ -1,8 +1,8 @@
 // sdk/state/src/composables/useMoneyFilter.ts
 
 import { getContext, untrack } from "svelte";
-import type { CurrencyStore } from "../stores/currency.svelte.ts";
 import { MONEY_CONTEXT } from "../mod.ts";
+import type { CurrencyStore } from "../stores/currency.svelte.ts";
 import { useMoney } from "./useMoney.ts";
 
 export interface MoneyFilterOptions {

@@ -1,15 +1,15 @@
 import { definePlugin } from "@rune-lab/core";
 import { createPluginKit } from "@rune-lab/svelte";
 import { createCommandStore } from "./commands/store.svelte.ts";
-import { createShortcutStore } from "./shortcuts/store.svelte.ts";
+import PaletteHost from "./host/PaletteHost.svelte";
 import { createToastStore } from "./notifications/store.svelte.ts";
-import { createPaletteRegistryStore } from "./registry/registry.svelte.ts";
+import Toaster from "./notifications/Toaster.svelte";
 import CommandPalette from "./palettes/commands/CommandPalette.svelte";
 import ShortcutPalette from "./palettes/shortcuts/ShortcutPalette.svelte";
+import { createPaletteRegistryStore } from "./registry/registry.svelte.ts";
 import SettingsModal from "./SettingsModal.svelte";
 import { ShortcutSettings } from "./shortcuts/mod.ts";
-import PaletteHost from "./host/PaletteHost.svelte";
-import Toaster from "./notifications/Toaster.svelte";
+import { createShortcutStore } from "./shortcuts/store.svelte.ts";
 
 export const palettesPluginSpec = definePlugin({
   id: "rune-lab.palettes",

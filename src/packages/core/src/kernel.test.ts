@@ -4,12 +4,12 @@ import {
   assertRejects,
   assertThrows,
 } from "@std/assert";
-import { createKernel } from "./kernel/kernel.ts";
-import { definePlugin } from "./forge/define-plugin.ts";
-import { createInMemoryDriver, namespaced } from "./ports/memory.ts";
-import { normalizeSlots, resolveSlotRef } from "./kernel/wiring.ts";
-import { createPersistedCell } from "./cells/persisted-cell.ts";
 import { Schema } from "effect";
+import { createPersistedCell } from "./cells/persisted-cell.ts";
+import { definePlugin } from "./forge/define-plugin.ts";
+import { createKernel } from "./kernel/kernel.ts";
+import { normalizeSlots, resolveSlotRef } from "./kernel/wiring.ts";
+import { createInMemoryDriver, namespaced } from "./ports/memory.ts";
 
 Deno.test("Kernel - slot resolution and store topological sort initialization", async () => {
   const driver = createInMemoryDriver();

@@ -1,6 +1,6 @@
 <script lang="ts">
-import { getThemeStore } from "@rune-lab/layout";
 import { getLanguageStore } from "@rune-lab/i18n";
+import { getThemeStore } from "@rune-lab/layout";
 import { getShortcutStore, getToastStore } from "@rune-lab/palettes";
 import { getAppStore } from "@rune-lab/svelte";
 import { onMount, untrack } from "svelte";

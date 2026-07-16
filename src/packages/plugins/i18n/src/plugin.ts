@@ -1,3 +1,4 @@
+import type { ConfigStore, SlotContext } from "@rune-lab/core";
 import { definePlugin } from "@rune-lab/core";
 import { createPluginKit } from "@rune-lab/svelte";
 import { Schema } from "effect";
@@ -10,7 +11,6 @@ import {
   setExchangeRateStore,
 } from "./money/mod.ts";
 import { i18nSettings } from "./settings.ts";
-import type { ConfigStore, SlotContext } from "@rune-lab/core";
 
 export const i18nPluginSpec = definePlugin({
   id: "rune-lab.i18n",

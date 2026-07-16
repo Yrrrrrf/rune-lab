@@ -6,14 +6,14 @@ import type {
 } from "@rune-lab/core";
 import { createKernel, namespaced } from "@rune-lab/core";
 import { type Component, type Snippet, setContext, untrack } from "svelte";
-import { RUNE_LAB_CONTEXT } from "./provider/context.ts";
-import { type AppData, createAppStore } from "./reactivity/app.svelte.ts";
 import {
 	cookieDriver,
 	createInMemoryDriver,
 	localStorageDriver,
 	sessionStorageDriver,
 } from "./persistence/drivers.ts";
+import { RUNE_LAB_CONTEXT } from "./provider/context.ts";
+import { type AppData, createAppStore } from "./reactivity/app.svelte.ts";
 
 /**
  * Namespaced configuration for Rune Lab plugins.
@@ -66,11 +66,14 @@ untrack(() => {
 setContext(RUNE_LAB_CONTEXT.app, appStore);
 
 // 1. Construct the kernel
-const kernel = createKernel(untrack(() => plugins), {
-	config: untrack(() => config as Record<string, unknown>),
-	persistence: initialPersistence,
-	localeAdapter: untrack(() => localeAdapter),
-});
+const kernel = createKernel(
+	untrack(() => plugins),
+	{
+		config: untrack(() => config as Record<string, unknown>),
+		persistence: initialPersistence,
+		localeAdapter: untrack(() => localeAdapter),
+	},
+);
 
 // Provide the kernel itself
 setContext(RUNE_LAB_CONTEXT.kernel, kernel);

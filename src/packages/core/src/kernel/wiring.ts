@@ -81,9 +81,7 @@ export function sortPlugins(resolved: ForgedPlugin[]): ForgedPlugin[] {
     return sortedNodes.map((node) => pluginMap.get(node.id)!);
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
-    throw new Error(
-      `[Kernel] Circular dependency detected in plugins: ${msg}`,
-    );
+    throw new Error(`[Kernel] Circular dependency detected in plugins: ${msg}`);
   }
 }
 

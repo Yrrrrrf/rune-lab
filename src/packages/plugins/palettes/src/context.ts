@@ -1,8 +1,8 @@
 import { createAccessor } from "@rune-lab/svelte";
 import type { CommandStore } from "./commands/store.svelte.ts";
-import type { ShortcutStore } from "./shortcuts/store.svelte.ts";
 import type { ToastStore } from "./notifications/store.svelte.ts";
 import type { PaletteRegistryStore } from "./registry/registry.svelte.ts";
+import type { ShortcutStore } from "./shortcuts/store.svelte.ts";
 
 export const getCommandStore = createAccessor<CommandStore>(
   Symbol.for("rl:rune-lab.palettes:commands"),

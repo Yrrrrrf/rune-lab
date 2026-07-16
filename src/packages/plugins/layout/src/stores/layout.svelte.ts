@@ -77,9 +77,7 @@ export class LayoutStore {
   #loadWorkspace() {
     const driver = this.#driver;
     if (!driver) return;
-    const saved = driver.get(
-      `rl:layout:${this.#storageNamespace}:workspace`,
-    );
+    const saved = driver.get(`rl:layout:${this.#storageNamespace}:workspace`);
     if (saved instanceof Promise) {
       saved.then((val) => {
         if (val) this.activeWorkspaceId = val;
@@ -92,9 +90,7 @@ export class LayoutStore {
   #loadSections() {
     const driver = this.#driver;
     if (!driver) return;
-    const saved = driver.get(
-      `rl:layout:${this.#storageNamespace}:sections`,
-    );
+    const saved = driver.get(`rl:layout:${this.#storageNamespace}:sections`);
     const applySections = (val: string | null) => {
       if (val) {
         try {
@@ -114,9 +110,7 @@ export class LayoutStore {
   #loadPreset() {
     const driver = this.#driver;
     if (!driver) return;
-    const saved = driver.get(
-      `rl:layout:${this.#storageNamespace}:preset`,
-    );
+    const saved = driver.get(`rl:layout:${this.#storageNamespace}:preset`);
     const applyPresetVal = (val: string | null) => {
       if (val && PRESETS[val]) {
         this.applyPreset(val);

@@ -1,10 +1,10 @@
+export { StateCell } from "./cells/define-cell.ts";
+export { createPersistedCell } from "./cells/persisted-cell.ts";
 export {
   type ConfigStore,
   ConfigStoreImpl,
   type ConfigStoreOptions,
 } from "./config/config-store.ts";
-export { StateCell } from "./cells/define-cell.ts";
-export { createPersistedCell } from "./cells/persisted-cell.ts";
 // Legacy exports for backward compatibility
 export type { PluginInput } from "./forge/define-plugin.ts";
 export { definePlugin, type ForgedPlugin } from "./forge/define-plugin.ts";

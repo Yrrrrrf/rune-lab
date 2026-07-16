@@ -1,6 +1,6 @@
 <script lang="ts">
-import ResourceSelector from "./ResourceSelector.svelte";
 import { getThemeStore } from "../plugin.ts";
+import ResourceSelector from "./ResourceSelector.svelte";
 
 const themeStore = getThemeStore();
 
