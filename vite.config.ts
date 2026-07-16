@@ -31,10 +31,6 @@ const svelteProject = (
       "@rune-lab/palettes": resolve(
         "./src/packages/plugins/palettes/src/mod.ts",
       ),
-      "pretext/rich-inline": resolve(
-        "./node_modules/@chenglou/pretext/dist/rich-inline.js",
-      ),
-      pretext: resolve("./node_modules/@chenglou/pretext/dist/layout.js"),
     },
   },
   test: {
