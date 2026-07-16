@@ -1,17 +1,15 @@
 <script lang="ts">
 import "./layout.css";
 import type { NavigationSection } from "@rune-lab/layout";
+import { LayoutPlugin } from "@rune-lab/layout";
+import { PalettesPlugin } from "@rune-lab/palettes";
+import { createParaglideAdapter, I18nPlugin } from "@rune-lab/i18n";
 import { RuneProvider, version } from "@rune-lab/svelte";
-import { m } from "$lib/i18n/messages.ts";
-// import { LayoutPlugin } from "@rune-lab/svelte";
-// import { PalettesPlugin } from "@rune-lab/svelte";
-// import { MoneyPlugin } from "@rune-lab/svelte";
-// import { createParaglideAdapter, I18nPlugin } from "@rune-lab/svelte";
-// import { ObserverPlugin } from "@rune-lab/svelte";
 import * as paraglideRuntime from "$lib/i18n/paraglide/runtime.js";
 import AppLayout from "./AppLayout.svelte";
+import { m } from "$lib/i18n/messages.ts";
 
-// const localeAdapter = createParaglideAdapter(paraglideRuntime);
+const localeAdapter = createParaglideAdapter(paraglideRuntime);
 
 let { children } = $props();
 
@@ -54,7 +52,7 @@ const sections: NavigationSection[] = [
 ];
 </script>
 
-<!-- <RuneProvider
+<RuneProvider
   config={{
     favicon: "/img/rune.png",
     icons: "material",
@@ -68,13 +66,11 @@ const sections: NavigationSection[] = [
   plugins={[
     LayoutPlugin,
     PalettesPlugin,
-    MoneyPlugin,
-    ObserverPlugin,
     I18nPlugin,
   ]}
   {localeAdapter}
 >
-</RuneProvider> -->
-<AppLayout {sections}>
-  {@render children()}
-</AppLayout>
+  <AppLayout {sections}>
+    {@render children()}
+  </AppLayout>
+</RuneProvider>

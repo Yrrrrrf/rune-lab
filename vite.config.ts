@@ -7,8 +7,6 @@ const resolve = (p: string) => new URL(p, import.meta.url).pathname;
 const PKGS = `./src/packages`;
 const PLUGINS = `${PKGS}/plugins`;
 
-// why `as any`: the svelte plugin types against upstream `vite`, while vite-plus
-// resolves to @voidzero-dev/vite-plus-core — same runtime, different type identity.
 const svelteProject = (
   name: string,
   root: string,
@@ -33,6 +31,10 @@ const svelteProject = (
       "@rune-lab/palettes": resolve(
         "./src/packages/plugins/palettes/src/mod.ts",
       ),
+      "pretext/rich-inline": resolve(
+        "./node_modules/@chenglou/pretext/dist/rich-inline.js",
+      ),
+      "pretext": resolve("./node_modules/@chenglou/pretext/dist/layout.js"),
     },
   },
   test: {
@@ -64,6 +66,7 @@ export default defineConfig({
       svelteProject("palettes", `${PLUGINS}`),
       svelteProject("observer", `${PLUGINS}`),
       svelteProject("layout", `${PLUGINS}`),
+      svelteProject("lab", "apps"),
       svelteProject("i18n", `${PLUGINS}`, [
         tailwindcss(),
         paraglideVitePlugin({

@@ -2,7 +2,7 @@
 // Declarative shortcut registration with automatic lifecycle cleanup.
 // Bridges ShortcutConfig (sdk/core) → ShortcutStore (sdk/state).
 
-import { getShortcutStore } from "../mod.ts";
+import { getShortcutStore } from "../context.ts";
 import type { ShortcutConfig, ShortcutEntry } from "./types.ts";
 
 /**
@@ -15,23 +15,6 @@ import type { ShortcutConfig, ShortcutEntry } from "./types.ts";
  *
  * @param configs - Array of ShortcutConfig
  * @returns Object with `registered` getter for the list of registered IDs
- *
- * @example
- * ```svelte
- * <script>
- *   import { useShortcuts } from '@rune-lab/palettes';
- *
- *   useShortcuts([
- *     {
- *       id: "save:document",
- *       keys: "ctrl+s",
- *       handler: (e) => { e.preventDefault(); save(); },
- *       label: "Save document",
- *       category: "Editing",
- *     },
- *   ]);
- * </script>
- * ```
  */
 export function useShortcuts(configs: ShortcutConfig[]): {
   readonly registered: string[];

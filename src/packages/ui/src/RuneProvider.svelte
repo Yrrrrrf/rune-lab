@@ -6,7 +6,8 @@ import type {
 } from "@rune-lab/core";
 import { createKernel, namespaced } from "@rune-lab/core";
 import { type Component, type Snippet, setContext, untrack } from "svelte";
-import { type AppData, createAppStore, RUNE_LAB_CONTEXT } from "./mod.ts";
+import { RUNE_LAB_CONTEXT } from "./provider/context.ts";
+import { type AppData, createAppStore } from "./reactivity/app.svelte.ts";
 import {
 	cookieDriver,
 	createInMemoryDriver,
@@ -65,10 +66,10 @@ untrack(() => {
 setContext(RUNE_LAB_CONTEXT.app, appStore);
 
 // 1. Construct the kernel
-const kernel = createKernel(plugins, {
+const kernel = createKernel(untrack(() => plugins), {
 	config: untrack(() => config as Record<string, unknown>),
 	persistence: initialPersistence,
-	localeAdapter,
+	localeAdapter: untrack(() => localeAdapter),
 });
 
 // Provide the kernel itself

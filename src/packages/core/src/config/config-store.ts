@@ -42,8 +42,11 @@ export class ConfigStoreImpl<T, K extends keyof T> {
     this.available = [...items] as T[];
     this.current = items[0][idKey];
 
-    const saved = this.#driver.get(storageKey);
-    // Handle either synchronous or Promise response from driver
+    this.#loadFromDriver(this.#driver);
+  }
+
+  #loadFromDriver(driver: PersistenceDriver): void {
+    const saved = driver.get(this.#options.storageKey);
     if (saved instanceof Promise) {
       saved
         .then((val) => {
@@ -61,20 +64,7 @@ export class ConfigStoreImpl<T, K extends keyof T> {
 
   setDriver(driver: PersistenceDriver): void {
     this.#driver = driver;
-    const saved = driver.get(this.#options.storageKey);
-    if (saved instanceof Promise) {
-      saved
-        .then((val) => {
-          if (val && this.get(val as T[K])) {
-            const old = this.current;
-            this.current = val as T[K];
-            this.#notify(val as T[K], old);
-          }
-        })
-        .catch(() => {});
-    } else if (saved && this.get(saved as T[K])) {
-      this.current = saved as T[K];
-    }
+    this.#loadFromDriver(driver);
   }
 
   set(id: T[K]): void {

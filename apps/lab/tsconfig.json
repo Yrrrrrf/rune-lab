@@ -4,7 +4,6 @@
     "paths": {
       "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"],
-      "$app/types": ["./.svelte-kit/types/index.d.ts"],
       "@rune-lab/core": ["../../src/packages/core/src/mod.ts"],
       "@rune-lab/svelte": ["../../src/packages/ui/src/mod.ts"],
       "@rune-lab/i18n": ["../../src/packages/plugins/i18n/src/mod.ts"],

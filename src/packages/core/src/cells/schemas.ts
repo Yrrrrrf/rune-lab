@@ -22,9 +22,6 @@ export const withFallback = <A, I>(
     },
   });
 
-export const ThemeSchema = withFallback(Schema.String, "light");
-export const LanguageSchema = withFallback(Schema.String, "en");
-export const CurrencySchema = withFallback(Schema.String, "USD");
 export const ContributionsSchema = withFallback(
   Schema.Record({
     key: Schema.String,
@@ -32,21 +29,3 @@ export const ContributionsSchema = withFallback(
   }),
   {},
 );
-
-export function getCellSchema(
-  key: string,
-  fallback: unknown,
-): Schema.Schema<unknown, unknown, never> {
-  if (key === "contributions") {
-    return ContributionsSchema as unknown as Schema.Schema<
-      unknown,
-      unknown,
-      never
-    >;
-  }
-  return withFallback(Schema.Any, fallback) as unknown as Schema.Schema<
-    unknown,
-    unknown,
-    never
-  >;
-}

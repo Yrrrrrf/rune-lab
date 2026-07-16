@@ -1,5 +1,5 @@
 import type { ForgedPlugin, SlotSpec } from "@rune-lab/core";
-import { createAccessor } from "../context.ts";
+import { createAccessor } from "../provider/context.ts";
 
 export function createPluginKit<
   TId extends string,

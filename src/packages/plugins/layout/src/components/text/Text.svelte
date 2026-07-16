@@ -1,6 +1,6 @@
 <script lang="ts">
-import { onMount } from "svelte";
 import { getTextStore } from "../../plugin.ts";
+import { resizeWidth } from "../../text/resize.ts";
 import TextLine from "./TextLine.svelte";
 
 let {
@@ -24,8 +24,7 @@ let {
 } = $props();
 
 const textStore = getTextStore();
-let containerEl = $state<HTMLElement>(),
-  measuredWidth = $state(0);
+let measuredWidth = $state(0);
 
 let prepared = $derived.by(() => {
   const _ = textStore.epoch;
@@ -51,19 +50,13 @@ let lines = $derived.by(() => {
   overflow = clampLimit;
   return clampLimit ? tempLines.slice(0, clamping) : tempLines;
 });
-
-onMount(() => {
-  if (!containerEl) return;
-  const observer = new ResizeObserver((entries) => {
-    for (const entry of entries) measuredWidth = entry.contentRect.width;
-  });
-  observer.observe(containerEl);
-  return () => observer.disconnect();
-});
 </script>
 
-<div bind:this={containerEl} class="rl-text-container w-full select-text"
-  style="line-height: {lineHeight}px;">
+<div
+  use:resizeWidth={(w) => (measuredWidth = w)}
+  class="rl-text-container w-full select-text"
+  style="line-height: {lineHeight}px;"
+>
   {#if !textStore.ready}
     <div class="rl-text-fallback whitespace-pre-wrap">{content}</div>
   {:else}

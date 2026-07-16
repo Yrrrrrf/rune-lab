@@ -1,21 +1,14 @@
-import { Context, Effect, Option, Schema } from "effect";
-import type { RuneLabCells } from "../cells/cells.ts";
+import { Context, Effect, Option } from "effect";
 import type { StateCell } from "../cells/define-cell.ts";
-import { getCellSchema } from "../cells/schemas.ts";
 import type { ForgedPlugin, PluginInput } from "../forge/define-plugin.ts";
 import type { SlotSpec } from "../forge/define-slot.ts";
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceDriver } from "../ports/persistence.ts";
 import type { TextMeasurer } from "../ports/text.ts";
 import { StateCellsTag } from "../services/layers.ts";
-import {
-  registerContributionLifecycle,
-  setCellLifecycle,
-  unregisterContributionLifecycle,
-} from "./lifecycle.ts";
 import { compileEnvironment, type NormalizedSlot } from "./wiring.ts";
 
-export interface Kernel<TCells = RuneLabCells> {
+export interface Kernel<TCells = any> {
   stores: Map<string, unknown>;
   overlays: unknown[];
 
@@ -35,7 +28,7 @@ export interface Kernel<TCells = RuneLabCells> {
   dispose(): Promise<void>;
 }
 
-export function createKernel<TCells = RuneLabCells>(
+export function createKernel<TCells = any>(
   pluginsInput: PluginInput[],
   options: {
     config: Record<string, unknown>;
@@ -73,46 +66,45 @@ export function createKernel<TCells = RuneLabCells>(
 
   cells.contributions.set(initialContributions);
 
-  // Initialize synchronizers
-  if (options.persistence) {
-    loadPersistedCells(cells, options.persistence);
-  }
-  if (options.localeAdapter) {
-    bindLocaleAdapter(cells, options.localeAdapter);
-  }
-
   const slotMap = new Map(sortedSlots.map((s) => [s.id, s]));
+
+  function getCell(cellName: string): StateCell<any> {
+    if (cellName === "contributions") {
+      return cells.contributions;
+    }
+    let storeKey = cellName;
+    if (!cellName.startsWith("rl:")) {
+      if (cellName.includes(".")) {
+        const lastDot = cellName.lastIndexOf(".");
+        const pluginId = cellName.slice(0, lastDot);
+        const slotName = cellName.slice(lastDot + 1);
+        storeKey = `rl:${pluginId}:${slotName}`;
+      }
+    }
+    const store = stores.get(storeKey);
+    if (!store) {
+      throw new Error(`[Kernel] Cell "${cellName}" does not exist`);
+    }
+    return store as StateCell<any>;
+  }
 
   return {
     stores,
     overlays,
     getCell: (cellName) => {
-      const cell = cells[cellName as string];
-      if (!cell) {
-        throw new Error(`[Kernel] Cell "${cellName as string}" does not exist`);
-      }
+      const cell = getCell(cellName as string);
       return cell.get() as TCells[typeof cellName];
     },
-    setCell: (cellName, value) =>
-      setCellLifecycle(
-        cells,
-        cellName,
-        value,
-        options.persistence,
-        options.localeAdapter,
-      ),
+    setCell: async (cellName, value) => {
+      const cell = getCell(cellName as string);
+      await cell.set(value as any);
+    },
     subscribe: (cellName, listener) => {
-      const cell = cells[cellName as string];
-      if (!cell) {
-        throw new Error(`[Kernel] Cell "${cellName as string}" does not exist`);
-      }
+      const cell = getCell(cellName as string);
       return cell.subscribe(listener);
     },
     getCellVersion: (cellName) => {
-      const cell = cells[cellName as string];
-      if (!cell) {
-        throw new Error(`[Kernel] Cell "${cellName as string}" does not exist`);
-      }
+      const cell = getCell(cellName as string);
       return cell.getVersion();
     },
     getContributions: (key) => {
@@ -177,46 +169,37 @@ function extractInitialContributions(
   return contributions;
 }
 
-function loadPersistedCells(
+export function registerContributionLifecycle(
   cells: Record<string, StateCell<unknown>>,
-  persistence: PersistenceDriver,
+  key: string,
+  item: unknown,
 ): void {
-  const keys = ["theme", "language", "currency"];
-  for (const key of keys) {
-    const saved = persistence.get(key);
-    const applyValue = (val: string | null) => {
-      if (val !== null && val !== undefined) {
-        const schema = getCellSchema(key, cells[key].get());
-        try {
-          const decoded = Schema.decodeUnknownSync(schema)(val);
-          cells[key].set(decoded);
-        } catch {
-          // ignore parsing error
-        }
-      }
-    };
-    if (saved instanceof Promise) {
-      saved.then(applyValue).catch(() => {
-        // ignore rejection
-      });
-    } else {
-      applyValue(saved);
-    }
-  }
+  const contributionsCell = cells.contributions;
+  if (!contributionsCell) return;
+  const registry = {
+    ...(contributionsCell.get() as Record<string, unknown[]>),
+  };
+  const list = registry[key] ? [...registry[key]] : [];
+  list.push(item);
+  registry[key] = list;
+  contributionsCell.set(registry);
 }
 
-function bindLocaleAdapter(
+export function unregisterContributionLifecycle(
   cells: Record<string, StateCell<unknown>>,
-  adapter: LocaleAdapter,
+  key: string,
+  id: string,
 ): void {
-  const initial = adapter.getLocale();
-  if (initial) {
-    cells.language.set(initial);
+  const contributionsCell = cells.contributions;
+  if (!contributionsCell) return;
+  const registry = {
+    ...(contributionsCell.get() as Record<string, unknown[]>),
+  };
+  if (registry[key]) {
+    registry[key] = registry[key].filter((item) => {
+      const obj = item as Record<string, unknown>;
+      return !obj || obj.id !== id;
+    });
+    contributionsCell.set(registry);
   }
-  adapter.onChange((lang) => {
-    const current = cells.language.get();
-    if (current !== lang) {
-      cells.language.set(lang);
-    }
-  });
 }

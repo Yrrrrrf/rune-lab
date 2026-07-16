@@ -1,25 +1,10 @@
-import type { ConfigStore } from "@rune-lab/svelte";
 import { untrack } from "svelte";
-import type { ToastStore } from "../notifications/store.svelte.ts";
 import type { Command } from "../types.ts";
 
 export type { Command };
 
-export interface CommandServices {
-  appStore: unknown;
-  apiStore: unknown;
-  toastStore: ToastStore;
-  themeStore: ConfigStore<Record<string, unknown>, string>;
-  languageStore: ConfigStore<Record<string, unknown>, string>;
-  currencyStore: ConfigStore<Record<string, unknown>, string>;
-}
-
 export class CommandStore {
-  // Dependency Injection
-  #services: CommandServices;
-
-  constructor(services: CommandServices) {
-    this.#services = services;
+  constructor() {
     this.refreshDefaultCommands();
   }
 
@@ -79,6 +64,6 @@ export class CommandStore {
   }
 }
 
-export function createCommandStore(services: CommandServices): CommandStore {
-  return new CommandStore(services);
+export function createCommandStore(): CommandStore {
+  return new CommandStore();
 }

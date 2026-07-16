@@ -1,2 +1,2 @@
-export { default as CommandPalette } from "./CommandPalette.svelte";
+export { default as CommandPalette } from "../palettes/commands/CommandPalette.svelte";
 export * from "./store.svelte.ts";

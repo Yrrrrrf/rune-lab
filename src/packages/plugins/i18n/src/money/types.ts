@@ -24,7 +24,7 @@ export {
   toPaypalMoney,
   toSquareMoney,
   toStripeMoney,
-} from "./money.ts";
+} from "./primitives/money.ts";
 
 export interface Currency {
   code: string;

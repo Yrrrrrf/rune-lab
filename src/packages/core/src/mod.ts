@@ -1,9 +1,10 @@
-export type { RuneLabCells } from "./cells/cells.ts";
 export {
   type ConfigStore,
   ConfigStoreImpl,
   type ConfigStoreOptions,
 } from "./config/config-store.ts";
+export { StateCell } from "./cells/define-cell.ts";
+export { createPersistedCell } from "./cells/persisted-cell.ts";
 // Legacy exports for backward compatibility
 export type { PluginInput } from "./forge/define-plugin.ts";
 export { definePlugin, type ForgedPlugin } from "./forge/define-plugin.ts";
@@ -15,8 +16,6 @@ export {
 export type { SlotContext, SlotSpec } from "./forge/define-slot.ts";
 export type { PersistenceHandle, SlotDescriptor } from "./forge/descriptors.ts";
 export { createKernel, type Kernel } from "./kernel/kernel.ts";
-export { normalizePlugins as resolvePlugins } from "./kernel/wiring.ts";
-export type { RunePlugin, StoreRegistryEntry } from "./plugin/manifest.ts";
 export type { LocaleAdapter } from "./ports/locale.ts";
 export {
   createInMemoryDriver,
@@ -47,11 +46,4 @@ export type {
   WordBreakMode,
 } from "./ports/text.ts";
 export { FakeTextMeasurer } from "./ports/text-fake.ts";
-export {
-  clearRegistry,
-  getAllRegisteredStores,
-  getRegisteredStore,
-  registerStore,
-  unregisterStore,
-} from "./registry/registry.ts";
 export type { StateCells } from "./services/layers.ts";

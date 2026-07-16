@@ -183,12 +183,27 @@ def main [
   
   for entry in ($exports | columns) {
     let paths = ($exports | get $entry)
+    let types_path = (if ($paths | describe) =~ "record" {
+      $paths | get types? | default null
+    } else {
+      null
+    })
     let default_path = (if ($paths | describe) =~ "record" {
-      $paths | get default? | default ($paths | get svelte?) | default ($paths | get types?)
+      $paths | get default? | default ($paths | get svelte?) | default null
     } else {
       $paths
     })
     
+    if $types_path != null {
+      let full_types_path = ($root | path join "build" ($types_path | str replace "./" ""))
+      if not ($full_types_path | path exists) {
+        error make {msg: $"Export gate failed: export '($entry)' target types file '($full_types_path)' does not exist!"}
+      }
+      print $"  verified types for '($entry)' -> ($types_path)"
+    } else {
+      error make {msg: $"Export gate failed: export '($entry)' has no types (d.ts) entry!"}
+    }
+
     if $default_path != null {
       let full_path = ($root | path join "build" ($default_path | str replace "./" ""))
       if not ($full_path | path exists) {

@@ -10,13 +10,11 @@ export interface WorkspaceLayoutProps {
   statusbar?: Snippet;
   namespace?: string;
   config?: LayoutConfig;
+  dir?: "ltr" | "rtl";
 }
 </script>
 <script lang="ts">
 import { getLayoutStore } from "../plugin.ts";
-import { getLanguageStore } from "@rune-lab/i18n";
-import { getShortcutStore, shortcutListener } from "@rune-lab/palettes";
-import { LAYOUT_SHORTCUTS } from "../types.ts";
 import { onMount } from "svelte";
 import WorkspaceStripZone from "./WorkspaceStripZone.svelte";
 import NavigationPanelZone from "./NavigationPanelZone.svelte";
@@ -25,13 +23,6 @@ import DetailPanelZone from "./DetailPanelZone.svelte";
 import StatusbarZone from "./StatusbarZone.svelte";
 
 const layoutStore = getLayoutStore();
-const languageStore = getLanguageStore();
-const shortcutStore = getShortcutStore();
-
-const RTL_LANGUAGES = new Set(["ar", "he", "fa", "ur"]);
-const dir = $derived(
-  RTL_LANGUAGES.has(String(languageStore.current)) ? "rtl" : "ltr",
-);
 
 let {
   workspaceStrip,
@@ -40,6 +31,7 @@ let {
   detailPanel,
   statusbar,
   namespace = "default",
+  dir = "ltr",
 }: WorkspaceLayoutProps = $props();
 
 onMount(() => {
@@ -55,27 +47,18 @@ onMount(() => {
   document.documentElement.style.height = "100%";
   document.body.style.height = "100%";
 
-  // Register default layout shortcuts
-  const shortcuts = [
-    {
-      ...LAYOUT_SHORTCUTS.TOGGLE_NAV,
-      handler: (e: KeyboardEvent) => {
-        e.preventDefault();
-        layoutStore.toggleZone("nav");
-      },
-    },
-    {
-      ...LAYOUT_SHORTCUTS.TOGGLE_DETAIL,
-      handler: (e: KeyboardEvent) => {
-        e.preventDefault();
-        layoutStore.toggleZone("detail");
-      },
-    },
-  ];
+  const handleKeydown = (e: KeyboardEvent) => {
+    const isMeta = e.ctrlKey || e.metaKey;
+    if (isMeta && e.key === "b") {
+      e.preventDefault();
+      layoutStore.toggleZone("nav");
+    } else if (isMeta && e.key === "j") {
+      e.preventDefault();
+      layoutStore.toggleZone("detail");
+    }
+  };
 
-  for (const s of shortcuts) {
-    shortcutStore.register(s);
-  }
+  window.addEventListener("keydown", handleKeydown);
 
   return () => {
     document.documentElement.style.overflow = originalHtmlOverflow;
@@ -83,15 +66,13 @@ onMount(() => {
     document.documentElement.style.height = originalHtmlHeight;
     document.body.style.height = originalBodyHeight;
 
-    shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_NAV.id);
-    shortcutStore.unregister(LAYOUT_SHORTCUTS.TOGGLE_DETAIL.id);
+    window.removeEventListener("keydown", handleKeydown);
   };
 });
 </script>
 
 <div
   class="rl-layout flex flex-col h-[100dvh] w-screen overflow-hidden bg-base-100 text-base-content font-sans relative"
-  use:shortcutListener={shortcutStore}
   data-rl-layout
   {dir}
 >

@@ -1,6 +1,6 @@
 <script lang="ts">
-import { CurrencySelector } from "@rune-lab/i18n";
-import { LanguageSelector, ThemeSelector } from "@rune-lab/layout";
+import { CurrencySelector, LanguageSelector } from "@rune-lab/i18n";
+import { ThemeSelector } from "@rune-lab/layout";
 import { getAppStore } from "@rune-lab/svelte";
 import { m } from "$lib/i18n/messages.ts";
 

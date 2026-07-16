@@ -7,15 +7,17 @@ export { default as Icon } from "./components/Icon.svelte";
 export { default as NavigationPanel } from "./components/NavigationPanel.svelte";
 export { default as ResourceSelector } from "./components/ResourceSelector.svelte";
 export { default as StatusbarOverflow } from "./components/StatusbarOverflow.svelte";
+export { default as ThemeSelector } from "./components/ThemeSelector.svelte";
 export { default as RichText } from "./components/text/RichText.svelte";
 export { default as Text } from "./components/text/Text.svelte";
 export { default as WorkspaceLayout } from "./components/WorkspaceLayout.svelte";
 export { default as WorkspaceStrip } from "./components/WorkspaceStrip.svelte";
-export { getLayoutStore, getTextStore, LayoutPlugin } from "./plugin.ts";
+export {
+  getLayoutStore,
+  getTextStore,
+  getThemeStore,
+  LayoutPlugin,
+} from "./plugin.ts";
 
 export { PRESETS } from "./presets.ts";
 export * from "./types.ts";
-
-export const LAYOUT_CONTEXT: { readonly layout: symbol } = {
-  layout: Symbol.for("rl:layout"),
-} as const;

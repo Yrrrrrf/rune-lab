@@ -16,9 +16,8 @@ types:
 
 [doc('Audit all code namespaces')]
 [group('check')]
-[working-directory('src')]
 audit:
-    deno run -A npm:fallow -c .fallowrc.json
+    deno run -A npm:fallow -c src/.fallowrc.json
 
 [doc('Test coverage')]
 [group('check')]

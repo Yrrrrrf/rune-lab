@@ -11,6 +11,8 @@ prune:
 prepare: prune
     # Install on workspace
     deno install
+    # Compile paraglide
+    just paraglide src/packages/plugins/i18n/src/lang/project.inlang src/packages/plugins/i18n/src/lang/paraglide
     # Install on main lab for testing...
     cd apps/lab; deno install
     cd apps/lab; deno run -A npm:@sveltejs/kit/svelte-kit sync

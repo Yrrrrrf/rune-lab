@@ -30,19 +30,19 @@ const cellBinds = $derived.by(() => {
   return binds;
 });
 
+function getStoreForField(field: any): any {
+  if (field.target?.type !== "store") return undefined;
+  const parts = field.id.split(".");
+  const pluginId = parts[0];
+  return getContext(Symbol.for(`rl:${pluginId}:${field.target.storeId}`));
+}
+
 function getValue(field: any): any {
   if (field.target?.type === "cell") {
     return cellBinds.get(field.id)?.current;
   }
-  if (field.target?.type === "store") {
-    const parts = field.id.split(".");
-    const pluginId = parts[0];
-    const store = (getContext(
-      Symbol.for(`rl:${pluginId}:${field.target.storeId}`),
-    ) || getContext(Symbol.for(`rl:${field.target.storeId}`))) as any;
-    return store ? store[field.target.property] : undefined;
-  }
-  return undefined;
+  const store = getStoreForField(field);
+  return store ? store[field.target.property] : undefined;
 }
 
 function commitValue(field: any, val: any) {
@@ -50,11 +50,7 @@ function commitValue(field: any, val: any) {
     const bind = cellBinds.get(field.id);
     if (bind) bind.current = val;
   } else if (field.target?.type === "store") {
-    const parts = field.id.split(".");
-    const pluginId = parts[0];
-    const store = (getContext(
-      Symbol.for(`rl:${pluginId}:${field.target.storeId}`),
-    ) || getContext(Symbol.for(`rl:${field.target.storeId}`))) as any;
+    const store = getStoreForField(field);
     if (store) {
       if (
         typeof store.set === "function" &&
@@ -69,6 +65,19 @@ function commitValue(field: any, val: any) {
   if (onCommit) {
     onCommit(field.id, val);
   }
+}
+
+function handleInput(field: any, event: Event) {
+  const target = event.currentTarget as HTMLInputElement | HTMLSelectElement;
+  let val: any;
+  if (field.type === "toggle") {
+    val = (target as HTMLInputElement).checked;
+  } else if (field.type === "number" || field.type === "range") {
+    val = Number(target.value);
+  } else {
+    val = target.value;
+  }
+  commitValue(field, val);
 }
 </script>
 
@@ -89,7 +98,7 @@ function commitValue(field: any, val: any) {
             type="checkbox"
             class="toggle toggle-primary toggle-sm"
             checked={getValue(field)}
-            onchange={(e) => commitValue(field, e.currentTarget.checked)}
+            onchange={(e) => handleInput(field, e)}
             disabled={disabled}
           />
         </label>
@@ -100,7 +109,7 @@ function commitValue(field: any, val: any) {
               id={field.id}
               class="select select-bordered select-sm w-full"
               value={getValue(field)}
-              onchange={(e) => commitValue(field, e.currentTarget.value)}
+              onchange={(e) => handleInput(field, e)}
               disabled={disabled}
             >
               {#each field.options || [] as opt}
@@ -113,7 +122,7 @@ function commitValue(field: any, val: any) {
               type="text"
               class="input input-bordered input-sm w-full"
               value={getValue(field) ?? ""}
-              oninput={(e) => commitValue(field, e.currentTarget.value)}
+              oninput={(e) => handleInput(field, e)}
               disabled={disabled}
             />
           {:else if field.type === "number"}
@@ -122,7 +131,7 @@ function commitValue(field: any, val: any) {
               type="number"
               class="input input-bordered input-sm w-full"
               value={getValue(field) ?? 0}
-              oninput={(e) => commitValue(field, Number(e.currentTarget.value))}
+              oninput={(e) => handleInput(field, e)}
               min={field.min}
               max={field.max}
               step={field.step}
@@ -135,7 +144,7 @@ function commitValue(field: any, val: any) {
                 type="range"
                 class="range range-primary range-xs flex-1"
                 value={getValue(field) ?? 0}
-                oninput={(e) => commitValue(field, Number(e.currentTarget.value))}
+                oninput={(e) => handleInput(field, e)}
                 min={field.min ?? 0}
                 max={field.max ?? 100}
                 step={field.step ?? 1}
@@ -150,7 +159,7 @@ function commitValue(field: any, val: any) {
                 type="color"
                 class="input input-bordered p-0 w-10 h-8 cursor-pointer rounded"
                 value={getValue(field) ?? "#000000"}
-                oninput={(e) => commitValue(field, e.currentTarget.value)}
+                oninput={(e) => handleInput(field, e)}
                 disabled={disabled}
               />
               <span class="text-xs font-mono uppercase">{getValue(field) ?? "#000000"}</span>

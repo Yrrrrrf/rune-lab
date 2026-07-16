@@ -29,23 +29,12 @@ export class TextStoreFacade {
     if (!BROWSER) return;
 
     const themeStore = ctx.stores.get("theme") as { current: string };
-    const languageStore = ctx.stores.get("language") as { current: string };
 
     this.#engine = new PretextTextMeasurer();
     this.#ready = true;
 
-    // React to language (locale) changes
+    // React to theme changes
     $effect.root(() => {
-      $effect(() => {
-        const lang = languageStore.current;
-        if (lang) {
-          this.#engine!.setLocale(lang);
-          this.#engine!.clearCache();
-          this.#epoch++;
-        }
-      });
-
-      // React to theme changes
       $effect(() => {
         const themeName = themeStore.current;
         if (themeName) {

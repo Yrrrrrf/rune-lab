@@ -1,6 +1,5 @@
 <script lang="ts" generics="T">
 import type { ConfigStore } from "@rune-lab/core";
-import { m } from "@rune-lab/i18n";
 import { getContext, type Snippet } from "svelte";
 import AppSettingSelector from "./AppSettingSelector.svelte";
 
@@ -40,19 +39,12 @@ const userDictionary =
 /**
  * Resolve a label for an item through the message chain:
  * 1. User-provided dictionary
- * 2. Paraglide messages
- * 3. Raw key fallback
+ * 2. Raw key fallback
  */
 function resolveLabel(item: T): string {
 	const key = String((item as Record<string, unknown>)[idKey]);
 	if (typeof userDictionary[key] === "function") {
 		return userDictionary[key]();
-	}
-	if (
-		typeof (m as Record<string, (...args: unknown[]) => string>)[key] ===
-		"function"
-	) {
-		return (m as Record<string, (...args: unknown[]) => string>)[key]();
 	}
 	return key;
 }

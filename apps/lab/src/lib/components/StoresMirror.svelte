@@ -1,10 +1,6 @@
 <script lang="ts">
-import { getCurrencyStore } from "@rune-lab/i18n";
-import {
-  getLanguageStore,
-  getLayoutStore,
-  getThemeStore,
-} from "@rune-lab/layout";
+import { getCurrencyStore, getLanguageStore } from "@rune-lab/i18n";
+import { getLayoutStore, getThemeStore } from "@rune-lab/layout";
 import {
   getCommandStore,
   getShortcutStore,

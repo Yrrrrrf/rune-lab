@@ -1,10 +1,12 @@
 import { Schema } from "effect";
 import type { PersistenceHandle } from "./descriptors.ts";
+import type { LocaleAdapter } from "../ports/locale.ts";
 
 export interface SlotContext<TConfig = unknown> {
   config: TConfig;
   persistence: PersistenceHandle;
   stores: Map<string, unknown>;
+  locale?: LocaleAdapter;
 }
 
 export interface SlotSpec<TConfig = unknown, TStore = unknown> {
@@ -13,6 +15,7 @@ export interface SlotSpec<TConfig = unknown, TStore = unknown> {
   persist?: boolean | string[];
   dependsOn?: string[];
   expose?: boolean; // default true
+  contextKey?: never;
 }
 
 export const SlotSpecSchema = Schema.Struct({

@@ -1,18 +1,18 @@
-import type { Kernel, RuneLabCells } from "@rune-lab/core";
+import type { Kernel } from "@rune-lab/core";
 import { BROWSER } from "esm-env";
 import { createSubscriber } from "svelte/reactivity";
 import { getKernel } from "../provider/context.ts";
 
 export function useCell<
-  TCells = RuneLabCells,
+  TCells = any,
   K extends keyof TCells = keyof TCells,
 >(cellName: K): { current: TCells[K] };
 export function useCell<
-  TCells = RuneLabCells,
+  TCells = any,
   K extends keyof TCells = keyof TCells,
 >(kernel: Kernel<TCells>, cellName: K): { current: TCells[K] };
 export function useCell<
-  TCells = RuneLabCells,
+  TCells = any,
   K extends keyof TCells = keyof TCells,
 >(first: Kernel<TCells> | K, second?: K): { current: TCells[K] } {
   let kernel: Kernel<TCells>;

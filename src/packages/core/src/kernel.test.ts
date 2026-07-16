@@ -1,45 +1,51 @@
-import { assertEquals, assertExists } from "@std/assert";
+import {
+  assertEquals,
+  assertExists,
+  assertRejects,
+  assertThrows,
+} from "@std/assert";
 import { createKernel } from "./kernel/kernel.ts";
-import type { RunePlugin } from "./mod.ts";
-import { createInMemoryDriver } from "./ports/memory.ts";
+import { definePlugin } from "./forge/define-plugin.ts";
+import { createInMemoryDriver, namespaced } from "./ports/memory.ts";
+import { normalizeSlots, resolveSlotRef } from "./kernel/wiring.ts";
+import { createPersistedCell } from "./cells/persisted-cell.ts";
+import { Schema } from "effect";
 
-Deno.test("Kernel - manifest resolution and store topological sort initialization", async () => {
+Deno.test("Kernel - slot resolution and store topological sort initialization", async () => {
   const driver = createInMemoryDriver();
 
-  const storeA = {
-    id: "storeA",
-    factory: () => "A",
-  };
-
-  const storeB = {
-    id: "storeB",
-    factory: (
-      _config: unknown,
-      _drv: unknown,
-      stores: Map<string, unknown>,
-    ) => {
-      const a = stores.get("storeA");
-      return `B(${a})`;
+  const pluginA = definePlugin({
+    id: "test.pluginA",
+    slots: {
+      slotA: {
+        create: () => "A",
+      },
     },
-    dependsOn: ["storeA"],
-  };
+  });
 
-  const plugin: RunePlugin = {
-    id: "test.plugin",
-    stores: [storeB, storeA],
-  };
+  const pluginB = definePlugin({
+    id: "test.pluginB",
+    requires: ["test.pluginA"],
+    slots: {
+      slotB: {
+        create: (ctx) => {
+          const a = ctx.stores.get("rl:test.pluginA:slotA");
+          return `B(${a})`;
+        },
+        dependsOn: ["test.pluginA.slotA"],
+      },
+    },
+  });
 
-  const kernel = await createKernel([plugin], {
+  const kernel = createKernel([pluginB, pluginA], {
     config: {},
     persistence: driver,
   });
 
   assertExists(kernel);
-  assertEquals(kernel.getCell("theme"), "light");
 
-  // Verify topological sorting worked (storeB succeeded because storeA was created first)
-  const initializedA = kernel.stores.get("storeA");
-  const initializedB = kernel.stores.get("storeB");
+  const initializedA = kernel.stores.get("rl:test.pluginA:slotA");
+  const initializedB = kernel.stores.get("rl:test.pluginB:slotB");
 
   assertEquals(initializedA, "A");
   assertEquals(initializedB, "B(A)");
@@ -47,140 +53,122 @@ Deno.test("Kernel - manifest resolution and store topological sort initializatio
   await kernel.dispose();
 });
 
-Deno.test("Kernel - state mutations write back to persistence", async () => {
-  const driver = createInMemoryDriver();
+Deno.test("Kernel - resolveSlotRef dotted/bare resolution", () => {
+  const allSlots = normalizeSlots([
+    definePlugin({
+      id: "pluginA",
+      slots: {
+        theme: { create: () => "light" },
+      },
+    }),
+    definePlugin({
+      id: "pluginB",
+      requires: ["pluginA"],
+      slots: {
+        localSlot: { create: () => "local" },
+      },
+    }),
+  ]);
 
-  const kernel = await createKernel([], {
-    config: {},
-    persistence: driver,
+  const slotsMap = new Map(allSlots.map((s) => [s.id, s]));
+
+  // Bare same-plugin ref
+  const res1 = resolveSlotRef("localSlot", "pluginB", slotsMap);
+  assertEquals(res1.id, "rl:pluginB:localSlot");
+
+  // Dotted cross-plugin ref
+  const res2 = resolveSlotRef("pluginA.theme", "pluginB", slotsMap);
+  assertEquals(res2.id, "rl:pluginA:theme");
+
+  // Fails loud on missing
+  assertThrows(() => {
+    resolveSlotRef("pluginA.missing", "pluginB", slotsMap);
   });
-
-  assertEquals(kernel.getCell("theme"), "light");
-  assertEquals(driver.get("theme"), null);
-
-  await kernel.setCell("theme", "dark");
-  assertEquals(kernel.getCell("theme"), "dark");
-  assertEquals(driver.get("theme"), "dark");
-
-  await kernel.setCell("language", "fr");
-  assertEquals(kernel.getCell("language"), "fr");
-  assertEquals(driver.get("language"), "fr");
-
-  await kernel.setCell("currency", "EUR");
-  assertEquals(kernel.getCell("currency"), "EUR");
-  assertEquals(driver.get("currency"), "EUR");
-
-  await kernel.dispose();
 });
 
-Deno.test("Kernel - subscribe and version updates", async () => {
+Deno.test("createPersistedCell - load and revert-on-failure", async () => {
   const driver = createInMemoryDriver();
+  const handle = namespaced(driver, "rl:plugin:slot:");
 
-  const kernel = await createKernel([], {
-    config: {},
-    persistence: driver,
-  });
+  // Set initial value in driver
+  await handle.set("", `"saved-value"`);
 
-  let callCount = 0;
-  const unsubscribe = kernel.subscribe("theme", () => {
-    callCount++;
-  });
+  // Initialize
+  const cell = createPersistedCell(Schema.String, handle, "initial");
 
-  const initialVersion = kernel.getCellVersion("theme");
+  // Verify load-on-create
+  assertEquals(cell.get(), "saved-value");
 
-  await kernel.setCell("theme", "dark");
+  // Successful write
+  cell.set("new-value");
+  assertEquals(cell.get(), "new-value");
+  assertEquals(await handle.get(""), "new-value");
 
-  assertEquals(callCount, 1);
-  assertEquals(kernel.getCellVersion("theme"), initialVersion + 1);
-
-  unsubscribe();
-  await kernel.setCell("theme", "light");
-
-  // Listener should not fire after unsubscribe
-  assertEquals(callCount, 1);
-
-  await kernel.dispose();
-});
-
-Deno.test("Kernel - generic getCell and setCell API", async () => {
-  const driver = createInMemoryDriver();
-
-  const kernel = createKernel([], {
-    config: {},
-    persistence: driver,
-  });
-
-  assertEquals(kernel.getCell("theme"), "light");
-  await kernel.setCell("theme", "dark");
-  assertEquals(kernel.getCell("theme"), "dark");
-  assertEquals(driver.get("theme"), "dark");
-
-  await kernel.dispose();
-});
-
-Deno.test("Kernel - declarative and imperative contributions", async () => {
-  const driver = createInMemoryDriver();
-
-  const commandStore = {
-    commands: [] as Record<string, unknown>[],
-    register(cmd: unknown) {
-      this.commands.push(cmd as Record<string, unknown>);
+  // Revert on failure (synchronous fail)
+  const failingHandle = {
+    get: () => null,
+    set: () => {
+      throw new Error("Disk full");
     },
-    unregister(id: string) {
-      this.commands = this.commands.filter((c) => c.id !== id);
-    },
+    remove: () => {},
   };
 
-  const commandRegistryEntry = {
-    id: "commands",
-    factory: () => commandStore,
+  const cell2 = createPersistedCell(Schema.String, failingHandle, "initial");
+  assertThrows(() => {
+    cell2.set("fail");
+  });
+  assertEquals(cell2.get(), "initial");
+
+  // Revert on failure (asynchronous fail)
+  const failingAsyncHandle = {
+    get: () => null,
+    set: () => Promise.reject(new Error("Async write failed")),
+    remove: () => {},
   };
 
-  const plugin: RunePlugin = {
+  const cell3 = createPersistedCell(
+    Schema.String,
+    failingAsyncHandle,
+    "initial",
+  );
+  await assertRejects(async () => {
+    await cell3.set("fail");
+  });
+  assertEquals(cell3.get(), "initial");
+});
+
+Deno.test("Kernel - contributions and lifecycle", async () => {
+  const driver = createInMemoryDriver();
+
+  const plugin = definePlugin({
     id: "test.plugin",
-    stores: [commandRegistryEntry],
     contributions: {
       commands: [{ id: "test-cmd", label: "Test Command" }],
     },
-  };
+  });
 
-  const kernel = await createKernel([plugin], {
+  const kernel = createKernel([plugin], {
     config: {},
     persistence: driver,
   });
 
-  // Verify declarative contributions are populated in store
-  assertEquals(commandStore.commands.length, 1);
-  assertEquals(commandStore.commands[0].id, "test-cmd");
+  // Verify declarative contributions
+  let commands = kernel.getContributions("commands");
+  assertEquals(commands.length, 1);
+  assertEquals((commands[0] as any).id, "test-cmd");
 
-  // Verify imperative mutations work on generic contributions bag
+  // Verify imperative mutations
   kernel.registerContribution("commands", {
     id: "imp-cmd",
     label: "Imperative",
   });
-  const commands = kernel.getContributions("commands");
-  // The list should have 2 items: 1 from plugin declaration, 1 from imperative register
+  commands = kernel.getContributions("commands");
   assertEquals(commands.length, 2);
-  assertEquals((commands[1] as Record<string, unknown>).id, "imp-cmd");
+  assertEquals((commands[1] as any).id, "imp-cmd");
 
   kernel.unregisterContribution("commands", "imp-cmd");
-  assertEquals(kernel.getContributions("commands").length, 1);
+  commands = kernel.getContributions("commands");
+  assertEquals(commands.length, 1);
 
-  await kernel.dispose();
-});
-
-Deno.test("Kernel - non-default persisted theme survives load", async () => {
-  const driver = createInMemoryDriver();
-  driver.set("theme", "cupcake");
-
-  const kernel = await createKernel([], {
-    config: {},
-    persistence: driver,
-  });
-
-  // Wait for the async load synchronizer
-  await new Promise((r) => setTimeout(r, 10));
-
-  assertEquals(kernel.getCell("theme"), "cupcake");
   await kernel.dispose();
 });
