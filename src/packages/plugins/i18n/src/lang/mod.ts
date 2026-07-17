@@ -1,15 +1,4 @@
-import type {
-  ConfigStore,
-  ForgedPlugin,
-  LocaleAdapter,
-  SlotContext,
-  SlotSpec,
-} from "@rune-lab/core";
-import { definePlugin, defineSettings } from "@rune-lab/core";
-import { createPluginKit } from "@rune-lab/svelte";
-import type { Language } from "./store.svelte.ts";
-// import { Schema } from "effect";
-import { createLanguageStore } from "./store.svelte.ts";
+import type { LocaleAdapter } from "@rune-lab/core";
 
 interface ParaglideRuntime {
   languageTag?(): string;

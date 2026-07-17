@@ -9,8 +9,3 @@ export * from "./stores/exchange-rate.svelte.ts";
 export * from "./types.ts";
 export * from "./use/useMoney.ts";
 export * from "./use/useMoneyFilter.svelte.ts";
-
-export const MONEY_CONTEXT = {
-  currency: Symbol.for("rl:currency"),
-  exchangeRate: Symbol.for("rl:exchange-rate"),
-} as const;

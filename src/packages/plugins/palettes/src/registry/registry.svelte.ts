@@ -1,15 +1,17 @@
+import type { Component } from "svelte";
+
 export interface PaletteDefinition {
   id: string;
   title: string;
   hotkey?: string;
   provider?: () => unknown;
-  renderer?: any;
-  onSelect?: (item: any) => void;
+  renderer?: Component;
+  onSelect?: (item: unknown) => void;
 }
 
 export class PaletteRegistryStore {
-  palettes = $state<PaletteDefinition[]>([]);
-  activePaletteId = $state<string | null>(null);
+  palettes: PaletteDefinition[] = $state([]);
+  activePaletteId: string | null = $state(null);
 
   register(palette: PaletteDefinition) {
     if (this.palettes.some((p) => p.id === palette.id)) return;

@@ -3,7 +3,7 @@ import { createAccessor } from "../provider/context.ts";
 
 export function createPluginKit<
   TId extends string,
-  TSlots extends Record<string, SlotSpec>,
+  TSlots extends Record<string, SlotSpec<any, any, any>>,
 >(
   forgedPlugin: ForgedPlugin<TId, TSlots>,
 ): {

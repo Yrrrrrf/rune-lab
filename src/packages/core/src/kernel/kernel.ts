@@ -1,14 +1,14 @@
 import { Context, Effect, Option } from "effect";
 import type { StateCell } from "../cells/define-cell.ts";
 import type { ForgedPlugin, PluginInput } from "../forge/define-plugin.ts";
-import type { SlotSpec } from "../forge/define-slot.ts";
+
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceDriver } from "../ports/persistence.ts";
 import type { TextMeasurer } from "../ports/text.ts";
 import { StateCellsTag } from "../services/layers.ts";
 import { compileEnvironment, type NormalizedSlot } from "./wiring.ts";
 
-export interface Kernel<TCells = any> {
+export interface Kernel<TCells = Record<string, unknown>> {
   stores: Map<string, unknown>;
   overlays: unknown[];
 
@@ -28,7 +28,7 @@ export interface Kernel<TCells = any> {
   dispose(): Promise<void>;
 }
 
-export function createKernel<TCells = any>(
+export function createKernel<TCells = Record<string, unknown>>(
   pluginsInput: PluginInput[],
   options: {
     config: Record<string, unknown>;
@@ -68,7 +68,7 @@ export function createKernel<TCells = any>(
 
   const slotMap = new Map(sortedSlots.map((s) => [s.id, s]));
 
-  function getCell(cellName: string): StateCell<any> {
+  function getCell(cellName: string): StateCell<unknown> {
     if (cellName === "contributions") {
       return cells.contributions;
     }
@@ -85,7 +85,7 @@ export function createKernel<TCells = any>(
     if (!store) {
       throw new Error(`[Kernel] Cell "${cellName}" does not exist`);
     }
-    return store as StateCell<any>;
+    return store as StateCell<unknown>;
   }
 
   return {
@@ -97,7 +97,7 @@ export function createKernel<TCells = any>(
     },
     setCell: async (cellName, value) => {
       const cell = getCell(cellName as string);
-      await cell.set(value as any);
+      await cell.set(value as unknown);
     },
     subscribe: (cellName, listener) => {
       const cell = getCell(cellName as string);
@@ -135,9 +135,7 @@ function extractStores(
   return stores;
 }
 
-function extractOverlays(
-  plugins: ForgedPlugin<string, Record<string, SlotSpec>>[],
-): unknown[] {
+function extractOverlays(plugins: ForgedPlugin[]): unknown[] {
   const overlays: unknown[] = [];
   for (const plugin of plugins) {
     if (plugin.overlays) {
@@ -148,7 +146,7 @@ function extractOverlays(
 }
 
 function extractInitialContributions(
-  plugins: ForgedPlugin<string, Record<string, SlotSpec>>[],
+  plugins: ForgedPlugin[],
 ): Record<string, unknown[]> {
   const contributions: Record<string, unknown[]> = {};
   for (const plugin of plugins) {

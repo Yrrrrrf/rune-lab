@@ -1,7 +1,7 @@
 <script lang="ts">
 import { getAppStore } from "@rune-lab/svelte";
 import { onMount, tick } from "svelte";
-import { getShortcutStore } from "../../context.ts";
+import { getShortcutStore } from "../../plugin.ts";
 import type { ShortcutEntry } from "../../types.ts";
 
 const appStore = getAppStore();
@@ -34,6 +34,10 @@ const groups = $derived.by(() => {
   }
   return result;
 });
+
+const typedGroups = $derived(
+  groups as Record<string, Record<string, ShortcutEntry[]>>,
+);
 
 const sortedScopes = $derived(
   query
@@ -115,7 +119,7 @@ function formatKeys(keys: string) {
           <div
             class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"
           >
-            {#each Object.entries(groups[scope]) as [category, entries]}
+            {#each Object.entries(typedGroups[scope] ?? {}) as [category, entries]}
               <div class="space-y-2">
                 <h4
                   class="text-[10px] font-bold opacity-30 uppercase"

@@ -22,6 +22,7 @@
     "vite-plus": "npm:vite-plus",
     "typescript": "npm:typescript@6",
     "@vitest/utils": "npm:vitest/utils",
+    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte@^7.2.0",
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom",
     "jsdom": "npm:jsdom",
     "@rune-lab/core": "./src/packages/core/src/mod.ts",
@@ -30,6 +31,7 @@
     "@rune-lab/palettes": "./src/packages/plugins/palettes/src/mod.ts",
     "@rune-lab/observer": "./src/packages/plugins/observer/src/mod.ts",
     "@rune-lab/i18n": "./src/packages/plugins/i18n/src/mod.ts",
+    "effect": "npm:effect@^3",
     "esm-env": "npm:esm-env@^1"
   },
   "test": {

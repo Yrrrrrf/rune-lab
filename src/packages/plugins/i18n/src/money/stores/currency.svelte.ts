@@ -1,3 +1,4 @@
+import type { SlotContext } from "@rune-lab/core";
 import { type ConfigStore, createConfigStore } from "@rune-lab/svelte";
 import { createMessageResolver } from "../../lang/message-resolver.ts";
 import { m } from "../../lang/messages.ts";
@@ -42,64 +43,73 @@ const CURRENCIES = [
   { code: "AED", symbol: "د.إ", decimals: 2 },
 ] as const;
 
-const baseStore = createConfigStore<Currency, "code">({
-  items: CURRENCIES,
-  storageKey: "currency",
-  displayName: "Currency",
-  idKey: "code",
-  icon: "💰",
-});
-
-// We hold a reference to exchangeRateStore if configured later
-let _exchangeRateStore: ExchangeRateStore | undefined;
-export function setExchangeRateStore(store: ExchangeRateStore) {
-  _exchangeRateStore = store;
+export interface CurrencyConfig {
+  readonly defaultCurrency?: string;
+  readonly currencies?: readonly Currency[];
 }
 
-/**
- * Extension: Atomic currency registration.
- * Updates both the Dinero registry (core) and the reactive store (UI).
- *
- * @remarks Custom currencies with non-decimal base systems must use
- * registerCurrency() from @rune-lab/kernel explicitly before addItems().
- */
-function addCurrency(meta: Currency, dineroDef?: unknown) {
-  const def = dineroDef || buildDineroDef(meta);
-  registerCurrency(meta.code, def as DineroCurrency<number>);
-  baseStore.addItems([meta]);
-}
-
-/**
- * Converts an amount from one currency to another.
- * Defaults to converting to the current store currency.
- */
-function convertAmount(
-  amount: number,
-  fromCode: string,
-  toCode?: string,
-): number {
-  const target = toCode ?? String(baseStore.current);
-  if (fromCode === target) return amount;
-  if (!_exchangeRateStore || !_exchangeRateStore.hasRates) return amount;
-
-  return _exchangeRateStore.convertAmount(amount, fromCode, target);
-}
-
-export const currencyStore = Object.assign(baseStore, {
-  addCurrency,
-  convertAmount,
-}) as ConfigStore<Currency, "code"> & {
-  addCurrency: typeof addCurrency;
-  convertAmount: typeof convertAmount;
+export type CurrencyStore = ConfigStore<Currency, "code"> & {
+  addCurrency: (meta: Currency, dineroDef?: unknown) => void;
+  convertAmount: (amount: number, fromCode: string, toCode?: string) => number;
   readonly canConvert: boolean;
 };
 
-Object.defineProperty(currencyStore, "canConvert", {
-  get() {
-    return !!_exchangeRateStore?.hasRates;
-  },
-  enumerable: true,
-  configurable: true,
-});
+export function createCurrencyStore(
+  ctx: SlotContext<CurrencyConfig>,
+  exchangeRateStore?: ExchangeRateStore,
+): CurrencyStore {
+  const baseStore = createConfigStore<Currency, "code">({
+    items: CURRENCIES,
+    storageKey: "currency",
+    displayName: "Currency",
+    idKey: "code",
+    icon: "💰",
+    driver: ctx.persistence,
+  });
 
-export type CurrencyStore = typeof currencyStore;
+  function addCurrency(meta: Currency, dineroDef?: unknown) {
+    const def = dineroDef || buildDineroDef(meta);
+    registerCurrency(meta.code, def as DineroCurrency<number>);
+    baseStore.addItems([meta]);
+  }
+
+  function convertAmount(
+    amount: number,
+    fromCode: string,
+    toCode?: string,
+  ): number {
+    const target = toCode ?? String(baseStore.current);
+    if (fromCode === target) return amount;
+    if (!exchangeRateStore || !exchangeRateStore.hasRates) return amount;
+
+    return exchangeRateStore.convertAmount(amount, fromCode, target);
+  }
+
+  const store = Object.assign(baseStore, {
+    addCurrency,
+    convertAmount,
+  });
+
+  Object.defineProperty(store, "canConvert", {
+    get() {
+      return !!exchangeRateStore?.hasRates;
+    },
+    enumerable: true,
+    configurable: true,
+  });
+
+  const config = ctx.config;
+  if (config?.currencies) {
+    for (const cur of config.currencies) {
+      store.addCurrency(cur);
+    }
+  }
+
+  if (config?.defaultCurrency && !store.current) {
+    if (store.get(config.defaultCurrency)) {
+      store.set(config.defaultCurrency);
+    }
+  }
+
+  return store as CurrencyStore;
+}

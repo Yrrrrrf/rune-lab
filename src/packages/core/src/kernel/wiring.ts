@@ -183,21 +183,27 @@ export function buildLayers(
     localeAdapter?: LocaleAdapter;
     textMeasurer?: TextMeasurer;
   },
-) {
+): Layer.Layer<unknown, never, never> {
   const cellsLayer = makeStateCellsLayer({
     contributions: {} as Record<string, unknown[]>,
   });
 
-  let env: Layer.Layer<any, any, any> = Layer.merge(
+  let env = Layer.merge(
     makePersistenceLayer(options.persistence),
     cellsLayer,
-  );
+  ) as Layer.Layer<unknown, never, never>;
 
   if (options.localeAdapter) {
-    env = Layer.merge(env, makeLocaleAdapterLayer(options.localeAdapter));
+    env = Layer.merge(
+      env,
+      makeLocaleAdapterLayer(options.localeAdapter),
+    ) as Layer.Layer<unknown, never, never>;
   }
   if (options.textMeasurer) {
-    env = Layer.merge(env, makeTextMeasurerLayer(options.textMeasurer));
+    env = Layer.merge(
+      env,
+      makeTextMeasurerLayer(options.textMeasurer),
+    ) as Layer.Layer<unknown, never, never>;
   }
 
   for (const slot of slots) {
@@ -294,11 +300,17 @@ export function buildLayers(
       }),
     );
 
-    env = Layer.provideMerge(storeLayer, env);
+    env = Layer.provideMerge(storeLayer, env) as Layer.Layer<
+      unknown,
+      never,
+      never
+    >;
   }
 
   return env;
 }
+
+type KernelRuntime = ManagedRuntime.ManagedRuntime<unknown, never>;
 
 export function compileEnvironment(
   pluginsInput: PluginInput[],
@@ -309,7 +321,7 @@ export function compileEnvironment(
     textMeasurer?: TextMeasurer;
   },
 ): {
-  runtime: ManagedRuntime.ManagedRuntime<any, any>;
+  runtime: KernelRuntime;
   resolvedPlugins: ForgedPlugin[];
   sortedSlots: NormalizedSlot[];
 } {
@@ -318,7 +330,7 @@ export function compileEnvironment(
   const slots = normalizeSlots(sortedPlugins);
   const sortedSlots = sortSlots(slots);
   const env = buildLayers(sortedSlots, options);
-  const runtime = ManagedRuntime.make(env as any);
+  const runtime = ManagedRuntime.make(env);
 
   return {
     runtime,

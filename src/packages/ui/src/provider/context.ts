@@ -1,4 +1,4 @@
-import type { Kernel, RuneLabCells, SettingsFieldSchema } from "@rune-lab/core";
+import type { Kernel, SettingsFieldSchema } from "@rune-lab/core";
 import { getContext } from "svelte";
 
 export const RUNE_LAB_CONTEXT: {
@@ -13,7 +13,7 @@ export const RUNE_LAB_CONTEXT: {
   settingsSections: Symbol("rl:settings-sections"),
 } as const;
 
-export function getKernel<TCells = RuneLabCells>(): Kernel<TCells> {
+export function getKernel<TCells = Record<string, unknown>>(): Kernel<TCells> {
   const kernel = getContext<Kernel<TCells>>(RUNE_LAB_CONTEXT.kernel);
   if (!kernel) {
     throw new Error(

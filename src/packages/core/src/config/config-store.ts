@@ -31,12 +31,7 @@ export class ConfigStoreImpl<T, K extends keyof T> {
 
   constructor(options: ConfigStoreOptions<T, K>) {
     this.#options = options;
-    const {
-      items,
-      idKey,
-      storageKey,
-      driver = createInMemoryDriver(),
-    } = options;
+    const { items, idKey, driver = createInMemoryDriver() } = options;
     this.#driver = driver;
 
     this.available = [...items] as T[];

@@ -5,7 +5,6 @@
     ".": "./src/mod.ts"
   },
   "imports": {
-    "@rune-lab/core": "workspace:*",
     "svelte": "npm:svelte",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
     "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",

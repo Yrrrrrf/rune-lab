@@ -1,33 +1,46 @@
-import { definePlugin } from "@rune-lab/core";
+import type { ForgedPlugin, SlotSpec } from "@rune-lab/core";
+import { definePlugin, defineSlot } from "@rune-lab/core";
 import { createPluginKit } from "@rune-lab/svelte";
-import { createCommandStore } from "./commands/store.svelte.ts";
+import {
+  type CommandStore,
+  createCommandStore,
+} from "./commands/store.svelte.ts";
 import PaletteHost from "./host/PaletteHost.svelte";
-import { createToastStore } from "./notifications/store.svelte.ts";
+import {
+  createToastStore,
+  type ToastStore,
+} from "./notifications/store.svelte.ts";
 import Toaster from "./notifications/Toaster.svelte";
 import CommandPalette from "./palettes/commands/CommandPalette.svelte";
 import ShortcutPalette from "./palettes/shortcuts/ShortcutPalette.svelte";
-import { createPaletteRegistryStore } from "./registry/registry.svelte.ts";
+import {
+  createPaletteRegistryStore,
+  type PaletteRegistryStore,
+} from "./registry/registry.svelte.ts";
 import SettingsModal from "./SettingsModal.svelte";
 import { ShortcutSettings } from "./shortcuts/mod.ts";
-import { createShortcutStore } from "./shortcuts/store.svelte.ts";
+import {
+  createShortcutStore,
+  type ShortcutStore,
+} from "./shortcuts/store.svelte.ts";
 
-export const palettesPluginSpec = definePlugin({
+const palettesPluginSpec = definePlugin({
   id: "rune-lab.palettes",
   requires: ["rune-lab.layout"],
   slots: {
-    commands: {
+    commands: defineSlot({
       create: () => createCommandStore(),
       expose: true,
-    },
-    shortcuts: {
+    }),
+    shortcuts: defineSlot({
       create: () => createShortcutStore(),
       expose: true,
-    },
-    toasts: {
+    }),
+    toasts: defineSlot({
       create: () => createToastStore(),
       expose: true,
-    },
-    registry: {
+    }),
+    registry: defineSlot({
       create: () => {
         const store = createPaletteRegistryStore();
         store.register({
@@ -51,7 +64,7 @@ export const palettesPluginSpec = definePlugin({
         return store;
       },
       expose: true,
-    },
+    }),
   },
   contributions: {
     settingsSections: [
@@ -68,4 +81,20 @@ export const palettesPluginSpec = definePlugin({
 
 const kit = createPluginKit(palettesPluginSpec);
 
-export const PalettesPlugin = kit.plugin;
+type PalettesSlots = {
+  commands: SlotSpec<unknown, CommandStore>;
+  shortcuts: SlotSpec<unknown, ShortcutStore>;
+  toasts: SlotSpec<unknown, ToastStore>;
+  registry: SlotSpec<unknown, PaletteRegistryStore>;
+};
+
+export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
+  kit.plugin;
+
+export const getCommandStore: () => CommandStore =
+  kit.accessors.getCommandsStore;
+export const getShortcutStore: () => ShortcutStore =
+  kit.accessors.getShortcutsStore;
+export const getToastStore: () => ToastStore = kit.accessors.getToastsStore;
+export const getRegistryStore: () => PaletteRegistryStore =
+  kit.accessors.getRegistryStore;

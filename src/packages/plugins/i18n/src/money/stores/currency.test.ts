@@ -1,7 +1,19 @@
+import type { SlotContext } from "@rune-lab/core";
 import { describe, expect, it } from "vite-plus/test";
-import { currencyStore } from "./currency.svelte.ts";
+import { createCurrencyStore, type CurrencyConfig } from "./currency.svelte.ts";
 
 describe("Currency Store", () => {
+  const mockCtx: SlotContext<CurrencyConfig> = {
+    persistence: {
+      get: () => null,
+      set: () => {},
+      remove: () => {},
+    },
+    config: {},
+    stores: new Map(),
+  };
+  const currencyStore = createCurrencyStore(mockCtx);
+
   it("should have prototype methods from ConfigStore", () => {
     // These come from the ConfigStore class prototype
     expect(typeof currencyStore.get).toBe("function");

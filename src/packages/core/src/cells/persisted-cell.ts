@@ -2,8 +2,8 @@ import { Effect, Schema, SubscriptionRef } from "effect";
 import type { PersistenceHandle } from "../forge/descriptors.ts";
 import { StateCell } from "./define-cell.ts";
 
-export function createPersistedCell<T>(
-  schema: Schema.Schema<T, any, never>,
+export function createPersistedCell<T, TEncoded = T>(
+  schema: Schema.Schema<T, TEncoded, never>,
   handle: PersistenceHandle,
   initialValue: T,
   key = "",
@@ -36,7 +36,7 @@ export function createPersistedCell<T>(
   }
 
   const originalSet = cell.set.bind(cell);
-  cell.set = (value: T): any => {
+  cell.set = (value: T): void | Promise<void> => {
     const oldValue = cell.get();
     originalSet(value);
 

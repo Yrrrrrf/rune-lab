@@ -5,7 +5,7 @@ import {
   getCommandStore,
   getRegistryStore,
   getShortcutStore,
-} from "./context.ts";
+} from "./plugin.ts";
 import {
   syncHashToState,
   updateHashFromState,

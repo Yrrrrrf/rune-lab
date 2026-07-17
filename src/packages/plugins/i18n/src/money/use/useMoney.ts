@@ -1,6 +1,8 @@
-import type { ConfigStore } from "@rune-lab/svelte";
-import { getContext } from "svelte";
-import { MONEY_CONTEXT } from "../mod.ts";
+import {
+  getCurrencyStore,
+  getExchangeRateStore,
+  getLanguageStore,
+} from "../../plugin.ts";
 import type { Dinero, ISO4217Code } from "../primitives/money.ts";
 import {
   addMoney,
@@ -16,8 +18,6 @@ import {
   toSquareMoney,
   toStripeMoney,
 } from "../primitives/money.ts";
-import type { CurrencyStore } from "../stores/currency.svelte.ts";
-import type { ExchangeRateStore } from "../stores/exchange-rate.svelte.ts";
 
 export interface UseMoneyReturn {
   toDinero: (
@@ -82,23 +82,19 @@ function getMinorAmount(
 }
 
 export function useMoney(): UseMoneyReturn {
-  const currencyStore = getContext<CurrencyStore>(MONEY_CONTEXT.currency);
+  const currencyStore = getCurrencyStore();
   if (!currencyStore) {
     throw new Error(
       "[rune-lab] useMoney() found no CurrencyStore. Did you register MoneyPlugin in <RuneProvider plugins={[…]}>?",
     );
   }
-  const languageStore = getContext<
-    ConfigStore<Record<string, unknown>, string>
-  >(Symbol.for("rl:language"));
+  const languageStore = getLanguageStore();
   if (!languageStore) {
     throw new Error(
       "[rune-lab] useMoney() found no LanguageStore. Did you register I18nPlugin in <RuneProvider plugins={[…]}>?",
     );
   }
-  const exchangeRateStore = getContext<ExchangeRateStore>(
-    MONEY_CONTEXT.exchangeRate,
-  );
+  const exchangeRateStore = getExchangeRateStore();
   if (!exchangeRateStore) {
     throw new Error(
       "[rune-lab] useMoney() found no ExchangeRateStore. Did you register MoneyPlugin in <RuneProvider plugins={[…]}>?",

@@ -1,4 +1,4 @@
-import type { RunePlugin } from "@rune-lab/core";
+import type { ForgedPlugin } from "@rune-lab/core";
 import { definePlugin } from "@rune-lab/core";
 import CapabilitiesSettings from "./CapabilitiesSettings.svelte";
 import ObserverPanel from "./ObserverPanel.svelte";
@@ -7,9 +7,11 @@ import ObserverPanel from "./ObserverPanel.svelte";
  * Observer Plugin — provides docked developer tools, same-origin iframe preview,
  * and a microkernel capabilities page in settings.
  */
-export const ObserverPlugin: RunePlugin = definePlugin({
+export const ObserverPlugin: ForgedPlugin<
+  "rune-lab.observer",
+  Record<never, never>
+> = definePlugin({
   id: "rune-lab.observer",
-  stores: [],
   contributions: {
     settingsSections: [
       {

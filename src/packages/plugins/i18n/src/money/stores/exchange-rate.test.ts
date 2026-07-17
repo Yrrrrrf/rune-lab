@@ -1,5 +1,6 @@
+import type { SlotContext } from "@rune-lab/core";
 import { describe, expect, it, vi } from "vite-plus/test";
-import { currencyStore, setExchangeRateStore } from "./currency.svelte.ts";
+import { createCurrencyStore, type CurrencyConfig } from "./currency.svelte.ts";
 import { ExchangeRateStore } from "./exchange-rate.svelte.ts";
 
 vi.mock("../use/useMoney.ts", () => ({
@@ -44,11 +45,21 @@ describe("ExchangeRateStore", () => {
 });
 
 describe("CurrencyStore Integration", () => {
+  const mockCtx: SlotContext<CurrencyConfig> = {
+    persistence: {
+      get: () => null,
+      set: () => {},
+      remove: () => {},
+    },
+    config: {},
+    stores: new Map(),
+  };
+
   it("should convert amount when ExchangeRateStore is wired", () => {
     const exchangeRateStore = new ExchangeRateStore();
     exchangeRateStore.setRates("USD", { MXN: 20 });
 
-    setExchangeRateStore(exchangeRateStore);
+    const currencyStore = createCurrencyStore(mockCtx, exchangeRateStore);
 
     expect(currencyStore.canConvert).toBe(true);
 
@@ -58,7 +69,7 @@ describe("CurrencyStore Integration", () => {
 
   it("should return original amount if no rates available", () => {
     const exchangeRateStore = new ExchangeRateStore();
-    setExchangeRateStore(exchangeRateStore);
+    const currencyStore = createCurrencyStore(mockCtx, exchangeRateStore);
 
     expect(currencyStore.canConvert).toBe(false);
 
@@ -68,11 +79,21 @@ describe("CurrencyStore Integration", () => {
 });
 
 describe("useMoneyFilter", () => {
+  const mockCtx: SlotContext<CurrencyConfig> = {
+    persistence: {
+      get: () => null,
+      set: () => {},
+      remove: () => {},
+    },
+    config: {},
+    stores: new Map(),
+  };
+
   it("matches() should work with conversion", () => {
     const exchangeRateStore = new ExchangeRateStore();
     exchangeRateStore.setRates("USD", { MXN: 20 });
 
-    setExchangeRateStore(exchangeRateStore);
+    const currencyStore = createCurrencyStore(mockCtx, exchangeRateStore);
 
     const amountInMxn = 1000000; // 10,000 MXN
     const amountInUsd = currencyStore.convertAmount(amountInMxn, "MXN", "USD");

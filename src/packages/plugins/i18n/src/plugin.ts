@@ -1,95 +1,117 @@
-import type { ConfigStore, SlotContext } from "@rune-lab/core";
-import { definePlugin } from "@rune-lab/core";
+import type { ConfigStore, ForgedPlugin, SlotSpec } from "@rune-lab/core";
+import { definePlugin, defineSlot } from "@rune-lab/core";
 import { createPluginKit } from "@rune-lab/svelte";
 import { Schema } from "effect";
 import { createLanguageStore, type Language } from "./lang/store.svelte.ts";
 import {
+  createCurrencyStore,
   createExchangeRateStore,
-  type Currency,
-  currencyStore,
+  type CurrencyConfig,
+  type CurrencyStore,
   type ExchangeRateStore,
-  setExchangeRateStore,
 } from "./money/mod.ts";
 import { i18nSettings } from "./settings.ts";
 
-export const i18nPluginSpec = definePlugin({
+const i18nPluginSpec = definePlugin({
   id: "rune-lab.i18n",
   requires: [],
   slots: {
-    language: {
-      create: (ctx: SlotContext<unknown>) => createLanguageStore(ctx),
+    language: defineSlot({
+      create: (ctx) => createLanguageStore(ctx),
       config: Schema.Struct({
         defaultLanguage: Schema.optional(Schema.String),
         locales: Schema.optional(Schema.Array(Schema.String)),
-      }) as any,
+      }),
       persist: true,
       expose: true,
-    },
-    messages: {
+    }),
+    messages: defineSlot({
       create: () => ({}),
       expose: true,
-    },
-    currency: {
-      create: (ctx: SlotContext<unknown>) => {
-        currencyStore.setDriver(ctx.persistence);
-
+    }),
+    currency: defineSlot({
+      create: (ctx) => {
         const exchangeRate = ctx.stores.get(
           "exchangeRate",
         ) as ExchangeRateStore;
-        if (exchangeRate) {
-          setExchangeRateStore(exchangeRate);
-        }
-
-        const config = ctx.config as any;
-        if (config?.currencies) {
-          for (const cur of config.currencies) {
-            currencyStore.addCurrency(cur);
-          }
-        }
-
-        if (config?.defaultCurrency && !currencyStore.current) {
-          if (currencyStore.get(config.defaultCurrency)) {
-            currencyStore.set(config.defaultCurrency);
-          }
-        }
-
-        return currencyStore;
+        return createCurrencyStore(ctx, exchangeRate);
       },
       config: Schema.Struct({
         defaultCurrency: Schema.optional(Schema.String),
-        currencies: Schema.optional(Schema.Array(Schema.Any)),
-      }) as any,
+        currencies: Schema.optional(
+          Schema.Array(
+            Schema.Struct({
+              code: Schema.String,
+              symbol: Schema.String,
+              decimals: Schema.Number,
+            }),
+          ),
+        ),
+      }),
       dependsOn: ["exchangeRate"],
       persist: true,
       expose: true,
-    },
-    exchangeRate: {
-      create: (ctx: SlotContext<unknown>) => {
+    }),
+    exchangeRate: defineSlot({
+      create: (ctx) => {
         const store = createExchangeRateStore();
-        const config = ctx.config as any;
+        const config = ctx.config;
         if (config?.exchangeRates) {
           store.setRates(config.exchangeRates.base, config.exchangeRates.rates);
         }
         return store;
       },
+      config: Schema.Struct({
+        exchangeRates: Schema.optional(
+          Schema.Struct({
+            base: Schema.String,
+            rates: Schema.Record({
+              key: Schema.String,
+              value: Schema.Number,
+            }),
+          }),
+        ),
+      }),
       expose: true,
-    },
+    }),
   },
   settings: i18nSettings,
 });
 
 const kit = createPluginKit(i18nPluginSpec);
 
-export const I18nPlugin = kit.plugin;
+type I18nSlots = {
+  language: SlotSpec<
+    { readonly defaultLanguage?: string; readonly locales?: readonly string[] },
+    ConfigStore<Language, "code">,
+    { readonly defaultLanguage?: string; readonly locales?: readonly string[] }
+  >;
+  messages: SlotSpec<unknown, Record<string, unknown>>;
+  currency: SlotSpec<CurrencyConfig, CurrencyStore, CurrencyConfig>;
+  exchangeRate: SlotSpec<
+    {
+      readonly exchangeRates?: {
+        readonly base: string;
+        readonly rates: Record<string, number>;
+      };
+    },
+    ExchangeRateStore,
+    {
+      readonly exchangeRates?: {
+        readonly base: string;
+        readonly rates: Record<string, number>;
+      };
+    }
+  >;
+};
 
-export const getLanguageStore: () => ConfigStore<Language, "code"> = kit
-  .accessors.getLanguageStore as any;
+export const I18nPlugin: ForgedPlugin<"rune-lab.i18n", I18nSlots> = kit.plugin;
 
-export const getCurrencyStore: () => ConfigStore<Currency, "code"> & {
-  addCurrency: (meta: Currency, dineroDef?: unknown) => void;
-  convertAmount: (amount: number, fromCode: string, toCode?: string) => number;
-  readonly canConvert: boolean;
-} = kit.accessors.getCurrencyStore as any;
+export const getLanguageStore: () => ConfigStore<Language, "code"> =
+  kit.accessors.getLanguageStore;
 
-export const getExchangeRateStore: () => ExchangeRateStore = kit.accessors
-  .getExchangeRateStore as any;
+export const getCurrencyStore: () => CurrencyStore =
+  kit.accessors.getCurrencyStore;
+
+export const getExchangeRateStore: () => ExchangeRateStore =
+  kit.accessors.getExchangeRateStore;

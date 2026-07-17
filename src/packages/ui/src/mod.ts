@@ -17,7 +17,6 @@ export {
   type AppStore,
   createAppStore,
   getAppStore,
-  useApp,
 } from "./reactivity/app.svelte.ts";
 // Reactivity & Context exports
 export { useCell } from "./reactivity/use-cell.svelte.ts";

@@ -155,7 +155,7 @@ Deno.test("Kernel - contributions and lifecycle", async () => {
   // Verify declarative contributions
   let commands = kernel.getContributions("commands");
   assertEquals(commands.length, 1);
-  assertEquals((commands[0] as any).id, "test-cmd");
+  assertEquals((commands[0] as { id: string }).id, "test-cmd");
 
   // Verify imperative mutations
   kernel.registerContribution("commands", {
@@ -164,7 +164,7 @@ Deno.test("Kernel - contributions and lifecycle", async () => {
   });
   commands = kernel.getContributions("commands");
   assertEquals(commands.length, 2);
-  assertEquals((commands[1] as any).id, "imp-cmd");
+  assertEquals((commands[1] as { id: string }).id, "imp-cmd");
 
   kernel.unregisterContribution("commands", "imp-cmd");
   commands = kernel.getContributions("commands");

@@ -8,7 +8,10 @@ import {
 
 export interface ForgedPlugin<
   TId extends string = string,
-  TSlots extends Record<string, SlotSpec> = Record<string, SlotSpec>,
+  TSlots extends Record<string, SlotSpec<any, any, any>> = Record<
+    string,
+    SlotSpec<any, any, any>
+  >,
 > {
   id: TId;
   requires?: string[];
@@ -20,7 +23,7 @@ export interface ForgedPlugin<
 }
 
 export type PluginInput =
-  | ForgedPlugin<string, Record<string, SlotSpec>>
+  | ForgedPlugin<string, Record<string, SlotSpec<any, any, any>>>
   | PluginInput[]
   | null
   | undefined
@@ -28,7 +31,7 @@ export type PluginInput =
 
 export function definePlugin<
   TId extends string,
-  TSlots extends Record<string, SlotSpec>,
+  TSlots extends Record<string, SlotSpec<any, any, any>>,
 >(spec: {
   id: TId;
   requires?: string[];
@@ -37,8 +40,8 @@ export function definePlugin<
   overlays?: unknown[];
   contributions?: Record<string, unknown[]>;
 }): ForgedPlugin<TId, TSlots> {
-  const slots: Record<string, SlotSpec> = spec.slots ||
-    ({} as Record<string, SlotSpec>);
+  const slots: Record<string, SlotSpec<any, any, any>> = spec.slots ||
+    ({} as Record<string, SlotSpec<any, any, any>>);
   const descriptors: Record<string, SlotDescriptor> = {};
   for (const slotName of Object.keys(slots)) {
     descriptors[slotName] = {

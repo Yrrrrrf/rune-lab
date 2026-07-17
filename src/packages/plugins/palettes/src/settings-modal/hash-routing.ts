@@ -3,7 +3,7 @@ export function syncHashToState(
   onClose: () => void,
 ): () => void {
   const update = () => {
-    const hash = window.location.hash;
+    const hash = globalThis.location.hash;
     if (hash.startsWith("#settings")) {
       const parts = hash.split("/");
       const section = parts[1] || "general";
@@ -14,29 +14,29 @@ export function syncHashToState(
   };
 
   update();
-  if (typeof window !== "undefined") {
-    window.addEventListener("hashchange", update);
+  if (typeof globalThis !== "undefined") {
+    globalThis.addEventListener("hashchange", update);
   }
   return () => {
-    if (typeof window !== "undefined") {
-      window.removeEventListener("hashchange", update);
+    if (typeof globalThis !== "undefined") {
+      globalThis.removeEventListener("hashchange", update);
     }
   };
 }
 
 export function updateHashFromState(isOpen: boolean, sectionId: string) {
-  if (typeof window === "undefined") return;
+  if (typeof globalThis === "undefined") return;
   if (isOpen) {
     const newHash = `#settings/${sectionId}`;
-    if (window.location.hash !== newHash) {
+    if (globalThis.location.hash !== newHash) {
       history.replaceState(null, "", newHash);
     }
   } else {
-    if (window.location.hash.startsWith("#settings")) {
+    if (globalThis.location.hash.startsWith("#settings")) {
       history.pushState(
         null,
         "",
-        window.location.pathname + window.location.search,
+        globalThis.location.pathname + globalThis.location.search,
       );
     }
   }

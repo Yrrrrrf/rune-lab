@@ -3,17 +3,18 @@ import { BROWSER } from "esm-env";
 import { createSubscriber } from "svelte/reactivity";
 import { getKernel } from "../provider/context.ts";
 
-export function useCell<TCells = any, K extends keyof TCells = keyof TCells>(
-  cellName: K,
-): { current: TCells[K] };
-export function useCell<TCells = any, K extends keyof TCells = keyof TCells>(
-  kernel: Kernel<TCells>,
-  cellName: K,
-): { current: TCells[K] };
-export function useCell<TCells = any, K extends keyof TCells = keyof TCells>(
-  first: Kernel<TCells> | K,
-  second?: K,
-): { current: TCells[K] } {
+export function useCell<
+  TCells = Record<string, unknown>,
+  K extends keyof TCells = keyof TCells,
+>(cellName: K): { current: TCells[K] };
+export function useCell<
+  TCells = Record<string, unknown>,
+  K extends keyof TCells = keyof TCells,
+>(kernel: Kernel<TCells>, cellName: K): { current: TCells[K] };
+export function useCell<
+  TCells = Record<string, unknown>,
+  K extends keyof TCells = keyof TCells,
+>(first: Kernel<TCells> | K, second?: K): { current: TCells[K] } {
   let kernel: Kernel<TCells>;
   let cellName: K;
 

@@ -1,8 +1,7 @@
 // sdk/state/src/composables/useMoneyFilter.ts
 
-import { getContext, untrack } from "svelte";
-import { MONEY_CONTEXT } from "../mod.ts";
-import type { CurrencyStore } from "../stores/currency.svelte.ts";
+import { untrack } from "svelte";
+import { getCurrencyStore } from "../../plugin.ts";
 import { useMoney } from "./useMoney.ts";
 
 export interface MoneyFilterOptions {
@@ -30,7 +29,7 @@ export interface UseMoneyFilterReturn {
 export function useMoneyFilter(
   options: MoneyFilterOptions = {},
 ): UseMoneyFilterReturn {
-  const currencyStore = getContext<CurrencyStore>(MONEY_CONTEXT.currency);
+  const currencyStore = getCurrencyStore();
   const { format } = useMoney();
 
   let min = $state(options.min ?? 0);

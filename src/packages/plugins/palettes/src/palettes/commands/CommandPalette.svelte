@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Icon } from "@rune-lab/layout";
 import { onMount, tick } from "svelte";
-import { getCommandStore, getRegistryStore } from "../../context.ts";
+import { getCommandStore, getRegistryStore } from "../../plugin.ts";
 import type { Command } from "../../types.ts";
 
 const commandStore = getCommandStore();

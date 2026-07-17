@@ -9,13 +9,23 @@ export interface SlotContext<TConfig = unknown> {
   locale?: LocaleAdapter;
 }
 
-export interface SlotSpec<TConfig = unknown, TStore = unknown> {
+export interface SlotSpec<
+  TConfig = unknown,
+  TStore = unknown,
+  TEncoded = TConfig,
+> {
   create: (context: SlotContext<TConfig>) => TStore;
-  config?: Schema.Schema<TConfig, unknown, never>;
+  config?: Schema.Schema<TConfig, TEncoded, never>;
   persist?: boolean | string[];
   dependsOn?: string[];
   expose?: boolean; // default true
   contextKey?: never;
+}
+
+export function defineSlot<TConfig, TStore, TEncoded = TConfig>(
+  spec: SlotSpec<TConfig, TStore, TEncoded>,
+): SlotSpec<TConfig, TStore, TEncoded> {
+  return spec;
 }
 
 export const SlotSpecSchema = Schema.Struct({

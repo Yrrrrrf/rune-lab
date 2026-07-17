@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getRegistryStore, getShortcutStore } from "../context.ts";
+import { getRegistryStore, getShortcutStore } from "../plugin.ts";
 
 const registryStore = getRegistryStore();
 const shortcutStore = getShortcutStore();
