@@ -1,6 +1,6 @@
-import { paraglideVitePlugin } from "@inlang/paraglide-js";
+// import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import tailwindcss from "@tailwindcss/vite";
+// import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, type PluginOption } from "vite-plus";
 
 const resolve = (p: string) => new URL(p, import.meta.url).pathname;
@@ -64,13 +64,13 @@ export default defineConfig({
       svelteProject("layout", `${PLUGINS}`),
       svelteProject("lab", "apps"),
       svelteProject("i18n", `${PLUGINS}`, [
-        tailwindcss(),
-        paraglideVitePlugin({
-          project: `${PLUGINS}/i18n/src/lang/project.inlang`,
-          outdir: `${PLUGINS}/i18n/src/lang/paraglide`,
-          // localStorage first, then browser language, then base locale
-          strategy: ["localStorage", "preferredLanguage", "baseLocale"],
-        }),
+        // tailwindcss(),
+        // paraglideVitePlugin({
+        //   project: `${PLUGINS}/i18n/src/lang/project.inlang`,
+        //   outdir: `${PLUGINS}/i18n/src/lang/paraglide`,
+        //   // localStorage first, then browser language, then base locale
+        //   strategy: ["localStorage", "preferredLanguage", "baseLocale"],
+        // }),
       ]),
     ],
   },
