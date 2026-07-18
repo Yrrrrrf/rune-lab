@@ -62,7 +62,6 @@ export default defineConfig({
       svelteProject("palettes", `${PLUGINS}`),
       svelteProject("observer", `${PLUGINS}`),
       svelteProject("layout", `${PLUGINS}`),
-      svelteProject("lab", "apps"),
       svelteProject("i18n", `${PLUGINS}`, [
         // tailwindcss(),
         // paraglideVitePlugin({

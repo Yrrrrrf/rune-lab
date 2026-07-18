@@ -28,8 +28,6 @@ paraglide project outdir:
 svelte-package dir out=dir:
     cd src/packages/{{ dir }}; deno run -A npm:@sveltejs/package -i src -o "{{ justfile_directory() }}/build/dist/{{ out }}"
 
-# closure-as-data: shim in, run, shim out — skips the copy when the
-# workspace ships its own real config (e.g. ui's svelte.config.js)
 [doc('Copy a shim file into dir, run cmd there, always remove the shim')]
 [positional-arguments]
 [private]

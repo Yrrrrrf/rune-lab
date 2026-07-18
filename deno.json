@@ -22,7 +22,7 @@
     "vite-plus": "npm:vite-plus",
     "typescript": "npm:typescript@6",
     "@vitest/utils": "npm:vitest/utils",
-    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte@^7.2.0",
+    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
     "@testing-library/jest-dom": "npm:@testing-library/jest-dom",
     "jsdom": "npm:jsdom",
     "@rune-lab/core": "./src/packages/core/src/mod.ts",
