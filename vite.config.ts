@@ -13,7 +13,13 @@ const svelteProject = (
   extraPlugins: PluginOption[] = [],
 ) => ({
   root: `${root}/${name}`,
-  plugins: [svelte() as PluginOption, ...extraPlugins],
+  plugins: [
+    svelte({
+      configFile: false, // tells the compiler to skip loading tsconfig.json
+      compilerOptions: {},
+    }) as PluginOption,
+    ...extraPlugins,
+  ],
   // server: {
   //   fs: {
   //     allow: [resolve(".")],

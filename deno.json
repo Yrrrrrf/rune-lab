@@ -19,6 +19,7 @@
     "./src/packages/plugins/palettes"
   ],
   "imports": {
+    "vite": "npm:vite",
     "vite-plus": "npm:vite-plus",
     "typescript": "npm:typescript@6",
     "@vitest/utils": "npm:vitest/utils",
