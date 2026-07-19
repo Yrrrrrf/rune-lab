@@ -1,3 +1,4 @@
+import type { Component } from "svelte";
 import type { Kernel, SettingsFieldSchema } from "@rune-lab/core";
 import { getContext } from "svelte";
 
@@ -45,7 +46,7 @@ export interface SettingsSection {
   label: string;
   icon?: string;
   fields?: SettingsFieldSchema[];
-  component?: unknown;
+  component?: Component;
 }
 
 export const getSettingsSections: () => SettingsSection[] = createAccessor<

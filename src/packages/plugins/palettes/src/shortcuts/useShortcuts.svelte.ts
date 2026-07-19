@@ -35,7 +35,6 @@ export function useShortcuts(configs: ShortcutConfig[]): {
       category: config.category ?? "General",
       scope: config.scope ?? "global",
       enabled: true,
-      hidden: !config.label, // Hide from palette if no label
     }));
   }
 
@@ -47,7 +46,7 @@ export function useShortcuts(configs: ShortcutConfig[]): {
     shortcutStore.register(entry);
   }
 
-  // Auto-cleanup using $effect.root for lifecycle management
+  // Component-lifecycle cleanup: unregister on destroy via $effect teardown
   $effect(() => {
     // This effect runs on mount — shortcuts are already registered above.
     // Return cleanup that unregisters all shortcuts on destroy.

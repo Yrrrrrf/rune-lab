@@ -9,8 +9,8 @@ let {
 </script>
 
 <div class="flex-grow overflow-y-auto bg-base-100">
-  {#if activeSection}
-    {@const ActiveComp = activeSection.component as any}
+  {#if activeSection?.component}
+    {@const ActiveComp = activeSection.component}
     <ActiveComp />
   {/if}
 </div>
