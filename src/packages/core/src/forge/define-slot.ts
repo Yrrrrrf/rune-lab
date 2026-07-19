@@ -1,4 +1,4 @@
-import { Schema } from "effect";
+import type { Schema } from "effect";
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { TextMeasurer } from "../ports/text.ts";
 import type { PersistenceHandle } from "./descriptors.ts";

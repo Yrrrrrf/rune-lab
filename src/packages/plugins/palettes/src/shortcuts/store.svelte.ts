@@ -18,9 +18,7 @@ export class ShortcutStore {
    * Grouped view for documentation/palette
    */
   byScopeAndCategory: Record<string, Record<string, ShortcutEntry[]>> =
-    $derived(
-      groupByScopeAndCategory(this.entries),
-    );
+    $derived(groupByScopeAndCategory(this.entries));
 
   /**
    * Scopes sorted for palette display
