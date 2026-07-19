@@ -1,5 +1,5 @@
-import type { Component } from "svelte";
 import type { Kernel, SettingsFieldSchema } from "@rune-lab/core";
+import type { Component } from "svelte";
 import { getContext } from "svelte";
 
 export const RUNE_LAB_CONTEXT: {

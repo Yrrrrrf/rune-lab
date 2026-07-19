@@ -1,8 +1,12 @@
 <script lang="ts">
+import { onMount } from "svelte";
 import { getRegistryStore, getShortcutStore } from "../plugin.ts";
+import { bindShortcuts } from "./hotkeys.svelte.ts";
 
 const registryStore = getRegistryStore();
 const shortcutStore = getShortcutStore();
+
+onMount(() => bindShortcuts(shortcutStore));
 
 let dialogEl = $state<HTMLDialogElement>();
 

@@ -41,23 +41,32 @@ $effect(() => {
   }
 });
 
-let lines = $derived.by(() => {
-  if (!prepared || !textStore.ready || measuredWidth <= 0) return [];
+// Pure: no prop writes in here. The record carries everything the effect
+// below needs to sync the bindables.
+let layoutResult = $derived.by(() => {
+  if (!prepared || !textStore.ready || measuredWidth <= 0) {
+    return { lines: [] as LayoutLine[], lineCount: 0, overflow: false };
+  }
   const engine = textStore.engine;
   const stats = engine.measureLineStats(prepared, measuredWidth);
-  lineCount = stats.lineCount;
-  overflow = clamping !== undefined && stats.lineCount > clamping;
-  const limit = overflow ? clamping! : stats.lineCount;
+  const clamped = clamping !== undefined && stats.lineCount > clamping;
+  const limit = clamped ? clamping! : stats.lineCount;
 
-  const out: LayoutLine[] = [];
+  const lines: LayoutLine[] = [];
   let cursor: LayoutCursor = { segmentIndex: 0, graphemeIndex: 0 };
-  while (out.length < limit) {
+  while (lines.length < limit) {
     const range = engine.layoutNextLineRange(prepared, cursor, measuredWidth);
     if (!range) break;
-    out.push(engine.materializeLineRange(prepared, range));
+    lines.push(engine.materializeLineRange(prepared, range));
     cursor = range.end;
   }
-  return out;
+  return { lines, lineCount: stats.lineCount, overflow: clamped };
+});
+
+// Bindable sync — prop writes belong in effects, not deriveds.
+$effect(() => {
+  lineCount = layoutResult.lineCount;
+  overflow = layoutResult.overflow;
 });
 </script>
 
@@ -69,7 +78,7 @@ let lines = $derived.by(() => {
   {#if !textStore.ready}
     <div class="rl-text-fallback whitespace-pre-wrap">{content}</div>
   {:else}
-    {#each lines as line, i (i)}
+    {#each layoutResult.lines as line, i (i)}
       <TextLine text={line.text} width={line.width} />
     {/each}
   {/if}

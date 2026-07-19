@@ -1,3 +1,5 @@
+import * as pretext from "@chenglou/pretext";
+import * as pretextRich from "@chenglou/pretext/rich-inline";
 import type {
   LayoutCursor,
   LayoutLine,
@@ -16,8 +18,6 @@ import type {
   RichInlineStats,
   TextMeasurer,
 } from "@rune-lab/core";
-import * as pretext from "@chenglou/pretext";
-import * as pretextRich from "@chenglou/pretext/rich-inline";
 
 // Brand boundary. Core's opaque handles and pretext's are structurally identical
 // except for the brand symbol: pretext's is required, core's is optional. So

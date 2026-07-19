@@ -41,31 +41,37 @@ $effect(() => {
   }
 });
 
-let lines = $derived.by(() => {
-  if (!prepared || !textStore.ready || measuredWidth <= 0) return [];
+let layoutResult = $derived.by(() => {
+  if (!prepared || !textStore.ready || measuredWidth <= 0) {
+    return { lines: [] as RichInlineLine[], lineCount: 0, overflow: false };
+  }
   const engine = textStore.engine;
   const stats = engine.measureRichInlineStats(prepared, measuredWidth);
-  lineCount = stats.lineCount;
-  overflow = clamping !== undefined && stats.lineCount > clamping;
-  const limit = overflow ? clamping! : stats.lineCount;
+  const clamped = clamping !== undefined && stats.lineCount > clamping;
+  const limit = clamped ? clamping! : stats.lineCount;
 
-  const out: RichInlineLine[] = [];
+  const lines: RichInlineLine[] = [];
   let cursor: RichInlineCursor = {
     itemIndex: 0,
     segmentIndex: 0,
     graphemeIndex: 0,
   };
-  while (out.length < limit) {
+  while (lines.length < limit) {
     const range = engine.layoutNextRichInlineLineRange(
       prepared,
       measuredWidth,
       cursor,
     );
     if (!range) break;
-    out.push(engine.materializeRichInlineLineRange(prepared, range));
+    lines.push(engine.materializeRichInlineLineRange(prepared, range));
     cursor = range.end;
   }
-  return out;
+  return { lines, lineCount: stats.lineCount, overflow: clamped };
+});
+
+$effect(() => {
+  lineCount = layoutResult.lineCount;
+  overflow = layoutResult.overflow;
 });
 </script>
 
@@ -79,7 +85,7 @@ let lines = $derived.by(() => {
       {items.map(i => i.text).join(" ")}
     </div>
   {:else}
-    {#each lines as line, i (i)}
+    {#each layoutResult.lines as line, i (i)}
       <div class="rl-rich-line flex items-center select-text h-[{lineHeight}px]">
         {#each line.fragments as fragment}
           {#if fragment.gapBefore > 0}

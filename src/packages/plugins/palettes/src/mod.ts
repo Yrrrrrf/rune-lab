@@ -1,5 +1,5 @@
 export * from "./commands/mod.ts";
-export * from "./host/hotkeys.ts";
+export * from "./host/hotkeys.svelte.ts";
 export { default as PaletteHost } from "./host/PaletteHost.svelte";
 export * from "./notifications/mod.ts";
 export {

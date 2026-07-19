@@ -1,7 +1,7 @@
 <script lang="ts">
-import { RichText, Text } from "rune-lab/layout";
-import { getLayoutStore } from "rune-lab/layout";
+import { getLayoutStore, RichText, Text } from "rune-lab/layout";
 import { getRegistryStore, getToastStore } from "rune-lab/palettes";
+import PretextPlayground from "$lib/PretextPlayground.svelte";
 
 const layout = getLayoutStore();
 const registry = getRegistryStore();
@@ -91,8 +91,11 @@ const shortcuts = [
   <div class="card bg-base-200 card-sm">
     <div class="card-body">
       <h2 class="card-title text-sm">
-        pretext · lines: {lineCount} · overflow: {overflow}
+        pretext playground · lines: {lineCount} · overflow: {overflow}
       </h2>
+      <PretextPlayground />
+      <div
+        class="divider my-1 text-xs opacity-50">clamped Text + rich pill</div>
       <Text content={longText} clamping={3} bind:lineCount bind:overflow />
       <RichText items={richItems} />
     </div>

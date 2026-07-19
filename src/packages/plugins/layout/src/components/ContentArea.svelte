@@ -1,7 +1,10 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
 
-let { header, children }: {
+let {
+	header,
+	children,
+}: {
 	header?: Snippet;
 	children: Snippet;
 } = $props();
