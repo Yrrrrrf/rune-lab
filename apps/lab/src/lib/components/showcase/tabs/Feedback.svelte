@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getToastStore } from "@rune-lab/palettes";
+import { getToastStore } from "rune-lab/palettes";
 import { m } from "$lib/i18n/messages.ts";
 import ShowcaseCard from "../ShowcaseCard.svelte";
 

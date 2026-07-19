@@ -1,12 +1,12 @@
 <script lang="ts">
-import { getCurrencyStore, getLanguageStore } from "@rune-lab/i18n";
-import { getLayoutStore, getThemeStore } from "@rune-lab/layout";
+import { getCurrencyStore, getLanguageStore } from "rune-lab/i18n";
+import { getLayoutStore, getThemeStore } from "rune-lab/layout";
 import {
   getCommandStore,
   getShortcutStore,
   getToastStore,
-} from "@rune-lab/palettes";
-import { getAppStore } from "@rune-lab/svelte";
+} from "rune-lab/palettes";
+import { getAppStore } from "rune-lab";
 import { m } from "$lib/i18n/messages.ts";
 
 const appStore = getAppStore();

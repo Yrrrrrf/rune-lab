@@ -4,12 +4,12 @@ import {
   DetailPanel,
   getLayoutStore,
   WorkspaceLayout,
-} from "@rune-lab/layout";
+} from "rune-lab/layout";
 import {
   getCommandStore,
   getShortcutStore,
   getToastStore,
-} from "@rune-lab/palettes";
+} from "rune-lab/palettes";
 import { type Snippet, untrack } from "svelte";
 import DashboardPanel from "../lib/components/panels/DashboardPanel.svelte";
 import ShortcutsPanel from "../lib/components/panels/ShortcutsPanel.svelte";
