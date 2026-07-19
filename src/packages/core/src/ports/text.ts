@@ -127,14 +127,13 @@ export interface TextMeasurer {
   measureNaturalWidth(prepared: PreparedTextWithSegments): number;
   layoutNextLine(
     prepared: PreparedTextWithSegments,
-    maxWidth: number,
-    lineHeight: number,
     start: LayoutCursor,
+    maxWidth: number,
   ): LayoutLine | null;
   layoutNextLineRange(
     prepared: PreparedTextWithSegments,
+    start: LayoutCursor,
     maxWidth: number,
-    start?: LayoutCursor,
   ): LayoutLineRange | null;
   layoutWithLines(
     prepared: PreparedTextWithSegments,

@@ -1,12 +1,14 @@
-import type { SlotContext } from "@rune-lab/core";
+import type { SlotContext, TextMeasurer } from "@rune-lab/core";
 import { BROWSER } from "esm-env";
+import { untrack } from "svelte";
 import { PretextTextMeasurer } from "../text/adapter.ts";
 import { resolveFontShorthand } from "../text/fonts.ts";
 
 export class TextStoreFacade {
   #ready = $state(false);
   #epoch = $state(0);
-  #engine: PretextTextMeasurer | null = null;
+  #font = $state("14px sans-serif");
+  #engine: TextMeasurer | null = null;
 
   get ready(): boolean {
     return this.#ready;
@@ -16,7 +18,11 @@ export class TextStoreFacade {
     return this.#epoch;
   }
 
-  get engine(): PretextTextMeasurer {
+  get font(): string {
+    return this.#font;
+  }
+
+  get engine(): TextMeasurer {
     if (!this.#ready || !this.#engine) {
       throw new Error(
         "[Layout Text] pretext engine is not available on server-side. Guard usage with the ready flag.",
@@ -26,25 +32,31 @@ export class TextStoreFacade {
   }
 
   constructor(ctx: SlotContext<unknown>) {
-    if (!BROWSER) return;
+    if (!BROWSER && !ctx.textMeasurer) return;
 
     const themeStore = ctx.stores.get("theme") as { current: string };
 
-    this.#engine = new PretextTextMeasurer();
+    this.#engine = ctx.textMeasurer ?? new PretextTextMeasurer();
     this.#ready = true;
 
     // React to theme changes
-    $effect.root(() => {
-      $effect(() => {
-        const themeName = themeStore.current;
-        if (themeName) {
-          // Resolve computed font styles for the theme to invalidate caches
-          resolveFontShorthand(themeName);
-          this.#engine!.clearCache();
-          this.#epoch++;
-        }
+    if (themeStore) {
+      let lastTheme: string | null = null;
+      $effect.root(() => {
+        $effect(() => {
+          const themeName = themeStore.current;
+          if (themeName && themeName !== lastTheme) {
+            lastTheme = themeName;
+            untrack(() => {
+              // Resolve computed font styles for the theme to invalidate caches
+              this.#font = resolveFontShorthand(themeName);
+              this.#engine!.clearCache();
+              this.#epoch++;
+            });
+          }
+        });
       });
-    });
+    }
   }
 }
 

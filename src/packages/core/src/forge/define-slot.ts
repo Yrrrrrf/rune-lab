@@ -1,12 +1,14 @@
 import { Schema } from "effect";
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceHandle } from "./descriptors.ts";
+import type { TextMeasurer } from "../ports/text.ts";
 
 export interface SlotContext<TConfig = unknown> {
   config: TConfig;
   persistence: PersistenceHandle;
   stores: Map<string, unknown>;
   locale?: LocaleAdapter;
+  textMeasurer?: TextMeasurer;
 }
 
 export interface SlotSpec<

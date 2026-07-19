@@ -1,5 +1,9 @@
 <script lang="ts">
-import type { RichInlineItem } from "@rune-lab/core";
+import type {
+  RichInlineCursor,
+  RichInlineItem,
+  RichInlineLine,
+} from "@rune-lab/core";
 import { getTextStore } from "../../plugin.ts";
 import { resizeWidth } from "../../text/resize.ts";
 
@@ -39,20 +43,29 @@ $effect(() => {
 
 let lines = $derived.by(() => {
   if (!prepared || !textStore.ready || measuredWidth <= 0) return [];
-  const tempLines: any[] = [];
-  textStore.engine.walkRichInlineLineRanges(
-    prepared,
-    measuredWidth,
-    (range: any) => {
-      tempLines.push(
-        textStore.engine.materializeRichInlineLineRange(prepared, range),
-      );
-    },
-  );
-  lineCount = tempLines.length;
-  const clampLimit = clamping !== undefined && tempLines.length > clamping;
-  overflow = clampLimit;
-  return clampLimit ? tempLines.slice(0, clamping) : tempLines;
+  const engine = textStore.engine;
+  const stats = engine.measureRichInlineStats(prepared, measuredWidth);
+  lineCount = stats.lineCount;
+  overflow = clamping !== undefined && stats.lineCount > clamping;
+  const limit = overflow ? clamping! : stats.lineCount;
+
+  const out: RichInlineLine[] = [];
+  let cursor: RichInlineCursor = {
+    itemIndex: 0,
+    segmentIndex: 0,
+    graphemeIndex: 0,
+  };
+  while (out.length < limit) {
+    const range = engine.layoutNextRichInlineLineRange(
+      prepared,
+      measuredWidth,
+      cursor,
+    );
+    if (!range) break;
+    out.push(engine.materializeRichInlineLineRange(prepared, range));
+    cursor = range.end;
+  }
+  return out;
 });
 </script>
 

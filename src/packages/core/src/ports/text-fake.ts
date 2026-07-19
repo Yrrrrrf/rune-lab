@@ -88,7 +88,7 @@ export class FakeTextMeasurer implements TextMeasurer {
     let cursor: LayoutCursor = { segmentIndex: 0, graphemeIndex: 0 };
     let count = 0;
     while (true) {
-      const range = this.layoutNextLineRange(prepared, maxWidth, cursor);
+      const range = this.layoutNextLineRange(prepared, cursor, maxWidth);
       if (!range) break;
       onLine(range);
       count++;
@@ -105,7 +105,7 @@ export class FakeTextMeasurer implements TextMeasurer {
     let lineCount = 0;
     let maxLineWidth = 0;
     while (true) {
-      const range = this.layoutNextLineRange(prepared, maxWidth, cursor);
+      const range = this.layoutNextLineRange(prepared, cursor, maxWidth);
       if (!range) break;
       lineCount++;
       if (range.width > maxLineWidth) maxLineWidth = range.width;
@@ -125,22 +125,21 @@ export class FakeTextMeasurer implements TextMeasurer {
 
   layoutNextLine(
     prepared: PreparedTextWithSegments,
-    maxWidth: number,
-    _lineHeight: number,
     start: LayoutCursor,
+    maxWidth: number,
   ): LayoutLine | null {
-    const range = this.layoutNextLineRange(prepared, maxWidth, start);
+    const range = this.layoutNextLineRange(prepared, start, maxWidth);
     if (!range) return null;
     return this.materializeLineRange(prepared, range);
   }
 
   layoutNextLineRange(
     prepared: PreparedTextWithSegments,
+    start: LayoutCursor,
     maxWidth: number,
-    start?: LayoutCursor,
   ): LayoutLineRange | null {
     const fake = prepared as unknown as FakePreparedText;
-    const startIndex = start ? start.segmentIndex : 0;
+    const startIndex = start.segmentIndex;
     if (startIndex >= fake.segments.length) return null;
 
     let width = 0;

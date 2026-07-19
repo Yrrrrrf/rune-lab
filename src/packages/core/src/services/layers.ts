@@ -3,7 +3,6 @@ import { StateCell } from "../cells/define-cell.ts";
 
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceDriver } from "../ports/persistence.ts";
-import type { TextMeasurer } from "../ports/text.ts";
 
 const PersistenceDriverTag = Context.GenericTag<PersistenceDriver>(
   "@rune-lab/core/PersistenceDriver",
@@ -11,10 +10,6 @@ const PersistenceDriverTag = Context.GenericTag<PersistenceDriver>(
 
 const LocaleAdapterTag = Context.GenericTag<LocaleAdapter>(
   "@rune-lab/core/LocaleAdapter",
-);
-
-const TextMeasurerTag = Context.GenericTag<TextMeasurer>(
-  "@rune-lab/core/TextMeasurer",
 );
 
 export interface StateCells {
@@ -30,9 +25,6 @@ export const makePersistenceLayer = (driver: PersistenceDriver) =>
 
 export const makeLocaleAdapterLayer = (adapter: LocaleAdapter) =>
   Layer.succeed(LocaleAdapterTag, adapter);
-
-export const makeTextMeasurerLayer = (measurer: TextMeasurer) =>
-  Layer.succeed(TextMeasurerTag, measurer);
 
 const makeCell = (key: string, value: unknown) =>
   Effect.gen(function* () {

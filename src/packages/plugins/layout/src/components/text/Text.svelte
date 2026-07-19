@@ -1,11 +1,12 @@
 <script lang="ts">
+import type { LayoutCursor, LayoutLine, PrepareOptions } from "@rune-lab/core";
 import { getTextStore } from "../../plugin.ts";
 import { resizeWidth } from "../../text/resize.ts";
 import TextLine from "./TextLine.svelte";
 
 let {
   content,
-  font = "14px sans-serif",
+  font,
   options,
   lineHeight = 20,
   clamping,
@@ -15,7 +16,7 @@ let {
 }: {
   content: string;
   font?: string;
-  options?: any;
+  options?: PrepareOptions;
   lineHeight?: number;
   clamping?: number;
   lineCount?: number;
@@ -25,11 +26,12 @@ let {
 
 const textStore = getTextStore();
 let measuredWidth = $state(0);
+const effectiveFont = $derived(font ?? textStore.font);
 
 let prepared = $derived.by(() => {
   const _ = textStore.epoch;
   return textStore.ready
-    ? textStore.engine.prepareWithSegments(content, font, options)
+    ? textStore.engine.prepareWithSegments(content, effectiveFont, options)
     : null;
 });
 
@@ -41,14 +43,21 @@ $effect(() => {
 
 let lines = $derived.by(() => {
   if (!prepared || !textStore.ready || measuredWidth <= 0) return [];
-  const tempLines: any[] = [];
-  textStore.engine.walkLineRanges(prepared, measuredWidth, (range: any) => {
-    tempLines.push(textStore.engine.materializeLineRange(prepared, range));
-  });
-  lineCount = tempLines.length;
-  const clampLimit = clamping !== undefined && tempLines.length > clamping;
-  overflow = clampLimit;
-  return clampLimit ? tempLines.slice(0, clamping) : tempLines;
+  const engine = textStore.engine;
+  const stats = engine.measureLineStats(prepared, measuredWidth);
+  lineCount = stats.lineCount;
+  overflow = clamping !== undefined && stats.lineCount > clamping;
+  const limit = overflow ? clamping! : stats.lineCount;
+
+  const out: LayoutLine[] = [];
+  let cursor: LayoutCursor = { segmentIndex: 0, graphemeIndex: 0 };
+  while (out.length < limit) {
+    const range = engine.layoutNextLineRange(prepared, cursor, measuredWidth);
+    if (!range) break;
+    out.push(engine.materializeLineRange(prepared, range));
+    cursor = range.end;
+  }
+  return out;
 });
 </script>
 

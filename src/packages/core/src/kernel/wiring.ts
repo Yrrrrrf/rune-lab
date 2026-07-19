@@ -10,7 +10,6 @@ import {
   makeLocaleAdapterLayer,
   makePersistenceLayer,
   makeStateCellsLayer,
-  makeTextMeasurerLayer,
 } from "../services/layers.ts";
 import { type GraphNode, topologicalSort } from "../utils/graph.ts";
 
@@ -199,12 +198,6 @@ export function buildLayers(
       makeLocaleAdapterLayer(options.localeAdapter),
     ) as Layer.Layer<unknown, never, never>;
   }
-  if (options.textMeasurer) {
-    env = Layer.merge(
-      env,
-      makeTextMeasurerLayer(options.textMeasurer),
-    ) as Layer.Layer<unknown, never, never>;
-  }
 
   for (const slot of slots) {
     const storeTag = Context.GenericTag<unknown>(slot.id);
@@ -265,6 +258,7 @@ export function buildLayers(
             persistence: persistenceHandle,
             stores: resolvedDeps,
             locale: options.localeAdapter,
+            textMeasurer: options.textMeasurer,
           });
         } catch (e) {
           console.error(`[Kernel] Failed to initialize slot "${slot.id}":`, e);
