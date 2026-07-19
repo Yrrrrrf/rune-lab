@@ -15,8 +15,8 @@ import type {
   RichInlineStats,
   TextMeasurer,
 } from "@rune-lab/core";
-import * as pretext from "pretext";
-import * as pretextRich from "pretext/rich-inline";
+import * as pretext from "@chenglou/pretext";
+import * as pretextRich from "@chenglou/pretext/rich-inline";
 
 export class PretextTextMeasurer implements TextMeasurer {
   prepare(text: string, font: string, options?: PrepareOptions): PreparedText {

@@ -6,6 +6,6 @@
   },
   "imports": {
     "svelte": "npm:svelte@^5",
-    "pretext": "npm:@chenglou/pretext"
+    "@chenglou/pretext": "npm:@chenglou/pretext"
   }
 }
