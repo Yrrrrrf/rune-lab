@@ -11,12 +11,21 @@ export interface SlotContext<TConfig = unknown> {
   textMeasurer?: TextMeasurer;
 }
 
+export interface BaseSlotSpec {
+  create(context: SlotContext<unknown>): unknown;
+  config?: unknown;
+  persist?: boolean | string[];
+  dependsOn?: string[];
+  expose?: boolean;
+  contextKey?: never;
+}
+
 export interface SlotSpec<
   TConfig = unknown,
   TStore = unknown,
   TEncoded = TConfig,
-> {
-  create: (context: SlotContext<TConfig>) => TStore;
+> extends BaseSlotSpec {
+  create(context: SlotContext<TConfig>): TStore;
   config?: Schema.Schema<TConfig, TEncoded, never>;
   persist?: boolean | string[];
   dependsOn?: string[];

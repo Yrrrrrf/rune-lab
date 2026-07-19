@@ -1,5 +1,5 @@
 import type { SettingsSchema } from "./define-settings.ts";
-import type { SlotSpec } from "./define-slot.ts";
+import type { BaseSlotSpec } from "./define-slot.ts";
 import {
   getAccessorName,
   getContextSymbol,
@@ -8,10 +8,7 @@ import {
 
 export interface ForgedPlugin<
   TId extends string = string,
-  TSlots extends Record<string, SlotSpec<any, any, any>> = Record<
-    string,
-    SlotSpec<any, any, any>
-  >,
+  TSlots extends Record<string, BaseSlotSpec> = Record<string, BaseSlotSpec>,
 > {
   id: TId;
   requires?: string[];
@@ -23,7 +20,7 @@ export interface ForgedPlugin<
 }
 
 export type PluginInput =
-  | ForgedPlugin<string, Record<string, SlotSpec<any, any, any>>>
+  | ForgedPlugin<string, Record<string, BaseSlotSpec>>
   | PluginInput[]
   | null
   | undefined
@@ -31,7 +28,7 @@ export type PluginInput =
 
 export function definePlugin<
   TId extends string,
-  TSlots extends Record<string, SlotSpec<any, any, any>>,
+  TSlots extends Record<string, BaseSlotSpec>,
 >(spec: {
   id: TId;
   requires?: string[];
@@ -40,8 +37,8 @@ export function definePlugin<
   overlays?: unknown[];
   contributions?: Record<string, unknown[]>;
 }): ForgedPlugin<TId, TSlots> {
-  const slots: Record<string, SlotSpec<any, any, any>> = spec.slots ||
-    ({} as Record<string, SlotSpec<any, any, any>>);
+  const slots: Record<string, BaseSlotSpec> = spec.slots ||
+    ({} as Record<string, BaseSlotSpec>);
   const descriptors: Record<string, SlotDescriptor> = {};
   for (const slotName of Object.keys(slots)) {
     descriptors[slotName] = {

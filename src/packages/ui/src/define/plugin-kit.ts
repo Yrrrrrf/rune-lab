@@ -1,9 +1,9 @@
-import type { ForgedPlugin, SlotSpec } from "@rune-lab/core";
+import type { BaseSlotSpec, ForgedPlugin } from "@rune-lab/core";
 import { createAccessor } from "../provider/context.ts";
 
 export function createPluginKit<
   TId extends string,
-  TSlots extends Record<string, SlotSpec<any, any, any>>,
+  TSlots extends Record<string, BaseSlotSpec>,
 >(
   forgedPlugin: ForgedPlugin<TId, TSlots>,
 ): {

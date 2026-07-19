@@ -13,7 +13,11 @@ export {
   type SettingsFieldSchema,
   type SettingsSchema,
 } from "./forge/define-settings.ts";
-export type { SlotContext, SlotSpec } from "./forge/define-slot.ts";
+export type {
+  BaseSlotSpec,
+  SlotContext,
+  SlotSpec,
+} from "./forge/define-slot.ts";
 export { defineSlot } from "./forge/define-slot.ts";
 export type { PersistenceHandle, SlotDescriptor } from "./forge/descriptors.ts";
 export { getContextSymbol } from "./forge/descriptors.ts";
