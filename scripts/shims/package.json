@@ -1,5 +1,8 @@
 {
   "name": "@rune-lab/shim",
   "private": true,
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  }
 }
