@@ -49,12 +49,11 @@ const packages = [
   ...plugins.map((p) => `src/packages/plugins/${p}`),
 ];
 
+// todo: Enhance this part to now let it...
+// To be able to read those from the deno.json & then add those in the package.json.dev-deps.
 const DEV_DEPS = new Set([
   "svelte",
-  "@sveltejs/vite-plugin-svelte",
-  "@sveltejs/adapter-static",
   "tailwindcss",
-  "@tailwindcss/vite",
   "daisyui",
   "@inlang/paraglide-js",
 ]);
@@ -62,8 +61,6 @@ const DEV_DEPS = new Set([
 const dependencies: Record<string, string> = {};
 
 for (const pkgPath of packages) {
-  // No try/catch: a typo'd plugin name in BUILD_PLUGINS should fail here,
-  // loudly, not as a missing-file surprise in a later build gate.
   const pkgDeno = JSON.parse(await Deno.readTextFile(`${pkgPath}/deno.json`));
   const imports = pkgDeno.imports || {};
   for (const [_, val] of Object.entries(imports)) {
@@ -80,6 +77,7 @@ const manifest = {
   name: "rune-lab",
   version: root.version,
   description: root.description,
+  readme: root.readme,
   license: root.license,
   repository: root.repository,
   homepage: `${repoUrl}#readme`,
