@@ -19,7 +19,7 @@ let {
   noRatesFallback,
   locale,
   compact = false,
-} = $props<{
+}: {
   amount?: number | null | undefined;
   money?: MoneyPrimitive;
   unit?: "major" | "minor";
@@ -30,7 +30,7 @@ let {
   noRatesFallback?: string;
   locale?: string;
   compact?: boolean;
-}>();
+} = $props();
 
 $effect(() => {
   if (DEV && money && unit !== "minor") {

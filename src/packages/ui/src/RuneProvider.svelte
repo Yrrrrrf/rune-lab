@@ -36,12 +36,12 @@ let {
 	config = {},
 	plugins = [],
 	localeAdapter,
-} = $props<{
+}: {
 	children: Snippet;
 	config?: RuneLabConfig;
 	plugins?: PluginInput[];
 	localeAdapter?: LocaleAdapter;
-}>();
+} = $props();
 
 const initialPersistence = untrack(() => {
 	let savedDriverType = "local";

@@ -6,11 +6,11 @@ let {
   fields = [],
   disabled = false,
   onCommit,
-} = $props<{
+}: {
   fields: any[];
   disabled?: boolean;
   onCommit?: (fieldId: string, value: any) => void;
-}>();
+} = $props();
 
 // Resolve cells reactively using Svelte 5's $derived.by
 const cellBinds = $derived.by(() => {

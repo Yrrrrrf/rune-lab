@@ -1,55 +1,12 @@
 <script lang="ts">
 import "./layout.css";
 import { RuneProvider, version } from "rune-lab";
-import { createParaglideAdapter, I18nPlugin } from "rune-lab/i18n";
-import type { NavigationSection } from "rune-lab/layout";
 import { LayoutPlugin } from "rune-lab/layout";
 import { PalettesPlugin } from "rune-lab/palettes";
-import { m } from "$lib/i18n/messages.ts";
-import * as paraglideRuntime from "$lib/i18n/paraglide/runtime.js";
+import type { Snippet } from "svelte";
 import AppLayout from "./AppLayout.svelte";
 
-const localeAdapter = createParaglideAdapter(paraglideRuntime);
-
-let { children } = $props();
-
-const sections: NavigationSection[] = [
-  {
-    id: "lab",
-    title: m.lab_label(),
-    items: [
-      {
-        id: "lab.overview",
-        label: m.overview_label(),
-        icon: "🔬",
-        href: "/lab",
-      },
-      {
-        id: "lab.components",
-        label: m.components_label(),
-        icon: "🧩",
-      },
-      { id: "lab.themes", label: m.themes_label(), icon: "🎨" },
-    ],
-  },
-  {
-    id: "system",
-    title: m.system_label(),
-    items: [
-      {
-        id: "system.settings",
-        label: m.settings_label(),
-        icon: "⚙️",
-      },
-      {
-        id: "system.logs",
-        label: m.activity_logs_label(),
-        icon: "📋",
-      },
-      { id: "system.users", label: m.users_label(), icon: "👤" },
-    ],
-  },
-];
+let { children }: { children: Snippet } = $props();
 </script>
 
 <RuneProvider
@@ -59,18 +16,16 @@ const sections: NavigationSection[] = [
     app: {
       name: "Rune Lab",
       version: version(),
-      description: m.rune_lab_desc(),
+      description: "Plugin test bench",
       author: "Yrrrrrf",
     },
+    // Namespaced per-plugin config — without this key the kernel hands the theme
+    // slot the whole object above and schema validation crashes (see §0).
+    "rune-lab.layout": "dark",
   }}
-  plugins={[
-    LayoutPlugin,
-    PalettesPlugin,
-    I18nPlugin,
-  ]}
-  {localeAdapter}
+  plugins={[LayoutPlugin, PalettesPlugin]}
 >
-  <AppLayout {sections}>
+  <AppLayout>
     {@render children()}
   </AppLayout>
 </RuneProvider>
