@@ -35,8 +35,6 @@ let {
 }: WorkspaceLayoutProps = $props();
 
 onMount(() => {
-  layoutStore.init({ namespace });
-
   const originalHtmlOverflow = document.documentElement.style.overflow;
   const originalBodyOverflow = document.body.style.overflow;
   const originalHtmlHeight = document.documentElement.style.height;

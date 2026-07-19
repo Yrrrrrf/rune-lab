@@ -1,4 +1,3 @@
-import type { Stream } from "effect";
 import { Effect, SubscriptionRef } from "effect";
 
 export class StateCell<T> {
@@ -42,9 +41,5 @@ export class StateCell<T> {
         }
       }
     });
-  }
-
-  getStream(): Stream.Stream<T, never, never> {
-    return this.ref.changes;
   }
 }

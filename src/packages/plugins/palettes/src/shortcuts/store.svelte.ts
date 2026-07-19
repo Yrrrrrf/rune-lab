@@ -5,7 +5,6 @@ import { groupByScopeAndCategory, sortScopes } from "./grouping.ts";
 
 export class ShortcutStore {
   entries: ShortcutEntry[] = $state<ShortcutEntry[]>([]);
-  showPalette: boolean = $state(false);
 
   /**
    * Filtered list of entries active in the current scope

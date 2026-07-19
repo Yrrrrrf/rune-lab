@@ -20,7 +20,6 @@ export class AppStore {
   repository: string = $state("https://github.com/Yrrrrrf/rune-lab");
   license: string = $state("MIT");
   homepage: string = $state("https://jsr.io/@yrrrrrf/rune-lab");
-  customIcons: Record<string, string> = $state<Record<string, string>>({});
 
   #initialized = false;
 
@@ -45,26 +44,6 @@ export class AppStore {
     if (data.homepage) this.homepage = data.homepage;
 
     this.#initialized = true;
-  }
-
-  __reset(): void {
-    this.#initialized = false;
-  }
-
-  get info(): AppData {
-    return {
-      name: this.name,
-      version: this.version,
-      description: this.description,
-      author: this.author,
-      repository: this.repository,
-      license: this.license,
-      homepage: this.homepage,
-    };
-  }
-
-  registerIcons(icons: Record<string, string>) {
-    this.customIcons = { ...this.customIcons, ...icons };
   }
 }
 
