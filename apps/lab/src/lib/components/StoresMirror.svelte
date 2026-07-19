@@ -1,4 +1,5 @@
 <script lang="ts">
+import { getAppStore } from "rune-lab";
 import { getCurrencyStore, getLanguageStore } from "rune-lab/i18n";
 import { getLayoutStore, getThemeStore } from "rune-lab/layout";
 import {
@@ -6,7 +7,6 @@ import {
   getShortcutStore,
   getToastStore,
 } from "rune-lab/palettes";
-import { getAppStore } from "rune-lab";
 import { m } from "$lib/i18n/messages.ts";
 
 const appStore = getAppStore();

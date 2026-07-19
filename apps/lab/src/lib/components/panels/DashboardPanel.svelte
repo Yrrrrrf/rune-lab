@@ -1,8 +1,8 @@
 <script lang="ts">
+import { getAppStore } from "rune-lab";
 import { getLanguageStore } from "rune-lab/i18n";
 import { getThemeStore } from "rune-lab/layout";
 import { getShortcutStore, getToastStore } from "rune-lab/palettes";
-import { getAppStore } from "rune-lab";
 import { onMount, untrack } from "svelte";
 import { m } from "$lib/i18n/messages.ts";
 
