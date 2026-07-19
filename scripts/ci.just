@@ -12,6 +12,7 @@ prepare: prune
     # Install on workspace
     deno install
     # Compile paraglide
+    # todo: Move this to the main paraglide recipe...
     just paraglide src/packages/plugins/i18n/src/lang/project.inlang src/packages/plugins/i18n/src/lang/paraglide
     # Install on main lab for testing...
     cd apps/lab; deno install

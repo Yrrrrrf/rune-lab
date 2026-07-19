@@ -1,19 +1,16 @@
-[doc('Build the rune-lab package (ui): deno.json -> build/{dist, package.json, README, LICENSE}')]
+[doc('Build the rune-lab package: deno.json -> build/{dist, package.json, README, LICENSE}')]
 [group('Build')]
 build:
     # * Clean previous build
     rm -rf build
-    # * Generate build/package.json from root + ui deno.json, copy README & LICENSE
-    deno run -A scripts/manifest.ts
+    # * Generate build/package.json (exports & deps derived from BUILD_PLUGINS)
+    deno run -A scripts/manifest.ts {{ BUILD_PLUGINS }}
     # * Compile i18n messages → paraglide runtime
     just paraglide src/packages/plugins/i18n/src/lang/project.inlang src/packages/plugins/i18n/src/lang/paraglide
-    # * Bundle workspace members
-    just svelte-package ui ""
+    # * Bundle workspace members: core + ui always, plugins from BUILD_PLUGINS
+    just svelte-package ui
     just svelte-package core
-    just svelte-package plugins/layout
-    just svelte-package plugins/palettes
-    just svelte-package plugins/observer
-    just svelte-package plugins/i18n
+    "{{ BUILD_PLUGINS }}" | split row " " | each {|p| just svelte-package $"plugins/($p)" } | ignore
     # * Format build output
     deno fmt build
     # * Post-build: strip i18n artifacts, rewrite .ts→.js imports, inline the version

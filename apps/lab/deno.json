@@ -11,6 +11,7 @@
     "tailwindcss": "npm:tailwindcss",
     "@tailwindcss/vite": "npm:@tailwindcss/vite",
     "daisyui": "npm:daisyui",
-    "typescript": "npm:typescript@6"
+    "typescript": "npm:typescript",
+    "@chenglou/pretext": "npm:@chenglou/pretext"
   }
 }

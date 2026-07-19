@@ -10,7 +10,6 @@ import { m } from "$lib/i18n/messages.ts";
 const toastStore = getToastStore();
 const shortcutStore = getShortcutStore();
 const commandStore = getCommandStore();
-const layoutStore = getLayoutStore();
 
 // ── Toast Cannon ─────────────────────────────────────────
 let toastDuration = $state(3000);

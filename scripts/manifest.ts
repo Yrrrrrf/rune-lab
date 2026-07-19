@@ -5,6 +5,12 @@
 //   build/README.md     <- copied from repo root
 //   build/LICENSE       <- copied from repo root
 //
+// Usage: deno run -A scripts/manifest.ts <plugin> [<plugin> ...]
+//
+// core + ui always ship; plugins are opt-in via the arg list. The canonical
+// list lives in scripts/_shared.just as BUILD_PLUGINS so the build recipe and
+// this manifest can never disagree about what's in the package.
+//
 // Run from the repo root. svelte-package fills build/dist afterwards.
 // The root deno.json is the canonical source for name/version/description/
 // license/repository.
@@ -16,47 +22,31 @@ const parseNpmSpec = (spec: string): { name: string; range: string } => {
   return { name: m[1], range: m[2] ?? "*" };
 };
 
+const plugins = Deno.args;
+
 const root = JSON.parse(await Deno.readTextFile("deno.json"));
 
 // "git+https://github.com/user/repo.git" -> "https://github.com/user/repo"
 const repoUrl = root.repository.url.replace(/^git\+/, "").replace(/\.git$/, "");
 
-// Define the canonical nested exports map
+// dist layout is uniform: every member lives at dist/src/<path>/mod.{js,d.ts}
+const member = (path: string, svelteEntry = true) => ({
+  types: `./dist/src/${path}/mod.d.ts`,
+  ...(svelteEntry ? { svelte: `./dist/src/${path}/mod.js` } : {}),
+  default: `./dist/src/${path}/mod.js`,
+});
+
 const exports = {
-  ".": {
-    types: "./dist/mod.d.ts",
-    svelte: "./dist/mod.js",
-    default: "./dist/mod.js",
-  },
-  "./core": {
-    types: "./dist/src/core/mod.d.ts",
-    default: "./dist/src/core/mod.js",
-  },
-  "./layout": {
-    types: "./dist/src/plugins/layout/mod.d.ts",
-    svelte: "./dist/src/plugins/layout/mod.js",
-    default: "./dist/src/plugins/layout/mod.js",
-  },
-  "./palettes": {
-    types: "./dist/src/plugins/palettes/mod.d.ts",
-    svelte: "./dist/src/plugins/palettes/mod.js",
-    default: "./dist/src/plugins/palettes/mod.js",
-  },
-  "./i18n": {
-    types: "./dist/src/plugins/i18n/mod.d.ts",
-    svelte: "./dist/src/plugins/i18n/mod.js",
-    default: "./dist/src/plugins/i18n/mod.js",
-  },
+  ".": member("ui"),
+  "./core": member("core", false), // core has no svelte components
+  ...Object.fromEntries(plugins.map((p) => [`./${p}`, member(`plugins/${p}`)])),
 };
 
-// Gather dependencies dynamically from all packages in the workspace
+// Gather dependencies from every shipped member's deno.json
 const packages = [
   "src/packages/ui",
   "src/packages/core",
-  "src/packages/plugins/layout",
-  "src/packages/plugins/palettes",
-  "src/packages/plugins/i18n",
-  "src/packages/plugins/observer",
+  ...plugins.map((p) => `src/packages/plugins/${p}`),
 ];
 
 const DEV_DEPS = new Set([
@@ -72,19 +62,17 @@ const DEV_DEPS = new Set([
 const dependencies: Record<string, string> = {};
 
 for (const pkgPath of packages) {
-  try {
-    const pkgDeno = JSON.parse(await Deno.readTextFile(`${pkgPath}/deno.json`));
-    const imports = pkgDeno.imports || {};
-    for (const [_, val] of Object.entries(imports)) {
-      if (typeof val === "string" && val.startsWith("npm:")) {
-        const { name, range } = parseNpmSpec(val);
-        if (!DEV_DEPS.has(name) && !name.startsWith("@rune-lab/")) {
-          dependencies[name] = range;
-        }
+  // No try/catch: a typo'd plugin name in BUILD_PLUGINS should fail here,
+  // loudly, not as a missing-file surprise in a later build gate.
+  const pkgDeno = JSON.parse(await Deno.readTextFile(`${pkgPath}/deno.json`));
+  const imports = pkgDeno.imports || {};
+  for (const [_, val] of Object.entries(imports)) {
+    if (typeof val === "string" && val.startsWith("npm:")) {
+      const { name, range } = parseNpmSpec(val);
+      if (!DEV_DEPS.has(name) && !name.startsWith("@rune-lab/")) {
+        dependencies[name] = range;
       }
     }
-  } catch (e) {
-    console.error(`Warning: failed to read dependencies for ${pkgPath}`, e);
   }
 }
 
@@ -114,6 +102,7 @@ await Deno.writeTextFile(
 console.log(
   `  wrote    build/package.json (${manifest.name}@${manifest.version})`,
 );
+console.log(`  plugins  ${plugins.length > 0 ? plugins.join(", ") : "(none)"}`);
 
 for (const file of ["README.md", "LICENSE"]) {
   await Deno.copyFile(file, `build/${file}`);

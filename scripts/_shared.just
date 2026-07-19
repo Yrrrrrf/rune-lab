@@ -1,3 +1,13 @@
+# Plugins shipped in the published rune-lab package (core + ui always ship).
+# NOTE: plugins depend on each other (i18n & palettes use layout, observer
+# uses palettes) - prune with care.
+#   layout   - workspace layout + pretext text engine
+#   palettes - commands / shortcuts / notifications / settings wiring
+#   i18n     - languages + currencies engine
+#   observer - meta-dev tool panel
+#   explorer - (future) api explorer
+BUILD_PLUGINS := "layout palettes i18n observer"
+
 [default]
 [doc('List all available recipes')]
 [group('meta')]
@@ -9,10 +19,10 @@ list:
 paraglide project outdir:
     deno run -A npm:@inlang/paraglide-js compile --project "{{ project }}" --outdir "{{ outdir }}"
 
-[doc('Package one workspace member: src/packages/<dir>/src → build/dist/<out>')]
+[doc('Package one workspace member: src/packages/<dir>/src → build/dist/src/<dir>')]
 [group('Build')]
-svelte-package dir out=dir:
-    cd src/packages/{{ dir }}; deno run -A npm:@sveltejs/package -i src -o "{{ justfile_directory() }}/build/dist/{{ out }}"
+svelte-package dir out=("src" / dir):
+    just with-shim src "{{ justfile_directory() / "scripts/shims/package.json" }}" deno run -A npm:@sveltejs/package -i packages/{{ dir }}/src -o "{{ justfile_directory() }}/build/dist/{{ out }}"
 
 [doc('Copy a shim file into dir, run cmd there, always remove the shim')]
 [positional-arguments]
