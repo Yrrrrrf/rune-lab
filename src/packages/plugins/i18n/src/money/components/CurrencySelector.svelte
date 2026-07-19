@@ -1,6 +1,6 @@
 <script lang="ts">
 import { ResourceSelector } from "@rune-lab/layout";
-import { getCurrencyStore } from "../../mod.ts";
+import { getCurrencyStore } from "../../accessors.ts";
 import { getCurrencyName } from "../stores/currency.svelte.ts";
 
 const currencyStore = getCurrencyStore();

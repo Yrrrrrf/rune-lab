@@ -25,7 +25,7 @@ export interface NormalizedSlot {
   create: (context: SlotContext<unknown>) => unknown;
 }
 
-export function normalizePlugins(inputs: PluginInput[]): ForgedPlugin[] {
+function normalizePlugins(inputs: PluginInput[]): ForgedPlugin[] {
   const flat: ForgedPlugin[] = [];
   function process(item: PluginInput) {
     if (!item) return;
@@ -58,7 +58,7 @@ function getPluginConfig(
   return config;
 }
 
-export function sortPlugins(resolved: ForgedPlugin[]): ForgedPlugin[] {
+function sortPlugins(resolved: ForgedPlugin[]): ForgedPlugin[] {
   const pluginMap = new Map(resolved.map((p) => [p.id, p]));
   const graphNodes: GraphNode[] = resolved.map((p) => ({
     id: p.id,
@@ -160,7 +160,7 @@ export function normalizeSlots(sorted: ForgedPlugin[]): NormalizedSlot[] {
   return allSlots;
 }
 
-export function sortSlots(slots: NormalizedSlot[]): NormalizedSlot[] {
+function sortSlots(slots: NormalizedSlot[]): NormalizedSlot[] {
   const slotGraphNodes: GraphNode[] = slots.map((s) => ({
     id: s.id,
     dependsOn: s.dependsOn,
@@ -174,7 +174,7 @@ export function sortSlots(slots: NormalizedSlot[]): NormalizedSlot[] {
   }
 }
 
-export function buildLayers(
+function buildLayers(
   slots: NormalizedSlot[],
   options: {
     config: Record<string, unknown>;

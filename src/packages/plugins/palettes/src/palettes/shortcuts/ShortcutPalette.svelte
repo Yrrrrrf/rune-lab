@@ -1,7 +1,8 @@
 <script lang="ts">
 import { getAppStore } from "@rune-lab/svelte";
 import { onMount, tick } from "svelte";
-import { getShortcutStore } from "../../plugin.ts";
+import { getShortcutStore } from "../../accessors.ts";
+import { sortScopes } from "../../shortcuts/grouping.ts";
 import type { ShortcutEntry } from "../../types.ts";
 
 const appStore = getAppStore();
@@ -40,15 +41,7 @@ const typedGroups = $derived(
 );
 
 const sortedScopes = $derived(
-  query
-    ? Object.keys(groups).sort((a, b) => {
-      if (a === "global") return -1;
-      if (b === "global") return 1;
-      if (a === "layout") return -1;
-      if (b === "layout") return 1;
-      return a.localeCompare(b);
-    })
-    : shortcutStore.sortedScopes,
+  query ? sortScopes(Object.keys(groups)) : shortcutStore.sortedScopes,
 );
 
 onMount(() => {

@@ -1,6 +1,5 @@
 import type { ConfigStore, ForgedPlugin, SlotSpec } from "@rune-lab/core";
 import { definePlugin, defineSlot } from "@rune-lab/core";
-import { createPluginKit } from "@rune-lab/svelte";
 import { Schema } from "effect";
 import { createLanguageStore, type Language } from "./lang/store.svelte.ts";
 import {
@@ -78,8 +77,6 @@ const i18nPluginSpec = definePlugin({
   settings: i18nSettings,
 });
 
-const kit = createPluginKit(i18nPluginSpec);
-
 type I18nSlots = {
   language: SlotSpec<
     { readonly defaultLanguage?: string; readonly locales?: readonly string[] },
@@ -105,13 +102,5 @@ type I18nSlots = {
   >;
 };
 
-export const I18nPlugin: ForgedPlugin<"rune-lab.i18n", I18nSlots> = kit.plugin;
-
-export const getLanguageStore: () => ConfigStore<Language, "code"> =
-  kit.accessors.getLanguageStore;
-
-export const getCurrencyStore: () => CurrencyStore =
-  kit.accessors.getCurrencyStore;
-
-export const getExchangeRateStore: () => ExchangeRateStore =
-  kit.accessors.getExchangeRateStore;
+export const I18nPlugin: ForgedPlugin<"rune-lab.i18n", I18nSlots> =
+  i18nPluginSpec;

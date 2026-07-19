@@ -2,7 +2,7 @@ import {
   getCurrencyStore,
   getExchangeRateStore,
   getLanguageStore,
-} from "../../plugin.ts";
+} from "../../accessors.ts";
 import type { Dinero, ISO4217Code } from "../primitives/money.ts";
 import {
   addMoney,

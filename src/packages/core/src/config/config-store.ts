@@ -111,9 +111,3 @@ export class ConfigStoreImpl<T, K extends keyof T> {
     }
   }
 }
-
-export function createConfigStore<T, K extends keyof T>(
-  options: ConfigStoreOptions<T, K>,
-): ConfigStore<T, K> {
-  return new ConfigStoreImpl(options) as unknown as ConfigStore<T, K>;
-}

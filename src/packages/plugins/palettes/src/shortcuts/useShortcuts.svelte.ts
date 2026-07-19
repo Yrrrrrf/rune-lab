@@ -2,7 +2,7 @@
 // Declarative shortcut registration with automatic lifecycle cleanup.
 // Bridges ShortcutConfig (sdk/core) → ShortcutStore (sdk/state).
 
-import { getShortcutStore } from "../plugin.ts";
+import { getShortcutStore } from "../accessors.ts";
 import type { ShortcutConfig, ShortcutEntry } from "./types.ts";
 
 /**

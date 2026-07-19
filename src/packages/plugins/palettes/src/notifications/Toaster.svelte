@@ -1,6 +1,6 @@
 <script lang="ts">
 import { portal } from "@rune-lab/svelte";
-import { getToastStore } from "../plugin.ts";
+import { getToastStore } from "../accessors.ts";
 
 const toastStore = getToastStore();
 

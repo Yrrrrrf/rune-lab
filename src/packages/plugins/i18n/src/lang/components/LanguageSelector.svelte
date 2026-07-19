@@ -1,6 +1,6 @@
 <script lang="ts">
 import { ResourceSelector } from "@rune-lab/layout";
-import { getLanguageStore } from "../../mod.ts";
+import { getLanguageStore } from "../../accessors.ts";
 import { getLanguageName } from "../store.svelte.ts";
 
 const languageStore = getLanguageStore();

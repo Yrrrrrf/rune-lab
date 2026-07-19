@@ -1,7 +1,7 @@
 <script lang="ts">
 import { getLayoutStore, RichText, Text } from "rune-lab/layout";
 import { getRegistryStore, getToastStore } from "rune-lab/palettes";
-import PretextPlayground from "$lib/PretextPlayground.svelte";
+import PretextPlayground from "../lib/PretextPlayground.svelte";
 
 const layout = getLayoutStore();
 const registry = getRegistryStore();

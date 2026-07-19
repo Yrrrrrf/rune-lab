@@ -1,3 +1,13 @@
+# Plugins shipped in the published rune-lab package (core + ui always ship).
+# NOTE: plugins depend on each other (i18n & palettes use layout, observer
+# uses palettes) - prune with care.
+#   layout   - workspace layout + pretext text engine
+#   palettes - commands / shortcuts / notifications / settings wiring
+#   i18n     - languages + currencies engine
+#   observer - meta-dev tool panel
+#   explorer - (future) api explorer
+BUILD_PLUGINS := "layout palettes i18n observer"
+
 [doc('Build the rune-lab package: deno.json -> build/{dist, package.json, README, LICENSE}')]
 [group('Build')]
 build:

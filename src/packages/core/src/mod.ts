@@ -16,6 +16,7 @@ export {
 export type { SlotContext, SlotSpec } from "./forge/define-slot.ts";
 export { defineSlot } from "./forge/define-slot.ts";
 export type { PersistenceHandle, SlotDescriptor } from "./forge/descriptors.ts";
+export { getContextSymbol } from "./forge/descriptors.ts";
 export { createKernel, type Kernel } from "./kernel/kernel.ts";
 export type { LocaleAdapter } from "./ports/locale.ts";
 export {

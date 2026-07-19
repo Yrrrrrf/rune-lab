@@ -1,6 +1,6 @@
 import type { SettingsSection } from "@rune-lab/svelte";
 
-export function fuzzyScore(query: string, text: string): number {
+function fuzzyScore(query: string, text: string): number {
   const q = query.toLowerCase();
   const t = text.toLowerCase();
   if (!q) return 0;

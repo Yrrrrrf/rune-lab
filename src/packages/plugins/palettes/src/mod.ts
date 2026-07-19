@@ -7,8 +7,8 @@ export {
   getRegistryStore,
   getShortcutStore,
   getToastStore,
-  PalettesPlugin,
-} from "./plugin.ts";
+} from "./accessors.ts";
+export { PalettesPlugin } from "./plugin.ts";
 export * from "./registry/registry.svelte.ts";
 export { default as SettingsModal } from "./SettingsModal.svelte";
 export * from "./shortcuts/mod.ts";

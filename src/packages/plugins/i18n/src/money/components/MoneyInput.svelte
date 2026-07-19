@@ -17,7 +17,7 @@ export interface MoneyInputProps {
 </script>
 
 <script lang="ts">
-import { getCurrencyStore } from "../../mod.ts";
+import { getCurrencyStore } from "../../accessors.ts";
 import { toMinorUnit } from "../primitives/money.ts";
 import { DEV } from "esm-env";
 

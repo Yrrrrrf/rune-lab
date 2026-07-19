@@ -1,5 +1,6 @@
 <script lang="ts">
-import { getShortcutStore } from "../plugin.ts";
+import { getShortcutStore } from "../accessors.ts";
+import { groupByScopeAndCategory } from "./grouping.ts";
 
 const shortcutStore = getShortcutStore();
 
@@ -19,20 +20,7 @@ const filteredEntries = $derived.by(() => {
   );
 });
 
-const groupedEntries = $derived.by(() => {
-  const groups: Record<
-    string,
-    Record<string, typeof shortcutStore.entries>
-  > = {};
-  for (const entry of filteredEntries) {
-    const scope = entry.scope ?? "global";
-    const category = entry.category ?? "General";
-    if (!groups[scope]) groups[scope] = {};
-    if (!groups[scope][category]) groups[scope][category] = [];
-    groups[scope][category].push(entry);
-  }
-  return groups;
-});
+const groupedEntries = $derived(groupByScopeAndCategory(filteredEntries));
 
 function startRecording(id: string) {
   recordingId = id;

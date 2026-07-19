@@ -48,12 +48,3 @@ export class StateCell<T> {
     return this.ref.changes;
   }
 }
-
-export function defineCell<T>(
-  initialValue: T,
-): Effect.Effect<StateCell<T>, never, never> {
-  return Effect.gen(function* () {
-    const ref = yield* SubscriptionRef.make(initialValue);
-    return new StateCell(ref);
-  });
-}

@@ -167,7 +167,7 @@ function extractInitialContributions(
   return contributions;
 }
 
-export function registerContributionLifecycle(
+function registerContributionLifecycle(
   cells: Record<string, StateCell<unknown>>,
   key: string,
   item: unknown,
@@ -183,7 +183,7 @@ export function registerContributionLifecycle(
   contributionsCell.set(registry);
 }
 
-export function unregisterContributionLifecycle(
+function unregisterContributionLifecycle(
   cells: Record<string, StateCell<unknown>>,
   key: string,
   id: string,

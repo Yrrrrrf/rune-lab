@@ -29,17 +29,3 @@ export function defineSlot<TConfig, TStore, TEncoded = TConfig>(
 ): SlotSpec<TConfig, TStore, TEncoded> {
   return spec;
 }
-
-export const SlotSpecSchema = Schema.Struct({
-  create: Schema.declare(
-    (input): input is (...args: unknown[]) => unknown =>
-      typeof input === "function",
-    { identifier: "Function" },
-  ),
-  config: Schema.optional(Schema.Any),
-  persist: Schema.optional(
-    Schema.Union(Schema.Boolean, Schema.Array(Schema.String)),
-  ),
-  dependsOn: Schema.optional(Schema.Array(Schema.String)),
-  expose: Schema.optional(Schema.Boolean),
-});
