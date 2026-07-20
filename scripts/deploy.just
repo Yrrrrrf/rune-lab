@@ -22,29 +22,23 @@ build:
     -biome check --fix ./build
     @echo "✓ build done"
 
-[doc('Publish build/ to npm using brave as default browser')]
-[group('Deploy')]
+[private]
 [script('nu')]
 [working-directory('build')]
-publish:
-    let d = (mktemp -d | str trim)
-    '#!/bin/sh
-    exec brave "$@"' | save -f $"($d)/xdg-open"
+_with-brave +cmd:
+    let d = (mktemp -d)
+    "#!/usr/bin/env nu\ndef main [...args] { exec brave ...$args }" | save -f $"($d)/xdg-open"
     chmod +x $"($d)/xdg-open"
-    with-env { PATH: ($env.PATH | prepend $d) } { bun publish }
-    print "✓ deploy done"
+    with-env { PATH: ($env.PATH | prepend $d) } { {{ cmd }} }
+    print "✓ {{ cmd }} done"
 
 [doc('Publish build/ to npm using brave as default browser')]
 [group('Deploy')]
-[script('nu')]
-[working-directory('build')]
-login:
-    let d = (mktemp -d | str trim)
-    '#!/bin/sh
-    exec brave "$@"' | save -f $"($d)/xdg-open"
-    chmod +x $"($d)/xdg-open"
-    with-env { PATH: ($env.PATH | prepend $d) } { bunx npm login }
-    print "✓ deploy done"
+publish: (_with-brave "bun publish")
+
+[doc('npm login using brave as default browser')]
+[group('Deploy')]
+login: (_with-brave "bunx npm login")
 
 [doc('Inject the built pkg (build/) into lab for local testing')]
 [group('Deploy')]
