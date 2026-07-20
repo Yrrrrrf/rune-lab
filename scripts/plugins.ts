@@ -13,6 +13,6 @@ export type PluginName = (typeof PLUGINS)[number];
 export const PLUGIN_DEPS: Record<PluginName, readonly PluginName[]> = {
   layout: [],
   palettes: ["layout"],
-  i18n: ["layout"],
+  i18n: [],
   observer: ["palettes"],
 } as const;
