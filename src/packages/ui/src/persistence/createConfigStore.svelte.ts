@@ -1,9 +1,9 @@
-import type { PersistenceDriver } from "@rune-lab/core";
+import type { PersistenceDriver } from "rune-lab/core";
 import {
   type ConfigStore,
   ConfigStoreImpl as VanillaConfigStoreImpl,
   type ConfigStoreOptions,
-} from "@rune-lab/core";
+} from "rune-lab/core";
 
 class ReactiveConfigStoreImpl<T, K extends keyof T>
   implements ConfigStore<T, K> {

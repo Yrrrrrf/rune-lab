@@ -1,4 +1,4 @@
-import type { SettingsSection } from "@rune-lab/svelte";
+import type { SettingsSection } from "rune-lab";
 
 function fuzzyScore(query: string, text: string): number {
   const q = query.toLowerCase();

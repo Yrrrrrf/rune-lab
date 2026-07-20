@@ -1,5 +1,5 @@
 <script lang="ts">
-import { portal } from "@rune-lab/svelte";
+import { portal } from "rune-lab";
 import { getToastStore } from "../accessors.ts";
 
 const toastStore = getToastStore();

@@ -1,10 +1,10 @@
+import { Effect, SubscriptionRef } from "effect";
 import {
   createInMemoryDriver,
   createKernel,
   definePlugin,
   StateCell,
-} from "@rune-lab/core";
-import { Effect, SubscriptionRef } from "effect";
+} from "rune-lab/core";
 import { describe, expect, it } from "vite-plus/test";
 import { useCell } from "./reactivity/use-cell.svelte.ts";
 

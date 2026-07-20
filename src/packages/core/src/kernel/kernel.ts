@@ -1,7 +1,10 @@
 import { Context, Effect, Option } from "effect";
 import type { StateCell } from "../cells/define-cell.ts";
+import {
+  type ContributionKey,
+  settingsSections,
+} from "../forge/define-contribution.ts";
 import type { ForgedPlugin, PluginInput } from "../forge/define-plugin.ts";
-
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceDriver } from "../ports/persistence.ts";
 import type { TextMeasurer } from "../ports/text.ts";
@@ -17,9 +20,13 @@ export interface Kernel<TCells = Record<string, unknown>> {
   subscribe(cellName: keyof TCells, listener: () => void): () => void;
   getCellVersion(cellName: keyof TCells): number;
 
-  getContributions(key: string): unknown[];
-  registerContribution(key: string, item: unknown): void;
-  unregisterContribution(key: string, id: string): void;
+  getContributions<T>(key: ContributionKey<T>): T[];
+  registerContribution<T>(key: ContributionKey<T>, item: T): void;
+  unregisterContribution<T>(key: ContributionKey<T>, id: string): void;
+  registerStore<T>(
+    key: ContributionKey<T>,
+    store: { register(item: T): void },
+  ): void;
 
   getStoreEntry(
     id: string,
@@ -50,15 +57,20 @@ export function createKernel<TCells = Record<string, unknown>>(
   const overlays = extractOverlays(resolvedPlugins);
   const initialContributions = extractInitialContributions(resolvedPlugins);
 
-  // Auto-register declarative contributions to matching stores
+  const registeredStores = new Map<
+    ContributionKey<unknown>,
+    { register(item: unknown): void }
+  >();
+
+  // Auto-register declarative contributions to matching stores by string ID matching (fallback)
   for (const plugin of resolvedPlugins) {
     if (plugin.contributions) {
-      for (const [key, items] of Object.entries(plugin.contributions)) {
-        const store = stores.get(key) as
+      for (const entry of plugin.contributions) {
+        const store = stores.get(entry.key.id) as
           | { register(item: unknown): void }
           | undefined;
         if (store && typeof store.register === "function") {
-          items.forEach((item) => store.register(item));
+          entry.items.forEach((item) => store.register(item));
         }
       }
     }
@@ -107,14 +119,32 @@ export function createKernel<TCells = Record<string, unknown>>(
       const cell = getCell(cellName as string);
       return cell.getVersion();
     },
-    getContributions: (key) => {
-      const registry = cells.contributions.get() as Record<string, unknown[]>;
-      return registry[key] ?? [];
+    getContributions: <T>(key: ContributionKey<T>): T[] => {
+      const registry = cells.contributions.get() as Map<
+        ContributionKey<unknown>,
+        unknown[]
+      >;
+      return (registry.get(key) ?? []) as T[];
     },
-    registerContribution: (key, item) =>
-      registerContributionLifecycle(cells, key, item),
-    unregisterContribution: (key, id) =>
+    registerContribution: <T>(key: ContributionKey<T>, item: T) => {
+      registerContributionLifecycle(cells, key, item);
+      const store = registeredStores.get(key);
+      if (store) {
+        store.register(item);
+      }
+    },
+    unregisterContribution: <T>(key: ContributionKey<T>, id: string) =>
       unregisterContributionLifecycle(cells, key, id),
+    registerStore: <T>(
+      key: ContributionKey<T>,
+      store: { register(item: T): void },
+    ) => {
+      registeredStores.set(key, store as { register(item: unknown): void });
+      const items = (
+        cells.contributions.get() as Map<ContributionKey<unknown>, unknown[]>
+      ).get(key) ?? [];
+      items.forEach((item) => store.register(item as T));
+    },
     getStoreEntry: (id) => slotMap.get(id),
     dispose: () => runtime.dispose(),
   };
@@ -147,57 +177,61 @@ function extractOverlays(plugins: ForgedPlugin[]): unknown[] {
 
 function extractInitialContributions(
   plugins: ForgedPlugin[],
-): Record<string, unknown[]> {
-  const contributions: Record<string, unknown[]> = {};
+): Map<ContributionKey<unknown>, unknown[]> {
+  const contributions = new Map<ContributionKey<unknown>, unknown[]>();
   for (const plugin of plugins) {
     if (plugin.contributions) {
-      for (const [key, items] of Object.entries(plugin.contributions)) {
-        if (!contributions[key]) contributions[key] = [];
-        contributions[key].push(...(items as unknown[]));
+      for (const entry of plugin.contributions) {
+        if (!contributions.has(entry.key)) {
+          contributions.set(entry.key, []);
+        }
+        contributions.get(entry.key)!.push(...entry.items);
       }
     }
     // Automatically register settings schemas as contributions to "settingsSections"
     if (plugin.settings) {
-      if (!contributions["settingsSections"]) {
-        contributions["settingsSections"] = [];
+      if (!contributions.has(settingsSections)) {
+        contributions.set(settingsSections, []);
       }
-      contributions["settingsSections"].push(plugin.settings);
+      contributions.get(settingsSections)!.push(plugin.settings);
     }
   }
   return contributions;
 }
 
-function registerContributionLifecycle(
+function registerContributionLifecycle<T>(
   cells: Record<string, StateCell<unknown>>,
-  key: string,
-  item: unknown,
+  key: ContributionKey<T>,
+  item: T,
 ): void {
-  const contributionsCell = cells.contributions;
+  const contributionsCell = cells.contributions as StateCell<
+    Map<ContributionKey<unknown>, unknown[]>
+  >;
   if (!contributionsCell) return;
-  const registry = {
-    ...(contributionsCell.get() as Record<string, unknown[]>),
-  };
-  const list = registry[key] ? [...registry[key]] : [];
+  const registry = new Map(contributionsCell.get());
+  const list = registry.get(key) ? [...registry.get(key)!] : [];
   list.push(item);
-  registry[key] = list;
+  registry.set(key, list);
   contributionsCell.set(registry);
 }
 
-function unregisterContributionLifecycle(
+function unregisterContributionLifecycle<T>(
   cells: Record<string, StateCell<unknown>>,
-  key: string,
+  key: ContributionKey<T>,
   id: string,
 ): void {
-  const contributionsCell = cells.contributions;
+  const contributionsCell = cells.contributions as StateCell<
+    Map<ContributionKey<unknown>, unknown[]>
+  >;
   if (!contributionsCell) return;
-  const registry = {
-    ...(contributionsCell.get() as Record<string, unknown[]>),
-  };
-  if (registry[key]) {
-    registry[key] = registry[key].filter((item) => {
+  const registry = new Map(contributionsCell.get());
+  const list = registry.get(key);
+  if (list) {
+    const filtered = list.filter((item: unknown) => {
       const obj = item as Record<string, unknown>;
       return !obj || obj.id !== id;
     });
+    registry.set(key, filtered);
     contributionsCell.set(registry);
   }
 }

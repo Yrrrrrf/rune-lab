@@ -1,4 +1,4 @@
-import type { PersistenceDriver } from "@rune-lab/core";
+import type { PersistenceDriver } from "rune-lab/core";
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "../provider/context.ts";
 

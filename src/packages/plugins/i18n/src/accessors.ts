@@ -1,6 +1,6 @@
-import type { ConfigStore } from "@rune-lab/core";
-import { getContextSymbol } from "@rune-lab/core";
-import { createAccessor } from "@rune-lab/svelte";
+import { createAccessor } from "rune-lab";
+import type { ConfigStore } from "rune-lab/core";
+import { getContextSymbol } from "rune-lab/core";
 import type { Language } from "./lang/store.svelte.ts";
 import type { CurrencyStore, ExchangeRateStore } from "./money/mod.ts";
 

@@ -1,5 +1,5 @@
-import type { Kernel } from "@rune-lab/core";
 import { BROWSER } from "esm-env";
+import type { Kernel } from "rune-lab/core";
 import { createSubscriber } from "svelte/reactivity";
 import { getKernel } from "../provider/context.ts";
 

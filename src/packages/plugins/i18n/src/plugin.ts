@@ -1,6 +1,6 @@
-import type { ConfigStore, ForgedPlugin, SlotSpec } from "@rune-lab/core";
-import { definePlugin, defineSlot } from "@rune-lab/core";
 import { Schema } from "effect";
+import type { ConfigStore, ForgedPlugin, SlotSpec } from "rune-lab/core";
+import { definePlugin, defineSlot } from "rune-lab/core";
 import { createLanguageStore, type Language } from "./lang/store.svelte.ts";
 import {
   createCurrencyStore,

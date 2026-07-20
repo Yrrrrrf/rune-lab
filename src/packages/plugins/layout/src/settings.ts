@@ -1,5 +1,5 @@
-import type { SettingsSchema } from "@rune-lab/core";
-import { defineSettings } from "@rune-lab/core";
+import type { SettingsSchema } from "rune-lab/core";
+import { defineSettings } from "rune-lab/core";
 
 export const layoutSettings: SettingsSchema = defineSettings({
   id: "general",

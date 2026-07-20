@@ -3,8 +3,8 @@ import type {
 	LocaleAdapter,
 	PersistenceDriver,
 	PluginInput,
-} from "@rune-lab/core";
-import { createKernel, namespaced } from "@rune-lab/core";
+} from "rune-lab/core";
+import { createKernel, namespaced, settingsSections } from "rune-lab/core";
 import { type Component, type Snippet, setContext, untrack } from "svelte";
 import {
 	cookieDriver,
@@ -90,7 +90,7 @@ for (const [id, store] of kernel.stores) {
 setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
 setContext(
 	RUNE_LAB_CONTEXT.settingsSections,
-	kernel.getContributions("settingsSections"),
+	kernel.getContributions(settingsSections),
 );
 
 // 3. Collect all overlays

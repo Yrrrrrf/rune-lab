@@ -1,4 +1,4 @@
-import type { SlotContext } from "@rune-lab/core";
+import type { SlotContext } from "rune-lab/core";
 import { describe, expect, it } from "vite-plus/test";
 import { createCurrencyStore, type CurrencyConfig } from "./currency.svelte.ts";
 

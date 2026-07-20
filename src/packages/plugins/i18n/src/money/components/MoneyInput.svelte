@@ -17,9 +17,9 @@ export interface MoneyInputProps {
 </script>
 
 <script lang="ts">
+import { DEV } from "esm-env";
 import { getCurrencyStore } from "../../accessors.ts";
 import { toMinorUnit } from "../primitives/money.ts";
-import { DEV } from "esm-env";
 
 let {
   amount = $bindable(0),
@@ -80,14 +80,14 @@ const displayValue = $derived.by(() => {
     );
 
     if (decimals === 0) return String(Math.round(convertedMinor));
-    return (convertedMinor / Math.pow(10, decimals)).toFixed(decimals);
+    return (convertedMinor / 10 ** decimals).toFixed(decimals);
   }
 
   if (unit === "major") {
     return Number(val).toFixed(decimals);
   }
   if (decimals === 0) return String(val);
-  const divisor = Math.pow(10, decimals);
+  const divisor = 10 ** decimals;
   return (Number(val) / divisor).toFixed(decimals);
 });
 
@@ -143,7 +143,7 @@ function handleInput(e: Event) {
   }
 
   if (unit === "major") {
-    const majorValue = finalStorageCents / Math.pow(10, storageDecimals);
+    const majorValue = finalStorageCents / 10 ** storageDecimals;
     amount = majorValue;
     oninput?.(majorValue);
   } else {

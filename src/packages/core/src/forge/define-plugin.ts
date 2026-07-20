@@ -1,3 +1,4 @@
+import type { ContributionEntry } from "./define-contribution.ts";
 import type { SettingsSchema } from "./define-settings.ts";
 import type { BaseSlotSpec } from "./define-slot.ts";
 import {
@@ -15,7 +16,7 @@ export interface ForgedPlugin<
   slots: TSlots;
   settings?: SettingsSchema;
   overlays?: unknown[];
-  contributions?: Record<string, unknown[]>;
+  contributions?: ContributionEntry<unknown>[];
   descriptors: Record<keyof TSlots, SlotDescriptor>;
 }
 
@@ -35,7 +36,7 @@ export function definePlugin<
   slots?: TSlots;
   settings?: SettingsSchema;
   overlays?: unknown[];
-  contributions?: Record<string, unknown[]>;
+  contributions?: ContributionEntry<unknown>[];
 }): ForgedPlugin<TId, TSlots> {
   const slots: Record<string, BaseSlotSpec> = spec.slots ||
     ({} as Record<string, BaseSlotSpec>);

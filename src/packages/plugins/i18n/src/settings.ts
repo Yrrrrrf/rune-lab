@@ -1,5 +1,5 @@
-import type { SettingsSchema } from "@rune-lab/core";
-import { defineSettings } from "@rune-lab/core";
+import type { SettingsSchema } from "rune-lab/core";
+import { defineSettings } from "rune-lab/core";
 
 export const i18nSettings: SettingsSchema = defineSettings({
   id: "i18n",

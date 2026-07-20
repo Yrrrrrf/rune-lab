@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getSettingsSections } from "@rune-lab/svelte";
+import { getSettingsSections } from "rune-lab";
 import { onMount } from "svelte";
 import {
   getCommandStore,

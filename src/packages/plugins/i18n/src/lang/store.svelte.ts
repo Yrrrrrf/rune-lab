@@ -1,5 +1,5 @@
-import type { ConfigStore, SlotContext } from "@rune-lab/core";
-import { createConfigStore } from "@rune-lab/svelte";
+import { createConfigStore } from "rune-lab";
+import type { ConfigStore, SlotContext } from "rune-lab/core";
 import { createMessageResolver } from "./message-resolver.ts";
 import { m } from "./messages.ts";
 

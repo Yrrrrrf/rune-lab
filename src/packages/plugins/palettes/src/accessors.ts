@@ -1,5 +1,5 @@
-import { getContextSymbol } from "@rune-lab/core";
-import { createAccessor } from "@rune-lab/svelte";
+import { createAccessor } from "rune-lab";
+import { getContextSymbol } from "rune-lab/core";
 import type { CommandStore } from "./commands/store.svelte.ts";
 import type { ToastStore } from "./notifications/store.svelte.ts";
 import type { PaletteRegistryStore } from "./registry/registry.svelte.ts";

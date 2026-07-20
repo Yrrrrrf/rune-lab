@@ -1,4 +1,4 @@
-import type { BaseSlotSpec, ForgedPlugin } from "@rune-lab/core";
+import type { BaseSlotSpec, ForgedPlugin } from "rune-lab/core";
 import { createAccessor } from "../provider/context.ts";
 
 export function createPluginKit<

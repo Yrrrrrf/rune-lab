@@ -17,7 +17,7 @@ import type {
   RichInlineLineRange,
   RichInlineStats,
   TextMeasurer,
-} from "@rune-lab/core";
+} from "rune-lab/core";
 
 // Brand boundary. Core's opaque handles and pretext's are structurally identical
 // except for the brand symbol: pretext's is required, core's is optional. So

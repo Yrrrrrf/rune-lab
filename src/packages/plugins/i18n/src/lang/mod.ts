@@ -1,4 +1,4 @@
-import type { LocaleAdapter } from "@rune-lab/core";
+import type { LocaleAdapter } from "rune-lab/core";
 
 interface ParaglideRuntime {
   languageTag?(): string;

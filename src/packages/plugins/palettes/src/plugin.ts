@@ -1,5 +1,10 @@
-import type { ForgedPlugin, SlotSpec } from "@rune-lab/core";
-import { definePlugin, defineSlot } from "@rune-lab/core";
+import type { ForgedPlugin, SlotSpec } from "rune-lab/core";
+import {
+  contribute,
+  definePlugin,
+  defineSlot,
+  settingsSections,
+} from "rune-lab/core";
 import type { CommandStore } from "./commands/store.svelte.ts";
 import { createCommandStore } from "./commands/store.svelte.ts";
 import PaletteHost from "./host/PaletteHost.svelte";
@@ -65,15 +70,13 @@ export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
         expose: true,
       }),
     },
-    contributions: {
-      settingsSections: [
-        {
-          id: "shortcuts",
-          label: "Shortcuts",
-          icon: "keyboard",
-          component: ShortcutSettings,
-        },
-      ],
-    },
+    contributions: [
+      contribute(settingsSections, {
+        id: "shortcuts",
+        label: "Shortcuts",
+        icon: "keyboard",
+        component: ShortcutSettings,
+      }),
+    ],
     overlays: [PaletteHost, Toaster],
   });

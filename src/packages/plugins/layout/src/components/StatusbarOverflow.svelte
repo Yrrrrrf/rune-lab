@@ -7,9 +7,10 @@ export interface StatusbarItem {
 }
 </script>
 <script lang="ts">
-import { getTextStore } from "../plugin.ts";
-import { getKernel } from "@rune-lab/svelte";
+import { getKernel } from "rune-lab";
 import { onMount } from "svelte";
+import { statusbar } from "../contributions.ts";
+import { getTextStore } from "../plugin.ts";
 import StatusbarDropdown from "./StatusbarDropdown.svelte";
 
 let { items: propsItems }: { items?: StatusbarItem[] } = $props();
@@ -18,7 +19,7 @@ const textStore = getTextStore();
 const items = $derived.by(() => {
   if (propsItems) return propsItems;
   try {
-    return getKernel().getContributions("statusbar") as StatusbarItem[];
+    return getKernel().getContributions(statusbar);
   } catch {
     return [];
   }

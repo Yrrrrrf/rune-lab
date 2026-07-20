@@ -1,6 +1,6 @@
 <script lang="ts">
-import { getCommandStore, getShortcutStore } from "@rune-lab/palettes";
-import { getSettingsSections } from "@rune-lab/svelte";
+import { getSettingsSections } from "rune-lab";
+import { getCommandStore, getShortcutStore } from "rune-lab/palettes";
 
 const shortcutStore = getShortcutStore();
 const commandStore = getCommandStore();

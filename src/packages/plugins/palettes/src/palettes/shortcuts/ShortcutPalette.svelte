@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getAppStore } from "@rune-lab/svelte";
+import { getAppStore } from "rune-lab";
 import { onMount, tick } from "svelte";
 import { getShortcutStore } from "../../accessors.ts";
 import { sortScopes } from "../../shortcuts/grouping.ts";

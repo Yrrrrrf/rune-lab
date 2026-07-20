@@ -5,11 +5,11 @@ import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceDriver } from "../ports/persistence.ts";
 
 const PersistenceDriverTag = Context.GenericTag<PersistenceDriver>(
-  "@rune-lab/core/PersistenceDriver",
+  "rune-lab/core/PersistenceDriver",
 );
 
 const LocaleAdapterTag = Context.GenericTag<LocaleAdapter>(
-  "@rune-lab/core/LocaleAdapter",
+  "rune-lab/core/LocaleAdapter",
 );
 
 export interface StateCells {
@@ -17,7 +17,7 @@ export interface StateCells {
 }
 
 export const StateCellsTag = Context.GenericTag<StateCells>(
-  "@rune-lab/core/StateCells",
+  "rune-lab/core/StateCells",
 );
 
 export const makePersistenceLayer = (driver: PersistenceDriver) =>

@@ -49,13 +49,6 @@ def patch-file [file: path, version: string]: nothing -> record {
   let original = (open --raw $file)
   let rewritten = ($original
     | str replace --all --regex $ts_import_re '$1$2.js$3'
-    | str replace --all --regex "@rune-lab/core(\\b|/|$)" 'rune-lab/core$1'
-    | str replace --all --regex "@rune-lab/layout(\\b|/|$)" 'rune-lab/layout$1'
-    | str replace --all --regex "@rune-lab/palettes(\\b|/|$)" 'rune-lab/palettes$1'
-    | str replace --all --regex "@rune-lab/observer(\\b|/|$)" 'rune-lab/observer$1'
-    | str replace --all --regex "@rune-lab/i18n(\\b|/|$)" 'rune-lab/i18n$1'
-    | str replace --all --regex "@rune-lab/svelte(\\b|/|$)" 'rune-lab$1'
-    | str replace --all "@rune-lab" "rune-lab"
   )
 
   let patched = ($rewritten
@@ -135,6 +128,16 @@ def main [
       }
       print $"  verified export '($entry)' -> ($default_path)"
     }
+  }
+
+  # Gate: no .ts specifiers may survive in dist
+  let ts_leftovers = (
+    glob ($dist | path join "**" "*.{js,svelte}")
+    | where {|p| ($p | path type) == "file" }
+    | where {|p| (open --raw $p) =~ "(from\\s+|import\\()\\s*[\"'][^\"']+\\.ts[\"']" }
+  )
+  if ($ts_leftovers | is-not-empty) {
+    error make {msg: $"Export gate failed: .ts specifiers survive in: ($ts_leftovers | each {|p| $p | path relative-to $root } | str join ', ')"}
   }
 
   print "✓ build.nu done"

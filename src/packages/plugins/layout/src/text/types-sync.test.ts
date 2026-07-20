@@ -1,6 +1,6 @@
 import type * as pt from "@chenglou/pretext";
 import type * as ptr from "@chenglou/pretext/rich-inline";
-import type * as core from "@rune-lab/core";
+import type * as core from "rune-lab/core";
 
 type Mutual<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
 type Assert<T extends true> = T;
@@ -38,7 +38,7 @@ import {
   createInMemoryDriver,
   createKernel,
   FakeTextMeasurer,
-} from "@rune-lab/core";
+} from "rune-lab/core";
 import { expect, it } from "vite-plus/test";
 import { LayoutPlugin } from "../plugin.ts";
 import type { TextStoreFacade } from "../stores/text.svelte.ts";

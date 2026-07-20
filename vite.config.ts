@@ -27,14 +27,14 @@ const svelteProject = (
   // },
   resolve: {
     alias: {
-      "@rune-lab/core": resolve("./src/packages/core/src/mod.ts"),
-      "@rune-lab/svelte": resolve("./src/packages/ui/src/mod.ts"),
-      "@rune-lab/i18n": resolve("./src/packages/plugins/i18n/src/mod.ts"),
-      "@rune-lab/layout": resolve("./src/packages/plugins/layout/src/mod.ts"),
-      "@rune-lab/observer": resolve(
+      "rune-lab/core": resolve("./src/packages/core/src/mod.ts"),
+      "rune-lab": resolve("./src/packages/ui/src/mod.ts"),
+      "rune-lab/i18n": resolve("./src/packages/plugins/i18n/src/mod.ts"),
+      "rune-lab/layout": resolve("./src/packages/plugins/layout/src/mod.ts"),
+      "rune-lab/observer": resolve(
         "./src/packages/plugins/observer/src/mod.ts",
       ),
-      "@rune-lab/palettes": resolve(
+      "rune-lab/palettes": resolve(
         "./src/packages/plugins/palettes/src/mod.ts",
       ),
     },

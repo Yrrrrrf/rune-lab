@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-import { portal } from "@rune-lab/svelte";
+import { portal } from "rune-lab";
 import type { Snippet } from "svelte";
 
 let {

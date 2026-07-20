@@ -1,19 +1,17 @@
 <script lang="ts">
-import { ResourceSelector } from "@rune-lab/layout";
+import { ResourceSelector } from "rune-lab/layout";
 import { getLanguageStore } from "../../accessors.ts";
-import { getLanguageName } from "../store.svelte.ts";
+import { getLanguageName, type Language } from "../store.svelte.ts";
 
 const languageStore = getLanguageStore();
 
 let {
-  languages: allowedLocales = languageStore.available.map((l: any) =>
+  languages: allowedLocales = languageStore.available.map((l: Language) =>
     String(l.code)
   ),
-  current = $bindable(String(languageStore.current)),
   onchange,
 }: {
   languages?: string[];
-  current?: string;
   onchange?: (value: string) => void;
 } = $props();
 </script>
@@ -35,7 +33,6 @@ let {
       class="flex items-center gap-3 w-full"
       onclick={() => {
         languageStore.set(l.code);
-        current = l.code;
         onchange?.(l.code);
       }}
     >

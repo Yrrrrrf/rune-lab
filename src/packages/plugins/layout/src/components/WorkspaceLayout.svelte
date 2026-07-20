@@ -14,13 +14,13 @@ export interface WorkspaceLayoutProps {
 }
 </script>
 <script lang="ts">
-import { getLayoutStore } from "../plugin.ts";
 import { onMount } from "svelte";
-import WorkspaceStripZone from "./WorkspaceStripZone.svelte";
-import NavigationPanelZone from "./NavigationPanelZone.svelte";
+import { getLayoutStore } from "../plugin.ts";
 import ContentAreaZone from "./ContentAreaZone.svelte";
 import DetailPanelZone from "./DetailPanelZone.svelte";
+import NavigationPanelZone from "./NavigationPanelZone.svelte";
 import StatusbarZone from "./StatusbarZone.svelte";
+import WorkspaceStripZone from "./WorkspaceStripZone.svelte";
 
 const layoutStore = getLayoutStore();
 

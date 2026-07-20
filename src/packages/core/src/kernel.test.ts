@@ -6,6 +6,7 @@ import {
 } from "@std/assert";
 import { Schema } from "effect";
 import { createPersistedCell } from "./cells/persisted-cell.ts";
+import { contribute, defineContribution } from "./forge/define-contribution.ts";
 import { definePlugin } from "./forge/define-plugin.ts";
 import { createKernel } from "./kernel/kernel.ts";
 import { normalizeSlots, resolveSlotRef } from "./kernel/wiring.ts";
@@ -140,11 +141,15 @@ Deno.test("createPersistedCell - load and revert-on-failure", async () => {
 Deno.test("Kernel - contributions and lifecycle", async () => {
   const driver = createInMemoryDriver();
 
+  const commandsKey = defineContribution<{ id: string; label: string }>(
+    "commands",
+  );
+
   const plugin = definePlugin({
     id: "test.plugin",
-    contributions: {
-      commands: [{ id: "test-cmd", label: "Test Command" }],
-    },
+    contributions: [
+      contribute(commandsKey, { id: "test-cmd", label: "Test Command" }),
+    ],
   });
 
   const kernel = createKernel([plugin], {
@@ -153,21 +158,21 @@ Deno.test("Kernel - contributions and lifecycle", async () => {
   });
 
   // Verify declarative contributions
-  let commands = kernel.getContributions("commands");
+  let commands = kernel.getContributions(commandsKey);
   assertEquals(commands.length, 1);
   assertEquals((commands[0] as { id: string }).id, "test-cmd");
 
   // Verify imperative mutations
-  kernel.registerContribution("commands", {
+  kernel.registerContribution(commandsKey, {
     id: "imp-cmd",
     label: "Imperative",
   });
-  commands = kernel.getContributions("commands");
+  commands = kernel.getContributions(commandsKey);
   assertEquals(commands.length, 2);
   assertEquals((commands[1] as { id: string }).id, "imp-cmd");
 
-  kernel.unregisterContribution("commands", "imp-cmd");
-  commands = kernel.getContributions("commands");
+  kernel.unregisterContribution(commandsKey, "imp-cmd");
+  commands = kernel.getContributions(commandsKey);
   assertEquals(commands.length, 1);
 
   await kernel.dispose();

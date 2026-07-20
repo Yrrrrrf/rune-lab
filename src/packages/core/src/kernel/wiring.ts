@@ -184,7 +184,7 @@ function buildLayers(
   },
 ): Layer.Layer<unknown, never, never> {
   const cellsLayer = makeStateCellsLayer({
-    contributions: {} as Record<string, unknown[]>,
+    contributions: new Map<unknown, unknown[]>(),
   });
 
   let env = Layer.merge(

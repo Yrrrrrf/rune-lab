@@ -8,7 +8,7 @@
 // Usage: deno run -A scripts/manifest.ts <plugin> [<plugin> ...]
 //
 // core + ui always ship; plugins are opt-in via the arg list. The canonical
-// list lives in scripts/_shared.just as BUILD_PLUGINS so the build recipe and
+// list is validated against scripts/plugins.ts so the build recipe and
 // this manifest can never disagree about what's in the package.
 //
 // Run from the repo root. svelte-package fills build/dist afterwards.
@@ -22,7 +22,35 @@ const parseNpmSpec = (spec: string): { name: string; range: string } => {
   return { name: m[1], range: m[2] ?? "*" };
 };
 
-const plugins = Deno.args;
+import { PLUGIN_DEPS, type PluginName, PLUGINS } from "./plugins.ts";
+
+const plugins = Deno.args as PluginName[];
+
+// 1. Check for unknown plugins
+for (const p of plugins) {
+  if (!PLUGINS.includes(p)) {
+    console.error(
+      `Error: Unknown plugin "${p}". Expected one of: ${PLUGINS.join(", ")}`,
+    );
+    Deno.exit(1);
+  }
+}
+
+// 2. Validate dependency closure
+for (const p of plugins) {
+  const deps = PLUGIN_DEPS[p];
+  const missing = deps.filter((d) => !plugins.includes(d));
+  if (missing.length > 0) {
+    console.error(
+      `Error: Plugin "${p}" is missing required dependencies: ${
+        missing.join(
+          ", ",
+        )
+      }`,
+    );
+    Deno.exit(1);
+  }
+}
 
 const root = JSON.parse(await Deno.readTextFile("deno.json"));
 
@@ -66,7 +94,10 @@ for (const pkgPath of packages) {
   for (const [_, val] of Object.entries(imports)) {
     if (typeof val === "string" && val.startsWith("npm:")) {
       const { name, range } = parseNpmSpec(val);
-      if (!DEV_DEPS.has(name) && !name.startsWith("@rune-lab/")) {
+      if (
+        !DEV_DEPS.has(name) &&
+        !(name === "rune-lab" || name.startsWith("rune-lab/"))
+      ) {
         dependencies[name] = range;
       }
     }

@@ -1,5 +1,5 @@
-import type { ForgedPlugin } from "@rune-lab/core";
-import { definePlugin } from "@rune-lab/core";
+import type { ForgedPlugin } from "rune-lab/core";
+import { contribute, definePlugin, settingsSections } from "rune-lab/core";
 import CapabilitiesSettings from "./CapabilitiesSettings.svelte";
 import ObserverPanel from "./ObserverPanel.svelte";
 
@@ -12,16 +12,14 @@ export const ObserverPlugin: ForgedPlugin<
   Record<never, never>
 > = definePlugin({
   id: "rune-lab.observer",
-  contributions: {
-    settingsSections: [
-      {
-        id: "capabilities",
-        label: "Capabilities",
-        icon: "🔬",
-        component: CapabilitiesSettings,
-      },
-    ],
-  },
+  contributions: [
+    contribute(settingsSections, {
+      id: "capabilities",
+      label: "Capabilities",
+      icon: "🔬",
+      component: CapabilitiesSettings,
+    }),
+  ],
   overlays: [ObserverPanel],
 });
 

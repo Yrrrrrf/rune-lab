@@ -12,12 +12,12 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "paths": {
-      "@rune-lab/core": ["./packages/core/src/mod.ts"],
-      "@rune-lab/svelte": ["./packages/ui/src/mod.ts"],
-      "@rune-lab/i18n": ["./packages/plugins/i18n/src/mod.ts"],
-      "@rune-lab/layout": ["./packages/plugins/layout/src/mod.ts"],
-      "@rune-lab/observer": ["./packages/plugins/observer/src/mod.ts"],
-      "@rune-lab/palettes": ["./packages/plugins/palettes/src/mod.ts"]
+      "rune-lab/core": ["./packages/core/src/mod.ts"],
+      "rune-lab": ["./packages/ui/src/mod.ts"],
+      "rune-lab/i18n": ["./packages/plugins/i18n/src/mod.ts"],
+      "rune-lab/layout": ["./packages/plugins/layout/src/mod.ts"],
+      "rune-lab/observer": ["./packages/plugins/observer/src/mod.ts"],
+      "rune-lab/palettes": ["./packages/plugins/palettes/src/mod.ts"]
     }
   },
   "exclude": [

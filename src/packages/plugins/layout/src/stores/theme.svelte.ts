@@ -1,6 +1,6 @@
-import type { ConfigStore, SlotContext } from "@rune-lab/core";
-import { createConfigStore } from "@rune-lab/svelte";
 import { BROWSER } from "esm-env";
+import { createConfigStore } from "rune-lab";
+import type { ConfigStore, SlotContext } from "rune-lab/core";
 
 export interface Theme {
   name: string;

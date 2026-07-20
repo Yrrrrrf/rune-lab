@@ -1,5 +1,5 @@
-import type { SlotContext } from "@rune-lab/core";
-import { type ConfigStore, createConfigStore } from "@rune-lab/svelte";
+import { type ConfigStore, createConfigStore } from "rune-lab";
+import type { SlotContext } from "rune-lab/core";
 import { createMessageResolver } from "../../lang/message-resolver.ts";
 import { m } from "../../lang/messages.ts";
 import { type DineroCurrency, registerCurrency } from "../primitives/money.ts";

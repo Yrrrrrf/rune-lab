@@ -5,6 +5,14 @@ export {
   ConfigStoreImpl,
   type ConfigStoreOptions,
 } from "./config/config-store.ts";
+export {
+  contribute,
+  type ContributionEntry,
+  type ContributionKey,
+  defineContribution,
+  type SettingsSectionContribution,
+  settingsSections,
+} from "./forge/define-contribution.ts";
 // Legacy exports for backward compatibility
 export type { PluginInput } from "./forge/define-plugin.ts";
 export { definePlugin, type ForgedPlugin } from "./forge/define-plugin.ts";

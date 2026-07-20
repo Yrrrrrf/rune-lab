@@ -1,5 +1,5 @@
-import type { SlotContext, TextMeasurer } from "@rune-lab/core";
 import { BROWSER } from "esm-env";
+import type { SlotContext, TextMeasurer } from "rune-lab/core";
 import { untrack } from "svelte";
 import { PretextTextMeasurer } from "../text/adapter.ts";
 import { resolveFontShorthand } from "../text/fonts.ts";

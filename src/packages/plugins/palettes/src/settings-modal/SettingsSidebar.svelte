@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { SettingsSection } from "@rune-lab/svelte";
+import type { SettingsSection } from "rune-lab";
 
 let {
   sections,

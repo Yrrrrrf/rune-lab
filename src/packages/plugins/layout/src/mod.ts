@@ -12,12 +12,12 @@ export { default as RichText } from "./components/text/RichText.svelte";
 export { default as Text } from "./components/text/Text.svelte";
 export { default as WorkspaceLayout } from "./components/WorkspaceLayout.svelte";
 export { default as WorkspaceStrip } from "./components/WorkspaceStrip.svelte";
+export { statusbar } from "./contributions.ts";
 export {
   getLayoutStore,
   getTextStore,
   getThemeStore,
   LayoutPlugin,
 } from "./plugin.ts";
-
 export { PRESETS } from "./presets.ts";
 export * from "./types.ts";

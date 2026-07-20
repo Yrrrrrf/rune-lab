@@ -1,7 +1,7 @@
-import type { ConfigStore, ForgedPlugin, SlotSpec } from "@rune-lab/core";
-import { definePlugin, defineSlot } from "@rune-lab/core";
-import { createPluginKit } from "@rune-lab/svelte";
 import { Schema } from "effect";
+import { createPluginKit } from "rune-lab";
+import type { ConfigStore, ForgedPlugin, SlotSpec } from "rune-lab/core";
+import { definePlugin, defineSlot } from "rune-lab/core";
 import { layoutSettings } from "./settings.ts";
 import { createLayoutStore, type LayoutStore } from "./stores/layout.svelte.ts";
 import { createTextStore, type TextStoreFacade } from "./stores/text.svelte.ts";

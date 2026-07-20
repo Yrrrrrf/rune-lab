@@ -1,4 +1,4 @@
-import type { SlotContext } from "@rune-lab/core";
+import type { SlotContext } from "rune-lab/core";
 import { PRESETS } from "../presets.ts";
 import type { PresetState, WorkspaceItem } from "../types.ts";
 
@@ -21,7 +21,7 @@ export class LayoutStore {
     "overlay-anchor": { visible: true },
   });
 
-  constructor(ctx?: SlotContext<unknown>) {}
+  constructor(_ctx?: SlotContext<unknown>) {}
 
   applyPreset(presetId: string | PresetState) {
     if (typeof presetId === "string") {

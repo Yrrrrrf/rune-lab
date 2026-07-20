@@ -1,4 +1,4 @@
-export * from "@rune-lab/core";
+export * from "rune-lab/core";
 export * from "./actions/portal.ts";
 export { createPluginKit } from "./define/plugin-kit.ts";
 export * from "./persistence/createConfigStore.svelte.ts";

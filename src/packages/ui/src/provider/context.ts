@@ -1,4 +1,4 @@
-import type { Kernel, SettingsFieldSchema } from "@rune-lab/core";
+import type { Kernel, SettingsFieldSchema } from "rune-lab/core";
 import type { Component } from "svelte";
 import { getContext } from "svelte";
 

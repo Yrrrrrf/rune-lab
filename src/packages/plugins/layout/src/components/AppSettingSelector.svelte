@@ -12,8 +12,8 @@ export interface AppSettingSelectorProps<T> {
 }
 </script>
 <script lang="ts" generics="T">
-import MobileModal from "./MobileModal.svelte";
 import DesktopDropdown from "./DesktopDropdown.svelte";
+import MobileModal from "./MobileModal.svelte";
 
 let {
   options,

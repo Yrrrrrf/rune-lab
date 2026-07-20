@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { LayoutCursor, LayoutLine, PrepareOptions } from "@rune-lab/core";
+import type { LayoutCursor, LayoutLine, PrepareOptions } from "rune-lab/core";
 import { getTextStore } from "../../plugin.ts";
 import { resizeWidth } from "../../text/resize.ts";
 import TextLine from "./TextLine.svelte";

@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-import type { ConfigStore } from "@rune-lab/core";
+import type { ConfigStore } from "rune-lab/core";
 import { getContext, type Snippet } from "svelte";
 import AppSettingSelector from "./AppSettingSelector.svelte";
 
