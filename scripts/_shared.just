@@ -6,7 +6,7 @@ list:
 
 [doc('Compile an inlang project into a paraglide runtime')]
 [group('Build')]
-paraglide project outdir:
+_paraglide project outdir:
     deno run -A npm:@inlang/paraglide-js compile --project "{{ project }}" --outdir "{{ outdir }}" --emit-ts-declarations
 
 SVELTE_SHIM := justfile_directory() / "scripts/shims/package.json"

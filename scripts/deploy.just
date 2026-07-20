@@ -9,7 +9,7 @@ build:
     # * Generate build/package.json (exports & deps derived from BUILD_PLUGINS)
     deno run -A scripts/manifest.ts {{ BUILD_PLUGINS }}
     # * Compile i18n messages → paraglide runtime
-    just paraglide src/packages/plugins/i18n/src/lang/project.inlang src/packages/plugins/i18n/src/lang/paraglide
+    just _paraglide src/packages/plugins/i18n/src/lang/project.inlang src/packages/plugins/i18n/src/lang/paraglide
     # * Bundle workspace members: core + ui always, plugins from BUILD_PLUGINS
     just svelte-package ui
     just svelte-package core
@@ -22,8 +22,6 @@ build:
     -biome check --fix ./build
     @echo "✓ build done"
 
-[private]
-[script('nu')]
 [working-directory('build')]
 _with-brave +cmd:
     let d = (mktemp -d)
@@ -32,11 +30,11 @@ _with-brave +cmd:
     with-env { PATH: ($env.PATH | prepend $d) } { {{ cmd }} }
     print "✓ {{ cmd }} done"
 
-[doc('Publish build/ to npm using brave as default browser')]
+[doc('Publish build/ to npm')]
 [group('Deploy')]
 publish: (_with-brave "bun publish")
 
-[doc('npm login using brave as default browser')]
+[doc('npm login')]
 [group('Deploy')]
 login: (_with-brave "bunx npm login")
 
