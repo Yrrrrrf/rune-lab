@@ -75,7 +75,7 @@ function handleKeyDown(e: KeyboardEvent) {
   stopRecording();
 }
 
-function resetShortcut(id: string, defaultKeys: string) {
+function _resetShortcut(id: string, defaultKeys: string) {
   const original = shortcutStore.entries.find((entry) => entry.id === id);
   if (original) {
     shortcutStore.unregister(original.id);

@@ -17,7 +17,7 @@ export function bindShortcuts(shortcutStore: ShortcutStoreLike): () => void {
       for (const entry of shortcutStore.entries) {
         if (entry.enabled === false) continue;
         hotkeys(entry.keys, "all", (event) => {
-          if (entry.when && !untrack(() => entry.when!())) {
+          if (entry.when && !untrack(() => entry.when?.())) {
             return;
           }
           entry.handler(event);

@@ -78,7 +78,7 @@ export class ToastStore {
    */
   pause(id: string): void {
     const meta = this.#meta.get(id);
-    if (meta && meta.timeoutId) {
+    if (meta?.timeoutId) {
       clearTimeout(meta.timeoutId);
       const elapsed = Date.now() - meta.lastStarted;
       meta.remaining = Math.max(0, meta.remaining - elapsed);

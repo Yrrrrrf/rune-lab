@@ -111,33 +111,31 @@ describe("ConversionStrategies", () => {
     });
 
     it("direct strategy matches standalone function", () => {
-      expect(CONVERSION_STRATEGIES["direct"](100, 20)).toBe(
+      expect(CONVERSION_STRATEGIES.direct(100, 20)).toBe(
         directConversion(100, 20),
       );
     });
 
     it("inverse strategy matches standalone function", () => {
-      expect(CONVERSION_STRATEGIES["inverse"](2000, 20)).toBe(
+      expect(CONVERSION_STRATEGIES.inverse(2000, 20)).toBe(
         inverseConversion(2000, 20),
       );
     });
 
     it("triangular strategy matches standalone function", () => {
-      expect(CONVERSION_STRATEGIES["triangular"](2000, 20, 0.91)).toBe(
+      expect(CONVERSION_STRATEGIES.triangular(2000, 20, 0.91)).toBe(
         triangularConversion(2000, 20, 0.91),
       );
     });
 
     it("should be extensible", () => {
-      CONVERSION_STRATEGIES["custom"] = (
-        amount: number,
-        rate: number,
-      ): number => Math.round(amount * rate * 1.01); // 1% fee
+      CONVERSION_STRATEGIES.custom = (amount: number, rate: number): number =>
+        Math.round(amount * rate * 1.01); // 1% fee
 
-      expect(CONVERSION_STRATEGIES["custom"](100, 20)).toBe(2020);
+      expect(CONVERSION_STRATEGIES.custom(100, 20)).toBe(2020);
 
       // Clean up
-      delete CONVERSION_STRATEGIES["custom"];
+      delete CONVERSION_STRATEGIES.custom;
     });
   });
 });

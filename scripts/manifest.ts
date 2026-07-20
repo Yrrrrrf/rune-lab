@@ -126,7 +126,7 @@ const manifest = {
 await Deno.mkdir("build", { recursive: true });
 await Deno.writeTextFile(
   "build/package.json",
-  JSON.stringify(manifest, null, 2) + "\n",
+  `${JSON.stringify(manifest, null, 2)}\n`,
 );
 console.log(
   `  wrote    build/package.json (${manifest.name}@${manifest.version})`,

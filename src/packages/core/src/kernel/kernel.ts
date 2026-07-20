@@ -185,7 +185,7 @@ function extractInitialContributions(
         if (!contributions.has(entry.key)) {
           contributions.set(entry.key, []);
         }
-        contributions.get(entry.key)!.push(...entry.items);
+        contributions.get(entry.key)?.push(...entry.items);
       }
     }
     // Automatically register settings schemas as contributions to "settingsSections"
@@ -193,7 +193,7 @@ function extractInitialContributions(
       if (!contributions.has(settingsSections)) {
         contributions.set(settingsSections, []);
       }
-      contributions.get(settingsSections)!.push(plugin.settings);
+      contributions.get(settingsSections)?.push(plugin.settings);
     }
   }
   return contributions;

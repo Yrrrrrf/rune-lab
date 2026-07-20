@@ -110,7 +110,7 @@ function handleInput(e: Event) {
   const combined = decimals === 0 ? integerPart : integerPart + fractionalPart;
 
   let displayCents = parseInt(combined, 10);
-  if (isNaN(displayCents)) return;
+  if (Number.isNaN(displayCents)) return;
 
   let storageCents = displayCents;
   if (

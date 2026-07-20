@@ -80,7 +80,7 @@ export function createCurrencyStore(
   ): number {
     const target = toCode ?? String(baseStore.current);
     if (fromCode === target) return amount;
-    if (!exchangeRateStore || !exchangeRateStore.hasRates) return amount;
+    if (!exchangeRateStore?.hasRates) return amount;
 
     return exchangeRateStore.convertAmount(amount, fromCode, target);
   }

@@ -68,7 +68,7 @@ const formatted = $derived.by(() => {
   if (
     amount === null ||
     amount === undefined ||
-    (typeof amount === "number" && isNaN(amount))
+    (typeof amount === "number" && Number.isNaN(amount))
   ) {
     return fallback;
   }

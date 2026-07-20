@@ -50,7 +50,7 @@ export class TextStoreFacade {
             untrack(() => {
               // Resolve computed font styles for the theme to invalidate caches
               this.#font = resolveFontShorthand(themeName);
-              this.#engine!.clearCache();
+              this.#engine?.clearCache();
               this.#epoch++;
             });
           }

@@ -41,8 +41,8 @@ const typeDetails: Record<
 <style>
 @media (prefers-reduced-motion: reduce) {
   .toast-item {
-    animation: none !important;
-    transition: none !important;
+    animation: none;
+    transition: none;
   }
 }
 </style>

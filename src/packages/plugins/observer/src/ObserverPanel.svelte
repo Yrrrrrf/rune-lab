@@ -16,7 +16,7 @@ function loadKeys() {
 	const list: typeof keys = [];
 	for (let i = 0; i < localStorage.length; i++) {
 		const k = localStorage.key(i);
-		if (k && k.startsWith("rl:")) {
+		if (k?.startsWith("rl:")) {
 			list.push({
 				key: k,
 				value: localStorage.getItem(k),
@@ -39,7 +39,7 @@ function clearAll() {
 	const toRemove: string[] = [];
 	for (let i = 0; i < localStorage.length; i++) {
 		const k = localStorage.key(i);
-		if (k && k.startsWith("rl:")) {
+		if (k?.startsWith("rl:")) {
 			toRemove.push(k);
 		}
 	}

@@ -67,7 +67,7 @@ describe("Money Core Utilities", () => {
       const KWD = { code: "KWD", base: 10, exponent: 3 };
       registerCurrency("KWD", KWD);
 
-      expect(CURRENCY_MAP["KWD"]).toEqual(KWD);
+      expect(CURRENCY_MAP.KWD).toEqual(KWD);
 
       const money = createMoney(1000, "KWD");
       expect(toSnapshot(money).currency.code).toBe("KWD");
