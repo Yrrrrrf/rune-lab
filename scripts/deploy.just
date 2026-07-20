@@ -34,6 +34,18 @@ publish:
     with-env { PATH: ($env.PATH | prepend $d) } { bun publish }
     print "✓ deploy done"
 
+[doc('Publish build/ to npm using brave as default browser')]
+[group('Deploy')]
+[script('nu')]
+[working-directory('build')]
+login:
+    let d = (mktemp -d | str trim)
+    '#!/bin/sh
+    exec brave "$@"' | save -f $"($d)/xdg-open"
+    chmod +x $"($d)/xdg-open"
+    with-env { PATH: ($env.PATH | prepend $d) } { bunx npm login }
+    print "✓ deploy done"
+
 [doc('Inject the built pkg (build/) into lab for local testing')]
 [group('Deploy')]
 inject root=justfile_directory(): build prepare

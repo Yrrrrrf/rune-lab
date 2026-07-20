@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getLayoutStore, RichText, Text } from "rune-lab/layout";
+import { getLayoutStore, RichText, Text, ThemeSelector } from "rune-lab/layout";
 import { getRegistryStore, getToastStore } from "rune-lab/palettes";
 import PretextPlayground from "../lib/PretextPlayground.svelte";
 
@@ -38,6 +38,9 @@ const shortcuts = [
   ["ctrl+,", "settings modal (plugin default)"],
 ];
 </script>
+
+<ThemeSelector />
+<!-- <LanguageSelector /> -->
 
 <div class="p-8 flex flex-col gap-6 max-w-3xl">
   <div>
