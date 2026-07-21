@@ -3,6 +3,7 @@ import "./layout.css";
 import { RuneProvider, version } from "rune-lab";
 import { LayoutPlugin } from "rune-lab/layout";
 import { PalettesPlugin } from "rune-lab/palettes";
+import { I18nPlugin } from "rune-lab/i18n";
 import type { Snippet } from "svelte";
 import AppLayout from "./AppLayout.svelte";
 
@@ -23,7 +24,7 @@ let { children }: { children: Snippet } = $props();
     // slot the whole object above and schema validation crashes (see §0).
     "rune-lab.layout": "dark",
   }}
-  plugins={[LayoutPlugin, PalettesPlugin]}
+  plugins={[LayoutPlugin, PalettesPlugin, I18nPlugin]}
 >
   <AppLayout>
     {@render children()}

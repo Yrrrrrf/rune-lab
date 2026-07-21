@@ -1,5 +1,6 @@
 <script lang="ts">
 import { getLayoutStore, RichText, Text, ThemeSelector } from "rune-lab/layout";
+import { LanguageSelector } from "rune-lab/i18n";
 import { getRegistryStore, getToastStore } from "rune-lab/palettes";
 import PretextPlayground from "../lib/PretextPlayground.svelte";
 
@@ -17,7 +18,7 @@ const longText =
   "three lines, so on narrow widths the overflow flag below flips to true.";
 
 const richItems = [
-  { text: "Rendered by", font: "14px sans-serif" },
+  { text: "Rendered by", font: "10px sans-serif" },
   {
     text: "pretext",
     font: "bold 12px sans-serif",
@@ -26,7 +27,7 @@ const richItems = [
   },
   {
     text: "with an atomic pill that never breaks across lines.",
-    font: "14px sans-serif",
+    font: "24px sans-serif",
   },
 ];
 
@@ -40,7 +41,7 @@ const shortcuts = [
 </script>
 
 <ThemeSelector />
-<!-- <LanguageSelector /> -->
+<LanguageSelector />
 
 <div class="p-8 flex flex-col gap-6 max-w-3xl">
   <div>
@@ -71,14 +72,6 @@ const shortcuts = [
           onclick={() => registry.open("shortcuts")}>Shortcuts</button>
         <button class="btn btn-sm"
           onclick={() => registry.open("settings")}>Settings</button>
-        <button class="btn btn-sm btn-success"
-          onclick={() => toasts.success("It works! 🎉")}>
-          Toast ✓
-        </button>
-        <button class="btn btn-sm btn-error"
-          onclick={() => toasts.error("Boom 💥")}>
-          Toast ✗
-        </button>
         <button class="btn btn-sm btn-outline"
           onclick={() => layout.applyPreset("page")}>
           Preset: page
