@@ -7,11 +7,13 @@ export interface PaletteDefinition {
   provider?: () => unknown;
   renderer?: Component;
   onSelect?: (item: unknown) => void;
+  boxClass?: string;
 }
 
 export class PaletteRegistryStore {
   palettes: PaletteDefinition[] = $state([]);
   activePaletteId: string | null = $state(null);
+  activeSectionId: string = $state("general");
 
   register(palette: PaletteDefinition) {
     if (this.palettes.some((p) => p.id === palette.id)) return;
@@ -25,8 +27,15 @@ export class PaletteRegistryStore {
     }
   }
 
-  open(id: string) {
+  open(id: string, section?: string) {
     this.activePaletteId = id;
+    if (section) {
+      this.activeSectionId = section;
+    }
+  }
+
+  setSection(sectionId: string) {
+    this.activeSectionId = sectionId;
   }
 
   close() {

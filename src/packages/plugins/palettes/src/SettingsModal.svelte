@@ -1,15 +1,10 @@
 <script lang="ts">
 import { getSettingsSections } from "rune-lab";
-import { onMount } from "svelte";
 import {
   getCommandStore,
   getRegistryStore,
   getShortcutStore,
 } from "./accessors.ts";
-import {
-  syncHashToState,
-  updateHashFromState,
-} from "./settings-modal/hash-routing.ts";
 import SettingsSearchResults from "./settings-modal/SettingsSearchResults.svelte";
 import SettingsSectionContent from "./settings-modal/SettingsSectionContent.svelte";
 import SettingsSidebar from "./settings-modal/SettingsSidebar.svelte";
@@ -17,65 +12,84 @@ import {
   computeSearchResults,
   type SearchResult,
 } from "./settings-modal/search.ts";
+import { deriveModalModel } from "./settings-modal/sections.ts";
 
-const sections = getSettingsSections();
 const shortcutStore = getShortcutStore();
 const commandStore = getCommandStore();
-const registryStore = getRegistryStore();
+const registry = getRegistryStore();
 
-let activeSectionId = $state("general");
+const model = $derived(deriveModalModel(getSettingsSections()));
+const activeSectionId = $derived(registry.activeSectionId);
+
 let searchQuery = $state("");
-
-onMount(() => {
-  return syncHashToState(
-    (sec) => {
-      activeSectionId = sec;
-    },
-    () => {
-      registryStore.close();
-    },
-  );
-});
+let selectedIndex = $state(0);
 
 $effect(() => {
-  const isOpen = registryStore.activePaletteId === "settings";
-  updateHashFromState(isOpen, activeSectionId);
+  // Reset selectedIndex to 0 whenever searchQuery changes
+  const _ = searchQuery;
+  selectedIndex = 0;
 });
 
 const searchResults = $derived(
   computeSearchResults(
     searchQuery,
-    sections,
+    model.sidebar,
+    model.generalGroups,
     shortcutStore.entries,
     commandStore.commands,
   ),
 );
 
-const activeSection = $derived(
-  sections.find((s) => s.id === activeSectionId) || sections[0],
-);
+function handleResultClick(r: SearchResult) {
+  if (r.type === "section") {
+    registry.setSection(r.sectionId);
+  } else if (r.type === "field") {
+    registry.setSection("general");
+  } else if (r.type === "shortcut") {
+    registry.setSection("shortcuts");
+  } else if (r.type === "command") {
+    r.action?.();
+    registry.close();
+  }
+  searchQuery = "";
+}
 
-function handleResultClick(result: SearchResult) {
-  if (result.type === "command" && result.action) {
-    result.action();
-    registryStore.close();
-  } else {
-    activeSectionId = result.sectionId;
-    searchQuery = "";
+function handleKeyDown(e: KeyboardEvent) {
+  if (!searchQuery) return;
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    if (searchResults.length > 0) {
+      selectedIndex = (selectedIndex + 1) % searchResults.length;
+    }
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    if (searchResults.length > 0) {
+      selectedIndex = (selectedIndex - 1 + searchResults.length) %
+        searchResults.length;
+    }
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (searchResults[selectedIndex]) {
+      handleResultClick(searchResults[selectedIndex]);
+    }
   }
 }
 </script>
 
-<div class="flex flex-1 h-[80vh] overflow-hidden bg-base-100 rounded-2xl">
+<div
+  class="flex flex-1 h-[80vh] overflow-hidden bg-base-100 rounded-2xl outline-none"
+  onkeydown={handleKeyDown}
+  role="presentation"
+>
   <SettingsSidebar
-    {sections}
+    sidebar={model.sidebar}
     {activeSectionId}
     bind:searchQuery
     onSectionChange={(id) => {
-      activeSectionId = id;
+      registry.setSection(id);
       searchQuery = "";
     }}
-    onClose={() => registryStore.close()}
+    onClose={() => registry.close()}
   />
 
   <div class="flex-1 flex flex-col overflow-hidden bg-base-100">
@@ -83,10 +97,11 @@ function handleResultClick(result: SearchResult) {
       <SettingsSearchResults
         query={searchQuery}
         results={searchResults}
+        {selectedIndex}
         onResultClick={handleResultClick}
       />
     {:else}
-      <SettingsSectionContent {activeSection} />
+      <SettingsSectionContent sectionId={activeSectionId} {model} />
     {/if}
   </div>
 </div>

@@ -1,4 +1,4 @@
-import type { SettingsSection } from "rune-lab";
+import type { FieldGroup, SidebarEntry } from "./sections.ts";
 
 function fuzzyScore(query: string, text: string): number {
   const q = query.toLowerCase();
@@ -21,7 +21,7 @@ function fuzzyScore(query: string, text: string): number {
 }
 
 export interface SearchResult {
-  type: "section" | "shortcut" | "command";
+  type: "section" | "field" | "shortcut" | "command";
   title: string;
   description?: string;
   badge?: string;
@@ -32,7 +32,8 @@ export interface SearchResult {
 
 export function computeSearchResults(
   query: string,
-  sections: SettingsSection[],
+  sidebar: SidebarEntry[],
+  generalGroups: FieldGroup[],
   shortcuts: { label?: string; keys: string; category?: string }[],
   commands: { label: string; category?: string; action?: () => void }[],
 ): SearchResult[] {
@@ -41,20 +42,42 @@ export function computeSearchResults(
 
   const list: SearchResult[] = [];
 
-  for (const sec of sections) {
-    const score = Math.max(fuzzyScore(q, sec.label), fuzzyScore(q, sec.id));
+  // (a) each sidebar entry
+  for (const entry of sidebar) {
+    const score = Math.max(fuzzyScore(q, entry.label), fuzzyScore(q, entry.id));
     if (score > 0) {
       list.push({
         type: "section",
-        title: sec.label,
-        description: `Go to ${sec.label} settings section`,
+        title: entry.label,
+        description: `Go to ${entry.label} settings section`,
         badge: "Section",
-        sectionId: sec.id,
+        sectionId: entry.id,
         score,
       });
     }
   }
 
+  // (b) each field in each generalGroups[*].fields
+  for (const group of generalGroups) {
+    for (const field of group.fields) {
+      const score = Math.max(
+        fuzzyScore(q, field.label || ""),
+        fuzzyScore(q, group.label),
+      );
+      if (score > 0) {
+        list.push({
+          type: "field",
+          title: field.label || "",
+          description: `Setting in ${group.label}`,
+          badge: group.label,
+          sectionId: "general",
+          score,
+        });
+      }
+    }
+  }
+
+  // (c) each shortcut
   for (const sh of shortcuts) {
     const score = Math.max(
       fuzzyScore(q, sh.label || ""),
@@ -73,6 +96,7 @@ export function computeSearchResults(
     }
   }
 
+  // (d) each command
   for (const cmd of commands) {
     const score = Math.max(
       fuzzyScore(q, cmd.label),

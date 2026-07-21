@@ -64,6 +64,7 @@ export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
             title: "Settings",
             hotkey: "cmd+,,ctrl+,",
             renderer: SettingsModal,
+            boxClass: "max-w-4xl",
           });
           return store;
         },
@@ -74,7 +75,7 @@ export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
       contribute(settingsSections, {
         id: "shortcuts",
         label: "Shortcuts",
-        icon: "keyboard",
+        icon: "⌨️",
         component: ShortcutSettings,
       }),
     ],

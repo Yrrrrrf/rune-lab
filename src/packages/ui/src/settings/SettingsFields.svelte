@@ -32,8 +32,7 @@ const cellBinds = $derived.by(() => {
 
 function getStoreForField(field: any): any {
   if (field.target?.type !== "store") return undefined;
-  const parts = field.id.split(".");
-  const pluginId = parts[0];
+  const pluginId = field.id.slice(0, field.id.lastIndexOf("."));
   return getContext(Symbol.for(`rl:${pluginId}:${field.target.storeId}`));
 }
 

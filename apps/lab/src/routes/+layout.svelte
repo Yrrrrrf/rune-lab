@@ -1,9 +1,9 @@
 <script lang="ts">
 import "./layout.css";
 import { RuneProvider, version } from "rune-lab";
+import { I18nPlugin } from "rune-lab/i18n";
 import { LayoutPlugin } from "rune-lab/layout";
 import { PalettesPlugin } from "rune-lab/palettes";
-import { I18nPlugin } from "rune-lab/i18n";
 import type { Snippet } from "svelte";
 import AppLayout from "./AppLayout.svelte";
 

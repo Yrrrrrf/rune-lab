@@ -1,6 +1,6 @@
 <script lang="ts">
-import { getLayoutStore, RichText, Text, ThemeSelector } from "rune-lab/layout";
 import { LanguageSelector } from "rune-lab/i18n";
+import { getLayoutStore, RichText, Text, ThemeSelector } from "rune-lab/layout";
 import { getRegistryStore, getToastStore } from "rune-lab/palettes";
 import PretextPlayground from "../lib/PretextPlayground.svelte";
 

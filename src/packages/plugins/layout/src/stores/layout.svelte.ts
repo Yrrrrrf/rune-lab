@@ -9,7 +9,7 @@ export class LayoutStore {
   collapsedSections: Set<string> = $state<Set<string>>(new Set());
 
   // Zone & Preset state
-  preset: string = $state<string>("workspace");
+  #preset: string = $state<string>("workspace");
   zones: Record<string, { visible: boolean; size?: number }> = $state<
     Record<string, { visible: boolean; size?: number }>
   >({
@@ -23,17 +23,25 @@ export class LayoutStore {
 
   constructor(_ctx?: SlotContext<unknown>) {}
 
+  get preset(): string {
+    return this.#preset;
+  }
+
+  set preset(v: string) {
+    this.applyPreset(v);
+  }
+
   applyPreset(presetId: string | PresetState) {
     if (typeof presetId === "string") {
       const state = PRESETS[presetId];
       if (state) {
-        this.preset = presetId;
+        this.#preset = presetId;
         for (const [zone, val] of Object.entries(state)) {
           this.zones[zone] = { ...val };
         }
       }
     } else {
-      this.preset = "custom";
+      this.#preset = "custom";
       for (const [zone, val] of Object.entries(presetId)) {
         this.zones[zone] = { ...val };
       }

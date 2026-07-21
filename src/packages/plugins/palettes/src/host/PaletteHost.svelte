@@ -1,12 +1,20 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import { getRegistryStore, getShortcutStore } from "../accessors.ts";
+import { installSettingsRoute } from "../settings-modal/route.svelte.ts";
 import { bindShortcuts } from "./hotkeys.svelte.ts";
 
 const registryStore = getRegistryStore();
 const shortcutStore = getShortcutStore();
 
-onMount(() => bindShortcuts(shortcutStore));
+onMount(() => {
+  const unbindShortcuts = bindShortcuts(shortcutStore);
+  const uninstallRoute = installSettingsRoute(registryStore);
+  return () => {
+    unbindShortcuts();
+    uninstallRoute();
+  };
+});
 
 let dialogEl = $state<HTMLDialogElement>();
 
@@ -60,7 +68,7 @@ const activePalette = $derived(
   {#if activePalette}
     {@const Renderer = activePalette.renderer}
     <div
-      class="modal-box p-0 overflow-hidden border border-base-300 shadow-2xl max-w-2xl w-full flex flex-col"
+      class="modal-box p-0 overflow-hidden border border-base-300 shadow-2xl {activePalette.boxClass ?? 'max-w-2xl'} w-full flex flex-col"
     >
       {#if Renderer}
         <Renderer />
