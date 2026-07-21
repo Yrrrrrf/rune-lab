@@ -24,6 +24,7 @@ build:
 
 [working-directory('build')]
 _with-brave +cmd:
+    #!/usr/bin/env nu
     let d = (mktemp -d)
     "#!/usr/bin/env nu\ndef main [...args] { exec brave ...$args }" | save -f $"($d)/xdg-open"
     chmod +x $"($d)/xdg-open"
@@ -32,7 +33,7 @@ _with-brave +cmd:
 
 [doc('Publish build/ to npm')]
 [group('Deploy')]
-publish: (_with-brave "bun publish")
+publish: build (_with-brave "bun publish")
 
 [doc('npm login')]
 [group('Deploy')]
