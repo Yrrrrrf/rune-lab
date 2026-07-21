@@ -59,9 +59,11 @@ const initialPersistence = untrack(() => {
 // 0. Create and provide the built-in AppStore
 const appStore = createAppStore();
 untrack(() => {
-	if (config.app) {
-		appStore.init(config.app);
-	}
+	const appData = {
+		...config.app,
+		icon: config.app?.icon ?? config.favicon,
+	};
+	appStore.init(appData);
 });
 setContext(RUNE_LAB_CONTEXT.app, appStore);
 

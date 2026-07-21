@@ -8,11 +8,11 @@ import {
 import SettingsSearchResults from "./settings-modal/SettingsSearchResults.svelte";
 import SettingsSectionContent from "./settings-modal/SettingsSectionContent.svelte";
 import SettingsSidebar from "./settings-modal/SettingsSidebar.svelte";
+import { deriveModalModel } from "./settings-modal/sections.ts";
 import {
   computeSearchResults,
   type SearchResult,
 } from "./settings-modal/search.ts";
-import { deriveModalModel } from "./settings-modal/sections.ts";
 
 const shortcutStore = getShortcutStore();
 const commandStore = getCommandStore();
@@ -89,19 +89,28 @@ function handleKeyDown(e: KeyboardEvent) {
       registry.setSection(id);
       searchQuery = "";
     }}
-    onClose={() => registry.close()}
   />
 
   <div class="flex-1 flex flex-col overflow-hidden bg-base-100">
-    {#if searchQuery}
-      <SettingsSearchResults
-        query={searchQuery}
-        results={searchResults}
-        {selectedIndex}
-        onResultClick={handleResultClick}
-      />
-    {:else}
-      <SettingsSectionContent sectionId={activeSectionId} {model} />
-    {/if}
+    <div
+      class="flex items-center justify-end px-4 py-3 border-b border-base-200 shrink-0">
+      <button class="btn btn-sm btn-circle btn-ghost"
+        onclick={() => registry.close()}>
+        ✕
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-hidden">
+      {#if searchQuery}
+        <SettingsSearchResults
+          query={searchQuery}
+          results={searchResults}
+          {selectedIndex}
+          onResultClick={handleResultClick}
+        />
+      {:else}
+        <SettingsSectionContent sectionId={activeSectionId} {model} />
+      {/if}
+    </div>
   </div>
 </div>

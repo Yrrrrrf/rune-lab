@@ -7,13 +7,11 @@ let {
   activeSectionId,
   searchQuery = $bindable(),
   onSectionChange,
-  onClose,
 }: {
   sidebar: SidebarEntry[];
   activeSectionId: string;
   searchQuery: string;
   onSectionChange: (id: string) => void;
-  onClose: () => void;
 } = $props();
 
 let inputEl = $state<HTMLInputElement>();
@@ -25,16 +23,6 @@ onMount(() => {
 
 <div
   class="w-64 bg-base-200/40 border-r border-base-200 flex flex-col p-4 gap-4 shrink-0">
-  <div class="flex items-center justify-between">
-    <span
-      class="font-bold text-sm tracking-wider uppercase text-base-content/50">
-      Settings
-    </span>
-    <button class="btn btn-sm btn-circle btn-ghost" onclick={onClose}>
-      ✕
-    </button>
-  </div>
-
   <label
     class="input input-sm input-bordered flex items-center gap-2 w-full bg-base-100 shrink-0">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
@@ -53,6 +41,11 @@ onMount(() => {
     <kbd
       class="kbd kbd-xs bg-base-200/50 border-base-300 opacity-60 font-mono shrink-0">/</kbd>
   </label>
+
+  <span
+    class="text-xs font-semibold uppercase tracking-wider text-base-content/50 px-1 shrink-0">
+    Settings
+  </span>
 
   <div class="flex-1 overflow-y-auto">
     <ul class="menu w-full p-0 gap-0.5">

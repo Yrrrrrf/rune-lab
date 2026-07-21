@@ -7,12 +7,14 @@ import { PalettesPlugin } from "rune-lab/palettes";
 import type { Snippet } from "svelte";
 import AppLayout from "./AppLayout.svelte";
 
+import faviconUrl from "$lib/static/img/rune.png";
+
 let { children }: { children: Snippet } = $props();
 </script>
 
 <RuneProvider
   config={{
-    favicon: "/img/rune.png",
+    favicon: faviconUrl,
     icons: "material",
     app: {
       name: "Rune Lab",

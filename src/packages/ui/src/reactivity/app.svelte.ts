@@ -10,6 +10,7 @@ export interface AppData {
   repository?: string;
   license?: string;
   homepage?: string;
+  icon?: string;
 }
 
 export class AppStore {
@@ -20,6 +21,7 @@ export class AppStore {
   repository: string = $state("https://github.com/Yrrrrrf/rune-lab");
   license: string = $state("MIT");
   homepage: string = $state("https://jsr.io/@yrrrrrf/rune-lab");
+  icon: string = $state("");
 
   #initialized = false;
 
@@ -42,6 +44,7 @@ export class AppStore {
     if (data.repository) this.repository = data.repository;
     if (data.license) this.license = data.license;
     if (data.homepage) this.homepage = data.homepage;
+    if (data.icon) this.icon = data.icon;
 
     this.#initialized = true;
   }
