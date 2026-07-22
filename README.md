@@ -50,22 +50,22 @@ import AppLayout from "./AppLayout.svelte";
 import faviconUrl from "$lib/static/img/rune.png";
 
 let { children }: { children: Snippet } = $props();
+
+const layoutPlugin = LayoutPlugin.with({ theme: "dark" });
 </script>
 
 <RuneProvider
   config={{
-    favicon: faviconUrl,
     icons: "material",
     app: {
       name: "Rune Lab",
       version: version(),
       description: "Plugin test bench",
       author: "Yrrrrrf",
+      icon: faviconUrl,
     },
-    // Namespaced per-plugin config
-    "rune-lab.layout": "dark",
   }}
-  plugins={[LayoutPlugin, PalettesPlugin, I18nPlugin]}
+  plugins={[layoutPlugin, PalettesPlugin, I18nPlugin]}
 >
   <AppLayout>
     {@render children()}
