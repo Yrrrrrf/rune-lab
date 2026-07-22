@@ -166,6 +166,8 @@ function formatKeys(keys: string) {
       <span><kbd class="kbd kbd-xs">ctrl</kbd> +
         <kbd class="kbd kbd-xs">/</kbd> to open help</span>
     </div>
-    <div>rune-lab v{appStore.version}</div>
+    {#if appStore.data.version}
+      <div>rune-lab v{appStore.data.version}</div>
+    {/if}
   </div>
 </div>

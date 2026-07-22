@@ -22,6 +22,7 @@ export interface NormalizedSlot {
   expose: boolean;
   persist?: boolean | string[];
   configSchema?: unknown;
+  pluginConfig?: Record<string, unknown>;
   create: (context: SlotContext<unknown>) => unknown;
 }
 
@@ -46,16 +47,6 @@ function normalizePlugins(inputs: PluginInput[]): ForgedPlugin[] {
     seen.add(p.id);
     return true;
   });
-}
-
-function getPluginConfig(
-  pluginId: string,
-  config: Record<string, unknown>,
-): unknown {
-  if (config[pluginId] !== undefined) {
-    return config[pluginId];
-  }
-  return config;
 }
 
 function sortPlugins(resolved: ForgedPlugin[]): ForgedPlugin[] {
@@ -127,6 +118,7 @@ export function normalizeSlots(sorted: ForgedPlugin[]): NormalizedSlot[] {
         expose: slotSpec.expose !== false,
         persist: slotSpec.persist,
         configSchema: slotSpec.config,
+        pluginConfig: plugin.config,
         create: slotSpec.create,
       };
       allSlots.push(slot);
@@ -204,21 +196,24 @@ function buildLayers(
     const storeLayer = Layer.effect(
       storeTag,
       Effect.gen(function* () {
-        const pluginConfig = getPluginConfig(slot.pluginId, options.config);
-
-        let configSlice = pluginConfig;
+        const rawConfig = slot.pluginConfig?.[slot.slotName];
+        let configSlice: unknown = rawConfig;
         if (slot.configSchema) {
-          try {
-            configSlice = Schema.decodeUnknownSync(
-              slot.configSchema as Parameters<
-                typeof Schema.decodeUnknownSync
-              >[0],
-            )(pluginConfig);
-          } catch (err: unknown) {
-            const errMsg = err instanceof Error ? err.message : String(err);
-            throw new Error(
-              `[Kernel] Config validation failed for plugin "${slot.pluginId}", slot "${slot.slotName}": ${errMsg}`,
-            );
+          if (rawConfig !== undefined) {
+            try {
+              configSlice = Schema.decodeUnknownSync(
+                slot.configSchema as Parameters<
+                  typeof Schema.decodeUnknownSync
+                >[0],
+              )(rawConfig);
+            } catch (err: unknown) {
+              const errMsg = err instanceof Error ? err.message : String(err);
+              throw new Error(
+                `[Kernel] Config validation failed for plugin "${slot.pluginId}", slot "${slot.slotName}": ${errMsg}`,
+              );
+            }
+          } else {
+            configSlice = undefined;
           }
         }
 

@@ -13,18 +13,25 @@ import { createToastStore } from "./notifications/store.svelte.ts";
 import Toaster from "./notifications/Toaster.svelte";
 import CommandPalette from "./palettes/commands/CommandPalette.svelte";
 import ShortcutPalette from "./palettes/shortcuts/ShortcutPalette.svelte";
-import type { PaletteRegistryStore } from "./registry/registry.svelte.ts";
+import type {
+  PaletteRegistryStore,
+  RouterAdapter,
+} from "./registry/registry.svelte.ts";
 import { createPaletteRegistryStore } from "./registry/registry.svelte.ts";
 import SettingsModal from "./SettingsModal.svelte";
 import { ShortcutSettings } from "./shortcuts/mod.ts";
 import type { ShortcutStore } from "./shortcuts/store.svelte.ts";
 import { createShortcutStore } from "./shortcuts/store.svelte.ts";
 
+export interface RegistrySlotConfig {
+  router?: RouterAdapter;
+}
+
 type PalettesSlots = {
   commands: SlotSpec<unknown, CommandStore>;
   shortcuts: SlotSpec<unknown, ShortcutStore>;
   toasts: SlotSpec<unknown, ToastStore>;
-  registry: SlotSpec<unknown, PaletteRegistryStore>;
+  registry: SlotSpec<RegistrySlotConfig, PaletteRegistryStore>;
 };
 
 export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
@@ -45,8 +52,10 @@ export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
         expose: true,
       }),
       registry: defineSlot({
-        create: () => {
-          const store = createPaletteRegistryStore();
+        create: (ctx) => {
+          const store = createPaletteRegistryStore(
+            ctx.config as RegistrySlotConfig,
+          );
           store.register({
             id: "commands",
             title: "Commands",

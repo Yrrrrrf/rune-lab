@@ -30,15 +30,21 @@ export function installSettingsRoute(
       if (activeId === "settings") {
         const want = formatSettingsHash(activeSec);
         if (globalThis.location.hash !== want) {
-          history.replaceState(null, "", want);
+          if (registry.router?.replaceState) {
+            registry.router.replaceState(want);
+          } else {
+            history.replaceState(null, "", want);
+          }
         }
       } else {
         if (globalThis.location.hash.startsWith("#settings")) {
-          history.pushState(
-            null,
-            "",
-            globalThis.location.pathname + globalThis.location.search,
-          );
+          const targetUrl = globalThis.location.pathname +
+            globalThis.location.search;
+          if (registry.router?.pushState) {
+            registry.router.pushState(targetUrl);
+          } else {
+            history.pushState(null, "", targetUrl);
+          }
         }
       }
     });

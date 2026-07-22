@@ -1,6 +1,6 @@
-import { DEV } from "esm-env";
 import { getContext } from "svelte";
 import { RUNE_LAB_CONTEXT } from "../provider/context.ts";
+import { createDataStore, type DataStore } from "./data-store.svelte.ts";
 
 export interface AppData {
   name: string;
@@ -13,45 +13,28 @@ export interface AppData {
   icon?: string;
 }
 
-export class AppStore {
-  name: string = $state("Rune Lab");
-  version: string = $state("0.0.1");
-  description: string = $state("Modern toolkit for Svelte 5 Runes");
-  author: string = $state("Yrrrrrf");
-  repository: string = $state("https://github.com/Yrrrrrf/rune-lab");
-  license: string = $state("MIT");
-  homepage: string = $state("https://jsr.io/@yrrrrrf/rune-lab");
-  icon: string = $state("");
+const APP_DATA_KEYS = [
+  "name",
+  "version",
+  "description",
+  "author",
+  "repository",
+  "license",
+  "homepage",
+  "icon",
+] as const satisfies readonly (keyof AppData)[];
 
-  #initialized = false;
+type ExpectEqual<A, B> = [A] extends [B] ? ([B] extends [A] ? true : never)
+  : never;
+type _ExhaustivenessCheck = ExpectEqual<
+  typeof APP_DATA_KEYS[number],
+  keyof AppData
+>;
 
-  init(data: Partial<AppData>): void {
-    if (this.#initialized) {
-      if (DEV) {
-        console.warn(
-          "AppStore.init() called multiple times. Ignoring subsequent calls.",
-          "Overwritten properties would have been:",
-          data,
-        );
-      }
-      return;
-    }
-
-    if (data.name) this.name = data.name;
-    if (data.version) this.version = data.version;
-    if (data.description) this.description = data.description;
-    if (data.author) this.author = data.author;
-    if (data.repository) this.repository = data.repository;
-    if (data.license) this.license = data.license;
-    if (data.homepage) this.homepage = data.homepage;
-    if (data.icon) this.icon = data.icon;
-
-    this.#initialized = true;
-  }
-}
+export type AppStore = DataStore<AppData>;
 
 export function createAppStore(): AppStore {
-  return new AppStore();
+  return createDataStore<AppData>(APP_DATA_KEYS);
 }
 
 export function getAppStore(): AppStore {

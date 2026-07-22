@@ -62,13 +62,23 @@ export function createThemeStore(
     driver: ctx.persistence,
   });
 
-  if (!store.current && BROWSER) {
-    const prefersDark = globalThis.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    const systemDefault = prefersDark ? "dark" : "light";
-    if (store.get(systemDefault)) {
-      store.set(systemDefault);
+  const saved = ctx.persistence.get("theme");
+  const hasPersisted = typeof saved === "string"
+    ? Boolean(saved && store.get(saved))
+    : false;
+
+  if (!hasPersisted) {
+    const configTheme = typeof ctx.config === "string" ? ctx.config : undefined;
+    if (configTheme && store.get(configTheme)) {
+      store.set(configTheme);
+    } else if (BROWSER) {
+      const prefersDark = globalThis.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      const systemDefault = prefersDark ? "dark" : "light";
+      if (store.get(systemDefault)) {
+        store.set(systemDefault);
+      }
     }
   }
 

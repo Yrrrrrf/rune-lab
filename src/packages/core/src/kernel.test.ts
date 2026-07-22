@@ -177,3 +177,69 @@ Deno.test("Kernel - contributions and lifecycle", async () => {
 
   await kernel.dispose();
 });
+
+Deno.test("Kernel - Plugin.with config resolution and isolation", async () => {
+  const driver = createInMemoryDriver();
+
+  let receivedA: unknown = "not_set";
+  let receivedB: unknown = "not_set";
+
+  const pluginA = definePlugin({
+    id: "test.pluginA",
+    slots: {
+      slotA: {
+        config: Schema.Struct({ theme: Schema.String }),
+        create: (ctx) => {
+          receivedA = ctx.config;
+          return "A";
+        },
+      },
+      slotAUnconfigured: {
+        create: (ctx) => {
+          receivedB = ctx.config;
+          return "B";
+        },
+      },
+    },
+  });
+
+  const configuredPluginA = pluginA.with({
+    slotA: { theme: "dark" },
+  });
+
+  const kernel = createKernel([configuredPluginA], {
+    config: { unrelatedKey: "should_not_leak" },
+    persistence: driver,
+  });
+
+  assertEquals(receivedA, { theme: "dark" });
+  assertEquals(receivedB, undefined);
+
+  await kernel.dispose();
+});
+
+Deno.test("Kernel - Config validation failure names plugin and slot", () => {
+  const driver = createInMemoryDriver();
+
+  const plugin = definePlugin({
+    id: "test.plugin",
+    slots: {
+      testSlot: {
+        config: Schema.Struct({ count: Schema.Number }),
+        create: () => "OK",
+      },
+    },
+  });
+
+  const badPlugin = plugin.with({
+    testSlot: { count: "not_a_number" as unknown as number },
+  });
+
+  assertThrows(
+    () => {
+      createKernel([badPlugin], { config: {}, persistence: driver });
+    },
+    Error,
+    'Config validation failed for plugin "test.plugin", slot "testSlot"',
+  );
+});

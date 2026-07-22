@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0-rc.2",
+  "version": "0.5.0",
   "description": "A comprehensive full-stack application template with Tauri integration",
   "license": "MIT",
   "readme": "README.md",

@@ -1,5 +1,10 @@
 import type { Component } from "svelte";
 
+export interface RouterAdapter {
+  replaceState?: (url: string) => void;
+  pushState?: (url: string) => void;
+}
+
 export interface PaletteDefinition {
   id: string;
   title: string;
@@ -14,6 +19,11 @@ export class PaletteRegistryStore {
   palettes: PaletteDefinition[] = $state([]);
   activePaletteId: string | null = $state(null);
   activeSectionId: string = $state("general");
+  router?: RouterAdapter;
+
+  constructor(config?: { router?: RouterAdapter }) {
+    this.router = config?.router;
+  }
 
   register(palette: PaletteDefinition) {
     if (this.palettes.some((p) => p.id === palette.id)) return;
@@ -43,6 +53,8 @@ export class PaletteRegistryStore {
   }
 }
 
-export function createPaletteRegistryStore(): PaletteRegistryStore {
-  return new PaletteRegistryStore();
+export function createPaletteRegistryStore(config?: {
+  router?: RouterAdapter;
+}): PaletteRegistryStore {
+  return new PaletteRegistryStore(config);
 }

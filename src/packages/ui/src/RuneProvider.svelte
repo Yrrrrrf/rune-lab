@@ -22,13 +22,10 @@ import { type AppData, createAppStore } from "./reactivity/app.svelte.ts";
 export interface RuneLabConfig {
 	persistence?: PersistenceDriver;
 	/** Optional head management properties */
-	favicon?: string;
 	manageHead?: boolean;
 	icons?: "material" | "none";
 	/** App metadata — passed to AppStore.init() */
 	app?: Partial<AppData>;
-	/** Namespaced config for plugins */
-	[pluginId: string]: unknown;
 }
 
 let {
@@ -59,11 +56,9 @@ const initialPersistence = untrack(() => {
 // 0. Create and provide the built-in AppStore
 const appStore = createAppStore();
 untrack(() => {
-	const appData = {
-		...config.app,
-		icon: config.app?.icon ?? config.favicon,
-	};
-	appStore.init(appData);
+	if (config.app) {
+		appStore.init(config.app);
+	}
 });
 setContext(RUNE_LAB_CONTEXT.app, appStore);
 
@@ -100,19 +95,23 @@ const allOverlays = $derived(kernel.overlays as Component[]);
 
 // Meta tags derived from app store state
 const metaTags = $derived([
-	{ name: "description", content: appStore.description },
-	{ name: "author", content: appStore.author },
+	{ name: "description", content: appStore.data.description },
+	{ name: "author", content: appStore.data.author },
 ]);
 </script>
 
 <svelte:head>
   {#if config.manageHead !== false && appStore}
-    <title>{appStore.name}</title>
-    {#if config.favicon}
-      <link rel="icon" href={config.favicon} />
+    {#if appStore.data.name}
+      <title>{appStore.data.name}</title>
+    {/if}
+    {#if appStore.data.icon}
+      <link rel="icon" href={appStore.data.icon} />
     {/if}
     {#each metaTags as meta}
-      <meta name={meta.name} content={meta.content} />
+      {#if meta.content}
+        <meta name={meta.name} content={meta.content} />
+      {/if}
     {/each}
     {#if config.icons === "material"}
       <link

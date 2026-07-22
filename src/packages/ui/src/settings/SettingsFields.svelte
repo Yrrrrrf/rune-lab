@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getContext } from "svelte";
+import { getKernel } from "../provider/context.ts";
 import { useCell } from "../reactivity/use-cell.svelte.ts";
 
 let {
@@ -12,13 +12,15 @@ let {
   onCommit?: (fieldId: string, value: any) => void;
 } = $props();
 
+const kernel = getKernel();
+
 // Resolve cells reactively using Svelte 5's $derived.by
 const cellBinds = $derived.by(() => {
   const binds = new Map<string, any>();
   for (const field of fields) {
     if (field.target?.type === "cell") {
       try {
-        binds.set(field.id, useCell(field.target.name));
+        binds.set(field.id, useCell(kernel, field.target.name));
       } catch (e) {
         console.warn(
           `[SettingsFields] Failed to bind cell ${field.target.name}:`,
@@ -33,7 +35,8 @@ const cellBinds = $derived.by(() => {
 function getStoreForField(field: any): any {
   if (field.target?.type !== "store") return undefined;
   const pluginId = field.id.slice(0, field.id.lastIndexOf("."));
-  return getContext(Symbol.for(`rl:${pluginId}:${field.target.storeId}`));
+  const storeKey = `rl:${pluginId}:${field.target.storeId}`;
+  return kernel.stores.get(storeKey);
 }
 
 function getValue(field: any): any {
