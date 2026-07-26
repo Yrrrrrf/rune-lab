@@ -32,6 +32,24 @@ npm install rune-lab
 bun install rune-lab
 ```
 
+Rune Lab ships pre-compiled Tailwind/daisyUI classes in its `dist`. Tailwind
+skips `node_modules` when scanning for classes, so your app's CSS entrypoint
+**must** opt back in with `@source`, or every rune-lab component renders
+unstyled:
+
+```css
+/* e.g. src/routes/layout.css */
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: all;
+}
+
+@source "../node_modules/rune-lab/dist";
+```
+
+Adjust the `@source` path to wherever `rune-lab` actually resolves to inside
+your `node_modules`.
+
 ## Setup & Quick Start
 
 Configure your application layout with the plugins. Here is what you need to set
@@ -40,6 +58,7 @@ up in your root `+layout.svelte`:
 ```svelte
 <script lang="ts">
 import "./layout.css";
+import { pushState, replaceState } from "$app/navigation";
 import { RuneProvider, version } from "rune-lab";
 import { I18nPlugin } from "rune-lab/i18n";
 import { LayoutPlugin } from "rune-lab/layout";
@@ -47,11 +66,22 @@ import { PalettesPlugin } from "rune-lab/palettes";
 import type { Snippet } from "svelte";
 import AppLayout from "./AppLayout.svelte";
 
-import faviconUrl from "$lib/static/img/rune.png";
+import faviconUrl from "$lib/assets/img/rune.png";
 
 let { children }: { children: Snippet } = $props();
 
 const layoutPlugin = LayoutPlugin.with({ theme: "dark" });
+
+// Wiring a router adapter lets the command palette and settings modal
+// update the URL through SvelteKit's router instead of raw history calls.
+const palettesPlugin = PalettesPlugin.with({
+  registry: {
+    router: {
+      replaceState: (url: string) => replaceState(url, {}),
+      pushState: (url: string) => pushState(url, {}),
+    },
+  },
+});
 </script>
 
 <RuneProvider
@@ -65,7 +95,7 @@ const layoutPlugin = LayoutPlugin.with({ theme: "dark" });
       icon: faviconUrl,
     },
   }}
-  plugins={[layoutPlugin, PalettesPlugin, I18nPlugin]}
+  plugins={[layoutPlugin, palettesPlugin, I18nPlugin]}
 >
   <AppLayout>
     {@render children()}
@@ -77,9 +107,12 @@ const layoutPlugin = LayoutPlugin.with({ theme: "dark" });
 
 Rune Lab is modular. Plugins are documented in their respective directories:
 
-- **Layout Plugin (`rune-lab/layout`)**:
-- **Palettes Plugin (`rune-lab/palettes`)**:
-- **i18n Plugin (`rune-lab/i18n`)**:
+- **Layout Plugin (`rune-lab/layout`)**: workspace layout shell, theming
+  (`data-theme`, daisyUI themes), and the pretext text engine.
+- **Palettes Plugin (`rune-lab/palettes`)**: command palette, keyboard
+  shortcuts, toast notifications, and the settings modal.
+- **i18n Plugin (`rune-lab/i18n`)**: language selection and currency
+  formatting/selection.
 
 ## License
 
