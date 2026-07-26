@@ -7,11 +7,9 @@ const currencyStore = getCurrencyStore();
 
 let {
   codes = [],
-  current = $bindable(String(currencyStore.current)),
   onchange,
 }: {
   codes?: string[];
-  current?: string;
   onchange?: (value: string) => void;
 } = $props();
 </script>
@@ -20,7 +18,6 @@ let {
   store={currencyStore}
   idKey="code"
   filterKeys={codes}
-  {onchange}
 >
   {#snippet triggerLabel(active: any)}
     <div class="flex items-center gap-2">
@@ -33,7 +30,6 @@ let {
       class="flex items-center gap-3 w-full"
       onclick={() => {
         currencyStore.set(c.code);
-        current = c.code;
         onchange?.(c.code);
       }}
     >

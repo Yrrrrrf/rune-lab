@@ -6,11 +6,9 @@ const themeStore = getThemeStore();
 
 let {
   themes = [],
-  current = $bindable(String(themeStore.current)),
   onchange,
 }: {
   themes?: string[];
-  current?: string;
   onchange?: (value: string) => void;
 } = $props();
 </script>
@@ -19,7 +17,6 @@ let {
   store={themeStore}
   idKey="name"
   filterKeys={themes}
-  {onchange}
 >
   {#snippet triggerLabel(active: any)}
     <div class="flex items-center gap-2">
@@ -32,7 +29,6 @@ let {
       class="flex items-center gap-3 w-full"
       onclick={() => {
         themeStore.set(t.name);
-        current = t.name;
         onchange?.(t.name);
       }}
     >

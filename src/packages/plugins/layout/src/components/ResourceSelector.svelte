@@ -14,8 +14,6 @@ interface Props {
 	triggerLabel: Snippet<[T]>;
 	/** Snippet to render each option in the dropdown */
 	item: Snippet<[T]>;
-	/** Callback when selection changes */
-	onchange?: (value: string) => void;
 	/** Dropdown direction */
 	direction?: "top" | "bottom" | "left" | "right" | "end" | "auto";
 	/** Whether to show responsive mobile modal */

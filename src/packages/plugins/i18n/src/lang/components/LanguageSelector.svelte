@@ -20,7 +20,6 @@ let {
   store={languageStore}
   idKey="code"
   filterKeys={[...allowedLocales]}
-  {onchange}
 >
   {#snippet triggerLabel(active: any)}
     <div class="flex items-center gap-2">
