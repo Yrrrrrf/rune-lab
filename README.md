@@ -63,9 +63,9 @@ up in your root `+layout.svelte`:
 import "./layout.css";
 import { pushState, replaceState } from "$app/navigation";
 import { RuneProvider, version } from "rune-lab";
-import { I18nPlugin } from "rune-lab/i18n";
-import { LayoutPlugin } from "rune-lab/layout";
-import { PalettesPlugin } from "rune-lab/palettes";
+import { i18n } from "rune-lab/i18n";
+import { layout } from "rune-lab/layout";
+import { palettes } from "rune-lab/palettes";
 import type { Snippet } from "svelte";
 import AppLayout from "./AppLayout.svelte";
 
@@ -73,11 +73,11 @@ import faviconUrl from "$lib/assets/img/rune.png";
 
 let { children }: { children: Snippet } = $props();
 
-const layoutPlugin = LayoutPlugin.with({ theme: "dark" });
+const layoutPlugin = layout.with({ theme: "dark" });
 
 // Wiring a router adapter lets the command palette and settings modal
 // update the URL through SvelteKit's router instead of raw history calls.
-const palettesPlugin = PalettesPlugin.with({
+const palettesPlugin = palettes.with({
   registry: {
     router: {
       replaceState: (url: string) => replaceState(url, {}),
@@ -98,7 +98,7 @@ const palettesPlugin = PalettesPlugin.with({
       icon: faviconUrl,
     },
   }}
-  plugins={[layoutPlugin, palettesPlugin, I18nPlugin]}
+  plugins={[layoutPlugin, palettesPlugin, i18n]}
 >
   <AppLayout>
     {@render children()}

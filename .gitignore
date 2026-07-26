@@ -14,7 +14,7 @@ coverage
 # docs & spec files
 # docs
 docs/ref
-# docs/v0.5.1/
+docs/v0.5.1/
 # apps
 some
 
@@ -24,4 +24,4 @@ some
 # one * means any characters except /
 # two ** means any characters including /
 temp
-# translations
+translations
