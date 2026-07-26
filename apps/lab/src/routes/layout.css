@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-@import "daisyui/daisyui.css";
-@import "daisyui/themes.css";
+@plugin "daisyui" {
+  themes: all;
+}
 
 @source "../../../../node_modules/rune-lab/dist";

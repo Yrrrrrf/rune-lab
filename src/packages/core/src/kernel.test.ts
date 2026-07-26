@@ -39,7 +39,6 @@ Deno.test("Kernel - slot resolution and store topological sort initialization", 
   });
 
   const kernel = createKernel([pluginB, pluginA], {
-    config: {},
     persistence: driver,
   });
 
@@ -153,7 +152,6 @@ Deno.test("Kernel - contributions and lifecycle", async () => {
   });
 
   const kernel = createKernel([plugin], {
-    config: {},
     persistence: driver,
   });
 
@@ -208,7 +206,6 @@ Deno.test("Kernel - Plugin.with config resolution and isolation", async () => {
   });
 
   const kernel = createKernel([configuredPluginA], {
-    config: { unrelatedKey: "should_not_leak" },
     persistence: driver,
   });
 
@@ -237,7 +234,7 @@ Deno.test("Kernel - Config validation failure names plugin and slot", () => {
 
   assertThrows(
     () => {
-      createKernel([badPlugin], { config: {}, persistence: driver });
+      createKernel([badPlugin], { persistence: driver });
     },
     Error,
     'Config validation failed for plugin "test.plugin", slot "testSlot"',

@@ -1,36 +1,35 @@
 <script lang="ts">
-import { getShortcutStore } from "../accessors.ts";
-import { groupByScopeAndCategory } from "./grouping.ts";
+/**
+ * The single shortcuts view (C24).
+ *
+ * Replaces the old `ShortcutPalette` / `ShortcutSettings` pair, which
+ * reimplemented search, grouping and key rendering independently and visibly
+ * disagreed about the result. The grouped-directory markup now lives in
+ * `FilterableGroupedList`; the key/scope formatting lives in `./format.ts`;
+ * what remains here is the one thing genuinely specific to this view — the
+ * rebind affordance.
+ */
+import { FilterableGroupedList } from "rune-lab";
+import { onDestroy } from "svelte";
+import { getShortcutsStore } from "../plugin.ts";
+import type { ShortcutEntry } from "../types.ts";
+import { formatCombos, matchesQuery, scopeLabel } from "./format.ts";
+import { sortScopes } from "./grouping.ts";
 
-const shortcutStore = getShortcutStore();
+let { autofocus = false }: { autofocus?: boolean } = $props();
 
-let searchQuery = $state("");
+const shortcutStore = getShortcutsStore();
+
 let recordingId = $state<string | null>(null);
-let recordedKeys = $state("");
-
-const filteredEntries = $derived.by(() => {
-  const q = searchQuery.toLowerCase().trim();
-  if (!q) return shortcutStore.entries;
-  return shortcutStore.entries.filter(
-    (e) =>
-      e.label?.toLowerCase().includes(q) ||
-      e.keys?.toLowerCase().includes(q) ||
-      e.category?.toLowerCase().includes(q) ||
-      e.scope?.toLowerCase().includes(q),
-  );
-});
-
-const groupedEntries = $derived(groupByScopeAndCategory(filteredEntries));
 
 function startRecording(id: string) {
   recordingId = id;
-  recordedKeys = "";
-  window.addEventListener("keydown", handleKeyDown, true);
+  globalThis.addEventListener("keydown", handleKeyDown, true);
 }
 
 function stopRecording() {
   if (recordingId) {
-    window.removeEventListener("keydown", handleKeyDown, true);
+    globalThis.removeEventListener("keydown", handleKeyDown, true);
     recordingId = null;
   }
 }
@@ -41,7 +40,7 @@ function handleKeyDown(e: KeyboardEvent) {
 
   const key = e.key.toLowerCase();
   if (["control", "alt", "shift", "meta"].includes(key)) {
-    // Just modifiers, show feedback or update draft
+    // A bare modifier is not a combo yet — keep listening.
     return;
   }
 
@@ -64,134 +63,73 @@ function handleKeyDown(e: KeyboardEvent) {
       (entry) => entry.id === recordingId,
     );
     if (original) {
-      // Exercise register/unregister
       shortcutStore.unregister(original.id);
-      shortcutStore.register({
-        ...original,
-        keys: combo,
-      });
+      shortcutStore.register({ ...original, keys: combo });
     }
   }
   stopRecording();
 }
 
-function _resetShortcut(id: string, defaultKeys: string) {
-  const original = shortcutStore.entries.find((entry) => entry.id === id);
-  if (original) {
-    shortcutStore.unregister(original.id);
-    shortcutStore.register({
-      ...original,
-      keys: defaultKeys,
-    });
-  }
-}
-
-// Ensure listener is cleaned up if component is destroyed
-import { onDestroy } from "svelte";
-
 onDestroy(stopRecording);
 </script>
 
-<div class="p-6 space-y-6 max-w-4xl">
-  <div
-    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-  >
-    <div>
-      <h3 class="text-lg font-semibold mb-1">Keyboard Shortcuts</h3>
-      <p class="text-sm text-base-content/60">
-        View and customize keyboard shortcuts across layout, palettes, and
-        plugins.
-      </p>
-    </div>
-    <div>
-      <input
-        type="text"
-        placeholder="Search shortcuts..."
-        class="input w-full sm:w-64"
-        bind:value={searchQuery}
-      />
-    </div>
-  </div>
+<FilterableGroupedList
+  items={shortcutStore.entries}
+  itemKey={(entry: ShortcutEntry) => entry.id}
+  group={(entry: ShortcutEntry) => entry.scope ?? "global"}
+  subgroup={(entry: ShortcutEntry) => entry.category ?? "General"}
+  matches={matchesQuery}
+  sortGroups={sortScopes}
+  groupLabel={scopeLabel}
+  title="Keyboard Shortcuts"
+  subtitle="View and customize application commands"
+  searchPlaceholder="Search shortcuts..."
+  {autofocus}
+>
+  {#snippet row(entry: ShortcutEntry)}
+    <div class="flex items-center justify-between gap-4 group">
+      <div class="flex flex-col min-w-0">
+        <span
+          class="text-sm opacity-80 group-hover:opacity-100 transition-opacity truncate"
+        >
+          {entry.label}
+        </span>
+        <span class="text-[10px] text-base-content/30 font-mono truncate">
+          {entry.id}
+        </span>
+      </div>
 
-  {#if Object.keys(groupedEntries).length === 0}
-    <div
-      class="text-center py-8 text-base-content/50 border border-dashed border-base-300 rounded-xl"
-    >
-      No shortcuts matching "{searchQuery}"
-    </div>
-  {:else}
-    <div class="space-y-6">
-      {#each Object.keys(groupedEntries) as scope}
-        <div class="space-y-4">
-          <h4
-            class="text-xs font-bold uppercase tracking-wider text-base-content/50"
-          >
-            {scope} Scope
-          </h4>
-
-          {#each Object.keys(groupedEntries[scope]) as category}
-            <div
-              class="bg-base-200/30 border border-base-200 rounded-xl overflow-hidden shadow-sm"
-            >
-              <div
-                class="bg-base-200/50 px-4 py-2 border-b border-base-200 text-sm font-medium"
-              >
-                {category}
-              </div>
-
-              <div class="divide-y divide-base-200">
-                {#each groupedEntries[scope][category] as entry}
-                  <div
-                    class="px-4 py-3 flex items-center justify-between gap-4 hover:bg-base-200/20 transition-colors"
+      <div class="flex items-center gap-2 shrink-0">
+        {#if recordingId === entry.id}
+          <span class="btn btn-xs btn-primary animate-pulse">
+            Press keys...
+          </span>
+          <button class="btn btn-xs btn-ghost" onclick={stopRecording}>
+            Cancel
+          </button>
+        {:else}
+          <div class="flex gap-1.5 items-center">
+            {#each formatCombos(entry.keys) as combo, i (i)}
+              <div class="flex gap-1 items-center">
+                {#each combo as key, j (j)}
+                  <kbd
+                    class="kbd kbd-sm font-mono text-[10px] min-w-[20px] bg-base-300 border-base-content/10"
                   >
-                    <div class="flex flex-col">
-                      <span class="text-sm font-medium">{entry.label}</span>
-                      <span
-                        class="text-xs text-base-content/40 font-mono mt-0.5"
-                      >{entry.id}</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                      {#if recordingId === entry.id}
-                        <span class="btn btn-sm btn-primary animate-pulse">
-                          Press Key Combination...
-                        </span>
-                        <button
-                          class="btn btn-sm btn-ghost"
-                          onclick={stopRecording}
-                        >
-                          Cancel
-                        </button>
-                      {:else}
-                        <div class="flex gap-1.5 items-center">
-                          {#each entry.keys.split(",") as keyCombo}
-                            <div class="flex gap-1 items-center">
-                              {#each keyCombo.trim().split("+") as keyPart}
-                                <kbd
-                                  class="kbd kbd-sm bg-base-100 border-base-300 text-xs shadow-sm font-sans font-medium px-1.5 py-0.5 rounded"
-                                >
-                                  {keyPart}
-                                </kbd>
-                              {/each}
-                            </div>
-                          {/each}
-                        </div>
-
-                        <button
-                          class="btn btn-sm btn-outline border-base-300 hover:border-base-400"
-                          onclick={() => startRecording(entry.id)}
-                        >
-                          Edit
-                        </button>
-                      {/if}
-                    </div>
-                  </div>
+                    {key}
+                  </kbd>
                 {/each}
               </div>
-            </div>
-          {/each}
-        </div>
-      {/each}
+            {/each}
+          </div>
+
+          <button
+            class="btn btn-xs btn-ghost opacity-0 group-hover:opacity-100 transition-opacity"
+            onclick={() => startRecording(entry.id)}
+          >
+            Edit
+          </button>
+        {/if}
+      </div>
     </div>
-  {/if}
-</div>
+  {/snippet}
+</FilterableGroupedList>

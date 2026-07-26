@@ -26,7 +26,6 @@ describe("useCell reactivity bridge", () => {
     });
 
     const kernel = createKernel([testPlugin], {
-      config: {},
       persistence: driver,
     });
 

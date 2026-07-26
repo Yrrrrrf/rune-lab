@@ -1,11 +1,11 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import { getRegistryStore, getShortcutStore } from "../accessors.ts";
+import { getRegistryStore, getShortcutsStore } from "../plugin.ts";
 import { installSettingsRoute } from "../settings-modal/route.svelte.ts";
 import { bindShortcuts } from "./hotkeys.svelte.ts";
 
 const registryStore = getRegistryStore();
-const shortcutStore = getShortcutStore();
+const shortcutStore = getShortcutsStore();
 
 onMount(() => {
   const unbindShortcuts = bindShortcuts(shortcutStore);
@@ -44,12 +44,28 @@ $effect(() => {
         },
       });
     }
+    for (const entry of palette.sectionHotkeys ?? []) {
+      shortcutStore.register({
+        id: `rl:palette:${palette.id}:${entry.section}`,
+        keys: entry.hotkey,
+        label: `Open ${entry.title}`,
+        category: "General",
+        scope: "global",
+        handler: (e) => {
+          e.preventDefault();
+          registryStore.open(palette.id, entry.section);
+        },
+      });
+    }
   }
 
   return () => {
     for (const palette of activePalettes) {
       if (palette.hotkey) {
         shortcutStore.unregister(`rl:palette:${palette.id}`);
+      }
+      for (const entry of palette.sectionHotkeys ?? []) {
+        shortcutStore.unregister(`rl:palette:${palette.id}:${entry.section}`);
       }
     }
   };

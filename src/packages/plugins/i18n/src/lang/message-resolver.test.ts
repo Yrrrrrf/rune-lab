@@ -1,8 +1,5 @@
 import { describe, expect, it, vi } from "vite-plus/test";
 
-// Mock esm-env before importing the module
-vi.mock("esm-env", () => ({ DEV: true }));
-
 import {
   batchResolveMessages,
   createMessageResolver,

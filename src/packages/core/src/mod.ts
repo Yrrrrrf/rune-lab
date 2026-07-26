@@ -6,6 +6,12 @@ export {
   type ConfigStoreOptions,
 } from "./config/config-store.ts";
 export {
+  type ItemPresenter,
+  type PresentedItem,
+  type SelectOption,
+  toOptions,
+} from "./config/item-presenter.ts";
+export {
   contribute,
   type ContributionEntry,
   type ContributionKey,

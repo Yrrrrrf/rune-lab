@@ -169,7 +169,6 @@ function sortSlots(slots: NormalizedSlot[]): NormalizedSlot[] {
 function buildLayers(
   slots: NormalizedSlot[],
   options: {
-    config: Record<string, unknown>;
     persistence: PersistenceDriver;
     localeAdapter?: LocaleAdapter;
     textMeasurer?: TextMeasurer;
@@ -219,7 +218,7 @@ function buildLayers(
 
         let persistenceHandle: PersistenceHandle;
         if (slot.persist) {
-          const prefix = `rl:${slot.pluginId}:${slot.slotName}:`;
+          const prefix = `${slot.pluginId}:${slot.slotName}:`;
           persistenceHandle = {
             get: (key) => options.persistence.get(`${prefix}${key}`),
             set: (key, value) =>
@@ -304,7 +303,6 @@ type KernelRuntime = ManagedRuntime.ManagedRuntime<unknown, never>;
 export function compileEnvironment(
   pluginsInput: PluginInput[],
   options: {
-    config: Record<string, unknown>;
     persistence: PersistenceDriver;
     localeAdapter?: LocaleAdapter;
     textMeasurer?: TextMeasurer;

@@ -1,5 +1,5 @@
-export * from "rune-lab/core";
 export * from "./actions/portal.ts";
+export { default as FilterableGroupedList } from "./collections/FilterableGroupedList.svelte";
 export { createPluginKit } from "./define/plugin-kit.ts";
 export * from "./persistence/createConfigStore.svelte.ts";
 export * from "./persistence/drivers.ts";

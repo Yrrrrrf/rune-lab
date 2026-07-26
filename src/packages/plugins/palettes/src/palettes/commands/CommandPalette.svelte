@@ -1,10 +1,10 @@
 <script lang="ts">
 import { Icon } from "rune-lab/layout";
 import { onMount, tick } from "svelte";
-import { getCommandStore, getRegistryStore } from "../../accessors.ts";
+import { getCommandsStore, getRegistryStore } from "../../plugin.ts";
 import type { Command } from "../../types.ts";
 
-const commandStore = getCommandStore();
+const commandStore = getCommandsStore();
 const registryStore = getRegistryStore();
 
 let input = $state<HTMLInputElement>();

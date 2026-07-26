@@ -1,7 +1,10 @@
 import { createConfigStore } from "rune-lab";
-import type { ConfigStore, SlotContext } from "rune-lab/core";
+import type { ConfigStore, LocaleAdapter, SlotContext } from "rune-lab/core";
 import { createMessageResolver } from "./message-resolver.ts";
 import { m } from "./messages.ts";
+import { createParaglideAdapter } from "./paraglide-adapter.ts";
+// @deno-types="./paraglide/runtime.d.ts"
+import * as paraglideRuntime from "./paraglide/runtime.js";
 
 export interface Language {
   code: string;
@@ -43,21 +46,27 @@ export function createLanguageStore(
     driver: ctx.persistence,
   });
 
+  // The plugin owns the paraglide call directly: it builds its own adapter
+  // from the generated runtime when the app doesn't supply one, so language
+  // switching works without the app author having to remember to wire
+  // `localeAdapter` into RuneProvider. An explicit `ctx.locale` still wins,
+  // for consumers who want to supply their own.
+  const locale: LocaleAdapter = ctx.locale ??
+    createParaglideAdapter(paraglideRuntime);
+
   const originalSet = store.set.bind(store);
   store.set = (code: string) => {
     originalSet(code);
-    if (ctx.locale) {
-      try {
-        ctx.locale.setLocale(code);
-      } catch (err) {
-        console.error("[i18n] Failed to update locale:", err);
-      }
+    try {
+      locale.setLocale(code);
+    } catch (err) {
+      console.error("[i18n] Failed to update locale:", err);
     }
   };
 
-  if (store.current && ctx.locale) {
+  if (store.current) {
     try {
-      ctx.locale.setLocale(String(store.current));
+      locale.setLocale(String(store.current));
     } catch (err) {
       console.error("[i18n] Failed to set initial locale:", err);
     }

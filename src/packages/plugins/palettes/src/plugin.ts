@@ -1,3 +1,4 @@
+import { createPluginKit } from "rune-lab";
 import type { ForgedPlugin, SlotSpec } from "rune-lab/core";
 import {
   contribute,
@@ -12,7 +13,6 @@ import type { ToastStore } from "./notifications/store.svelte.ts";
 import { createToastStore } from "./notifications/store.svelte.ts";
 import Toaster from "./notifications/Toaster.svelte";
 import CommandPalette from "./palettes/commands/CommandPalette.svelte";
-import ShortcutPalette from "./palettes/shortcuts/ShortcutPalette.svelte";
 import type {
   PaletteRegistryStore,
   RouterAdapter,
@@ -34,7 +34,7 @@ type PalettesSlots = {
   registry: SlotSpec<RegistrySlotConfig, PaletteRegistryStore>;
 };
 
-export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
+const palettesPluginSpec: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
   definePlugin({
     id: "rune-lab.palettes",
     requires: ["rune-lab.layout"],
@@ -62,18 +62,22 @@ export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
             hotkey: "cmd+shift+k,ctrl+shift+k",
             renderer: CommandPalette,
           });
-          store.register({
-            id: "shortcuts",
-            title: "Shortcuts",
-            hotkey: "cmd+/,ctrl+/",
-            renderer: ShortcutPalette,
-          });
+          // C24: the standalone shortcuts palette is gone. `cmd+/` now opens the
+          // settings modal at its "shortcuts" section — the same view, which
+          // additionally carries the rebind affordance.
           store.register({
             id: "settings",
             title: "Settings",
             hotkey: "cmd+,,ctrl+,",
             renderer: SettingsModal,
             boxClass: "max-w-4xl",
+            sectionHotkeys: [
+              {
+                hotkey: "cmd+/,ctrl+/",
+                section: "shortcuts",
+                title: "Shortcuts",
+              },
+            ],
           });
           return store;
         },
@@ -90,3 +94,16 @@ export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
     ],
     overlays: [PaletteHost, Toaster],
   });
+
+const kit = createPluginKit(palettesPluginSpec);
+
+export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
+  kit.plugin;
+
+export const getCommandsStore: () => CommandStore =
+  kit.accessors.getCommandsStore;
+export const getShortcutsStore: () => ShortcutStore =
+  kit.accessors.getShortcutsStore;
+export const getToastsStore: () => ToastStore = kit.accessors.getToastsStore;
+export const getRegistryStore: () => PaletteRegistryStore =
+  kit.accessors.getRegistryStore;

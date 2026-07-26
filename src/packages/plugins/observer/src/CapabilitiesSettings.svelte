@@ -1,9 +1,9 @@
 <script lang="ts">
 import { getSettingsSections } from "rune-lab";
-import { getCommandStore, getShortcutStore } from "rune-lab/palettes";
+import { getCommandsStore, getShortcutsStore } from "rune-lab/palettes";
 
-const shortcutStore = getShortcutStore();
-const commandStore = getCommandStore();
+const shortcutStore = getShortcutsStore();
+const commandStore = getCommandsStore();
 const sections = getSettingsSections();
 
 let showPreview = $state(true);

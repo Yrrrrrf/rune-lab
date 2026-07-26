@@ -38,7 +38,6 @@ export interface Kernel<TCells = Record<string, unknown>> {
 export function createKernel<TCells = Record<string, unknown>>(
   pluginsInput: PluginInput[],
   options: {
-    config: Record<string, unknown>;
     persistence: PersistenceDriver;
     localeAdapter?: LocaleAdapter;
     textMeasurer?: TextMeasurer;

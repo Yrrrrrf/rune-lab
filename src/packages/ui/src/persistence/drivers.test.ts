@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import { createInMemoryDriver, inMemoryDriver } from "./drivers.ts";
+import { createInMemoryDriver, inMemoryDriver } from "rune-lab/core";
 
 describe("PersistenceDriver Contract Tests", () => {
   describe("createInMemoryDriver (factory)", () => {

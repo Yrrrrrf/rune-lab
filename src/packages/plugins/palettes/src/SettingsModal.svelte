@@ -1,10 +1,10 @@
 <script lang="ts">
 import { getSettingsSections } from "rune-lab";
 import {
-  getCommandStore,
+  getCommandsStore,
   getRegistryStore,
-  getShortcutStore,
-} from "./accessors.ts";
+  getShortcutsStore,
+} from "./plugin.ts";
 import SettingsSearchResults from "./settings-modal/SettingsSearchResults.svelte";
 import SettingsSectionContent from "./settings-modal/SettingsSectionContent.svelte";
 import SettingsSidebar from "./settings-modal/SettingsSidebar.svelte";
@@ -14,8 +14,8 @@ import {
   type SearchResult,
 } from "./settings-modal/search.ts";
 
-const shortcutStore = getShortcutStore();
-const commandStore = getCommandStore();
+const shortcutStore = getShortcutsStore();
+const commandStore = getCommandsStore();
 const registry = getRegistryStore();
 
 const model = $derived(deriveModalModel(getSettingsSections()));

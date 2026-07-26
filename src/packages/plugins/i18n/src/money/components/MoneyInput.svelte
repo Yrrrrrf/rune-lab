@@ -18,7 +18,7 @@ export interface MoneyInputProps {
 
 <script lang="ts">
 import { DEV } from "esm-env";
-import { getCurrencyStore } from "../../accessors.ts";
+import { getCurrencyStore } from "../../plugin.ts";
 import { toMinorUnit } from "../primitives/money.ts";
 
 let {

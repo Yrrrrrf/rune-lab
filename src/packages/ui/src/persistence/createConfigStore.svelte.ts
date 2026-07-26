@@ -69,4 +69,3 @@ export function createConfigStore<T, K extends keyof T>(
 ): ConfigStore<T, K> {
   return new ReactiveConfigStoreImpl(options) as unknown as ConfigStore<T, K>;
 }
-export type { ConfigStore, ConfigStoreOptions };

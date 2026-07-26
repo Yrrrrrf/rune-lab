@@ -32,13 +32,6 @@ let {
         onchange?.(t.name);
       }}
     >
-      <input
-        type="radio"
-        name="theme-{t.name}"
-        class="theme-controller radio radio-xs"
-        value={t.name}
-        bind:group={themeStore.current}
-      />
       <span class="text-lg">{t.icon}</span>
       <span class="flex-grow text-left capitalize">
         {t.name}

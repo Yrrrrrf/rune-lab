@@ -52,9 +52,6 @@ it("kernel test injecting FakeTextMeasurer reaches TextStoreFacade", async () =>
   const fakeMeasurer = new FakeTextMeasurer();
 
   const kernel = createKernel([LayoutPlugin], {
-    config: {
-      "rune-lab.layout": "light",
-    },
     persistence: driver,
     textMeasurer: fakeMeasurer,
   });

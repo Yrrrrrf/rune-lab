@@ -5,6 +5,20 @@ export interface RouterAdapter {
   pushState?: (url: string) => void;
 }
 
+/**
+ * An extra hotkey that opens a palette at a specific section (C24).
+ *
+ * This is what lets `cmd+/` land on the shortcuts section of the settings
+ * modal now that the standalone shortcuts palette is gone: the destination is
+ * a section of an existing palette, not a palette of its own.
+ */
+export interface PaletteSectionHotkey {
+  hotkey: string;
+  section: string;
+  /** Used for the shortcut's own label, e.g. "Open Shortcuts". */
+  title: string;
+}
+
 export interface PaletteDefinition {
   id: string;
   title: string;
@@ -13,6 +27,7 @@ export interface PaletteDefinition {
   renderer?: Component;
   onSelect?: (item: unknown) => void;
   boxClass?: string;
+  sectionHotkeys?: PaletteSectionHotkey[];
 }
 
 export class PaletteRegistryStore {

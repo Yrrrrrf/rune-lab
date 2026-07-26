@@ -12,7 +12,9 @@ coverage
 .fallow
 
 # docs & spec files
-docs
+# docs
+docs/ref
+docs/v0.5.1/
 # apps
 some
 

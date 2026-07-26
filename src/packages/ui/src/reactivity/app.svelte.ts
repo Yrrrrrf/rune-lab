@@ -30,6 +30,7 @@ type _ExhaustivenessCheck = ExpectEqual<
   typeof APP_DATA_KEYS[number],
   keyof AppData
 >;
+const _checkAppDataExhaustive: _ExhaustivenessCheck = true;
 
 export type AppStore = DataStore<AppData>;
 

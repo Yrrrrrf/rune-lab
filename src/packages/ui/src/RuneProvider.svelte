@@ -4,11 +4,15 @@ import type {
 	PersistenceDriver,
 	PluginInput,
 } from "rune-lab/core";
-import { createKernel, namespaced, settingsSections } from "rune-lab/core";
+import {
+	createInMemoryDriver,
+	createKernel,
+	namespaced,
+	settingsSections,
+} from "rune-lab/core";
 import { type Component, type Snippet, setContext, untrack } from "svelte";
 import {
 	cookieDriver,
-	createInMemoryDriver,
 	localStorageDriver,
 	sessionStorageDriver,
 } from "./persistence/drivers.ts";
@@ -16,8 +20,7 @@ import { RUNE_LAB_CONTEXT } from "./provider/context.ts";
 import { type AppData, createAppStore } from "./reactivity/app.svelte.ts";
 
 /**
- * Namespaced configuration for Rune Lab plugins.
- * Keyed by plugin.id.
+ * Configuration options for RuneProvider (persistence driver, head management, icon selection, app metadata).
  */
 export interface RuneLabConfig {
 	persistence?: PersistenceDriver;
@@ -40,16 +43,16 @@ let {
 	localeAdapter?: LocaleAdapter;
 } = $props();
 
+const DRIVERS: Record<string, PersistenceDriver> = {
+	local: localStorageDriver,
+	session: sessionStorageDriver,
+	cookie: cookieDriver,
+	memory: createInMemoryDriver(),
+};
+
 const initialPersistence = untrack(() => {
-	let savedDriverType = "local";
-	if (typeof window !== "undefined") {
-		savedDriverType =
-			window.localStorage.getItem("rl:persistence:driver") || "local";
-	}
-	let baseDriver = localStorageDriver;
-	if (savedDriverType === "memory") baseDriver = createInMemoryDriver();
-	else if (savedDriverType === "session") baseDriver = sessionStorageDriver;
-	else if (savedDriverType === "cookie") baseDriver = cookieDriver;
+	const saved = localStorageDriver.get("rl:persistence:driver");
+	const baseDriver = DRIVERS[String(saved ?? "local")] ?? DRIVERS.local;
 	return namespaced(config.persistence ?? baseDriver, "rl:");
 });
 
@@ -66,7 +69,6 @@ setContext(RUNE_LAB_CONTEXT.app, appStore);
 const kernel = createKernel(
 	untrack(() => plugins),
 	{
-		config: untrack(() => config as Record<string, unknown>),
 		persistence: initialPersistence,
 		localeAdapter: untrack(() => localeAdapter),
 	},

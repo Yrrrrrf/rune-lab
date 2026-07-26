@@ -1,6 +1,6 @@
 <script lang="ts">
 import { DEV } from "esm-env";
-import { getCurrencyStore, getLanguageStore } from "../../accessors.ts";
+import { getCurrencyStore, getLanguageStore } from "../../plugin.ts";
 import {
   formatAmount,
   type ISO4217Code,
