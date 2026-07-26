@@ -32,6 +32,9 @@ npm install rune-lab
 bun install rune-lab
 ```
 
+Rune Lab requires `tailwindcss@^4` and `daisyui@^5` as dev dependencies in
+your app.
+
 Rune Lab ships pre-compiled Tailwind/daisyUI classes in its `dist`. Tailwind
 skips `node_modules` when scanning for classes, so your app's CSS entrypoint
 **must** opt back in with `@source`, or every rune-lab component renders
