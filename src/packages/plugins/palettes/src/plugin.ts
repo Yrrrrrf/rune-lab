@@ -4,6 +4,7 @@ import {
   contribute,
   definePlugin,
   defineSlot,
+  messages,
   settingsSections,
 } from "rune-lab/core";
 import type { CommandStore } from "./commands/store.svelte.ts";
@@ -91,13 +92,40 @@ const palettesPluginSpec: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
         icon: "⌨️",
         component: ShortcutSettings,
       }),
+      contribute(messages, {
+        "palettes.shortcuts.title": "Keyboard Shortcuts",
+        "palettes.shortcuts.subtitle":
+          "View and customize application commands",
+        "palettes.shortcuts.search_placeholder": "Search shortcuts...",
+        "palettes.shortcuts.press_keys": "Press keys...",
+        "palettes.shortcuts.cancel": "Cancel",
+        "palettes.shortcuts.edit": "Edit",
+        "palettes.settings.search_placeholder": "Search settings...",
+        "palettes.settings.sections_heading": "Settings",
+        "palettes.settings.navigate": "Navigate",
+        "palettes.settings.select": "Select",
+        "palettes.settings.no_matches_for": "No matching settings found for",
+        "palettes.settings.search_results_for": "Search Results for",
+        "palettes.app.repo": "Repo",
+        "palettes.app.home": "Home",
+        "palettes.commands.root": "Root",
+        "palettes.commands.search_subcommands": "Search in subcommands...",
+        "palettes.commands.what_do_you_need": "What do you need?",
+        "palettes.commands.no_results_for": "No results found for",
+        "palettes.commands.backspace_to_go_back": "Backspace to go back",
+        "palettes.commands.search_actions_pages_settings":
+          "Search actions, pages, or settings",
+        "palettes.notifications.title": "Notifications",
+        "palettes.notifications.unread_suffix": "unread",
+        "palettes.notifications.close": "Close notification",
+      }),
     ],
     overlays: [PaletteHost, Toaster],
   });
 
 const kit = createPluginKit(palettesPluginSpec);
 
-export const PalettesPlugin: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
+export const palettes: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
   kit.plugin;
 
 export const getCommandsStore: () => CommandStore =

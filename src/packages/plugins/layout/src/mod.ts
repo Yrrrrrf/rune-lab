@@ -17,7 +17,7 @@ export {
   getLayoutStore,
   getTextStore,
   getThemeStore,
-  LayoutPlugin,
+  layout,
 } from "./plugin.ts";
 export { PRESETS } from "./presets.ts";
 export { type Theme, THEMES } from "./stores/theme.svelte.ts";

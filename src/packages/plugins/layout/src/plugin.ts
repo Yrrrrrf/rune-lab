@@ -1,7 +1,7 @@
 import { Schema } from "effect";
 import { createPluginKit } from "rune-lab";
 import type { ConfigStore, ForgedPlugin, SlotSpec } from "rune-lab/core";
-import { definePlugin, defineSlot } from "rune-lab/core";
+import { contribute, definePlugin, defineSlot, messages } from "rune-lab/core";
 import { layoutSettings } from "./settings.ts";
 import { createLayoutStore, type LayoutStore } from "./stores/layout.svelte.ts";
 import { createTextStore, type TextStoreFacade } from "./stores/text.svelte.ts";
@@ -28,6 +28,14 @@ const layoutPluginSpec = definePlugin({
     }),
   },
   settings: layoutSettings,
+  contributions: [
+    contribute(messages, {
+      "layout.modal.select_option": "Select Option",
+      "layout.modal.close": "close",
+      "layout.nav.close_navigation": "Close navigation",
+      "layout.nav.close_detail_panel": "Close detail panel",
+    }),
+  ],
 });
 
 const kit = createPluginKit(layoutPluginSpec);
@@ -38,8 +46,7 @@ type LayoutSlots = {
   theme: SlotSpec<ThemeName, ConfigStore<Theme, "name">, ThemeName>;
 };
 
-export const LayoutPlugin: ForgedPlugin<"rune-lab.layout", LayoutSlots> =
-  kit.plugin;
+export const layout: ForgedPlugin<"rune-lab.layout", LayoutSlots> = kit.plugin;
 
 export const getLayoutStore: () => LayoutStore = kit.accessors.getLayoutStore;
 export const getTextStore: () => TextStoreFacade = kit.accessors.getTextStore;

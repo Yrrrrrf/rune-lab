@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
+import { getT } from "rune-lab";
 import { getLayoutStore } from "../plugin.ts";
 
 let {
@@ -7,6 +8,7 @@ let {
 	workspaceStrip,
 }: { navigationPanel?: Snippet; workspaceStrip?: Snippet } = $props();
 const layoutStore = getLayoutStore();
+const t = getT();
 const zone = $derived(layoutStore.zones.nav);
 const stripZone = $derived(layoutStore.zones.strip);
 const visible = $derived(zone?.visible ?? false);
@@ -21,7 +23,7 @@ const stripSize = $derived(
     class="fixed inset-0 bg-black/50 md:hidden cursor-default border-none"
     style="z-index: var(--rl-z-backdrop, 40)"
     onclick={() => layoutStore.toggleZone("nav")}
-    aria-label="Close navigation"
+    aria-label={t("layout.nav.close_navigation", "Close navigation")}
   >
   </button>
 {/if}

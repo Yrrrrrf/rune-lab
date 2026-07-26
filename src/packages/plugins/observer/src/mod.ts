@@ -7,7 +7,7 @@ import ObserverPanel from "./ObserverPanel.svelte";
  * Observer Plugin — provides docked developer tools, same-origin iframe preview,
  * and a microkernel capabilities page in settings.
  */
-export const ObserverPlugin: ForgedPlugin<
+export const observer: ForgedPlugin<
   "rune-lab.observer",
   Record<never, never>
 > = definePlugin({

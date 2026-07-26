@@ -1,7 +1,8 @@
 <script lang="ts">
-import { getAppStore } from "rune-lab";
+import { getAppStore, getT } from "rune-lab";
 
 const appStore = getAppStore();
+const t = getT();
 const initial = $derived(
   appStore.data.name ? appStore.data.name.charAt(0).toUpperCase() : "",
 );
@@ -40,13 +41,13 @@ const initial = $derived(
     {/if}
     <div class="flex items-center gap-2 text-xs text-base-content/50">
       {#if appStore.data.repository}
-        <a href={appStore.data.repository} target="_blank" rel="noopener noreferrer" class="link link-hover text-xs">Repo</a>
+        <a href={appStore.data.repository} target="_blank" rel="noopener noreferrer" class="link link-hover text-xs">{t("palettes.app.repo", "Repo")}</a>
       {/if}
       {#if appStore.data.homepage}
         {#if appStore.data.repository}
           <span>•</span>
         {/if}
-        <a href={appStore.data.homepage} target="_blank" rel="noopener noreferrer" class="link link-hover text-xs">Home</a>
+        <a href={appStore.data.homepage} target="_blank" rel="noopener noreferrer" class="link link-hover text-xs">{t("palettes.app.home", "Home")}</a>
       {/if}
       {#if appStore.data.license}
         {#if appStore.data.repository || appStore.data.homepage}

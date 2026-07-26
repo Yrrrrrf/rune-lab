@@ -1,4 +1,5 @@
 <script lang="ts">
+import { getT } from "rune-lab";
 import type { SearchResult } from "./search.ts";
 
 let {
@@ -12,6 +13,8 @@ let {
   selectedIndex: number;
   onResultClick: (res: SearchResult) => void;
 } = $props();
+
+const t = getT();
 
 function getGlyph(type: string): string {
   switch (type) {
@@ -34,7 +37,7 @@ function getGlyph(type: string): string {
     {#if results.length === 0}
       <div class="flex flex-col items-center justify-center h-full text-base-content/40 py-12">
         <span class="text-3xl mb-2">🔍</span>
-        <span>No matching settings found for "{query}"</span>
+        <span>{t("palettes.settings.no_matches_for", "No matching settings found for")} "{query}"</span>
       </div>
     {:else}
       <ul class="menu w-full p-0 gap-1">
@@ -68,11 +71,11 @@ function getGlyph(type: string): string {
   <div
     class="border-t border-base-200 px-4 py-2 bg-base-200/30 flex items-center justify-between text-xs text-base-content/50 shrink-0">
     <div class="flex items-center gap-4">
-      <span>Search Results for "{query}"</span>
+      <span>{t("palettes.settings.search_results_for", "Search Results for")} "{query}"</span>
     </div>
     <div class="flex items-center gap-2">
-      <kbd class="kbd kbd-xs">↑↓</kbd> <span>Navigate</span>
-      <kbd class="kbd kbd-xs">↵</kbd> <span>Select</span>
+      <kbd class="kbd kbd-xs">↑↓</kbd> <span>{t("palettes.settings.navigate", "Navigate")}</span>
+      <kbd class="kbd kbd-xs">↵</kbd> <span>{t("palettes.settings.select", "Select")}</span>
     </div>
   </div>
 </div>

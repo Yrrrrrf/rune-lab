@@ -16,6 +16,8 @@ export {
   type ContributionEntry,
   type ContributionKey,
   defineContribution,
+  type MessageBundle,
+  messages,
   type SettingsSectionContribution,
   settingsSections,
 } from "./forge/define-contribution.ts";
@@ -43,6 +45,7 @@ export {
   namespaced,
 } from "./ports/memory.ts";
 export type { PersistenceDriver } from "./ports/persistence.ts";
+export type { Translator } from "./ports/translate.ts";
 export type {
   LayoutCursor,
   LayoutLine,

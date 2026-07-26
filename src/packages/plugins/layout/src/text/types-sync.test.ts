@@ -40,7 +40,7 @@ import {
   FakeTextMeasurer,
 } from "rune-lab/core";
 import { expect, it } from "vite-plus/test";
-import { LayoutPlugin } from "../plugin.ts";
+import { layout } from "../plugin.ts";
 import type { TextStoreFacade } from "../stores/text.svelte.ts";
 
 it("text port types mirror pretext (compile-time)", () => {
@@ -51,7 +51,7 @@ it("kernel test injecting FakeTextMeasurer reaches TextStoreFacade", async () =>
   const driver = createInMemoryDriver();
   const fakeMeasurer = new FakeTextMeasurer();
 
-  const kernel = createKernel([LayoutPlugin], {
+  const kernel = createKernel([layout], {
     persistence: driver,
     textMeasurer: fakeMeasurer,
   });

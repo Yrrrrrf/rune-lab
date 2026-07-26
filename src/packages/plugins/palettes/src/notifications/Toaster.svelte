@@ -1,8 +1,9 @@
 <script lang="ts">
-import { portal } from "rune-lab";
+import { getT, portal } from "rune-lab";
 import { getToastsStore } from "../plugin.ts";
 
 const toastStore = getToastsStore();
+const t = getT();
 
 const typeDetails: Record<
   string,
@@ -83,7 +84,7 @@ const typeDetails: Record<
       <button
         class="shrink-0 -mr-2 -mt-2 btn btn-ghost btn-xs btn-circle opacity-60 hover:opacity-100 transition-opacity"
         onclick={() => toastStore.dismiss(toast.id)}
-        aria-label="Close notification"
+        aria-label={t("palettes.notifications.close", "Close notification")}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -29,3 +29,10 @@ export interface SettingsSectionContribution {
 
 export const settingsSections: ContributionKey<SettingsSectionContribution> =
   defineContribution<SettingsSectionContribution>("settingsSections");
+
+/** key -> English fallback string, contributed by each plugin (C25). */
+export type MessageBundle = Record<string, string>;
+
+export const messages: ContributionKey<MessageBundle> = defineContribution<
+  MessageBundle
+>("messages");

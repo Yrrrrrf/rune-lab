@@ -85,19 +85,19 @@ export function useMoney(): UseMoneyReturn {
   const currencyStore = getCurrencyStore();
   if (!currencyStore) {
     throw new Error(
-      "[rune-lab] useMoney() found no CurrencyStore. Did you register MoneyPlugin in <RuneProvider plugins={[…]}>?",
+      "[rune-lab] useMoney() found no CurrencyStore. Did you register rune-lab.i18n in <RuneProvider plugins={[…]}>?",
     );
   }
   const languageStore = getLanguageStore();
   if (!languageStore) {
     throw new Error(
-      "[rune-lab] useMoney() found no LanguageStore. Did you register I18nPlugin in <RuneProvider plugins={[…]}>?",
+      "[rune-lab] useMoney() found no LanguageStore. Did you register rune-lab.i18n in <RuneProvider plugins={[…]}>?",
     );
   }
   const exchangeRateStore = getExchangeRateStore();
   if (!exchangeRateStore) {
     throw new Error(
-      "[rune-lab] useMoney() found no ExchangeRateStore. Did you register MoneyPlugin in <RuneProvider plugins={[…]}>?",
+      "[rune-lab] useMoney() found no ExchangeRateStore. Did you register rune-lab.i18n in <RuneProvider plugins={[…]}>?",
     );
   }
 

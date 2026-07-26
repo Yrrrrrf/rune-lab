@@ -9,7 +9,7 @@
  * what remains here is the one thing genuinely specific to this view — the
  * rebind affordance.
  */
-import { FilterableGroupedList } from "rune-lab";
+import { FilterableGroupedList, getT } from "rune-lab";
 import { onDestroy } from "svelte";
 import { getShortcutsStore } from "../plugin.ts";
 import type { ShortcutEntry } from "../types.ts";
@@ -19,6 +19,7 @@ import { sortScopes } from "./grouping.ts";
 let { autofocus = false }: { autofocus?: boolean } = $props();
 
 const shortcutStore = getShortcutsStore();
+const t = getT();
 
 let recordingId = $state<string | null>(null);
 
@@ -81,9 +82,15 @@ onDestroy(stopRecording);
   matches={matchesQuery}
   sortGroups={sortScopes}
   groupLabel={scopeLabel}
-  title="Keyboard Shortcuts"
-  subtitle="View and customize application commands"
-  searchPlaceholder="Search shortcuts..."
+  title={t("palettes.shortcuts.title", "Keyboard Shortcuts")}
+  subtitle={t(
+    "palettes.shortcuts.subtitle",
+    "View and customize application commands",
+  )}
+  searchPlaceholder={t(
+    "palettes.shortcuts.search_placeholder",
+    "Search shortcuts...",
+  )}
   {autofocus}
 >
   {#snippet row(entry: ShortcutEntry)}
@@ -102,10 +109,10 @@ onDestroy(stopRecording);
       <div class="flex items-center gap-2 shrink-0">
         {#if recordingId === entry.id}
           <span class="btn btn-xs btn-primary animate-pulse">
-            Press keys...
+            {t("palettes.shortcuts.press_keys", "Press keys...")}
           </span>
           <button class="btn btn-xs btn-ghost" onclick={stopRecording}>
-            Cancel
+            {t("palettes.shortcuts.cancel", "Cancel")}
           </button>
         {:else}
           <div class="flex gap-1.5 items-center">
@@ -126,7 +133,7 @@ onDestroy(stopRecording);
             class="btn btn-xs btn-ghost opacity-0 group-hover:opacity-100 transition-opacity"
             onclick={() => startRecording(entry.id)}
           >
-            Edit
+            {t("palettes.shortcuts.edit", "Edit")}
           </button>
         {/if}
       </div>

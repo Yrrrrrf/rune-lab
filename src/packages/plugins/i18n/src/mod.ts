@@ -5,5 +5,5 @@ export {
   getCurrencyStore,
   getExchangeRateStore,
   getLanguageStore,
-  I18nPlugin,
+  i18n,
 } from "./plugin.ts";

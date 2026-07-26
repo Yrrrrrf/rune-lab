@@ -1,9 +1,11 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
+import { getT } from "rune-lab";
 import { getLayoutStore } from "../plugin.ts";
 
 let { detailPanel }: { detailPanel?: Snippet } = $props();
 const layoutStore = getLayoutStore();
+const t = getT();
 const zone = $derived(layoutStore.zones.detail);
 const visible = $derived(zone?.visible ?? false);
 const size = $derived(zone?.size ?? 320);
@@ -14,7 +16,7 @@ const size = $derived(zone?.size ?? 320);
     class="fixed inset-0 bg-black/50 md:hidden cursor-default border-none"
     style="z-index: var(--rl-z-backdrop, 40)"
     onclick={() => layoutStore.toggleZone("detail")}
-    aria-label="Close detail panel"
+    aria-label={t("layout.nav.close_detail_panel", "Close detail panel")}
   >
   </button>
 {/if}

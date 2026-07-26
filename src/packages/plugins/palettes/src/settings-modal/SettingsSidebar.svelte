@@ -1,4 +1,5 @@
 <script lang="ts">
+import { getT } from "rune-lab";
 import { onMount } from "svelte";
 import type { SidebarEntry } from "./sections.ts";
 
@@ -15,6 +16,7 @@ let {
 } = $props();
 
 let inputEl = $state<HTMLInputElement>();
+const t = getT();
 
 onMount(() => {
   inputEl?.focus();
@@ -34,7 +36,7 @@ onMount(() => {
     <input
       bind:this={inputEl}
       type="text"
-      placeholder="Search settings..."
+      placeholder={t("palettes.settings.search_placeholder", "Search settings...")}
       class="grow"
       bind:value={searchQuery}
     />
@@ -44,7 +46,7 @@ onMount(() => {
 
   <span
     class="text-xs font-semibold uppercase tracking-wider text-base-content/50 px-1 shrink-0">
-    Settings
+    {t("palettes.settings.sections_heading", "Settings")}
   </span>
 
   <div class="flex-1 overflow-y-auto">

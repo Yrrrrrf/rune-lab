@@ -14,21 +14,29 @@ export interface NotificationBellProps {
 </script>
 
 <script lang="ts">
+import { getT } from "rune-lab";
+
 let {
   unreadCount = 0,
   onclick,
   animate = false,
 }: NotificationBellProps = $props();
 
+const t = getT();
 const showBadge = $derived(unreadCount > 0);
 const badgeText = $derived(unreadCount > 99 ? "99+" : String(unreadCount));
+const title = $derived(
+  t("palettes.notifications.title", "Notifications"),
+);
 </script>
 
 <button
   class="btn btn-ghost btn-sm btn-square relative"
   class:rl-bell-animate={animate && showBadge}
   {onclick}
-  aria-label={showBadge ? `Notifications — ${unreadCount} unread` : "Notifications"}
+  aria-label={showBadge
+    ? `${title} — ${unreadCount} ${t("palettes.notifications.unread_suffix", "unread")}`
+    : title}
 >
   <!-- Bell Icon (inline SVG) -->
   <svg

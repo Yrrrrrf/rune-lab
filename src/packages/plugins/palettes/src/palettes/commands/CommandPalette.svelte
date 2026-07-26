@@ -1,4 +1,5 @@
 <script lang="ts">
+import { getT } from "rune-lab";
 import { Icon } from "rune-lab/layout";
 import { onMount, tick } from "svelte";
 import { getCommandsStore, getRegistryStore } from "../../plugin.ts";
@@ -6,6 +7,7 @@ import type { Command } from "../../types.ts";
 
 const commandStore = getCommandsStore();
 const registryStore = getRegistryStore();
+const t = getT();
 
 let input = $state<HTMLInputElement>();
 let query = $state("");
@@ -83,7 +85,7 @@ function handleKeyDown(e: KeyboardEvent) {
   {#if navigationStack.length > 0}
     <div class="breadcrumbs text-xs px-4 pt-4 opacity-50">
       <ul>
-        <li><button onclick={goBack}>Root</button></li>
+        <li><button onclick={goBack}>{t("palettes.commands.root", "Root")}</button></li>
         {#each navigationStack as id}
           <li><span class="font-bold">{id}</span></li>
         {/each}
@@ -98,7 +100,9 @@ function handleKeyDown(e: KeyboardEvent) {
       bind:this={input}
       type="text"
       class="bg-transparent outline-none w-full text-lg"
-      placeholder={navigationStack.length > 0 ? "Search in subcommands..." : "What do you need?"}
+      placeholder={navigationStack.length > 0
+        ? t("palettes.commands.search_subcommands", "Search in subcommands...")
+        : t("palettes.commands.what_do_you_need", "What do you need?")}
       bind:value={query}
     />
     <div class="flex gap-1">
@@ -111,7 +115,7 @@ function handleKeyDown(e: KeyboardEvent) {
   <div class="max-h-[60vh] overflow-y-auto p-2 rl-command-list">
     {#if filtered.length === 0}
       <div class="p-8 text-center text-base-content/50">
-        No results found for "{query}"
+        {t("palettes.commands.no_results_for", "No results found for")} "{query}"
       </div>
     {:else}
       <ul class="menu w-full p-0 gap-1">
@@ -158,8 +162,11 @@ function handleKeyDown(e: KeyboardEvent) {
   >
     {
       navigationStack.length > 0
-      ? "Backspace to go back"
-      : "Search actions, pages, or settings"
+      ? t("palettes.commands.backspace_to_go_back", "Backspace to go back")
+      : t(
+        "palettes.commands.search_actions_pages_settings",
+        "Search actions, pages, or settings",
+      )
     }
   </div>
 </div>

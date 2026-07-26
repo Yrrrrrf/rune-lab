@@ -8,6 +8,7 @@ export {
   createAccessor,
   getKernel,
   getSettingsSections,
+  getT,
   RUNE_LAB_CONTEXT,
   type SettingsSection,
 } from "./provider/context.ts";
