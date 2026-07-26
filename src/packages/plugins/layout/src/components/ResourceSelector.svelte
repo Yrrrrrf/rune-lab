@@ -1,6 +1,6 @@
 <script lang="ts" generics="T">
 import type { ConfigStore } from "rune-lab/core";
-import { getContext, type Snippet } from "svelte";
+import type { Snippet } from "svelte";
 import AppSettingSelector from "./AppSettingSelector.svelte";
 
 interface Props {
@@ -30,23 +30,6 @@ let {
 	responsive = true,
 }: Props = $props();
 
-const userDictionary =
-	getContext<Record<string, (...args: unknown[]) => string>>("rl:dictionary") ??
-	{};
-
-/**
- * Resolve a label for an item through the message chain:
- * 1. User-provided dictionary
- * 2. Raw key fallback
- */
-function resolveLabel(item: T): string {
-	const key = String((item as Record<string, unknown>)[idKey]);
-	if (typeof userDictionary[key] === "function") {
-		return userDictionary[key]();
-	}
-	return key;
-}
-
 let active = $derived(store.get(store.current) ?? store.available[0]);
 
 let available = $derived(
@@ -69,7 +52,7 @@ let available = $derived(
 <AppSettingSelector
   value={active}
   options={available}
-  tooltip={resolveLabel(active)}
+  tooltip={String((active as Record<string, unknown>)[idKey])}
   {direction}
   {responsive}
   triggerLabel={_triggerLabel}
