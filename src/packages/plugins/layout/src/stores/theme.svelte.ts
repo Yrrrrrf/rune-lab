@@ -45,7 +45,7 @@ const THEME_ICONS: Record<string, string> = {
   silk: "🎀",
 };
 
-const THEMES = Object.keys(THEME_ICONS).map((name: string) => ({
+export const THEMES = Object.keys(THEME_ICONS).map((name: string) => ({
   name,
   icon: THEME_ICONS[name] ?? "🎨",
 })) as Theme[];
@@ -71,10 +71,14 @@ export function createThemeStore(
     const configTheme = typeof ctx.config === "string" ? ctx.config : undefined;
     if (configTheme && store.get(configTheme)) {
       store.set(configTheme);
-    } else if (BROWSER) {
-      const prefersDark = globalThis.matchMedia(
-        "(prefers-color-scheme: dark)",
-      ).matches;
+    } else if (
+      BROWSER ||
+      (typeof globalThis !== "undefined" &&
+        typeof globalThis.matchMedia === "function")
+    ) {
+      const prefersDark = typeof globalThis.matchMedia === "function"
+        ? globalThis.matchMedia("(prefers-color-scheme: dark)")?.matches
+        : false;
       const systemDefault = prefersDark ? "dark" : "light";
       if (store.get(systemDefault)) {
         store.set(systemDefault);

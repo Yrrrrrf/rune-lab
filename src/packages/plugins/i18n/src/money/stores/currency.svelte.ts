@@ -29,7 +29,7 @@ function buildDineroDef(meta: Currency) {
   };
 }
 
-const CURRENCIES = [
+export const CURRENCIES = [
   { code: "USD", symbol: "$", decimals: 2 },
   { code: "EUR", symbol: "€", decimals: 2 },
   { code: "GBP", symbol: "£", decimals: 2 },
