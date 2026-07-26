@@ -55,7 +55,11 @@ const shortcuts = [
       <table class="table table-xs font-mono">
         <tbody>
           {#each shortcuts as [keys, what]}
-            <tr><td class="w-40"><kbd class="kbd kbd-sm">{keys}</kbd></td><td>{what}</td></tr>
+            <tr
+              ><td class="w-40"><kbd class="kbd kbd-sm">{keys}</kbd></td><td
+                >{what}</td
+              ></tr
+            >
           {/each}
         </tbody>
       </table>
@@ -66,18 +70,20 @@ const shortcuts = [
     <div class="card-body">
       <h2 class="card-title text-sm">Triggers</h2>
       <div class="flex flex-wrap gap-2">
-        <button class="btn btn-sm"
-          onclick={() => registry.open("commands")}>Commands</button>
-        <button class="btn btn-sm"
-          onclick={() => registry.open("shortcuts")}>Shortcuts</button>
-        <button class="btn btn-sm"
-          onclick={() => registry.open("settings")}>Settings</button>
-        <button class="btn btn-sm btn-outline"
-          onclick={() => layout.applyPreset("page")}>
+        <button class="btn btn-sm" onclick={() => registry.open("commands")}
+        >Commands</button>
+        <button class="btn btn-sm" onclick={() => registry.open("settings")}
+        >Settings</button>
+        <button
+          class="btn btn-sm btn-outline"
+          onclick={() => layout.applyPreset("page")}
+        >
           Preset: page
         </button>
-        <button class="btn btn-sm btn-outline"
-          onclick={() => layout.applyPreset("workspace")}>
+        <button
+          class="btn btn-sm btn-outline"
+          onclick={() => layout.applyPreset("workspace")}
+        >
           Preset: workspace
         </button>
       </div>
@@ -90,8 +96,9 @@ const shortcuts = [
         pretext playground · lines: {lineCount} · overflow: {overflow}
       </h2>
       <PretextPlayground />
-      <div
-        class="divider my-1 text-xs opacity-50">clamped Text + rich pill</div>
+      <div class="divider my-1 text-xs opacity-50">
+        clamped Text + rich pill
+      </div>
       <Text content={longText} clamping={3} bind:lineCount bind:overflow />
       <RichText items={richItems} />
     </div>

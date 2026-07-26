@@ -1,14 +1,16 @@
 <script lang="ts">
+import { ResourceSelector } from "rune-lab";
 import { getThemeStore } from "../plugin.ts";
-import ResourceSelector from "./ResourceSelector.svelte";
+import ThemeSwatch from "./ThemeSwatch.svelte";
 
 const themeStore = getThemeStore();
 
+// C21: which themes exist is single-sourced from the plugin config
+// (`LayoutPlugin.with({ theme: { available: [...] } })`) via `store.available`
+// — there is no client-side narrowing prop anymore.
 let {
-  themes = [],
   onchange,
 }: {
-  themes?: string[];
   onchange?: (value: string) => void;
 } = $props();
 </script>
@@ -16,11 +18,10 @@ let {
 <ResourceSelector
   store={themeStore}
   idKey="name"
-  filterKeys={themes}
 >
   {#snippet triggerLabel(active: any)}
     <div class="flex items-center gap-2">
-      <span class="text-lg">{active.icon}</span>
+      <ThemeSwatch name={active.name} />
     </div>
   {/snippet}
 
@@ -32,7 +33,7 @@ let {
         onchange?.(t.name);
       }}
     >
-      <span class="text-lg">{t.icon}</span>
+      <ThemeSwatch name={t.name} />
       <span class="flex-grow text-left capitalize">
         {t.name}
       </span>

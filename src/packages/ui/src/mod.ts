@@ -21,6 +21,9 @@ export {
 } from "./reactivity/app.svelte.ts";
 // Reactivity & Context exports
 export { useCell } from "./reactivity/use-cell.svelte.ts";
+export { default as AppSettingSelector } from "./selectors/AppSettingSelector.svelte";
+export { default as Icon } from "./selectors/Icon.svelte";
+export { default as ResourceSelector } from "./selectors/ResourceSelector.svelte";
 export { default as SettingsFields } from "./settings/SettingsFields.svelte";
 
 import pkgConfig from "../deno.json" with { type: "json" };

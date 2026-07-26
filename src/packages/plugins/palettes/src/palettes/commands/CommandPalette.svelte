@@ -1,6 +1,5 @@
 <script lang="ts">
-import { getT } from "rune-lab";
-import { Icon } from "rune-lab/layout";
+import { getT, Icon } from "rune-lab";
 import { onMount, tick } from "svelte";
 import { getCommandsStore, getRegistryStore } from "../../plugin.ts";
 import type { Command } from "../../types.ts";

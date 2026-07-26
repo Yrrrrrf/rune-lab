@@ -13,7 +13,7 @@ import faviconUrl from "$lib/assets/img/rune.png";
 
 let { children }: { children: Snippet } = $props();
 
-const layoutPlugin = layout.with({ theme: "dark" });
+const layoutPlugin = layout.with({ theme: { default: "dark" } });
 const palettesPlugin = palettes.with({
   registry: {
     router: {

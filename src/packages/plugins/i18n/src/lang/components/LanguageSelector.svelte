@@ -1,7 +1,8 @@
 <script lang="ts">
-import { ResourceSelector } from "rune-lab/layout";
+import { ResourceSelector } from "rune-lab";
 import { getLanguageStore } from "../../plugin.ts";
-import { getLanguageName, type Language } from "../store.svelte.ts";
+import { languagePresenter } from "../presenter.ts";
+import type { Language } from "../store.svelte.ts";
 
 const languageStore = getLanguageStore();
 
@@ -14,12 +15,20 @@ let {
   languages?: string[];
   onchange?: (value: string) => void;
 } = $props();
+
+// C21: ResourceSelector's key-based narrowing prop is gone — narrowing is
+// this domain's own concern now, done against the store's own `available`.
+const available = $derived(
+  languageStore.available.filter((l: Language) =>
+    allowedLocales.includes(l.code)
+  ),
+);
 </script>
 
 <ResourceSelector
   store={languageStore}
   idKey="code"
-  filterKeys={[...allowedLocales]}
+  items={available}
 >
   {#snippet triggerLabel(active: any)}
     <div class="flex items-center gap-2">
@@ -28,6 +37,7 @@ let {
   {/snippet}
 
   {#snippet item(l: any)}
+    {@const p = languagePresenter.present(l)}
     <button
       class="flex items-center gap-3 w-full"
       onclick={() => {
@@ -35,9 +45,9 @@ let {
         onchange?.(l.code);
       }}
     >
-      <span class="text-lg">{l.flag}</span>
+      <span class="text-lg">{p.icon}</span>
       <span class="text-xs opacity-50 uppercase">{l.code}</span>
-      <span class="flex-grow text-left">{getLanguageName(l)}</span>
+      <span class="flex-grow text-left">{p.label}</span>
     </button>
   {/snippet}
 </ResourceSelector>

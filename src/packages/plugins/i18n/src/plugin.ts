@@ -6,7 +6,7 @@ import type {
   SlotSpec,
   Translator,
 } from "rune-lab/core";
-import { definePlugin, defineSlot } from "rune-lab/core";
+import { contribute, definePlugin, defineSlot, messages } from "rune-lab/core";
 import { createLanguageStore, type Language } from "./lang/store.svelte.ts";
 import { createTranslator } from "./lang/translator.ts";
 import {
@@ -82,6 +82,15 @@ const i18nPluginSpec = definePlugin({
     }),
   },
   settings: i18nSettings,
+  contributions: [
+    // C24.3: LanguageSelector/CurrencySelector render the hoisted, shared
+    // ResourceSelector/MobileModal (now in `ui`) — same fallback catalog
+    // entry as layout/plugin.ts, since `ui` has no contribute() of its own.
+    contribute(messages, {
+      "ui.modal.select_option": "Select Option",
+      "ui.modal.close": "close",
+    }),
+  ],
 });
 
 const kit = createPluginKit(i18nPluginSpec);

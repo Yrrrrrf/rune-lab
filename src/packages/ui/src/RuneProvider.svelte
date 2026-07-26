@@ -7,7 +7,6 @@ import type {
 import {
 	createInMemoryDriver,
 	createKernel,
-	namespaced,
 	settingsSections,
 } from "rune-lab/core";
 import { type Component, type Snippet, setContext, untrack } from "svelte";
@@ -53,7 +52,7 @@ const DRIVERS: Record<string, PersistenceDriver> = {
 const initialPersistence = untrack(() => {
 	const saved = localStorageDriver.get("rl:persistence:driver");
 	const baseDriver = DRIVERS[String(saved ?? "local")] ?? DRIVERS.local;
-	return namespaced(config.persistence ?? baseDriver, "rl:");
+	return config.persistence ?? baseDriver;
 });
 
 // 0. Create and provide the built-in AppStore

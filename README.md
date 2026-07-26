@@ -53,6 +53,30 @@ unstyled:
 Adjust the `@source` path to wherever `rune-lab` actually resolves to inside
 your `node_modules`.
 
+### Preventing theme flash
+
+A persisted theme hydrates during component init — after first paint in SPA
+mode. `app.html` is a static shell, not a Svelte component, so a library cannot
+inject into it. Paste this literally into `<head>`, as early as possible —
+before any other script or stylesheet that could paint content:
+
+```html
+<!-- app.html -->
+<script>
+try {
+  var t = localStorage.getItem("rune-lab.layout:theme:theme");
+  if (t && t !== "system") document.documentElement.dataset.theme = t;
+} catch (_) {}
+</script>
+```
+
+This is exactly the markup `rune-lab/layout`'s exported `THEME_BOOT_SCRIPT`
+string constant contains — import it anywhere you _can_ run JS (e.g. a build
+script that writes `app.html`) if you'd rather not hand-copy the key. It reads
+the persisted theme and sets `data-theme` synchronously; if nothing is
+persisted, it leaves `data-theme` unset so daisyUI's `:root:not([data-theme])`
+CSS rule can resolve the OS preference instead.
+
 ## Setup & Quick Start
 
 Configure your application layout with the plugins. Here is what you need to set
@@ -73,7 +97,7 @@ import faviconUrl from "$lib/assets/img/rune.png";
 
 let { children }: { children: Snippet } = $props();
 
-const layoutPlugin = layout.with({ theme: "dark" });
+const layoutPlugin = layout.with({ theme: { default: "dark" } });
 
 // Wiring a router adapter lets the command palette and settings modal
 // update the URL through SvelteKit's router instead of raw history calls.

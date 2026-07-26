@@ -5,9 +5,11 @@ import { contribute, definePlugin, defineSlot, messages } from "rune-lab/core";
 import { layoutSettings } from "./settings.ts";
 import { createLayoutStore, type LayoutStore } from "./stores/layout.svelte.ts";
 import { createTextStore, type TextStoreFacade } from "./stores/text.svelte.ts";
-import { createThemeStore, type Theme } from "./stores/theme.svelte.ts";
-
-type ThemeName = string;
+import {
+  createThemeStore,
+  type Theme,
+  type ThemeConfig,
+} from "./stores/theme.svelte.ts";
 
 const layoutPluginSpec = definePlugin({
   id: "rune-lab.layout",
@@ -23,15 +25,23 @@ const layoutPluginSpec = definePlugin({
     }),
     theme: defineSlot({
       create: (ctx) => createThemeStore(ctx),
-      config: Schema.Union(Schema.Literal("light", "dark"), Schema.String),
+      config: Schema.Struct({
+        available: Schema.optional(Schema.Array(Schema.String)),
+        default: Schema.optional(Schema.String),
+      }),
       persist: true,
     }),
   },
   settings: layoutSettings,
   contributions: [
     contribute(messages, {
-      "layout.modal.select_option": "Select Option",
-      "layout.modal.close": "close",
+      // C24.3: "ui.modal.*" strings belong to the now-hoisted MobileModal in
+      // `ui`, not to this plugin — but `ui` has no contribute() mechanism of
+      // its own, so whichever plugin renders a ResourceSelector contributes
+      // the fallback catalog entry for extraction. i18n/plugin.ts does the
+      // same for its own consumers.
+      "ui.modal.select_option": "Select Option",
+      "ui.modal.close": "close",
       "layout.nav.close_navigation": "Close navigation",
       "layout.nav.close_detail_panel": "Close detail panel",
     }),
@@ -43,7 +53,7 @@ const kit = createPluginKit(layoutPluginSpec);
 type LayoutSlots = {
   layout: SlotSpec<unknown, LayoutStore>;
   text: SlotSpec<unknown, TextStoreFacade>;
-  theme: SlotSpec<ThemeName, ConfigStore<Theme, "name">, ThemeName>;
+  theme: SlotSpec<ThemeConfig, ConfigStore<Theme, "name">, ThemeConfig>;
 };
 
 export const layout: ForgedPlugin<"rune-lab.layout", LayoutSlots> = kit.plugin;

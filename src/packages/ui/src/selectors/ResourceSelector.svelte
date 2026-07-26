@@ -8,8 +8,12 @@ interface Props {
 	store: ConfigStore<T, keyof T>;
 	/** Key to use as identifier (e.g., "name", "code") */
 	idKey: string;
-	/** Optional subset of IDs to show */
-	filterKeys?: string[];
+	/**
+	 * Optional pre-filtered item list, replacing `store.available`. Per-domain
+	 * narrowing (e.g. LanguageSelector's `languages` prop) is the caller's own
+	 * concern — this component stays ignorant of how items were chosen.
+	 */
+	items?: T[];
 	/** Snippet to render the trigger button content */
 	triggerLabel: Snippet<[T]>;
 	/** Snippet to render each option in the dropdown */
@@ -23,7 +27,7 @@ interface Props {
 let {
 	store,
 	idKey,
-	filterKeys = [],
+	items,
 	triggerLabel,
 	item,
 	direction = "bottom",
@@ -32,13 +36,7 @@ let {
 
 let active = $derived(store.get(store.current) ?? store.available[0]);
 
-let available = $derived(
-	filterKeys.length > 0
-		? store.available.filter((item: T) =>
-				filterKeys.includes(String((item as Record<string, unknown>)[idKey])),
-			)
-		: store.available,
-);
+let available = $derived(items ?? store.available);
 </script>
 
 {#snippet _triggerLabel(v: T)}

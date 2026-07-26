@@ -1,7 +1,7 @@
 <script lang="ts">
-import { ResourceSelector } from "rune-lab/layout";
+import { ResourceSelector } from "rune-lab";
 import { getCurrencyStore } from "../../plugin.ts";
-import { getCurrencyName } from "../stores/currency.svelte.ts";
+import { currencyPresenter } from "../presenter.ts";
 
 const currencyStore = getCurrencyStore();
 
@@ -12,12 +12,20 @@ let {
   codes?: string[];
   onchange?: (value: string) => void;
 } = $props();
+
+// C21: ResourceSelector's key-based narrowing prop is gone — narrowing is
+// this domain's own concern now, done against the store's own `available`.
+const available = $derived(
+  codes.length > 0
+    ? currencyStore.available.filter((c) => codes.includes(c.code))
+    : currencyStore.available,
+);
 </script>
 
 <ResourceSelector
   store={currencyStore}
   idKey="code"
-  filterKeys={codes}
+  items={available}
 >
   {#snippet triggerLabel(active: any)}
     <div class="flex items-center gap-2">
@@ -26,6 +34,7 @@ let {
   {/snippet}
 
   {#snippet item(c: any)}
+    {@const p = currencyPresenter.present(c)}
     <button
       class="flex items-center gap-3 w-full"
       onclick={() => {
@@ -33,9 +42,9 @@ let {
         onchange?.(c.code);
       }}
     >
-      <span class="badge badge-sm badge-ghost w-8">{c.symbol}</span>
+      <span class="badge badge-sm badge-ghost w-8">{p.icon}</span>
       <span class="text-xs opacity-50 uppercase">{c.code}</span>
-      <span class="flex-grow text-left">{getCurrencyName(c)}</span>
+      <span class="flex-grow text-left">{p.label}</span>
     </button>
   {/snippet}
 </ResourceSelector>

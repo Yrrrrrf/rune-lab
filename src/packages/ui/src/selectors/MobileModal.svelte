@@ -1,6 +1,6 @@
 <script lang="ts" generics="T">
 import type { Snippet } from "svelte";
-import { getT } from "rune-lab";
+import { getT } from "../provider/context.ts";
 
 let {
   options,
@@ -35,7 +35,7 @@ const t = getT();
       <div
         class="p-4 bg-base-200 border-b border-base-300 flex justify-between items-center">
         <h3
-          class="font-bold text-lg">{t("layout.modal.select_option", "Select Option")}</h3>
+          class="font-bold text-lg">{t("ui.modal.select_option", "Select Option")}</h3>
         <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost">✕</button>
         </form>
@@ -59,7 +59,7 @@ const t = getT();
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button>{t("layout.modal.close", "close")}</button>
+      <button>{t("ui.modal.close", "close")}</button>
     </form>
   </dialog>
 </div>
