@@ -1,6 +1,6 @@
 {
   "version": "0.5.0",
-  "description": "A comprehensive full-stack application template with Tauri integration",
+  "description": "A modern, extensible plugin-based UI shell for Svelte 5 applications",
   "license": "MIT",
   "readme": "README.md",
   "repository": {
