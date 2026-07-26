@@ -191,7 +191,7 @@ onMount(() => {
           <div class="flex gap-2 shrink-0">
             <input
               type="text"
-              class="input input-xs input-bordered flex-1 font-mono"
+              class="input input-xs flex-1 font-mono"
               bind:value={urlInput}
               onkeydown={(e) => e.key === "Enter" && handleGo()}
             />

@@ -85,16 +85,14 @@ function handleInput(field: any, event: Event) {
 
 <div class="grid grid-cols-1 gap-4">
   {#each fields as field (field.id)}
-    <div class="form-control w-full">
+    <div class="flex flex-col w-full">
       {#if field.type !== "toggle"}
-        <label class="label pb-1.5" for={field.id}>
-          <span class="label-text font-medium text-sm text-base-content/80">{field.label}</span>
-        </label>
+        <label class="label pb-1.5 font-medium text-sm text-base-content/80" for={field.id}>{field.label}</label>
       {/if}
 
       {#if field.type === "toggle"}
-        <label class="label cursor-pointer justify-between py-2 px-1 rounded-lg hover:bg-base-200/50 transition-colors" for={field.id}>
-          <span class="label-text font-medium text-sm text-base-content/80">{field.label}</span>
+        <label class="label cursor-pointer justify-between py-2 px-1 rounded-lg hover:bg-base-200/50 transition-colors font-medium text-sm text-base-content/80" for={field.id}>
+          {field.label}
           <input
             id={field.id}
             type="checkbox"
@@ -109,7 +107,7 @@ function handleInput(field: any, event: Event) {
           {#if field.type === "select"}
             <select
               id={field.id}
-              class="select select-bordered select-sm w-full"
+              class="select select-sm w-full"
               value={getValue(field)}
               onchange={(e) => handleInput(field, e)}
               disabled={disabled}
@@ -122,7 +120,7 @@ function handleInput(field: any, event: Event) {
             <input
               id={field.id}
               type="text"
-              class="input input-bordered input-sm w-full"
+              class="input input-sm w-full"
               value={getValue(field) ?? ""}
               oninput={(e) => handleInput(field, e)}
               disabled={disabled}
@@ -131,7 +129,7 @@ function handleInput(field: any, event: Event) {
             <input
               id={field.id}
               type="number"
-              class="input input-bordered input-sm w-full"
+              class="input input-sm w-full"
               value={getValue(field) ?? 0}
               oninput={(e) => handleInput(field, e)}
               min={field.min}
@@ -159,7 +157,7 @@ function handleInput(field: any, event: Event) {
               <input
                 id={field.id}
                 type="color"
-                class="input input-bordered p-0 w-10 h-8 cursor-pointer rounded"
+                class="input p-0 w-10 h-8 cursor-pointer rounded"
                 value={getValue(field) ?? "#000000"}
                 oninput={(e) => handleInput(field, e)}
                 disabled={disabled}

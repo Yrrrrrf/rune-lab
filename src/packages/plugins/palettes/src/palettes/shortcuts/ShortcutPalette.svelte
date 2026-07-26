@@ -77,7 +77,7 @@ function formatKeys(keys: string) {
         bind:value={query}
         type="text"
         placeholder="Search shortcuts..."
-        class="input input-sm input-bordered w-full pr-8"
+        class="input input-sm w-full pr-8"
       />
       <span
         class="absolute right-2 top-1/2 -translate-y-1/2 opacity-30 text-[10px] font-mono"

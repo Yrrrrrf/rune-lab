@@ -107,7 +107,7 @@ onDestroy(stopRecording);
       <input
         type="text"
         placeholder="Search shortcuts..."
-        class="input input-bordered w-full sm:w-64"
+        class="input w-full sm:w-64"
         bind:value={searchQuery}
       />
     </div>

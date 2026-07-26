@@ -24,7 +24,7 @@ onMount(() => {
 <div
   class="w-64 bg-base-200/40 border-r border-base-200 flex flex-col p-4 gap-4 shrink-0">
   <label
-    class="input input-sm input-bordered flex items-center gap-2 w-full bg-base-100 shrink-0">
+    class="input input-sm flex items-center gap-2 w-full bg-base-100 shrink-0">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
       fill="currentColor" class="w-4 h-4 opacity-50 shrink-0">
       <path fill-rule="evenodd"

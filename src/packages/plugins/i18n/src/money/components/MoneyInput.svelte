@@ -154,7 +154,7 @@ function handleInput(e: Event) {
 </script>
 
 <label
-  class="input input-bordered flex items-center gap-1"
+  class="input flex items-center gap-1"
   class:input-disabled={disabled}
 >
   <span class="text-base-content/50 font-medium select-none">{symbol}</span>
