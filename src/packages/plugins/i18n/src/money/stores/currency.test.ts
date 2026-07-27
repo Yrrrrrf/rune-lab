@@ -1,6 +1,6 @@
 import type { SlotContext } from "rune-lab/core";
 import { describe, expect, it } from "vite-plus/test";
-import { createCurrencyStore, type CurrencyConfig } from "./currency.svelte.ts";
+import { type CurrencyConfig, createCurrencyStore } from "./currency.svelte.ts";
 
 describe("Currency Store", () => {
 	const mockCtx: SlotContext<CurrencyConfig> = {

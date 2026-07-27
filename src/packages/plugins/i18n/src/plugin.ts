@@ -10,10 +10,10 @@ import { createPluginKit } from "rune-lab/ui";
 import { createLanguageStore, type Language } from "./lang/store.svelte.ts";
 import { createTranslator } from "./lang/translator.ts";
 import {
-	createCurrencyStore,
-	createExchangeRateStore,
 	type CurrencyConfig,
 	type CurrencyStore,
+	createCurrencyStore,
+	createExchangeRateStore,
 	type ExchangeRateStore,
 } from "./money/mod.ts";
 import { i18nSettings } from "./settings.ts";

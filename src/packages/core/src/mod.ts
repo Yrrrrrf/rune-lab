@@ -20,9 +20,9 @@ export {
 	UnresolvableSlotRef,
 } from "./errors.ts";
 export {
-	contribute,
 	type ContributionEntry,
 	type ContributionKey,
+	contribute,
 	defineContribution,
 	type SettingsSectionContribution,
 	settingsSections,

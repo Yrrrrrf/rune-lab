@@ -5,7 +5,7 @@ import {
 } from "rune-lab/core";
 import { useCell } from "rune-lab/ui";
 import { describe, expect, it } from "vite-plus/test";
-import { statusbar, type StatusbarItem } from "./contributions.ts";
+import { type StatusbarItem, statusbar } from "./contributions.ts";
 
 describe("statusbar contributions reactivity (W2-F)", () => {
 	it("reflects a runtime registerContribution without a remount", async () => {

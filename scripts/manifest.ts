@@ -22,7 +22,7 @@ const parseNpmSpec = (spec: string): { name: string; range: string } => {
 	return { name: m[1], range: m[2] ?? "*" };
 };
 
-import { PLUGIN_DEPS, type PluginName, PLUGINS } from "./plugins.ts";
+import { PLUGIN_DEPS, PLUGINS, type PluginName } from "./plugins.ts";
 
 const plugins = Deno.args as PluginName[];
 
