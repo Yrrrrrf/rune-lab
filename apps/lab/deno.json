@@ -3,8 +3,10 @@
   "description": "A comprehensive full-stack application template with Tauri integration",
   "license": "MIT",
   "authors": ["Yrrrrrf <fer.rezac@outlook.com>"],
+  "nodeModulesDir": "auto",
   "imports": {
     "vite": "npm:vite",
+    "vite-plus": "npm:vite-plus",
     "svelte": "npm:svelte@^5",
     "typescript": "npm:typescript@6",
     "esm-env": "npm:esm-env@^1",
@@ -14,6 +16,7 @@
     "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
     "tailwindcss": "npm:tailwindcss",
     "@tailwindcss/vite": "npm:@tailwindcss/vite",
-    "daisyui": "npm:daisyui"
+    "daisyui": "npm:daisyui",
+    "rune-lab": "npm:rune-lab"
   }
 }

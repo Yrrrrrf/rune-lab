@@ -10,7 +10,6 @@
   "nodeModulesDir": "auto",
   "unstable": ["fmt-component"],
   "workspace": [
-    "./apps/lab",
     "./src/packages/ui",
     "./src/packages/core",
     "./src/packages/plugins/i18n",
