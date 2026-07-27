@@ -1,6 +1,6 @@
 import { BROWSER } from "esm-env";
-import { createConfigStore } from "rune-lab/ui";
 import type { ConfigStore, SlotContext } from "rune-lab/core";
+import { createConfigStore } from "rune-lab/ui";
 
 export interface Theme {
   name: string;
@@ -11,10 +11,7 @@ export const SYSTEM: Theme = { name: "system" };
 const readableSheet = (s: CSSStyleSheet): boolean =>
   s.href === null || new URL(s.href, location.href).origin === location.origin;
 
-function extractThemesFromRule(
-  rule: CSSRule,
-  discovered: Set<string>,
-): void {
+function extractThemesFromRule(rule: CSSRule, discovered: Set<string>): void {
   if ("selectorText" in rule && typeof rule.selectorText === "string") {
     const matches = rule.selectorText.matchAll(
       /\[data-theme=["']?([\w-]+)["']?\]/g,

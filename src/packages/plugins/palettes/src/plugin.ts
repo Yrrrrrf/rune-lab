@@ -1,4 +1,3 @@
-import { createPluginKit } from "rune-lab/ui";
 import type { ForgedPlugin, SlotSpec } from "rune-lab/core";
 import {
   contribute,
@@ -6,6 +5,7 @@ import {
   defineSlot,
   settingsSections,
 } from "rune-lab/core";
+import { createPluginKit } from "rune-lab/ui";
 import type { CommandStore } from "./commands/store.svelte.ts";
 import { createCommandStore } from "./commands/store.svelte.ts";
 import PaletteHost from "./host/PaletteHost.svelte";

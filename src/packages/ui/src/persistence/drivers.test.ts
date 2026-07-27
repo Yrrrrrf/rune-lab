@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vite-plus/test";
 import { createInMemoryDriver, inMemoryDriver } from "rune-lab/core";
+import { describe, expect, it } from "vite-plus/test";
 
 describe("PersistenceDriver Contract Tests", () => {
   describe("createInMemoryDriver (factory)", () => {

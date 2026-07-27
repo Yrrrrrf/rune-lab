@@ -2,9 +2,8 @@
 import "./layout.css";
 import { RuneProvider, version } from "rune-lab";
 import type { Snippet } from "svelte";
-import AppLayout from "./AppLayout.svelte";
-
 import faviconUrl from "$lib/assets/img/rune.png";
+import AppLayout from "./AppLayout.svelte";
 
 let { children }: { children: Snippet } = $props();
 </script>

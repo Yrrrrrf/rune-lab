@@ -1,10 +1,10 @@
-import { createConfigStore } from "rune-lab/ui";
 import type { ConfigStore, LocaleAdapter, SlotContext } from "rune-lab/core";
+import { createConfigStore } from "rune-lab/ui";
 import { createMessageResolver } from "./message-resolver.ts";
 import { m } from "./messages.ts";
-import { createParaglideAdapter } from "./paraglide-adapter.ts";
 // @deno-types="./paraglide/runtime.d.ts"
 import * as paraglideRuntime from "./paraglide/runtime.js";
+import { createParaglideAdapter } from "./paraglide-adapter.ts";
 
 export interface Language {
   code: string;

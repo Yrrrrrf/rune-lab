@@ -7,7 +7,7 @@ export interface StatusbarItem {
 }
 </script>
 <script lang="ts">
-import { getKernel } from "rune-lab/ui";
+import { getKernel, useCell } from "rune-lab/ui";
 import { onMount } from "svelte";
 import { statusbar } from "../contributions.ts";
 import { getTextStore } from "../plugin.ts";
@@ -15,15 +15,13 @@ import StatusbarDropdown from "./StatusbarDropdown.svelte";
 
 let { items: propsItems }: { items?: StatusbarItem[] } = $props();
 const textStore = getTextStore();
+const kernel = getKernel();
+const contributions = useCell(kernel, "contributions");
 
-const items = $derived.by(() => {
-  if (propsItems) return propsItems;
-  try {
-    return getKernel().getContributions(statusbar);
-  } catch {
-    return [];
-  }
-});
+const items = $derived(
+  propsItems ??
+    ((contributions.current.get(statusbar) ?? []) as StatusbarItem[]),
+);
 
 let containerEl = $state<HTMLElement>(), containerWidth = $state(0);
 
@@ -31,16 +29,11 @@ let measuredItems = $derived.by(() => {
   const _ = textStore.epoch;
   if (!textStore.ready) return [];
   return items.map((item) => {
-    let labelWidth = 0;
-    try {
-      const prepared = textStore.engine.prepareWithSegments(
-        item.label,
-        "12px sans-serif",
-      );
-      labelWidth = textStore.engine.measureNaturalWidth(prepared);
-    } catch {
-      labelWidth = item.label.length * 7;
-    }
+    const prepared = textStore.engine.prepareWithSegments(
+      item.label,
+      "12px sans-serif",
+    );
+    const labelWidth = textStore.engine.measureNaturalWidth(prepared);
     return { item, width: labelWidth + (item.icon ? 32 : 16) };
   });
 });

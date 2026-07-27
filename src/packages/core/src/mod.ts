@@ -11,6 +11,15 @@ export {
   toOptions,
 } from "./config/item-presenter.ts";
 export {
+  CircularPluginDependency,
+  CircularSlotDependency,
+  MissingRequirement,
+  SlotConfigInvalid,
+  SlotInitFailed,
+  UndeclaredCrossPluginDependency,
+  UnresolvableSlotRef,
+} from "./errors.ts";
+export {
   contribute,
   type ContributionEntry,
   type ContributionKey,
@@ -43,15 +52,6 @@ export {
   namespaced,
 } from "./ports/memory.ts";
 export type { PersistenceDriver } from "./ports/persistence.ts";
-export type { Translator } from "./ports/translate.ts";
 export type { TextMeasurer } from "./ports/text.ts";
+export type { Translator } from "./ports/translate.ts";
 export type { StateCells } from "./services/layers.ts";
-export {
-  CircularPluginDependency,
-  CircularSlotDependency,
-  MissingRequirement,
-  SlotConfigInvalid,
-  SlotInitFailed,
-  UndeclaredCrossPluginDependency,
-  UnresolvableSlotRef,
-} from "./errors.ts";

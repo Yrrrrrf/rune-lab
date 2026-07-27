@@ -35,6 +35,9 @@ export class StateCell<T> {
     queueMicrotask(() => {
       this.pendingNotify = false;
       for (const listener of this.listeners) {
+        // Sanctioned exception to the no-try/catch rule (see W1-02): this
+        // isolates a foreign subscriber callback so one throwing listener
+        // cannot break notification for every other listener.
         try {
           listener();
         } catch (e) {

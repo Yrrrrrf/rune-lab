@@ -1,6 +1,6 @@
 <script lang="ts">
-import type { Snippet } from "svelte";
 import { getT } from "rune-lab/ui";
+import type { Snippet } from "svelte";
 import { getLayoutStore } from "../plugin.ts";
 
 let { detailPanel }: { detailPanel?: Snippet } = $props();

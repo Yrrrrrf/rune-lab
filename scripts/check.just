@@ -2,6 +2,7 @@
 [group('check')]
 fmt:
     deno fmt .
+    # -biome format --write .
 
 [doc('Lint workspace')]
 [group('check')]
@@ -32,6 +33,5 @@ check: fmt lint types
 [group('check')]
 biome:
     just prune
-    -biome format --write .
     -biome check --fix .
     just fmt

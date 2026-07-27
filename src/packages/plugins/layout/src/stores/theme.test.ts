@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vite-plus/test";
 import {
   createInMemoryDriver,
   namespaced,
   type SlotContext,
 } from "rune-lab/core";
+import { describe, expect, it } from "vite-plus/test";
 import { createThemeStore } from "./theme.svelte.ts";
 
 describe("createThemeStore discovery", () => {

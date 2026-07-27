@@ -27,7 +27,9 @@ const CircularPluginDependencyBase: TaggedErrorConstructor<
 export class CircularPluginDependency extends CircularPluginDependencyBase {
   get message(): string {
     return `[Kernel] Circular dependency detected in plugins: ${
-      this.cycle.join(" -> ")
+      this.cycle.join(
+        " -> ",
+      )
     }`;
   }
 }
@@ -40,7 +42,9 @@ const CircularSlotDependencyBase: TaggedErrorConstructor<
 export class CircularSlotDependency extends CircularSlotDependencyBase {
   get message(): string {
     return `[Kernel] Circular dependency detected in slots: ${
-      this.cycle.join(" -> ")
+      this.cycle.join(
+        " -> ",
+      )
     }`;
   }
 }

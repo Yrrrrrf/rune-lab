@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { Schema } from "effect";
 import {
   CircularPluginDependency,
@@ -9,58 +9,49 @@ import {
   UndeclaredCrossPluginDependency,
   UnresolvableSlotRef,
 } from "./errors.ts";
-import { defineSlot } from "./forge/define-slot.ts";
 import { definePlugin } from "./forge/define-plugin.ts";
+import { defineSlot } from "./forge/define-slot.ts";
 import { createKernel } from "./kernel/kernel.ts";
 import { createInMemoryDriver } from "./ports/memory.ts";
 
 Deno.test("Errors - missing requirement tag", () => {
-  const driver = createInMemoryDriver();
-  const pluginB = definePlugin({
-    id: "pluginB",
-    requires: ["pluginA"],
-  });
-  try {
-    createKernel([pluginB], { persistence: driver });
-  } catch (err: unknown) {
-    // Check that string error carries message, or TaggedError directly
-    if (err instanceof Error) {
-      assertEquals(
-        err.message.includes(
-          'Missing requirement: Plugin "pluginB" requires "pluginA"',
-        ),
-        true,
-      );
-    }
-  }
   const err = new MissingRequirement({
     pluginId: "pluginB",
     requiredId: "pluginA",
   });
   assertEquals(err._tag, "MissingRequirement");
+
+  const driver = createInMemoryDriver();
+  const pluginB = definePlugin({ id: "pluginB", requires: ["pluginA"] });
+  assertThrows(
+    () => createKernel([pluginB], { persistence: driver }),
+    Error,
+    'Plugin "pluginB" requires "pluginA"',
+  );
 });
 
 Deno.test("Errors - circular plugin dependency tag", () => {
-  const driver = createInMemoryDriver();
-  const pluginA = definePlugin({ id: "pluginA", requires: ["pluginB"] });
-  const pluginB = definePlugin({ id: "pluginB", requires: ["pluginA"] });
-  try {
-    createKernel([pluginA, pluginB], { persistence: driver });
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      assertEquals(
-        err.message.includes("Circular dependency detected in plugins"),
-        true,
-      );
-    }
-  }
   const err = new CircularPluginDependency({
     cycle: ["pluginA", "pluginB", "pluginA"],
   });
   assertEquals(err._tag, "CircularPluginDependency");
+
+  const driver = createInMemoryDriver();
+  const pluginA = definePlugin({ id: "pluginA", requires: ["pluginB"] });
+  const pluginB = definePlugin({ id: "pluginB", requires: ["pluginA"] });
+  assertThrows(
+    () => createKernel([pluginA, pluginB], { persistence: driver }),
+    Error,
+    "Circular dependency detected in plugins",
+  );
 });
 
 Deno.test("Errors - circular slot dependency tag", () => {
+  const err = new CircularSlotDependency({
+    cycle: ["rl:pluginA:slot1", "rl:pluginA:slot2"],
+  });
+  assertEquals(err._tag, "CircularSlotDependency");
+
   const pluginA = definePlugin({
     id: "pluginA",
     slots: {
@@ -69,23 +60,20 @@ Deno.test("Errors - circular slot dependency tag", () => {
     },
   });
   const driver = createInMemoryDriver();
-  try {
-    createKernel([pluginA], { persistence: driver });
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      assertEquals(
-        err.message.includes("Circular dependency detected in slots"),
-        true,
-      );
-    }
-  }
-  const err = new CircularSlotDependency({
-    cycle: ["rl:pluginA:slot1", "rl:pluginA:slot2"],
-  });
-  assertEquals(err._tag, "CircularSlotDependency");
+  assertThrows(
+    () => createKernel([pluginA], { persistence: driver }),
+    Error,
+    "Circular dependency detected in slots",
+  );
 });
 
 Deno.test("Errors - unresolvable slot ref tag", () => {
+  const err = new UnresolvableSlotRef({
+    ref: "nonexistent",
+    declaringPluginId: "pluginA",
+  });
+  assertEquals(err._tag, "UnresolvableSlotRef");
+
   const pluginA = definePlugin({
     id: "pluginA",
     slots: {
@@ -96,24 +84,22 @@ Deno.test("Errors - unresolvable slot ref tag", () => {
     },
   });
   const driver = createInMemoryDriver();
-  let caught = false;
-  try {
-    createKernel([pluginA], { persistence: driver });
-  } catch (err: unknown) {
-    caught = true;
-    if (err instanceof Error) {
-      assertEquals(err.message.includes("Cannot resolve slot reference"), true);
-    }
-  }
-  assertEquals(caught, true);
-  const err = new UnresolvableSlotRef({
-    ref: "nonexistent",
-    declaringPluginId: "pluginA",
-  });
-  assertEquals(err._tag, "UnresolvableSlotRef");
+  assertThrows(
+    () => createKernel([pluginA], { persistence: driver }),
+    Error,
+    "Cannot resolve slot reference",
+  );
 });
 
 Deno.test("Errors - undeclared cross-plugin dependency tag", () => {
+  const err = new UndeclaredCrossPluginDependency({
+    slotName: "slotB",
+    pluginId: "pluginB",
+    dep: "pluginA.slotA",
+    targetPluginId: "pluginA",
+  });
+  assertEquals(err._tag, "UndeclaredCrossPluginDependency");
+
   const pluginA = definePlugin({
     id: "pluginA",
     slots: { slotA: { create: () => "A" } },
@@ -126,26 +112,21 @@ Deno.test("Errors - undeclared cross-plugin dependency tag", () => {
     },
   });
   const driver = createInMemoryDriver();
-  try {
-    createKernel([pluginA, pluginB], { persistence: driver });
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      assertEquals(
-        err.message.includes('is not in the requires spec of "pluginB"'),
-        true,
-      );
-    }
-  }
-  const err = new UndeclaredCrossPluginDependency({
-    slotName: "slotB",
-    pluginId: "pluginB",
-    dep: "pluginA.slotA",
-    targetPluginId: "pluginA",
-  });
-  assertEquals(err._tag, "UndeclaredCrossPluginDependency");
+  assertThrows(
+    () => createKernel([pluginA, pluginB], { persistence: driver }),
+    Error,
+    'is not in the requires spec of "pluginB"',
+  );
 });
 
 Deno.test("Errors - slot config invalid tag", () => {
+  const err = new SlotConfigInvalid({
+    pluginId: "pluginA",
+    slotName: "slotA",
+    parseError: "Expected number",
+  });
+  assertEquals(err._tag, "SlotConfigInvalid");
+
   const pluginA = definePlugin({
     id: "pluginA",
     slots: {
@@ -156,32 +137,26 @@ Deno.test("Errors - slot config invalid tag", () => {
     },
   });
   const driver = createInMemoryDriver();
-  try {
-    createKernel([pluginA], {
-      persistence: driver,
-      pluginConfig: {
-        pluginA: { slotA: { count: "invalid" } },
-      },
-    });
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      assertEquals(
-        err.message.includes(
-          'Config validation failed for plugin "pluginA", slot "slotA"',
-        ),
-        true,
-      );
-    }
-  }
-  const err = new SlotConfigInvalid({
-    pluginId: "pluginA",
-    slotName: "slotA",
-    parseError: "Expected number",
-  });
-  assertEquals(err._tag, "SlotConfigInvalid");
+  assertThrows(
+    () =>
+      createKernel([pluginA], {
+        persistence: driver,
+        pluginConfig: {
+          pluginA: { slotA: { count: "invalid" } },
+        },
+      }),
+    Error,
+    'Config validation failed for plugin "pluginA", slot "slotA"',
+  );
 });
 
 Deno.test("Errors - slot init failed tag", () => {
+  const err = new SlotInitFailed({
+    slotId: "rl:pluginA:slotA",
+    cause: new Error("Init exploded"),
+  });
+  assertEquals(err._tag, "SlotInitFailed");
+
   const pluginA = definePlugin({
     id: "pluginA",
     slots: {
@@ -193,19 +168,9 @@ Deno.test("Errors - slot init failed tag", () => {
     },
   });
   const driver = createInMemoryDriver();
-  try {
-    createKernel([pluginA], { persistence: driver });
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      assertEquals(
-        err.message.includes('Failed to initialize slot "rl:pluginA:slotA"'),
-        true,
-      );
-    }
-  }
-  const err = new SlotInitFailed({
-    slotId: "rl:pluginA:slotA",
-    cause: new Error("Init exploded"),
-  });
-  assertEquals(err._tag, "SlotInitFailed");
+  assertThrows(
+    () => createKernel([pluginA], { persistence: driver }),
+    Error,
+    'Failed to initialize slot "rl:pluginA:slotA"',
+  );
 });

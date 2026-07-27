@@ -8,11 +8,11 @@ import {
 import SettingsSearchResults from "./settings-modal/SettingsSearchResults.svelte";
 import SettingsSectionContent from "./settings-modal/SettingsSectionContent.svelte";
 import SettingsSidebar from "./settings-modal/SettingsSidebar.svelte";
-import { deriveModalModel } from "./settings-modal/sections.ts";
 import {
   computeSearchResults,
   type SearchResult,
 } from "./settings-modal/search.ts";
+import { deriveModalModel } from "./settings-modal/sections.ts";
 
 const shortcutStore = getShortcutsStore();
 const commandStore = getCommandsStore();

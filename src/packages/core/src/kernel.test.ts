@@ -4,7 +4,7 @@ import {
   assertRejects,
   assertThrows,
 } from "@std/assert";
-import { Option, Schema } from "effect";
+import { Either, Option, Schema } from "effect";
 import { contribute, defineContribution } from "./forge/define-contribution.ts";
 import { definePlugin } from "./forge/define-plugin.ts";
 import { defineSlot } from "./forge/define-slot.ts";
@@ -54,7 +54,7 @@ Deno.test("Kernel - slot resolution and store topological sort initialization", 
 });
 
 Deno.test("Kernel - resolveSlotRef dotted/bare resolution", () => {
-  const allSlots = normalizeSlots([
+  const slotsResult = normalizeSlots([
     definePlugin({
       id: "pluginA",
       slots: {
@@ -69,6 +69,10 @@ Deno.test("Kernel - resolveSlotRef dotted/bare resolution", () => {
       },
     }),
   ]);
+  if (Either.isLeft(slotsResult)) {
+    throw new Error(`Expected Right, got Left: ${slotsResult.left.message}`);
+  }
+  const allSlots = slotsResult.right;
 
   const slotsMap = new Map(allSlots.map((s) => [s.id, s]));
 

@@ -5,9 +5,9 @@ import { getKernel } from "../provider/context.ts";
 
 export type ContributionsMap = Map<ContributionKey<unknown>, unknown[]>;
 
-export function useCell(
-  cellName?: "contributions",
-): { readonly current: ContributionsMap };
+export function useCell(cellName?: "contributions"): {
+  readonly current: ContributionsMap;
+};
 export function useCell(
   kernel: Kernel,
   cellName?: "contributions",

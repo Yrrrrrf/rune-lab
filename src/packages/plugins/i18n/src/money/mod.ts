@@ -1,10 +1,10 @@
 export { default as CurrencySelector } from "./components/CurrencySelector.svelte";
 export { default as MoneyDisplay } from "./components/MoneyDisplay.svelte";
 export { default as MoneyInput } from "./components/MoneyInput.svelte";
+export * from "./presenter.ts";
 export * from "./primitives/money.ts";
 export * from "./primitives/money-primitive.ts";
 export * from "./primitives/strategies.ts";
-export * from "./presenter.ts";
 export * from "./stores/currency.svelte.ts";
 export * from "./stores/exchange-rate.svelte.ts";
 export * from "./types.ts";

@@ -6,6 +6,8 @@ import type { Toast, ToastType } from "../types.ts";
 
 export type { Toast, ToastType };
 
+const MAX_TOASTS = 5;
+
 interface ToastMeta {
   remaining: number;
   lastStarted: number;
@@ -35,7 +37,7 @@ export class ToastStore implements Disposable {
     duration: number = 3000,
   ): void {
     // Evict oldest if we are at cap (FIFO)
-    while (this.toasts.length >= 5) {
+    while (this.toasts.length >= MAX_TOASTS) {
       const oldest = this.toasts[0];
       this.dismiss(oldest.id);
     }

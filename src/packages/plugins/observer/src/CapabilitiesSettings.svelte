@@ -1,6 +1,6 @@
 <script lang="ts">
-import { getSettingsSections } from "rune-lab/ui";
 import { getCommandsStore, getShortcutsStore } from "rune-lab/palettes";
+import { getSettingsSections } from "rune-lab/ui";
 
 const shortcutStore = getShortcutsStore();
 const commandStore = getCommandsStore();

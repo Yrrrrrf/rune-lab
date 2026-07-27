@@ -39,6 +39,18 @@ export interface NormalizedSlot {
   create: (context: SlotContext<unknown>) => unknown;
 }
 
+/**
+ * Every failure mode `compileEnvironment` can produce, pre-runtime. These are
+ * plain synchronous functions running before `ManagedRuntime.make`, so they
+ * are not in an Effect context — they return `Either` rather than `Effect.fail`.
+ */
+export type CompileError =
+  | MissingRequirement
+  | CircularPluginDependency
+  | CircularSlotDependency
+  | UnresolvableSlotRef
+  | UndeclaredCrossPluginDependency;
+
 function normalizePlugins(inputs: PluginInput[]): ForgedPlugin[] {
   const flat: ForgedPlugin[] = [];
   function process(item: PluginInput) {
@@ -62,7 +74,9 @@ function normalizePlugins(inputs: PluginInput[]): ForgedPlugin[] {
   });
 }
 
-function sortPlugins(resolved: ForgedPlugin[]): ForgedPlugin[] {
+function sortPlugins(
+  resolved: ForgedPlugin[],
+): Either.Either<ForgedPlugin[], CompileError> {
   const pluginMap = new Map(resolved.map((p) => [p.id, p]));
   const graphNodes: GraphNode[] = resolved.map((p) => ({
     id: p.id,
@@ -72,16 +86,22 @@ function sortPlugins(resolved: ForgedPlugin[]): ForgedPlugin[] {
   for (const node of graphNodes) {
     for (const reqId of node.dependsOn ?? []) {
       if (!pluginMap.has(reqId)) {
-        throw new MissingRequirement({ pluginId: node.id, requiredId: reqId });
+        return Either.left(
+          new MissingRequirement({ pluginId: node.id, requiredId: reqId }),
+        );
       }
     }
   }
 
   const sortedResult = topologicalSort(graphNodes);
   if (Either.isLeft(sortedResult)) {
-    throw new CircularPluginDependency({ cycle: sortedResult.left.cycle });
+    return Either.left(
+      new CircularPluginDependency({ cycle: sortedResult.left.cycle }),
+    );
   }
-  return sortedResult.right.map((node) => pluginMap.get(node.id)!);
+  return Either.right(
+    sortedResult.right.map((node) => pluginMap.get(node.id)!),
+  );
 }
 
 export function resolveSlotRef(
@@ -107,7 +127,9 @@ export function resolveSlotRef(
   return Option.none();
 }
 
-export function normalizeSlots(sorted: ForgedPlugin[]): NormalizedSlot[] {
+export function normalizeSlots(
+  sorted: ForgedPlugin[],
+): Either.Either<NormalizedSlot[], CompileError> {
   const allSlots: NormalizedSlot[] = [];
   const allSlotsMap = new Map<string, NormalizedSlot>();
 
@@ -142,21 +164,22 @@ export function normalizeSlots(sorted: ForgedPlugin[]): NormalizedSlot[] {
       for (const dep of slotSpec.dependsOn ?? []) {
         const resolvedOpt = resolveSlotRef(dep, plugin.id, allSlotsMap);
         if (Option.isNone(resolvedOpt)) {
-          throw new UnresolvableSlotRef({
-            ref: dep,
-            declaringPluginId: plugin.id,
-          });
+          return Either.left(
+            new UnresolvableSlotRef({ ref: dep, declaringPluginId: plugin.id }),
+          );
         }
         const resolvedSlot = resolvedOpt.value;
 
         if (resolvedSlot.pluginId !== plugin.id) {
           if (!plugin.requires?.includes(resolvedSlot.pluginId)) {
-            throw new UndeclaredCrossPluginDependency({
-              slotName,
-              pluginId: plugin.id,
-              dep,
-              targetPluginId: resolvedSlot.pluginId,
-            });
+            return Either.left(
+              new UndeclaredCrossPluginDependency({
+                slotName,
+                pluginId: plugin.id,
+                dep,
+                targetPluginId: resolvedSlot.pluginId,
+              }),
+            );
           }
         }
         resolvedDeps.push(resolvedSlot.id);
@@ -165,19 +188,25 @@ export function normalizeSlots(sorted: ForgedPlugin[]): NormalizedSlot[] {
     }
   }
 
-  return allSlots;
+  return Either.right(allSlots);
 }
 
-function sortSlots(slots: NormalizedSlot[]): NormalizedSlot[] {
+function sortSlots(
+  slots: NormalizedSlot[],
+): Either.Either<NormalizedSlot[], CompileError> {
   const slotGraphNodes: GraphNode[] = slots.map((s) => ({
     id: s.id,
     dependsOn: s.dependsOn,
   }));
   const sortedResult = topologicalSort(slotGraphNodes);
   if (Either.isLeft(sortedResult)) {
-    throw new CircularSlotDependency({ cycle: sortedResult.left.cycle });
+    return Either.left(
+      new CircularSlotDependency({ cycle: sortedResult.left.cycle }),
+    );
   }
-  return sortedResult.right.map((n) => slots.find((s) => s.id === n.id)!);
+  return Either.right(
+    sortedResult.right.map((n) => slots.find((s) => s.id === n.id)!),
+  );
 }
 
 function buildLayers(
@@ -306,21 +335,38 @@ export function compileEnvironment(
     textMeasurer?: TextMeasurer;
     pluginConfig?: Record<string, Record<string, unknown>>;
   },
-): {
-  runtime: KernelRuntime;
-  resolvedPlugins: ForgedPlugin[];
-  sortedSlots: NormalizedSlot[];
-} {
+): Either.Either<
+  {
+    runtime: KernelRuntime;
+    resolvedPlugins: ForgedPlugin[];
+    sortedSlots: NormalizedSlot[];
+  },
+  CompileError
+> {
   const resolved = normalizePlugins(pluginsInput);
-  const sortedPlugins = sortPlugins(resolved);
-  const slots = normalizeSlots(sortedPlugins);
-  const sortedSlots = sortSlots(slots);
+
+  const sortedPluginsResult = sortPlugins(resolved);
+  if (Either.isLeft(sortedPluginsResult)) {
+    return Either.left(sortedPluginsResult.left);
+  }
+
+  const slotsResult = normalizeSlots(sortedPluginsResult.right);
+  if (Either.isLeft(slotsResult)) {
+    return Either.left(slotsResult.left);
+  }
+
+  const sortedSlotsResult = sortSlots(slotsResult.right);
+  if (Either.isLeft(sortedSlotsResult)) {
+    return Either.left(sortedSlotsResult.left);
+  }
+  const sortedSlots = sortedSlotsResult.right;
+
   const env = buildLayers(sortedSlots, options);
   const runtime = ManagedRuntime.make(env);
 
-  return {
+  return Either.right({
     runtime,
     resolvedPlugins: resolved,
     sortedSlots,
-  };
+  });
 }

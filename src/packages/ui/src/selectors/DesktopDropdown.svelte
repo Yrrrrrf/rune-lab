@@ -1,6 +1,6 @@
 <script lang="ts" generics="T">
-import { portal } from "../actions/portal.ts";
 import type { Snippet } from "svelte";
+import { portal } from "../actions/portal.ts";
 
 let {
 	options,

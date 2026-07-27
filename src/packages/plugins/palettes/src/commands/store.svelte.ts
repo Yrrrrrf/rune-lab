@@ -4,16 +4,7 @@ import type { Command } from "../types.ts";
 export type { Command };
 
 export class CommandStore {
-  constructor() {
-    this.refreshDefaultCommands();
-  }
-
   commands: Command[] = $state<Command[]>([]);
-
-  refreshDefaultCommands(): void {
-    // Intentionally empty.
-    this.commands = [];
-  }
 
   /**
    * Register a new command

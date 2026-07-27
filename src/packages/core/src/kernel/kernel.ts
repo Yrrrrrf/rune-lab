@@ -1,4 +1,4 @@
-import { Context, Effect, Option } from "effect";
+import { Cause, Chunk, Context, Effect, Either, Exit, Option } from "effect";
 import type { StateCell } from "../cells/define-cell.ts";
 import {
   type ContributionKey,
@@ -38,44 +38,23 @@ export function createKernel<TCells = Record<string, unknown>>(
     pluginConfig?: Record<string, Record<string, unknown>>;
   },
 ): Kernel<TCells> {
-  let compiled;
-  try {
-    compiled = compileEnvironment(pluginsInput, options);
-  } catch (err: unknown) {
-    if (
-      err && typeof err === "object" && "message" in err &&
-      typeof (err as { message: unknown }).message === "string"
-    ) {
-      throw new Error((err as { message: string }).message);
-    }
-    throw err;
+  const compiled = compileEnvironment(pluginsInput, options);
+  if (Either.isLeft(compiled)) {
+    throw new Error(compiled.left.message);
   }
-  const { runtime, resolvedPlugins, sortedSlots } = compiled;
+  const { runtime, resolvedPlugins, sortedSlots } = compiled.right;
 
-  let ctx: Context.Context<never>;
-  try {
-    ctx = runtime.runSync(Effect.context());
-  } catch (err: unknown) {
-    if (err && typeof err === "object") {
-      const e = err as Record<string, unknown>;
-      if ("_tag" in e && e._tag === "FiberFailure" && "cause" in e) {
-        const cause = e.cause as Record<string, unknown> | undefined;
-        if (cause && "error" in cause) {
-          const errorObj = cause.error as Record<string, unknown> | undefined;
-          if (
-            errorObj && "message" in errorObj &&
-            typeof errorObj.message === "string"
-          ) {
-            throw new Error(errorObj.message);
-          }
-        }
-      }
-      if ("message" in e && typeof e.message === "string") {
-        throw new Error(e.message);
-      }
+  const ctxExit = runtime.runSyncExit(Effect.context());
+  if (Exit.isFailure(ctxExit)) {
+    const typedFailure = Cause.failureOption(ctxExit.cause);
+    if (Option.isSome(typedFailure)) {
+      throw new Error(
+        (typedFailure.value as { message: string }).message,
+      );
     }
-    throw err;
+    throw Cause.squash(ctxExit.cause);
   }
+  const ctx = ctxExit.value;
   const cellsService = Context.get(
     ctx,
     StateCellsTag as unknown as Context.Tag<never, StateCells>,
@@ -127,34 +106,23 @@ export function createKernel<TCells = Record<string, unknown>>(
     dispose: () => {
       if (disposed) return Promise.resolve();
       if (disposePromise) return disposePromise;
-      disposePromise = (async () => {
-        try {
-          await runtime.dispose();
-        } catch (err: unknown) {
+      // Effect.addFinalizer requires its callback's error channel to be
+      // `never` (see the Effect type: `(exit) => Effect<X, never, R>`), so a
+      // failing finalizer can only ever surface as a defect, not a typed
+      // failure. `runPromiseExit` captures that defect into the Exit instead
+      // of rejecting, and `Cause.defects` walks the whole cause tree
+      // (parallel or sequential) to collect every one of them.
+      disposePromise = Effect.runPromiseExit(runtime.disposeEffect).then(
+        (exit) => {
           disposed = true;
-          const errors: unknown[] = [];
-          if (err && typeof err === "object") {
-            const e = err as Record<string, unknown>;
-            if ("_tag" in e && e._tag === "FiberFailure" && "cause" in e) {
-              const cause = e.cause as Record<string, unknown> | undefined;
-              if (
-                cause && "failures" in cause && Array.isArray(cause.failures)
-              ) {
-                errors.push(...cause.failures);
-              } else if (cause && "error" in cause) {
-                errors.push(cause.error);
-              }
-            } else {
-              errors.push(err);
-            }
-          } else {
-            errors.push(err);
+          if (Exit.isFailure(exit)) {
+            throw new AggregateError(
+              Chunk.toArray(Cause.defects(exit.cause)),
+              "Kernel disposal failed",
+            );
           }
-          throw new AggregateError(errors, "Kernel disposal failed");
-        } finally {
-          disposed = true;
-        }
-      })();
+        },
+      );
       return disposePromise;
     },
   };
