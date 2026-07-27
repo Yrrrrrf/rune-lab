@@ -12,16 +12,6 @@ import AppLayout from "./AppLayout.svelte";
 import faviconUrl from "$lib/assets/img/rune.png";
 
 let { children }: { children: Snippet } = $props();
-
-const layoutPlugin = layout.with({ theme: { default: "dark" } });
-const palettesPlugin = palettes.with({
-  registry: {
-    router: {
-      replaceState: (url: string) => replaceState(url, {}),
-      pushState: (url: string) => pushState(url, {}),
-    },
-  },
-});
 </script>
 
 <RuneProvider
@@ -35,7 +25,7 @@ const palettesPlugin = palettes.with({
       icon: faviconUrl,
     },
   }}
-  plugins={[layoutPlugin, palettesPlugin, i18n]}
+  plugins={[layout, palettes, i18n]}
 >
   <AppLayout>
     {@render children()}
