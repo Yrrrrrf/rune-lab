@@ -5,12 +5,9 @@
   "authors": ["Yrrrrrf <fer.rezac@outlook.com>"],
   "nodeModulesDir": "auto",
   "imports": {
-    "vite": "npm:vite",
     "vite-plus": "npm:vite-plus",
-    "svelte": "npm:svelte@^5",
     "typescript": "npm:typescript@6",
-    "esm-env": "npm:esm-env@^1",
-    "effect": "npm:effect@^3",
+    "svelte": "npm:svelte@^5",
     "@sveltejs/kit": "npm:@sveltejs/kit",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
     "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",

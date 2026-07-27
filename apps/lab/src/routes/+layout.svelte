@@ -1,11 +1,6 @@
 <script lang="ts">
 import "./layout.css";
-// fallow-ignore-next-line unresolved-import
-import { pushState, replaceState } from "$app/navigation";
 import { RuneProvider, version } from "rune-lab";
-import { i18n } from "rune-lab/i18n";
-import { layout } from "rune-lab/layout";
-import { palettes } from "rune-lab/palettes";
 import type { Snippet } from "svelte";
 import AppLayout from "./AppLayout.svelte";
 
@@ -16,7 +11,6 @@ let { children }: { children: Snippet } = $props();
 
 <RuneProvider
   config={{
-    icons: "material",
     app: {
       name: "Rune Lab",
       version: version(),
@@ -25,7 +19,6 @@ let { children }: { children: Snippet } = $props();
       icon: faviconUrl,
     },
   }}
-  plugins={[layout, palettes, i18n]}
 >
   <AppLayout>
     {@render children()}
