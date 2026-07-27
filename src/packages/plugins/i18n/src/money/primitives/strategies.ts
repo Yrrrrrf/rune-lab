@@ -16,8 +16,8 @@ export type ConversionFn = (amount: number, ...rates: number[]) => number;
  * Resolves a ScaledRate or plain number into a float rate value.
  */
 export function resolveRate(rate: ScaledRate | number): number {
-  if (typeof rate === "number") return rate;
-  return rate.amount / 10 ** rate.scale;
+	if (typeof rate === "number") return rate;
+	return rate.amount / 10 ** rate.scale;
 }
 
 // ── Strategy Functions ─────────────────────────────────────────────────────────
@@ -31,7 +31,7 @@ export function resolveRate(rate: ScaledRate | number): number {
  * @returns Minor-unit amount in the target currency
  */
 export function directConversion(amount: number, rate: number): number {
-  return Math.round(amount * rate);
+	return Math.round(amount * rate);
 }
 
 /**
@@ -43,10 +43,10 @@ export function directConversion(amount: number, rate: number): number {
  * @returns Minor-unit amount in the base currency
  */
 export function inverseConversion(amount: number, rate: number): number {
-  if (rate === 0) {
-    throw new Error("Cannot perform inverse conversion with a rate of zero.");
-  }
-  return Math.round(amount / rate);
+	if (rate === 0) {
+		throw new Error("Cannot perform inverse conversion with a rate of zero.");
+	}
+	return Math.round(amount / rate);
 }
 
 /**
@@ -59,17 +59,17 @@ export function inverseConversion(amount: number, rate: number): number {
  * @returns Minor-unit amount in the target currency
  */
 export function triangularConversion(
-  amount: number,
-  rateSourceToBase: number,
-  rateBaseToTarget: number,
+	amount: number,
+	rateSourceToBase: number,
+	rateBaseToTarget: number,
 ): number {
-  if (rateSourceToBase === 0) {
-    throw new Error(
-      "Cannot perform triangular conversion: source-to-base rate is zero.",
-    );
-  }
-  const amountInBase = amount / rateSourceToBase;
-  return Math.round(amountInBase * rateBaseToTarget);
+	if (rateSourceToBase === 0) {
+		throw new Error(
+			"Cannot perform triangular conversion: source-to-base rate is zero.",
+		);
+	}
+	const amountInBase = amount / rateSourceToBase;
+	return Math.round(amountInBase * rateBaseToTarget);
 }
 
 // ── Strategy Registry ──────────────────────────────────────────────────────────
@@ -87,9 +87,9 @@ export function triangularConversion(
  * ```
  */
 export const CONVERSION_STRATEGIES: Record<string, ConversionFn> = {
-  direct: directConversion,
-  inverse: inverseConversion,
-  // triangularConversion takes 2 rates — wrapped for the registry signature
-  triangular: (amount: number, ...rates: number[]) =>
-    triangularConversion(amount, rates[0], rates[1]),
+	direct: directConversion,
+	inverse: inverseConversion,
+	// triangularConversion takes 2 rates — wrapped for the registry signature
+	triangular: (amount: number, ...rates: number[]) =>
+		triangularConversion(amount, rates[0], rates[1]),
 };

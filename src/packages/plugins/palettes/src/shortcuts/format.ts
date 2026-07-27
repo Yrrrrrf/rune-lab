@@ -20,33 +20,33 @@
  * `meta+k`. Rendering only one of them was why the two views disagreed.
  */
 const KEY_SYMBOLS: Record<string, string> = {
-  cmd: "⌘",
-  meta: "⌘",
-  command: "⌘",
-  super: "⌘",
-  ctrl: "⌃",
-  control: "⌃",
-  shift: "⇧",
-  alt: "⌥",
-  option: "⌥",
-  enter: "↵",
-  return: "↵",
-  backspace: "⌫",
-  delete: "⌦",
-  tab: "⇥",
-  escape: "esc",
-  esc: "esc",
-  up: "↑",
-  down: "↓",
-  left: "←",
-  right: "→",
-  space: "␣",
+	cmd: "⌘",
+	meta: "⌘",
+	command: "⌘",
+	super: "⌘",
+	ctrl: "⌃",
+	control: "⌃",
+	shift: "⇧",
+	alt: "⌥",
+	option: "⌥",
+	enter: "↵",
+	return: "↵",
+	backspace: "⌫",
+	delete: "⌦",
+	tab: "⇥",
+	escape: "esc",
+	esc: "esc",
+	up: "↑",
+	down: "↓",
+	left: "←",
+	right: "→",
+	space: "␣",
 };
 
 /** Render one key part — `cmd` → `⌘`, `k` → `K`. */
 export function formatKeyPart(part: string): string {
-  const key = part.trim().toLowerCase();
-  return KEY_SYMBOLS[key] ?? (key.length === 1 ? key.toUpperCase() : key);
+	const key = part.trim().toLowerCase();
+	return KEY_SYMBOLS[key] ?? (key.length === 1 ? key.toUpperCase() : key);
 }
 
 /**
@@ -57,18 +57,18 @@ export function formatKeyPart(part: string): string {
  * which hid the non-mac binding entirely.
  */
 export function formatCombos(keys: string): string[][] {
-  return keys
-    .split(",")
-    .map((combo) => combo.trim())
-    .filter(Boolean)
-    .map((combo) => combo.split("+").map(formatKeyPart));
+	return keys
+		.split(",")
+		.map((combo) => combo.trim())
+		.filter(Boolean)
+		.map((combo) => combo.split("+").map(formatKeyPart));
 }
 
 /** Human-readable name for a shortcut scope. */
 export function scopeLabel(scope: string): string {
-  if (scope === "global") return "Global";
-  if (scope === "layout") return "Layout";
-  return scope.replace("panel:", "");
+	if (scope === "global") return "Global";
+	if (scope === "layout") return "Layout";
+	return scope.replace("panel:", "");
 }
 
 /**
@@ -76,13 +76,13 @@ export function scopeLabel(scope: string): string {
  * searchable in the settings view but not the palette.
  */
 export function matchesQuery(
-  entry: { label?: string; category?: string; keys: string; scope?: string },
-  query: string,
+	entry: { label?: string; category?: string; keys: string; scope?: string },
+	query: string,
 ): boolean {
-  return (
-    (entry.label ?? "").toLowerCase().includes(query) ||
-    (entry.category ?? "").toLowerCase().includes(query) ||
-    entry.keys.toLowerCase().includes(query) ||
-    (entry.scope ?? "").toLowerCase().includes(query)
-  );
+	return (
+		(entry.label ?? "").toLowerCase().includes(query) ||
+		(entry.category ?? "").toLowerCase().includes(query) ||
+		entry.keys.toLowerCase().includes(query) ||
+		(entry.scope ?? "").toLowerCase().includes(query)
+	);
 }

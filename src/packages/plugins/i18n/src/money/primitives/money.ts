@@ -3,46 +3,46 @@
 // Consumers should never import Dinero directly — these helpers encapsulate it.
 
 import {
-  add as dineroAdd,
-  AED,
-  BRL,
-  CAD,
-  CNY,
-  convert as dineroConvert,
-  type Dinero,
-  dinero,
-  type DineroCurrency,
-  type DineroSnapshot,
-  EUR,
-  GBP,
-  INR,
-  JPY,
-  KRW,
-  multiply as dineroMultiply,
-  MXN,
-  subtract as dineroSubtract,
-  toDecimal,
-  // ISO 4217 currency definitions
-  toSnapshot,
-  transformScale as dineroTransformScale,
-  USD,
+	add as dineroAdd,
+	AED,
+	BRL,
+	CAD,
+	CNY,
+	convert as dineroConvert,
+	type Dinero,
+	dinero,
+	type DineroCurrency,
+	type DineroSnapshot,
+	EUR,
+	GBP,
+	INR,
+	JPY,
+	KRW,
+	multiply as dineroMultiply,
+	MXN,
+	subtract as dineroSubtract,
+	toDecimal,
+	// ISO 4217 currency definitions
+	toSnapshot,
+	transformScale as dineroTransformScale,
+	USD,
 } from "dinero.js";
 
 /**
  * Map of ISO 4217 currency codes to Dinero currency objects
  */
 export const CURRENCY_MAP: Record<string, DineroCurrency<number>> = {
-  USD,
-  EUR,
-  MXN,
-  JPY,
-  KRW,
-  CNY,
-  AED,
-  GBP,
-  CAD,
-  BRL,
-  INR,
+	USD,
+	EUR,
+	MXN,
+	JPY,
+	KRW,
+	CNY,
+	AED,
+	GBP,
+	CAD,
+	BRL,
+	INR,
 };
 
 /**
@@ -68,11 +68,11 @@ export type RateMap = Record<string, ScaledRate | number>;
  * Defaults to 4 decimal places of precision if not specified.
  */
 export function scaledRate(float: number, precision: number = 4): ScaledRate {
-  const factor = 10 ** precision;
-  return {
-    amount: Math.round(float * factor),
-    scale: precision,
-  };
+	const factor = 10 ** precision;
+	return {
+		amount: Math.round(float * factor),
+		scale: precision,
+	};
 }
 
 /**
@@ -80,10 +80,10 @@ export function scaledRate(float: number, precision: number = 4): ScaledRate {
  * Ensures the core registry and any store-level registries stay in sync.
  */
 export function registerCurrency(
-  code: string,
-  currency: DineroCurrency<number>,
+	code: string,
+	currency: DineroCurrency<number>,
 ): void {
-  CURRENCY_MAP[code] = currency;
+	CURRENCY_MAP[code] = currency;
 }
 
 /**
@@ -91,24 +91,24 @@ export function registerCurrency(
  * Handles null, undefined, bigints, and SurrealDB Decimal objects via toString().
  */
 function toNumber(amount: unknown): number {
-  if (amount === null || amount === undefined) return 0;
-  if (typeof amount === "number") return Number.isFinite(amount) ? amount : 0;
-  if (typeof amount === "bigint") return Number(amount);
+	if (amount === null || amount === undefined) return 0;
+	if (typeof amount === "number") return Number.isFinite(amount) ? amount : 0;
+	if (typeof amount === "bigint") return Number(amount);
 
-  // Handle SurrealDB Decimal (which has a toString method) or other objects
-  if (typeof amount === "object") {
-    try {
-      // SurrealDB Decimal.toString() returns a numeric string
-      const str = String(amount);
-      const parsed = parseFloat(str);
-      return Number.isFinite(parsed) ? parsed : 0;
-    } catch {
-      return 0;
-    }
-  }
+	// Handle SurrealDB Decimal (which has a toString method) or other objects
+	if (typeof amount === "object") {
+		try {
+			// SurrealDB Decimal.toString() returns a numeric string
+			const str = String(amount);
+			const parsed = parseFloat(str);
+			return Number.isFinite(parsed) ? parsed : 0;
+		} catch {
+			return 0;
+		}
+	}
 
-  const coerced = Number(amount);
-  return Number.isFinite(coerced) ? coerced : 0;
+	const coerced = Number(amount);
+	return Number.isFinite(coerced) ? coerced : 0;
 }
 
 /**
@@ -116,7 +116,7 @@ function toNumber(amount: unknown): number {
  * Exported so consumers can apply the same defensive coercion.
  */
 export function safeAmount(amount: unknown): number {
-  return Math.round(toNumber(amount));
+	return Math.round(toNumber(amount));
 }
 
 /**
@@ -124,18 +124,18 @@ export function safeAmount(amount: unknown): number {
  * Uses the currency's exponent from CURRENCY_MAP.
  */
 export function toMinorUnit(
-  amount: unknown,
-  currencyCode: ISO4217Code | string,
+	amount: unknown,
+	currencyCode: ISO4217Code | string,
 ): number {
-  const currency = CURRENCY_MAP[currencyCode];
-  if (!currency) {
-    throw new Error(
-      `Unknown currency code: ${currencyCode}. Register it first via registerCurrency().`,
-    );
-  }
-  const base = Array.isArray(currency.base) ? currency.base[0] : currency.base;
-  const factor = Number(base) ** Number(currency.exponent);
-  return Math.round(toNumber(amount) * factor);
+	const currency = CURRENCY_MAP[currencyCode];
+	if (!currency) {
+		throw new Error(
+			`Unknown currency code: ${currencyCode}. Register it first via registerCurrency().`,
+		);
+	}
+	const base = Array.isArray(currency.base) ? currency.base[0] : currency.base;
+	const factor = Number(base) ** Number(currency.exponent);
+	return Math.round(toNumber(amount) * factor);
 }
 
 /**
@@ -144,16 +144,16 @@ export function toMinorUnit(
  * @param currencyCode - ISO 4217 currency code (e.g., "USD")
  */
 export function createMoney(
-  amount: unknown,
-  currencyCode: ISO4217Code | string,
+	amount: unknown,
+	currencyCode: ISO4217Code | string,
 ): Dinero<number> {
-  const currency = CURRENCY_MAP[currencyCode];
-  if (!currency) {
-    throw new Error(
-      `Unknown currency code: ${currencyCode}. Register it first via registerCurrency().`,
-    );
-  }
-  return dinero({ amount: safeAmount(amount), currency });
+	const currency = CURRENCY_MAP[currencyCode];
+	if (!currency) {
+		throw new Error(
+			`Unknown currency code: ${currencyCode}. Register it first via registerCurrency().`,
+		);
+	}
+	return dinero({ amount: safeAmount(amount), currency });
 }
 
 /**
@@ -163,24 +163,25 @@ export function createMoney(
  * @param currencyCode - ISO 4217 code for Intl.NumberFormat (e.g., "USD")
  */
 export function formatMoney(
-  money: Dinero<number>,
-  locale: string = "en-US",
-  currencyCode?: string,
+	money: Dinero<number>,
+	locale: string = "en-US",
+	currencyCode?: string,
 ): string {
-  return toDecimal(money, ({ value, currency }) => {
-    const code = currencyCode ??
-      Object.entries(CURRENCY_MAP).find(
-        ([, c]) => c.code === currency.code,
-      )?.[0] ??
-      currency.code;
+	return toDecimal(money, ({ value, currency }) => {
+		const code =
+			currencyCode ??
+			Object.entries(CURRENCY_MAP).find(
+				([, c]) => c.code === currency.code,
+			)?.[0] ??
+			currency.code;
 
-    return new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency: code,
-      minimumFractionDigits: currency.exponent,
-      maximumFractionDigits: currency.exponent,
-    }).format(Number(value));
-  });
+		return new Intl.NumberFormat(locale, {
+			style: "currency",
+			currency: code,
+			minimumFractionDigits: currency.exponent,
+			maximumFractionDigits: currency.exponent,
+		}).format(Number(value));
+	});
 }
 
 /**
@@ -188,39 +189,39 @@ export function formatMoney(
  * Convenience wrapper around createMoney + formatMoney.
  */
 export function formatAmount(
-  amount: unknown,
-  currencyCode: ISO4217Code | string,
-  locale: string = "en-US",
+	amount: unknown,
+	currencyCode: ISO4217Code | string,
+	locale: string = "en-US",
 ): string {
-  const money = createMoney(amount, currencyCode);
-  return formatMoney(money, locale, currencyCode);
+	const money = createMoney(amount, currencyCode);
+	return formatMoney(money, locale, currencyCode);
 }
 
 /**
  * Add two monetary values (must be same currency)
  */
 export function addMoney(a: Dinero<number>, b: Dinero<number>): Dinero<number> {
-  return dineroAdd(a, b);
+	return dineroAdd(a, b);
 }
 
 /**
  * Subtract two monetary values (must be same currency)
  */
 export function subtractMoney(
-  a: Dinero<number>,
-  b: Dinero<number>,
+	a: Dinero<number>,
+	b: Dinero<number>,
 ): Dinero<number> {
-  return dineroSubtract(a, b);
+	return dineroSubtract(a, b);
 }
 
 /**
  * Multiply a monetary value by a factor
  */
 export function multiplyMoney(
-  money: Dinero<number>,
-  factor: number,
+	money: Dinero<number>,
+	factor: number,
 ): Dinero<number> {
-  return dineroMultiply(money, factor);
+	return dineroMultiply(money, factor);
 }
 
 /**
@@ -228,32 +229,32 @@ export function multiplyMoney(
  * Both currencies must share the same base (base 10 for all standard ISO currencies).
  */
 export function convertMoney(
-  money: Dinero<number>,
-  toCurrencyCode: string,
-  rates: RateMap,
+	money: Dinero<number>,
+	toCurrencyCode: string,
+	rates: RateMap,
 ): Dinero<number> {
-  const targetCurrency = CURRENCY_MAP[toCurrencyCode];
-  if (!targetCurrency) {
-    throw new Error(
-      `Unknown target currency: ${toCurrencyCode}. Register it first via registerCurrency().`,
-    );
-  }
+	const targetCurrency = CURRENCY_MAP[toCurrencyCode];
+	if (!targetCurrency) {
+		throw new Error(
+			`Unknown target currency: ${toCurrencyCode}. Register it first via registerCurrency().`,
+		);
+	}
 
-  const rate = rates[toCurrencyCode];
-  if (rate === undefined) {
-    throw new Error(`Missing exchange rate for currency: ${toCurrencyCode}`);
-  }
+	const rate = rates[toCurrencyCode];
+	if (rate === undefined) {
+		throw new Error(`Missing exchange rate for currency: ${toCurrencyCode}`);
+	}
 
-  try {
-    return dineroConvert(money, targetCurrency, { [toCurrencyCode]: rate });
-  } catch (err) {
-    if (err instanceof Error && err.message.includes("base")) {
-      throw new Error(
-        `Cannot convert between currencies with different bases. Ensure both are base 10.`,
-      );
-    }
-    throw err;
-  }
+	try {
+		return dineroConvert(money, targetCurrency, { [toCurrencyCode]: rate });
+	} catch (err) {
+		if (err instanceof Error && err.message.includes("base")) {
+			throw new Error(
+				`Cannot convert between currencies with different bases. Ensure both are base 10.`,
+			);
+		}
+		throw err;
+	}
 }
 
 /**
@@ -261,122 +262,122 @@ export function convertMoney(
  * Returns the original amount if from and to currencies are the same.
  */
 export function convertAmount(
-  amount: number,
-  fromCode: string,
-  toCode: string,
-  rates: RateMap,
+	amount: number,
+	fromCode: string,
+	toCode: string,
+	rates: RateMap,
 ): number {
-  if (fromCode === toCode) return amount;
-  const targetCurrency = CURRENCY_MAP[toCode];
-  if (!targetCurrency) {
-    throw new Error(`Unknown target currency: ${toCode}`);
-  }
+	if (fromCode === toCode) return amount;
+	const targetCurrency = CURRENCY_MAP[toCode];
+	if (!targetCurrency) {
+		throw new Error(`Unknown target currency: ${toCode}`);
+	}
 
-  const sourceMoney = createMoney(amount, fromCode);
-  const convertedMoney = convertMoney(sourceMoney, toCode, rates);
+	const sourceMoney = createMoney(amount, fromCode);
+	const convertedMoney = convertMoney(sourceMoney, toCode, rates);
 
-  // Normalize back to the target currency's standard exponent
-  const targetMoney = dineroTransformScale(
-    convertedMoney,
-    targetCurrency.exponent,
-  );
-  const snapshot = toSnapshot(targetMoney);
+	// Normalize back to the target currency's standard exponent
+	const targetMoney = dineroTransformScale(
+		convertedMoney,
+		targetCurrency.exponent,
+	);
+	const snapshot = toSnapshot(targetMoney);
 
-  return snapshot.amount;
+	return snapshot.amount;
 }
 
 /**
  * Converts Dinero object to a Stripe-compatible payload.
  */
 export function toStripeMoney(money: Dinero<number>): {
-  amount: number;
-  currency: string;
+	amount: number;
+	currency: string;
 } {
-  const snapshot = toSnapshot(money);
-  return {
-    amount: snapshot.amount,
-    currency: snapshot.currency.code.toLowerCase(),
-  };
+	const snapshot = toSnapshot(money);
+	return {
+		amount: snapshot.amount,
+		currency: snapshot.currency.code.toLowerCase(),
+	};
 }
 
 /**
  * Converts Dinero object to a PayPal-compatible payload.
  */
 export function toPaypalMoney(money: Dinero<number>): {
-  value: string;
-  currency_code: string;
+	value: string;
+	currency_code: string;
 } {
-  const value = toDecimal(money);
-  const snapshot = toSnapshot(money);
-  return {
-    value,
-    currency_code: snapshot.currency.code,
-  };
+	const value = toDecimal(money);
+	const snapshot = toSnapshot(money);
+	return {
+		value,
+		currency_code: snapshot.currency.code,
+	};
 }
 
 /**
  * Converts Dinero object to an Adyen-compatible payload.
  */
 export function toAdyenMoney(money: Dinero<number>): {
-  value: number;
-  currency: string;
+	value: number;
+	currency: string;
 } {
-  const snapshot = toSnapshot(money);
-  return {
-    value: snapshot.amount,
-    currency: snapshot.currency.code.toUpperCase(),
-  };
+	const snapshot = toSnapshot(money);
+	return {
+		value: snapshot.amount,
+		currency: snapshot.currency.code.toUpperCase(),
+	};
 }
 
 /**
  * Converts Dinero object to a Square-compatible payload (uses BigInt).
  */
 export function toSquareMoney(money: Dinero<number>): {
-  amount: bigint;
-  currency: string;
+	amount: bigint;
+	currency: string;
 } {
-  const snapshot = toSnapshot(money);
-  return {
-    amount: BigInt(snapshot.amount),
-    currency: snapshot.currency.code,
-  };
+	const snapshot = toSnapshot(money);
+	return {
+		amount: BigInt(snapshot.amount),
+		currency: snapshot.currency.code,
+	};
 }
 
 /**
  * Serializes a Dinero object into a plain object snapshot.
  */
 export function toMoneySnapshot(money: Dinero<number>): {
-  amount: number;
-  currency: string;
-  scale: number;
+	amount: number;
+	currency: string;
+	scale: number;
 } {
-  const snapshot = toSnapshot(money);
-  return {
-    amount: snapshot.amount,
-    currency: snapshot.currency.code,
-    scale: snapshot.scale,
-  };
+	const snapshot = toSnapshot(money);
+	return {
+		amount: snapshot.amount,
+		currency: snapshot.currency.code,
+		scale: snapshot.scale,
+	};
 }
 
 /**
  * Restores a Dinero object from a snapshot.
  */
 export function fromMoneySnapshot(snapshot: {
-  amount: number;
-  currency: string;
-  scale?: number;
+	amount: number;
+	currency: string;
+	scale?: number;
 }): Dinero<number> {
-  const currency = CURRENCY_MAP[snapshot.currency];
-  if (!currency) {
-    throw new Error(
-      `Unknown currency: ${snapshot.currency}. Register it first.`,
-    );
-  }
-  return dinero({
-    amount: snapshot.amount,
-    currency,
-    scale: snapshot.scale ?? currency.exponent,
-  });
+	const currency = CURRENCY_MAP[snapshot.currency];
+	if (!currency) {
+		throw new Error(
+			`Unknown currency: ${snapshot.currency}. Register it first.`,
+		);
+	}
+	return dinero({
+		amount: snapshot.amount,
+		currency,
+		scale: snapshot.scale ?? currency.exponent,
+	});
 }
 
 // Re-export types

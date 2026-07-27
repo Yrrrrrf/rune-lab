@@ -1,11 +1,11 @@
 {
-  "name": "@rune-lab/layout",
-  "version": "0.0.1",
-  "exports": {
-    ".": "./src/mod.ts"
-  },
-  "imports": {
-    "svelte": "npm:svelte@^5",
-    "@chenglou/pretext": "npm:@chenglou/pretext"
-  }
+	"name": "@rune-lab/layout",
+	"version": "0.0.1",
+	"exports": {
+		".": "./src/mod.ts"
+	},
+	"imports": {
+		"svelte": "npm:svelte@^5",
+		"@chenglou/pretext": "npm:@chenglou/pretext"
+	}
 }

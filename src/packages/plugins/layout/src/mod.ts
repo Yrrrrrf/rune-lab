@@ -13,10 +13,10 @@ export { default as WorkspaceLayout } from "./components/WorkspaceLayout.svelte"
 export { default as WorkspaceStrip } from "./components/WorkspaceStrip.svelte";
 export { statusbar } from "./contributions.ts";
 export {
-  getLayoutStore,
-  getTextStore,
-  getThemeStore,
-  layout,
+	getLayoutStore,
+	getTextStore,
+	getThemeStore,
+	layout,
 } from "./plugin.ts";
 export { PRESETS } from "./presets.ts";
 export type { Theme } from "./stores/theme.svelte.ts";

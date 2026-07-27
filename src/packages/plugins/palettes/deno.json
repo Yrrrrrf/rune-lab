@@ -1,11 +1,11 @@
 {
-  "name": "@rune-lab/palettes",
-  "version": "0.0.1",
-  "exports": {
-    ".": "./src/mod.ts"
-  },
-  "imports": {
-    "svelte": "npm:svelte@^5",
-    "hotkeys-js": "npm:hotkeys-js@^4"
-  }
+	"name": "@rune-lab/palettes",
+	"version": "0.0.1",
+	"exports": {
+		".": "./src/mod.ts"
+	},
+	"imports": {
+		"svelte": "npm:svelte@^5",
+		"hotkeys-js": "npm:hotkeys-js@^4"
+	}
 }

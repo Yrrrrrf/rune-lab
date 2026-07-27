@@ -8,19 +8,19 @@ import ObserverPanel from "./ObserverPanel.svelte";
  * and a microkernel capabilities page in settings.
  */
 export const observer: ForgedPlugin<
-  "rune-lab.observer",
-  Record<never, never>
+	"rune-lab.observer",
+	Record<never, never>
 > = definePlugin({
-  id: "rune-lab.observer",
-  contributions: [
-    contribute(settingsSections, {
-      id: "capabilities",
-      label: "Capabilities",
-      icon: "🔬",
-      component: CapabilitiesSettings,
-    }),
-  ],
-  overlays: [ObserverPanel],
+	id: "rune-lab.observer",
+	contributions: [
+		contribute(settingsSections, {
+			id: "capabilities",
+			label: "Capabilities",
+			icon: "🔬",
+			component: CapabilitiesSettings,
+		}),
+	],
+	overlays: [ObserverPanel],
 });
 
 export { CapabilitiesSettings, ObserverPanel };

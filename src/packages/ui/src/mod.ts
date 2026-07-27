@@ -5,19 +5,19 @@ export * from "./persistence/createConfigStore.svelte.ts";
 export * from "./persistence/drivers.ts";
 export * from "./persistence/usePersistence.ts";
 export {
-  createAccessor,
-  getKernel,
-  getSettingsSections,
-  getT,
-  RUNE_LAB_CONTEXT,
-  type SettingsSection,
+	createAccessor,
+	getKernel,
+	getSettingsSections,
+	getT,
+	RUNE_LAB_CONTEXT,
+	type SettingsSection,
 } from "./provider/context.ts";
 export { default as RuneProvider } from "./RuneProvider.svelte";
 export {
-  type AppData,
-  type AppStore,
-  createAppStore,
-  getAppStore,
+	type AppData,
+	type AppStore,
+	createAppStore,
+	getAppStore,
 } from "./reactivity/app.svelte.ts";
 // Reactivity & Context exports
 export { useCell } from "./reactivity/use-cell.svelte.ts";

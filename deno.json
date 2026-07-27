@@ -1,34 +1,33 @@
 {
-  "version": "0.5.1-rc.2",
-  "description": "A modern, extensible plugin-based UI shell for Svelte 5 applications",
-  "license": "MIT",
-  "readme": "README.md",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Yrrrrrf/rune-lab.git"
-  },
-  "nodeModulesDir": "auto",
-  "unstable": ["fmt-component"],
-  "workspace": [
-    "./src/packages/ui",
-    "./src/packages/core",
-    "./src/packages/plugins/i18n",
-    "./src/packages/plugins/layout",
-    "./src/packages/plugins/observer",
-    "./src/packages/plugins/palettes"
-  ],
-  "imports": {
-    "svelte": "npm:svelte@^5",
-    "vite": "npm:vite",
-    "vite-plus": "npm:vite-plus",
-    "typescript": "npm:typescript@6",
-    "jsdom": "npm:jsdom",
-    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
-    "@testing-library/jest-dom": "npm:@testing-library/jest-dom",
-    "effect": "npm:effect@^3",
-    "esm-env": "npm:esm-env@^1"
-  },
-  "test": {
-    "exclude": ["apps/**", "src/packages/ui/**", "src/packages/plugins/**"]
-  }
+	"version": "0.5.1-rc.2",
+	"description": "A modern, extensible plugin-based UI shell for Svelte 5 applications",
+	"license": "MIT",
+	"readme": "README.md",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Yrrrrrf/rune-lab.git"
+	},
+	"nodeModulesDir": "auto",
+	"workspace": [
+		"./src/packages/ui",
+		"./src/packages/core",
+		"./src/packages/plugins/i18n",
+		"./src/packages/plugins/layout",
+		"./src/packages/plugins/observer",
+		"./src/packages/plugins/palettes"
+	],
+	"imports": {
+		"svelte": "npm:svelte@^5",
+		"vite": "npm:vite",
+		"vite-plus": "npm:vite-plus",
+		"typescript": "npm:typescript@6",
+		"jsdom": "npm:jsdom",
+		"@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
+		"@testing-library/jest-dom": "npm:@testing-library/jest-dom",
+		"effect": "npm:effect@^3",
+		"esm-env": "npm:esm-env@^1"
+	},
+	"test": {
+		"exclude": ["apps/**", "src/packages/ui/**", "src/packages/plugins/**"]
+	}
 }

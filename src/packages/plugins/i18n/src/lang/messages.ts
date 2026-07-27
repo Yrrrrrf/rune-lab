@@ -3,8 +3,8 @@ import * as messages from "./paraglide/messages.js";
 
 // re-export all the messages as m
 export const m = messages as unknown as Record<
-  string,
-  (...args: unknown[]) => string
+	string,
+	(...args: unknown[]) => string
 >;
 
 // * Note: This is a re-export of the messages from the paraglide-js package.

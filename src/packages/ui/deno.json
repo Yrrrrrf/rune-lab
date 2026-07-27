@@ -1,16 +1,16 @@
 {
-  "name": "@rune-lab/svelte",
-  "version": "0.0.1",
-  "exports": {
-    ".": "./src/mod.ts"
-  },
-  "imports": {
-    "svelte": "npm:svelte",
-    "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
-    "@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
-    "tailwindcss": "npm:tailwindcss",
-    "@tailwindcss/vite": "npm:@tailwindcss/vite",
-    "daisyui": "npm:daisyui@^5",
-    "esm-env": "npm:esm-env@^1"
-  }
+	"name": "@rune-lab/svelte",
+	"version": "0.0.1",
+	"exports": {
+		".": "./src/mod.ts"
+	},
+	"imports": {
+		"svelte": "npm:svelte",
+		"@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
+		"@sveltejs/adapter-static": "npm:@sveltejs/adapter-static",
+		"tailwindcss": "npm:tailwindcss",
+		"@tailwindcss/vite": "npm:@tailwindcss/vite",
+		"daisyui": "npm:daisyui@^5",
+		"esm-env": "npm:esm-env@^1"
+	}
 }

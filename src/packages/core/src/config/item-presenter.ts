@@ -19,23 +19,23 @@
 
 /** The renderable shape of a single item. Text only, by construction. */
 export interface PresentedItem {
-  label: string;
-  /** A short leading glyph — an emoji, a flag, a currency symbol. */
-  icon?: string;
-  /** Secondary text, e.g. a key combo or a native-language name. */
-  hint?: string;
+	label: string;
+	/** A short leading glyph — an emoji, a flag, a currency symbol. */
+	icon?: string;
+	/** Secondary text, e.g. a key combo or a native-language name. */
+	hint?: string;
 }
 
 export interface ItemPresenter<T, Id extends string = string> {
-  readonly items: readonly T[];
-  id(item: T): Id;
-  present(item: T): PresentedItem;
+	readonly items: readonly T[];
+	id(item: T): Id;
+	present(item: T): PresentedItem;
 }
 
 /** A `{value,label}` pair as consumed by a `select`-type settings field. */
 export interface SelectOption {
-  value: string;
-  label: string;
+	value: string;
+	label: string;
 }
 
 /**
@@ -45,10 +45,10 @@ export interface SelectOption {
  * away from the constant it was hand-copied from.
  */
 export function toOptions<T, Id extends string>(
-  presenter: ItemPresenter<T, Id>,
+	presenter: ItemPresenter<T, Id>,
 ): SelectOption[] {
-  return presenter.items.map((item) => ({
-    value: presenter.id(item),
-    label: presenter.present(item).label,
-  }));
+	return presenter.items.map((item) => ({
+		value: presenter.id(item),
+		label: presenter.present(item).label,
+	}));
 }

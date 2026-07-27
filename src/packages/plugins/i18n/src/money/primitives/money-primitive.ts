@@ -9,9 +9,9 @@ import { CURRENCY_MAP, type ISO4217Code } from "./money.ts";
  * Used for persistence drivers and JSON round-trips.
  */
 export interface MoneyJSON {
-  amount: number;
-  currencyCode: string;
-  scale: number;
+	amount: number;
+	currencyCode: string;
+	scale: number;
 }
 
 /**
@@ -33,188 +33,188 @@ export interface MoneyJSON {
  * ```
  */
 export class MoneyPrimitive {
-  /** Raw amount in minor units (e.g., cents). */
-  readonly amount: number;
-  /** ISO 4217 currency code. */
-  readonly currencyCode: string;
-  /** Number of decimal places for this currency (e.g., 2 for USD, 0 for JPY). */
-  readonly scale: number;
+	/** Raw amount in minor units (e.g., cents). */
+	readonly amount: number;
+	/** ISO 4217 currency code. */
+	readonly currencyCode: string;
+	/** Number of decimal places for this currency (e.g., 2 for USD, 0 for JPY). */
+	readonly scale: number;
 
-  private constructor(amount: number, currencyCode: string, scale: number) {
-    this.amount = Math.round(amount);
-    this.currencyCode = currencyCode;
-    this.scale = scale;
-  }
+	private constructor(amount: number, currencyCode: string, scale: number) {
+		this.amount = Math.round(amount);
+		this.currencyCode = currencyCode;
+		this.scale = scale;
+	}
 
-  // ── Factories ────────────────────────────────────────────────────────────
+	// ── Factories ────────────────────────────────────────────────────────────
 
-  /**
-   * Create a MoneyPrimitive from a minor-unit integer amount.
-   * @param amount - Amount in minor units (e.g., 1299 for $12.99)
-   * @param currencyCode - ISO 4217 currency code
-   */
-  static fromMinor(
-    amount: number,
-    currencyCode: ISO4217Code | string,
-  ): MoneyPrimitive {
-    const scale = MoneyPrimitive.resolveScale(currencyCode);
-    return new MoneyPrimitive(amount, currencyCode, scale);
-  }
+	/**
+	 * Create a MoneyPrimitive from a minor-unit integer amount.
+	 * @param amount - Amount in minor units (e.g., 1299 for $12.99)
+	 * @param currencyCode - ISO 4217 currency code
+	 */
+	static fromMinor(
+		amount: number,
+		currencyCode: ISO4217Code | string,
+	): MoneyPrimitive {
+		const scale = MoneyPrimitive.resolveScale(currencyCode);
+		return new MoneyPrimitive(amount, currencyCode, scale);
+	}
 
-  /**
-   * Create a MoneyPrimitive from a major-unit float amount.
-   * @param amount - Amount in major units (e.g., 12.99 for $12.99)
-   * @param currencyCode - ISO 4217 currency code
-   */
-  static fromMajor(
-    amount: number,
-    currencyCode: ISO4217Code | string,
-  ): MoneyPrimitive {
-    const scale = MoneyPrimitive.resolveScale(currencyCode);
-    const factor = 10 ** scale;
-    return new MoneyPrimitive(Math.round(amount * factor), currencyCode, scale);
-  }
+	/**
+	 * Create a MoneyPrimitive from a major-unit float amount.
+	 * @param amount - Amount in major units (e.g., 12.99 for $12.99)
+	 * @param currencyCode - ISO 4217 currency code
+	 */
+	static fromMajor(
+		amount: number,
+		currencyCode: ISO4217Code | string,
+	): MoneyPrimitive {
+		const scale = MoneyPrimitive.resolveScale(currencyCode);
+		const factor = 10 ** scale;
+		return new MoneyPrimitive(Math.round(amount * factor), currencyCode, scale);
+	}
 
-  /**
-   * Restore a MoneyPrimitive from its JSON representation.
-   */
-  static fromJSON(json: MoneyJSON): MoneyPrimitive {
-    return new MoneyPrimitive(json.amount, json.currencyCode, json.scale);
-  }
+	/**
+	 * Restore a MoneyPrimitive from its JSON representation.
+	 */
+	static fromJSON(json: MoneyJSON): MoneyPrimitive {
+		return new MoneyPrimitive(json.amount, json.currencyCode, json.scale);
+	}
 
-  // ── Computed Getters ─────────────────────────────────────────────────────
+	// ── Computed Getters ─────────────────────────────────────────────────────
 
-  /** Amount in minor units (alias for `amount`). */
-  get minor(): number {
-    return this.amount;
-  }
+	/** Amount in minor units (alias for `amount`). */
+	get minor(): number {
+		return this.amount;
+	}
 
-  /** Amount in major units (e.g., 12.99 for 1299 cents). */
-  get major(): number {
-    if (this.scale === 0) return this.amount;
-    return this.amount / 10 ** this.scale;
-  }
+	/** Amount in major units (e.g., 12.99 for 1299 cents). */
+	get major(): number {
+		if (this.scale === 0) return this.amount;
+		return this.amount / 10 ** this.scale;
+	}
 
-  // ── Formatting ───────────────────────────────────────────────────────────
+	// ── Formatting ───────────────────────────────────────────────────────────
 
-  /**
-   * Format this monetary value as a locale-aware currency string.
-   * @param locale - BCP 47 locale string (default: "en-US")
-   */
-  format(locale: string = "en-US"): string {
-    return new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency: this.currencyCode,
-      minimumFractionDigits: this.scale,
-      maximumFractionDigits: this.scale,
-    }).format(this.major);
-  }
+	/**
+	 * Format this monetary value as a locale-aware currency string.
+	 * @param locale - BCP 47 locale string (default: "en-US")
+	 */
+	format(locale: string = "en-US"): string {
+		return new Intl.NumberFormat(locale, {
+			style: "currency",
+			currency: this.currencyCode,
+			minimumFractionDigits: this.scale,
+			maximumFractionDigits: this.scale,
+		}).format(this.major);
+	}
 
-  // ── Arithmetic (returns new instances — immutability) ────────────────────
+	// ── Arithmetic (returns new instances — immutability) ────────────────────
 
-  /**
-   * Add another MoneyPrimitive (must be same currency).
-   * Returns a new MoneyPrimitive.
-   */
-  add(other: MoneyPrimitive): MoneyPrimitive {
-    this.assertSameCurrency(other);
-    return new MoneyPrimitive(
-      this.amount + other.amount,
-      this.currencyCode,
-      this.scale,
-    );
-  }
+	/**
+	 * Add another MoneyPrimitive (must be same currency).
+	 * Returns a new MoneyPrimitive.
+	 */
+	add(other: MoneyPrimitive): MoneyPrimitive {
+		this.assertSameCurrency(other);
+		return new MoneyPrimitive(
+			this.amount + other.amount,
+			this.currencyCode,
+			this.scale,
+		);
+	}
 
-  /**
-   * Subtract another MoneyPrimitive (must be same currency).
-   * Returns a new MoneyPrimitive.
-   */
-  subtract(other: MoneyPrimitive): MoneyPrimitive {
-    this.assertSameCurrency(other);
-    return new MoneyPrimitive(
-      this.amount - other.amount,
-      this.currencyCode,
-      this.scale,
-    );
-  }
+	/**
+	 * Subtract another MoneyPrimitive (must be same currency).
+	 * Returns a new MoneyPrimitive.
+	 */
+	subtract(other: MoneyPrimitive): MoneyPrimitive {
+		this.assertSameCurrency(other);
+		return new MoneyPrimitive(
+			this.amount - other.amount,
+			this.currencyCode,
+			this.scale,
+		);
+	}
 
-  /**
-   * Multiply by a scalar factor. Returns a new MoneyPrimitive.
-   */
-  multiply(factor: number): MoneyPrimitive {
-    return new MoneyPrimitive(
-      Math.round(this.amount * factor),
-      this.currencyCode,
-      this.scale,
-    );
-  }
+	/**
+	 * Multiply by a scalar factor. Returns a new MoneyPrimitive.
+	 */
+	multiply(factor: number): MoneyPrimitive {
+		return new MoneyPrimitive(
+			Math.round(this.amount * factor),
+			this.currencyCode,
+			this.scale,
+		);
+	}
 
-  // ── Comparison ───────────────────────────────────────────────────────────
+	// ── Comparison ───────────────────────────────────────────────────────────
 
-  /**
-   * Value equality — two MoneyPrimitives are equal if they have the same
-   * amount, currency code, and scale.
-   */
-  equals(other: MoneyPrimitive): boolean {
-    return (
-      this.amount === other.amount &&
-      this.currencyCode === other.currencyCode &&
-      this.scale === other.scale
-    );
-  }
+	/**
+	 * Value equality — two MoneyPrimitives are equal if they have the same
+	 * amount, currency code, and scale.
+	 */
+	equals(other: MoneyPrimitive): boolean {
+		return (
+			this.amount === other.amount &&
+			this.currencyCode === other.currencyCode &&
+			this.scale === other.scale
+		);
+	}
 
-  /**
-   * Returns true if this amount is zero.
-   */
-  isZero(): boolean {
-    return this.amount === 0;
-  }
+	/**
+	 * Returns true if this amount is zero.
+	 */
+	isZero(): boolean {
+		return this.amount === 0;
+	}
 
-  /**
-   * Returns true if this amount is negative.
-   */
-  isNegative(): boolean {
-    return this.amount < 0;
-  }
+	/**
+	 * Returns true if this amount is negative.
+	 */
+	isNegative(): boolean {
+		return this.amount < 0;
+	}
 
-  // ── Serialization ────────────────────────────────────────────────────────
+	// ── Serialization ────────────────────────────────────────────────────────
 
-  /**
-   * Serialize to a plain JSON-compatible object.
-   */
-  toJSON(): MoneyJSON {
-    return {
-      amount: this.amount,
-      currencyCode: this.currencyCode,
-      scale: this.scale,
-    };
-  }
+	/**
+	 * Serialize to a plain JSON-compatible object.
+	 */
+	toJSON(): MoneyJSON {
+		return {
+			amount: this.amount,
+			currencyCode: this.currencyCode,
+			scale: this.scale,
+		};
+	}
 
-  toString(): string {
-    return `MoneyPrimitive(${this.amount} ${this.currencyCode} scale=${this.scale})`;
-  }
+	toString(): string {
+		return `MoneyPrimitive(${this.amount} ${this.currencyCode} scale=${this.scale})`;
+	}
 
-  // ── Private Helpers ──────────────────────────────────────────────────────
+	// ── Private Helpers ──────────────────────────────────────────────────────
 
-  private assertSameCurrency(other: MoneyPrimitive): void {
-    if (this.currencyCode !== other.currencyCode) {
-      throw new Error(
-        `Currency mismatch: cannot operate on ${this.currencyCode} and ${other.currencyCode}`,
-      );
-    }
-  }
+	private assertSameCurrency(other: MoneyPrimitive): void {
+		if (this.currencyCode !== other.currencyCode) {
+			throw new Error(
+				`Currency mismatch: cannot operate on ${this.currencyCode} and ${other.currencyCode}`,
+			);
+		}
+	}
 
-  /**
-   * Resolves the scale (exponent) for a currency code from CURRENCY_MAP.
-   * Throws if the currency is not registered.
-   */
-  private static resolveScale(currencyCode: string): number {
-    const currency = CURRENCY_MAP[currencyCode];
-    if (!currency) {
-      throw new Error(
-        `Unknown currency code: ${currencyCode}. Register it first via registerCurrency().`,
-      );
-    }
-    return currency.exponent;
-  }
+	/**
+	 * Resolves the scale (exponent) for a currency code from CURRENCY_MAP.
+	 * Throws if the currency is not registered.
+	 */
+	private static resolveScale(currencyCode: string): number {
+		const currency = CURRENCY_MAP[currencyCode];
+		if (!currency) {
+			throw new Error(
+				`Unknown currency code: ${currencyCode}. Register it first via registerCurrency().`,
+			);
+		}
+		return currency.exponent;
+	}
 }

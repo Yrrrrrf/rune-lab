@@ -1,14 +1,14 @@
 {
-  "name": "@rune-lab/core",
-  "version": "0.0.1",
-  "exports": {
-    ".": "./src/mod.ts"
-  },
-  "imports": {
-    "effect": "npm:effect@^3",
-    "@std/assert": "jsr:@std/assert"
-  },
-  "publish": {
-    "exclude": ["**/*.test.ts"]
-  }
+	"name": "@rune-lab/core",
+	"version": "0.0.1",
+	"exports": {
+		".": "./src/mod.ts"
+	},
+	"imports": {
+		"effect": "npm:effect@^3",
+		"@std/assert": "jsr:@std/assert"
+	},
+	"publish": {
+		"exclude": ["**/*.test.ts"]
+	}
 }

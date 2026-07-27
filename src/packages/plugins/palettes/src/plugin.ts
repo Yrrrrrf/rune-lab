@@ -1,9 +1,9 @@
 import type { ForgedPlugin, SlotSpec } from "rune-lab/core";
 import {
-  contribute,
-  definePlugin,
-  defineSlot,
-  settingsSections,
+	contribute,
+	definePlugin,
+	defineSlot,
+	settingsSections,
 } from "rune-lab/core";
 import { createPluginKit } from "rune-lab/ui";
 import type { CommandStore } from "./commands/store.svelte.ts";
@@ -21,77 +21,77 @@ import type { ShortcutStore } from "./shortcuts/store.svelte.ts";
 import { createShortcutStore } from "./shortcuts/store.svelte.ts";
 
 type PalettesSlots = {
-  commands: SlotSpec<unknown, CommandStore>;
-  shortcuts: SlotSpec<unknown, ShortcutStore>;
-  toasts: SlotSpec<unknown, ToastStore>;
-  registry: SlotSpec<unknown, PaletteRegistryStore>;
+	commands: SlotSpec<unknown, CommandStore>;
+	shortcuts: SlotSpec<unknown, ShortcutStore>;
+	toasts: SlotSpec<unknown, ToastStore>;
+	registry: SlotSpec<unknown, PaletteRegistryStore>;
 };
 
 const palettesPluginSpec: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
-  definePlugin({
-    id: "rune-lab.palettes",
-    requires: ["rune-lab.layout"],
-    slots: {
-      commands: defineSlot({
-        create: () => createCommandStore(),
-        expose: true,
-      }),
-      shortcuts: defineSlot({
-        create: () => createShortcutStore(),
-        expose: true,
-      }),
-      toasts: defineSlot({
-        create: () => createToastStore(),
-        expose: true,
-      }),
-      registry: defineSlot({
-        create: () => {
-          const store = createPaletteRegistryStore();
-          store.register({
-            id: "commands",
-            title: "Commands",
-            hotkey: "cmd+shift+k,ctrl+shift+k",
-            renderer: CommandPalette,
-          });
-          store.register({
-            id: "settings",
-            title: "Settings",
-            hotkey: "cmd+,,ctrl+,",
-            renderer: SettingsModal,
-            boxClass: "max-w-4xl",
-            sectionHotkeys: [
-              {
-                hotkey: "cmd+/,ctrl+/",
-                section: "shortcuts",
-                title: "Shortcuts",
-              },
-            ],
-          });
-          return store;
-        },
-        expose: true,
-      }),
-    },
-    contributions: [
-      contribute(settingsSections, {
-        id: "shortcuts",
-        label: "Shortcuts",
-        icon: "⌨️",
-        component: ShortcutSettings,
-      }),
-    ],
-    overlays: [PaletteHost, Toaster],
-  });
+	definePlugin({
+		id: "rune-lab.palettes",
+		requires: ["rune-lab.layout"],
+		slots: {
+			commands: defineSlot({
+				create: () => createCommandStore(),
+				expose: true,
+			}),
+			shortcuts: defineSlot({
+				create: () => createShortcutStore(),
+				expose: true,
+			}),
+			toasts: defineSlot({
+				create: () => createToastStore(),
+				expose: true,
+			}),
+			registry: defineSlot({
+				create: () => {
+					const store = createPaletteRegistryStore();
+					store.register({
+						id: "commands",
+						title: "Commands",
+						hotkey: "cmd+shift+k,ctrl+shift+k",
+						renderer: CommandPalette,
+					});
+					store.register({
+						id: "settings",
+						title: "Settings",
+						hotkey: "cmd+,,ctrl+,",
+						renderer: SettingsModal,
+						boxClass: "max-w-4xl",
+						sectionHotkeys: [
+							{
+								hotkey: "cmd+/,ctrl+/",
+								section: "shortcuts",
+								title: "Shortcuts",
+							},
+						],
+					});
+					return store;
+				},
+				expose: true,
+			}),
+		},
+		contributions: [
+			contribute(settingsSections, {
+				id: "shortcuts",
+				label: "Shortcuts",
+				icon: "⌨️",
+				component: ShortcutSettings,
+			}),
+		],
+		overlays: [PaletteHost, Toaster],
+	});
 
 const kit = createPluginKit(palettesPluginSpec);
 
 export const palettes: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
-  kit.plugin;
+	kit.plugin;
 
 export const getCommandsStore: () => CommandStore =
-  kit.accessors.getCommandsStore;
+	kit.accessors.getCommandsStore;
 export const getShortcutsStore: () => ShortcutStore =
-  kit.accessors.getShortcutsStore;
+	kit.accessors.getShortcutsStore;
 export const getToastsStore: () => ToastStore = kit.accessors.getToastsStore;
 export const getRegistryStore: () => PaletteRegistryStore =
-  kit.accessors.getRegistryStore;
+	kit.accessors.getRegistryStore;

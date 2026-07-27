@@ -69,7 +69,7 @@ const kernel = createKernel(
 	{
 		persistence: initialPersistence,
 		localeAdapter: untrack(() => localeAdapter),
-		pluginConfig: config.pluginConfig,
+		pluginConfig: untrack(() => config.pluginConfig),
 	},
 );
 

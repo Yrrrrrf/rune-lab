@@ -2,8 +2,8 @@ export { default as LanguageSelector } from "./lang/components/LanguageSelector.
 export * from "./lang/mod.ts";
 export * from "./money/mod.ts";
 export {
-  getCurrencyStore,
-  getExchangeRateStore,
-  getLanguageStore,
-  i18n,
+	getCurrencyStore,
+	getExchangeRateStore,
+	getLanguageStore,
+	i18n,
 } from "./plugin.ts";

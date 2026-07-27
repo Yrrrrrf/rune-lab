@@ -17,50 +17,50 @@ import type { ShortcutConfig, ShortcutEntry } from "./types.ts";
  * @returns Object with `registered` getter for the list of registered IDs
  */
 export function useShortcuts(configs: ShortcutConfig[]): {
-  readonly registered: string[];
+	readonly registered: string[];
 } {
-  const shortcutStore = getShortcutsStore();
+	const shortcutStore = getShortcutsStore();
 
-  // Convert ShortcutConfig[] to ShortcutEntry[] respecting the `when` predicate
-  function toEntries(configs: ShortcutConfig[]): ShortcutEntry[] {
-    return configs.map((config) => ({
-      id: config.id,
-      keys: config.keys,
-      handler: (event: KeyboardEvent) => {
-        // Check `when` predicate before firing
-        if (config.when && !config.when()) return;
-        config.handler(event);
-      },
-      label: config.label ?? config.id,
-      category: config.category ?? "General",
-      scope: config.scope ?? "global",
-      enabled: true,
-    }));
-  }
+	// Convert ShortcutConfig[] to ShortcutEntry[] respecting the `when` predicate
+	function toEntries(configs: ShortcutConfig[]): ShortcutEntry[] {
+		return configs.map((config) => ({
+			id: config.id,
+			keys: config.keys,
+			handler: (event: KeyboardEvent) => {
+				// Check `when` predicate before firing
+				if (config.when && !config.when()) return;
+				config.handler(event);
+			},
+			label: config.label ?? config.id,
+			category: config.category ?? "General",
+			scope: config.scope ?? "global",
+			enabled: true,
+		}));
+	}
 
-  // Register all shortcuts
-  const entries = toEntries(configs);
-  const ids = entries.map((e) => e.id);
+	// Register all shortcuts
+	const entries = toEntries(configs);
+	const ids = entries.map((e) => e.id);
 
-  for (const entry of entries) {
-    shortcutStore.register(entry);
-  }
+	for (const entry of entries) {
+		shortcutStore.register(entry);
+	}
 
-  // Component-lifecycle cleanup: unregister on destroy via $effect teardown
-  $effect(() => {
-    // This effect runs on mount — shortcuts are already registered above.
-    // Return cleanup that unregisters all shortcuts on destroy.
-    return () => {
-      for (const id of ids) {
-        shortcutStore.unregister(id);
-      }
-    };
-  });
+	// Component-lifecycle cleanup: unregister on destroy via $effect teardown
+	$effect(() => {
+		// This effect runs on mount — shortcuts are already registered above.
+		// Return cleanup that unregisters all shortcuts on destroy.
+		return () => {
+			for (const id of ids) {
+				shortcutStore.unregister(id);
+			}
+		};
+	});
 
-  return {
-    /** IDs of all shortcuts registered by this composable */
-    get registered(): string[] {
-      return ids;
-    },
-  };
+	return {
+		/** IDs of all shortcuts registered by this composable */
+		get registered(): string[] {
+			return ids;
+		},
+	};
 }

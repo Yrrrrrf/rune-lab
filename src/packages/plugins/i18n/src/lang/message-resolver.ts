@@ -11,17 +11,17 @@ import { DEV } from "esm-env";
 type MessageBundle = Record<string, (...args: unknown[]) => string>;
 
 interface MessageResolverConfig<T> {
-  /**
-   * Function to extract the message key from an option
-   * @example (currency) => currency.code // "USD"
-   */
-  keyExtractor: (option: T) => string;
+	/**
+	 * Function to extract the message key from an option
+	 * @example (currency) => currency.code // "USD"
+	 */
+	keyExtractor: (option: T) => string;
 
-  /**
-   * Optional transformer for the key before message lookup
-   * @example (key) => key.toLowerCase() // "USD" -> "usd"
-   */
-  keyTransformer?: (key: string) => string;
+	/**
+	 * Optional transformer for the key before message lookup
+	 * @example (key) => key.toLowerCase() // "USD" -> "usd"
+	 */
+	keyTransformer?: (key: string) => string;
 }
 
 /**
@@ -37,26 +37,26 @@ interface MessageResolverConfig<T> {
  * ```
  */
 export function createMessageResolver<T>(
-  messages: MessageBundle,
-  config: MessageResolverConfig<T>,
+	messages: MessageBundle,
+	config: MessageResolverConfig<T>,
 ): (option: T) => string {
-  return (option: T): string => {
-    const key = config.keyExtractor(option);
-    const transformedKey = config.keyTransformer
-      ? config.keyTransformer(key)
-      : key;
+	return (option: T): string => {
+		const key = config.keyExtractor(option);
+		const transformedKey = config.keyTransformer
+			? config.keyTransformer(key)
+			: key;
 
-    const messageFn = messages[transformedKey];
+		const messageFn = messages[transformedKey];
 
-    if (!messageFn || typeof messageFn !== "function") {
-      if (DEV) {
-        console.warn(
-          `[MessageResolver] Missing translation for key: "${transformedKey}"`,
-        );
-      }
-      return key; // Fallback to key
-    }
+		if (!messageFn || typeof messageFn !== "function") {
+			if (DEV) {
+				console.warn(
+					`[MessageResolver] Missing translation for key: "${transformedKey}"`,
+				);
+			}
+			return key; // Fallback to key
+		}
 
-    return messageFn();
-  };
+		return messageFn();
+	};
 }

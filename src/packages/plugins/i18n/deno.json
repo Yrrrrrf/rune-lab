@@ -1,12 +1,12 @@
 {
-  "name": "@rune-lab/i18n",
-  "version": "0.0.1",
-  "exports": {
-    ".": "./src/mod.ts"
-  },
-  "imports": {
-    "svelte": "npm:svelte@^5",
-    "@inlang/paraglide-js": "npm:@inlang/paraglide-js@2",
-    "dinero.js": "npm:dinero.js@^2"
-  }
+	"name": "@rune-lab/i18n",
+	"version": "0.0.1",
+	"exports": {
+		".": "./src/mod.ts"
+	},
+	"imports": {
+		"svelte": "npm:svelte@^5",
+		"@inlang/paraglide-js": "npm:@inlang/paraglide-js@2",
+		"dinero.js": "npm:dinero.js@^2"
+	}
 }

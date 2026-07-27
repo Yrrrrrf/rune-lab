@@ -1,8 +1,7 @@
 [doc('Format workspace')]
 [group('check')]
 fmt:
-    deno fmt .
-    # -biome format --write .
+    -biome format --write .
 
 [doc('Lint workspace')]
 [group('check')]
