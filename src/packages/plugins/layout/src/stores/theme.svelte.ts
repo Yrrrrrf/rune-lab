@@ -75,8 +75,8 @@ export function createThemeStore(
   // it afterward, so narrowing has to happen on the item list going in, not
   // via a prop on the consuming component.
   const items = configured?.available
-    ? THEMES.filter((t) =>
-      t.name === SYSTEM.name || configured.available!.includes(t.name)
+    ? THEMES.filter(
+      (t) => t.name === SYSTEM.name || configured.available!.includes(t.name),
     )
     : THEMES;
 

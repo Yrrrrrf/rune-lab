@@ -47,9 +47,11 @@ describe("useCell reactivity bridge", () => {
 describe("createDataStore", () => {
   it("starts with all-null data, copies only defined keys on init, and ignores second init", () => {
     const keys = ["name", "version", "icon"] as const;
-    const store = createDataStore<
-      { name: string; version: string; icon?: string }
-    >(keys);
+    const store = createDataStore<{
+      name: string;
+      version: string;
+      icon?: string;
+    }>(keys);
 
     expect(store.data.name).toBeNull();
     expect(store.data.version).toBeNull();

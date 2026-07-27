@@ -24,10 +24,11 @@ const APP_DATA_KEYS = [
   "icon",
 ] as const satisfies readonly (keyof AppData)[];
 
-type ExpectEqual<A, B> = [A] extends [B] ? ([B] extends [A] ? true : never)
+type ExpectEqual<A, B> = [A] extends [B] ? [B] extends [A] ? true
+  : never
   : never;
 type _ExhaustivenessCheck = ExpectEqual<
-  typeof APP_DATA_KEYS[number],
+  (typeof APP_DATA_KEYS)[number],
   keyof AppData
 >;
 const _checkAppDataExhaustive: _ExhaustivenessCheck = true;

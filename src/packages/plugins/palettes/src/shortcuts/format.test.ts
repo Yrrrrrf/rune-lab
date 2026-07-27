@@ -35,7 +35,10 @@ describe("formatKeyPart", () => {
 describe("formatCombos", () => {
   it("returns every alternative combo, not just the first", () => {
     // The old palette did `keys.split(",")[0]`, hiding the non-mac binding.
-    expect(formatCombos("cmd+/,ctrl+/")).toEqual([["⌘", "/"], ["⌃", "/"]]);
+    expect(formatCombos("cmd+/,ctrl+/")).toEqual([
+      ["⌘", "/"],
+      ["⌃", "/"],
+    ]);
   });
 
   it("handles a single combo", () => {
