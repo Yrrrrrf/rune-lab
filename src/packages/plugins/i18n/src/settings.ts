@@ -17,7 +17,7 @@ export const i18nSettings: SettingsSchema = defineSettings({
         storeId: "language",
         property: "current",
       },
-      options: toOptions(languagePresenter),
+      options: () => toOptions(languagePresenter),
     },
     {
       id: "rune-lab.i18n.currency",
@@ -28,7 +28,7 @@ export const i18nSettings: SettingsSchema = defineSettings({
         storeId: "currency",
         property: "current",
       },
-      options: toOptions(currencyPresenter),
+      options: () => toOptions(currencyPresenter),
     },
   ],
 });

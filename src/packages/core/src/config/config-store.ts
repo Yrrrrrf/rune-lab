@@ -43,15 +43,18 @@ export class ConfigStoreImpl<T, K extends keyof T> {
   #loadFromDriver(driver: PersistenceDriver): void {
     const saved = driver.get(this.#options.storageKey);
     if (saved instanceof Promise) {
-      saved
-        .then((val) => {
+      saved.then(
+        (val) => {
           if (val && this.get(val as T[K])) {
             const old = this.current;
             this.current = val as T[K];
             this.#notify(val as T[K], old);
           }
-        })
-        .catch(() => {});
+        },
+        (_err) => {
+          // Promise rejection handled explicitly
+        },
+      );
     } else if (saved && this.get(saved as T[K])) {
       this.current = saved as T[K];
     }
@@ -76,14 +79,7 @@ export class ConfigStoreImpl<T, K extends keyof T> {
 
   #notify(newId: T[K], oldId: T[K]): void {
     this.#callbacks.forEach((cb) => {
-      try {
-        cb(newId, oldId);
-      } catch (err) {
-        console.error(
-          `[rune-lab/core] Error in ${this.#options.displayName} onChange callback:`,
-          err,
-        );
-      }
+      cb(newId, oldId);
     });
   }
 

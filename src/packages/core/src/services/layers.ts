@@ -1,17 +1,6 @@
 import { Context, Effect, Layer, Stream, SubscriptionRef } from "effect";
 import { StateCell } from "../cells/define-cell.ts";
 
-import type { LocaleAdapter } from "../ports/locale.ts";
-import type { PersistenceDriver } from "../ports/persistence.ts";
-
-const PersistenceDriverTag = Context.GenericTag<PersistenceDriver>(
-  "rune-lab/core/PersistenceDriver",
-);
-
-const LocaleAdapterTag = Context.GenericTag<LocaleAdapter>(
-  "rune-lab/core/LocaleAdapter",
-);
-
 export interface StateCells {
   readonly cells: Record<string, StateCell<unknown>>;
 }
@@ -19,12 +8,6 @@ export interface StateCells {
 export const StateCellsTag = Context.GenericTag<StateCells>(
   "rune-lab/core/StateCells",
 );
-
-export const makePersistenceLayer = (driver: PersistenceDriver) =>
-  Layer.succeed(PersistenceDriverTag, driver);
-
-export const makeLocaleAdapterLayer = (adapter: LocaleAdapter) =>
-  Layer.succeed(LocaleAdapterTag, adapter);
 
 const makeCell = (key: string, value: unknown) =>
   Effect.gen(function* () {

@@ -84,6 +84,9 @@ const DEV_DEPS = new Set([
   "tailwindcss",
   "daisyui",
   "@inlang/paraglide-js",
+  "@sveltejs/vite-plugin-svelte",
+  "@sveltejs/adapter-static",
+  "@tailwindcss/vite",
 ]);
 
 const dependencies: Record<string, string> = {};
@@ -118,7 +121,7 @@ const manifest = {
   svelte: exports["."].svelte,
   exports,
   peerDependencies: {
-    svelte: "*",
+    svelte: "^5",
   },
   dependencies,
 };

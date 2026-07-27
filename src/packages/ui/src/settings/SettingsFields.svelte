@@ -1,64 +1,48 @@
 <script lang="ts">
-import { getKernel } from "../provider/context.ts";
-import { useCell } from "../reactivity/use-cell.svelte.ts";
+import type { SettingsFieldSchema } from "rune-lab/core";
+import type { Component } from "svelte";
+import { getKernel, type SettingsSection } from "../provider/context.ts";
 
 let {
   fields = [],
+  section,
   disabled = false,
   onCommit,
 }: {
-  fields: any[];
+  fields?: SettingsFieldSchema[];
+  section?: SettingsSection;
   disabled?: boolean;
-  onCommit?: (fieldId: string, value: any) => void;
+  onCommit?: (fieldId: string, value: unknown) => void;
 } = $props();
 
 const kernel = getKernel();
 
-// Resolve cells reactively using Svelte 5's $derived.by
-const cellBinds = $derived.by(() => {
-  const binds = new Map<string, any>();
-  for (const field of fields) {
-    if (field.target?.type === "cell") {
-      try {
-        binds.set(field.id, useCell(kernel, field.target.name));
-      } catch (e) {
-        console.warn(
-          `[SettingsFields] Failed to bind cell ${field.target.name}:`,
-          e,
-        );
-      }
-    }
-  }
-  return binds;
-});
-
-function getStoreForField(field: any): any {
+function getStoreForField(
+  field: SettingsFieldSchema,
+): Record<string, unknown> | undefined {
   if (field.target?.type !== "store") return undefined;
-  const pluginId = field.id.slice(0, field.id.lastIndexOf("."));
+  const pluginId = (field as { pluginId?: string }).pluginId ??
+    section?.pluginId ?? "";
   const storeKey = `rl:${pluginId}:${field.target.storeId}`;
-  return kernel.stores.get(storeKey);
+  return kernel.stores.get(storeKey) as Record<string, unknown> | undefined;
 }
 
-function getValue(field: any): any {
-  if (field.target?.type === "cell") {
-    return cellBinds.get(field.id)?.current;
-  }
+function getValue(field: SettingsFieldSchema): unknown {
   const store = getStoreForField(field);
-  return store ? store[field.target.property] : undefined;
+  return field.target?.type === "store"
+    ? store?.[field.target.property]
+    : undefined;
 }
 
-function commitValue(field: any, val: any) {
-  if (field.target?.type === "cell") {
-    const bind = cellBinds.get(field.id);
-    if (bind) bind.current = val;
-  } else if (field.target?.type === "store") {
+function commitValue(field: SettingsFieldSchema, val: unknown) {
+  if (field.target?.type === "store") {
     const store = getStoreForField(field);
     if (store) {
       if (
         typeof store.set === "function" &&
         field.target.property === "current"
       ) {
-        store.set(val);
+        (store.set as (v: unknown) => void)(val);
       } else {
         store[field.target.property] = val;
       }
@@ -69,9 +53,9 @@ function commitValue(field: any, val: any) {
   }
 }
 
-function handleInput(field: any, event: Event) {
+function handleInput(field: SettingsFieldSchema, event: Event) {
   const target = event.currentTarget as HTMLInputElement | HTMLSelectElement;
-  let val: any;
+  let val: unknown;
   if (field.type === "toggle") {
     val = (target as HTMLInputElement).checked;
   } else if (field.type === "number" || field.type === "range") {
@@ -97,83 +81,79 @@ function handleInput(field: any, event: Event) {
             id={field.id}
             type="checkbox"
             class="toggle toggle-primary toggle-sm"
-            checked={getValue(field)}
+            checked={Boolean(getValue(field))}
             onchange={(e) => handleInput(field, e)}
             disabled={disabled}
           />
         </label>
-      {:else}
-        {#key field.id}
-          {#if field.type === "select"}
-            <select
-              id={field.id}
-              class="select select-sm w-full"
-              value={getValue(field)}
-              onchange={(e) => handleInput(field, e)}
-              disabled={disabled}
-            >
-              {#each field.options || [] as opt}
-                <option value={opt.value}>{opt.label}</option>
-              {/each}
-            </select>
-          {:else if field.type === "text"}
-            <input
-              id={field.id}
-              type="text"
-              class="input input-sm w-full"
-              value={getValue(field) ?? ""}
-              oninput={(e) => handleInput(field, e)}
-              disabled={disabled}
-            />
-          {:else if field.type === "number"}
-            <input
-              id={field.id}
-              type="number"
-              class="input input-sm w-full"
-              value={getValue(field) ?? 0}
-              oninput={(e) => handleInput(field, e)}
-              min={field.min}
-              max={field.max}
-              step={field.step}
-              disabled={disabled}
-            />
-          {:else if field.type === "range"}
-            <div class="flex items-center gap-3 w-full">
-              <input
-                id={field.id}
-                type="range"
-                class="range range-primary range-xs flex-1"
-                value={getValue(field) ?? 0}
-                oninput={(e) => handleInput(field, e)}
-                min={field.min ?? 0}
-                max={field.max ?? 100}
-                step={field.step ?? 1}
-                disabled={disabled}
-              />
-              <span class="text-xs font-mono w-8 text-right">{getValue(field) ?? 0}</span>
-            </div>
-          {:else if field.type === "color"}
-            <div class="flex items-center gap-3">
-              <input
-                id={field.id}
-                type="color"
-                class="input p-0 w-10 h-8 cursor-pointer rounded"
-                value={getValue(field) ?? "#000000"}
-                oninput={(e) => handleInput(field, e)}
-                disabled={disabled}
-              />
-              <span class="text-xs font-mono uppercase">{getValue(field) ?? "#000000"}</span>
-            </div>
-          {:else if field.type === "custom" && field.component}
-            {@const CustomComponent = field.component as any}
-            <CustomComponent
-              value={getValue(field)}
-              commit={(val: any) => commitValue(field, val)}
-              disabled={disabled}
-              metadata={field}
-            />
-          {/if}
-        {/key}
+      {:else if field.type === "select"}
+        <select
+          id={field.id}
+          class="select select-sm w-full"
+          value={String(getValue(field) ?? "")}
+          onchange={(e) => handleInput(field, e)}
+          disabled={disabled}
+        >
+          {#each field.options?.() ?? [] as opt}
+            <option value={opt.value}>{opt.label}</option>
+          {/each}
+        </select>
+      {:else if field.type === "text"}
+        <input
+          id={field.id}
+          type="text"
+          class="input input-sm w-full"
+          value={String(getValue(field) ?? "")}
+          oninput={(e) => handleInput(field, e)}
+          disabled={disabled}
+        />
+      {:else if field.type === "number"}
+        <input
+          id={field.id}
+          type="number"
+          class="input input-sm w-full"
+          value={Number(getValue(field) ?? 0)}
+          oninput={(e) => handleInput(field, e)}
+          min={field.min}
+          max={field.max}
+          step={field.step}
+          disabled={disabled}
+        />
+      {:else if field.type === "range"}
+        <div class="flex items-center gap-3 w-full">
+          <input
+            id={field.id}
+            type="range"
+            class="range range-primary range-xs flex-1"
+            value={Number(getValue(field) ?? 0)}
+            oninput={(e) => handleInput(field, e)}
+            min={field.min ?? 0}
+            max={field.max ?? 100}
+            step={field.step ?? 1}
+            disabled={disabled}
+          />
+          <span class="text-xs font-mono w-8 text-right">{String(getValue(field) ?? 0)}</span>
+        </div>
+      {:else if field.type === "color"}
+        <div class="flex items-center gap-3">
+          <input
+            id={field.id}
+            type="color"
+            class="input p-0 w-10 h-8 cursor-pointer rounded"
+            value={String(getValue(field) ?? "#000000")}
+            oninput={(e) => handleInput(field, e)}
+            disabled={disabled}
+          />
+          <span class="text-xs font-mono uppercase">{String(getValue(field) ?? "#000000")}</span>
+        </div>
+      {:else if field.type === "custom" && field.component}
+        {@const CustomComponent = field.component as Component<Record<string, unknown>>}
+        <CustomComponent
+          value={getValue(field)}
+          commit={(val: unknown) => commitValue(field, val)}
+          disabled={disabled}
+          metadata={field}
+        />
       {/if}
     </div>
   {/each}

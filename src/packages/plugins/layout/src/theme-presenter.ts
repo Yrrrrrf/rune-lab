@@ -1,9 +1,7 @@
 import type { ItemPresenter } from "rune-lab/core";
-import { type Theme, THEMES } from "./stores/theme.svelte.ts";
+import { getKernel } from "rune-lab/ui";
+import type { Theme } from "./stores/theme.svelte.ts";
 
-// C20: every daisyUI theme name capitalizes cleanly except one — a single
-// override map, not a fourth naming rule. A second exception here would mean
-// the rule itself is wrong.
 const LABEL_OVERRIDES: Record<string, string> = {
   cmyk: "CMYK",
 };
@@ -14,7 +12,17 @@ function themeLabel(name: string): string {
 }
 
 export const themePresenter: ItemPresenter<Theme> = {
-  items: THEMES,
+  get items() {
+    try {
+      const kernel = getKernel();
+      const store = kernel.stores.get("rl:rune-lab.layout:theme") as
+        | { available: Theme[] }
+        | undefined;
+      return store?.available ?? [];
+    } catch {
+      return [];
+    }
+  },
   id: (t) => t.name,
   present: (t) => ({ label: themeLabel(t.name) }),
 };

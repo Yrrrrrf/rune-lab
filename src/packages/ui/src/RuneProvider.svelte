@@ -7,7 +7,6 @@ import type {
 import {
 	createInMemoryDriver,
 	createKernel,
-	settingsSections,
 } from "rune-lab/core";
 import { type Component, type Snippet, setContext, untrack } from "svelte";
 import {
@@ -19,15 +18,15 @@ import { RUNE_LAB_CONTEXT } from "./provider/context.ts";
 import { type AppData, createAppStore } from "./reactivity/app.svelte.ts";
 
 /**
- * Configuration options for RuneProvider (persistence driver, head management, icon selection, app metadata).
+ * Configuration options for RuneProvider (persistence driver, head management, app metadata).
  */
 export interface RuneLabConfig {
 	persistence?: PersistenceDriver;
 	/** Optional head management properties */
 	manageHead?: boolean;
-	icons?: "material" | "none";
 	/** App metadata — passed to AppStore.init() */
 	app?: Partial<AppData>;
+	pluginConfig?: Record<string, Record<string, unknown>>;
 }
 
 let {
@@ -70,8 +69,14 @@ const kernel = createKernel(
 	{
 		persistence: initialPersistence,
 		localeAdapter: untrack(() => localeAdapter),
+		pluginConfig: config.pluginConfig,
 	},
 );
+
+// Teardown kernel on unmount
+$effect(() => () => {
+	kernel.dispose();
+});
 
 // Provide the kernel itself
 setContext(RUNE_LAB_CONTEXT.kernel, kernel);
@@ -86,13 +91,9 @@ for (const [id, store] of kernel.stores) {
 
 // Also provide the persistence driver itself
 setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
-setContext(
-	RUNE_LAB_CONTEXT.settingsSections,
-	kernel.getContributions(settingsSections),
-);
 
 // 3. Collect all overlays
-const allOverlays = $derived(kernel.overlays as Component[]);
+const allOverlays = kernel.overlays as Component[];
 
 // Meta tags derived from app store state
 const metaTags = $derived([
@@ -114,12 +115,10 @@ const metaTags = $derived([
         <meta name={meta.name} content={meta.content} />
       {/if}
     {/each}
-    {#if config.icons === "material"}
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-      />
-    {/if}
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
   {/if}
 </svelte:head>
 

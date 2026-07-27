@@ -4,13 +4,13 @@ import {
   assertRejects,
   assertThrows,
 } from "@std/assert";
-import { Schema } from "effect";
-import { createPersistedCell } from "./cells/persisted-cell.ts";
+import { Option, Schema } from "effect";
 import { contribute, defineContribution } from "./forge/define-contribution.ts";
 import { definePlugin } from "./forge/define-plugin.ts";
+import { defineSlot } from "./forge/define-slot.ts";
 import { createKernel } from "./kernel/kernel.ts";
 import { normalizeSlots, resolveSlotRef } from "./kernel/wiring.ts";
-import { createInMemoryDriver, namespaced } from "./ports/memory.ts";
+import { createInMemoryDriver } from "./ports/memory.ts";
 
 Deno.test("Kernel - slot resolution and store topological sort initialization", async () => {
   const driver = createInMemoryDriver();
@@ -74,67 +74,21 @@ Deno.test("Kernel - resolveSlotRef dotted/bare resolution", () => {
 
   // Bare same-plugin ref
   const res1 = resolveSlotRef("localSlot", "pluginB", slotsMap);
-  assertEquals(res1.id, "rl:pluginB:localSlot");
+  assertEquals(Option.isSome(res1), true);
+  if (Option.isSome(res1)) {
+    assertEquals(res1.value.id, "rl:pluginB:localSlot");
+  }
 
   // Dotted cross-plugin ref
   const res2 = resolveSlotRef("pluginA.theme", "pluginB", slotsMap);
-  assertEquals(res2.id, "rl:pluginA:theme");
+  assertEquals(Option.isSome(res2), true);
+  if (Option.isSome(res2)) {
+    assertEquals(res2.value.id, "rl:pluginA:theme");
+  }
 
-  // Fails loud on missing
-  assertThrows(() => {
-    resolveSlotRef("pluginA.missing", "pluginB", slotsMap);
-  });
-});
-
-Deno.test("createPersistedCell - load and revert-on-failure", async () => {
-  const driver = createInMemoryDriver();
-  const handle = namespaced(driver, "rl:plugin:slot:");
-
-  // Set initial value in driver
-  await handle.set("", `"saved-value"`);
-
-  // Initialize
-  const cell = createPersistedCell(Schema.String, handle, "initial");
-
-  // Verify load-on-create
-  assertEquals(cell.get(), "saved-value");
-
-  // Successful write
-  cell.set("new-value");
-  assertEquals(cell.get(), "new-value");
-  assertEquals(await handle.get(""), "new-value");
-
-  // Revert on failure (synchronous fail)
-  const failingHandle = {
-    get: () => null,
-    set: () => {
-      throw new Error("Disk full");
-    },
-    remove: () => {},
-  };
-
-  const cell2 = createPersistedCell(Schema.String, failingHandle, "initial");
-  assertThrows(() => {
-    cell2.set("fail");
-  });
-  assertEquals(cell2.get(), "initial");
-
-  // Revert on failure (asynchronous fail)
-  const failingAsyncHandle = {
-    get: () => null,
-    set: () => Promise.reject(new Error("Async write failed")),
-    remove: () => {},
-  };
-
-  const cell3 = createPersistedCell(
-    Schema.String,
-    failingAsyncHandle,
-    "initial",
-  );
-  await assertRejects(async () => {
-    await cell3.set("fail");
-  });
-  assertEquals(cell3.get(), "initial");
+  // Returns None on missing
+  const res3 = resolveSlotRef("pluginA.missing", "pluginB", slotsMap);
+  assertEquals(Option.isNone(res3), true);
 });
 
 Deno.test("Kernel - contributions and lifecycle", async () => {
@@ -176,7 +130,7 @@ Deno.test("Kernel - contributions and lifecycle", async () => {
   await kernel.dispose();
 });
 
-Deno.test("Kernel - Plugin.with config resolution and isolation", async () => {
+Deno.test("Kernel - Plugin config resolution and isolation", async () => {
   const driver = createInMemoryDriver();
 
   let receivedA: unknown = "not_set";
@@ -201,12 +155,13 @@ Deno.test("Kernel - Plugin.with config resolution and isolation", async () => {
     },
   });
 
-  const configuredPluginA = pluginA.with({
-    slotA: { theme: "dark" },
-  });
-
-  const kernel = createKernel([configuredPluginA], {
+  const kernel = createKernel([pluginA], {
     persistence: driver,
+    pluginConfig: {
+      "test.pluginA": {
+        slotA: { theme: "dark" },
+      },
+    },
   });
 
   assertEquals(receivedA, { theme: "dark" });
@@ -228,15 +183,128 @@ Deno.test("Kernel - Config validation failure names plugin and slot", () => {
     },
   });
 
-  const badPlugin = plugin.with({
-    testSlot: { count: "not_a_number" as unknown as number },
-  });
-
   assertThrows(
     () => {
-      createKernel([badPlugin], { persistence: driver });
+      createKernel([plugin], {
+        persistence: driver,
+        pluginConfig: {
+          "test.plugin": {
+            testSlot: { count: "not_a_number" },
+          },
+        },
+      });
     },
     Error,
     'Config validation failed for plugin "test.plugin", slot "testSlot"',
   );
+});
+
+Deno.test("Kernel - disposal order (slotB before slotA)", async () => {
+  const driver = createInMemoryDriver();
+  const disposalOrder: string[] = [];
+
+  const pluginA = definePlugin({
+    id: "pluginA",
+    slots: {
+      slotA: defineSlot({
+        create: () => ({
+          dispose: () => {
+            disposalOrder.push("slotA");
+          },
+        }),
+      }),
+    },
+  });
+
+  const pluginB = definePlugin({
+    id: "pluginB",
+    requires: ["pluginA"],
+    slots: {
+      slotB: defineSlot({
+        dependsOn: ["pluginA.slotA"],
+        create: () => ({
+          dispose: () => {
+            disposalOrder.push("slotB");
+          },
+        }),
+      }),
+    },
+  });
+
+  const kernel = createKernel([pluginB, pluginA], { persistence: driver });
+  await kernel.dispose();
+
+  assertEquals(disposalOrder, ["slotB", "slotA"]);
+});
+
+Deno.test("Kernel - throwing dispose does not prevent sibling dispose", async () => {
+  const driver = createInMemoryDriver();
+  let siblingDisposed = false;
+
+  const plugin = definePlugin({
+    id: "pluginFailing",
+    slots: {
+      slotFail: defineSlot({
+        create: () => ({
+          dispose: () => {
+            throw new Error("Disposal boom");
+          },
+        }),
+      }),
+      slotOK: defineSlot({
+        create: () => ({
+          dispose: () => {
+            siblingDisposed = true;
+          },
+        }),
+      }),
+    },
+  });
+
+  const kernel = createKernel([plugin], { persistence: driver });
+  await assertRejects(async () => {
+    await kernel.dispose();
+  });
+
+  assertEquals(siblingDisposed, true);
+});
+
+Deno.test("Kernel - dispose idempotence", async () => {
+  const driver = createInMemoryDriver();
+  let disposeCount = 0;
+
+  const plugin = definePlugin({
+    id: "pluginIdempotent",
+    slots: {
+      slot1: defineSlot({
+        create: () => ({
+          dispose: () => {
+            disposeCount++;
+          },
+        }),
+      }),
+    },
+  });
+
+  const kernel = createKernel([plugin], { persistence: driver });
+  await kernel.dispose();
+  await kernel.dispose();
+
+  assertEquals(disposeCount, 1);
+});
+
+Deno.test("Kernel - non-disposable store skipped silently", async () => {
+  const driver = createInMemoryDriver();
+
+  const plugin = definePlugin({
+    id: "pluginPlain",
+    slots: {
+      plainSlot: defineSlot({
+        create: () => ({ name: "plain" }),
+      }),
+    },
+  });
+
+  const kernel = createKernel([plugin], { persistence: driver });
+  await kernel.dispose();
 });

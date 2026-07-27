@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getAppStore, getT } from "rune-lab";
+import { getAppStore, getT } from "rune-lab/ui";
 
 const appStore = getAppStore();
 const t = getT();

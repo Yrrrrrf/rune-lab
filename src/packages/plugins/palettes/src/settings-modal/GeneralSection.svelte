@@ -1,5 +1,5 @@
 <script lang="ts">
-import { SettingsFields } from "rune-lab";
+import { SettingsFields } from "rune-lab/ui";
 import AppMetadata from "./AppMetadata.svelte";
 import type { FieldGroup } from "./sections.ts";
 

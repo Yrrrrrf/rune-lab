@@ -1,4 +1,4 @@
-import type { SettingsSection } from "rune-lab";
+import type { SettingsSection } from "rune-lab/ui";
 import type { SettingsFieldSchema } from "rune-lab/core";
 
 export interface FieldGroup {

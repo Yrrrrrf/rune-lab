@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getT } from "rune-lab";
+import { getT } from "rune-lab/ui";
 import type { SearchResult } from "./search.ts";
 
 let {

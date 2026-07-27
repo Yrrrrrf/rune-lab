@@ -1,4 +1,22 @@
-import { Context, Effect, Layer, ManagedRuntime, Schema } from "effect";
+import {
+  Context,
+  Effect,
+  Either,
+  Layer,
+  ManagedRuntime,
+  Option,
+  Schema,
+} from "effect";
+import {
+  CircularPluginDependency,
+  CircularSlotDependency,
+  MissingRequirement,
+  SlotConfigInvalid,
+  SlotDisposeFailed,
+  SlotInitFailed,
+  UndeclaredCrossPluginDependency,
+  UnresolvableSlotRef,
+} from "../errors.ts";
 import type { ForgedPlugin, PluginInput } from "../forge/define-plugin.ts";
 import type { SlotContext } from "../forge/define-slot.ts";
 import type { PersistenceHandle } from "../forge/descriptors.ts";
@@ -6,11 +24,7 @@ import { createInMemoryDriver } from "../persistence/memory.ts";
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceDriver } from "../ports/persistence.ts";
 import type { TextMeasurer } from "../ports/text.ts";
-import {
-  makeLocaleAdapterLayer,
-  makePersistenceLayer,
-  makeStateCellsLayer,
-} from "../services/layers.ts";
+import { makeStateCellsLayer } from "../services/layers.ts";
 import { type GraphNode, topologicalSort } from "../utils/graph.ts";
 
 export interface NormalizedSlot {
@@ -22,7 +36,6 @@ export interface NormalizedSlot {
   expose: boolean;
   persist?: boolean | string[];
   configSchema?: unknown;
-  pluginConfig?: Record<string, unknown>;
   create: (context: SlotContext<unknown>) => unknown;
 }
 
@@ -59,30 +72,26 @@ function sortPlugins(resolved: ForgedPlugin[]): ForgedPlugin[] {
   for (const node of graphNodes) {
     for (const reqId of node.dependsOn ?? []) {
       if (!pluginMap.has(reqId)) {
-        throw new Error(
-          `[Kernel] Missing requirement: Plugin "${node.id}" requires "${reqId}", but "${reqId}" is not provided.`,
-        );
+        throw new MissingRequirement({ pluginId: node.id, requiredId: reqId });
       }
     }
   }
 
-  try {
-    const sortedNodes = topologicalSort(graphNodes);
-    return sortedNodes.map((node) => pluginMap.get(node.id)!);
-  } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : String(e);
-    throw new Error(`[Kernel] Circular dependency detected in plugins: ${msg}`);
+  const sortedResult = topologicalSort(graphNodes);
+  if (Either.isLeft(sortedResult)) {
+    throw new CircularPluginDependency({ cycle: sortedResult.left.cycle });
   }
+  return sortedResult.right.map((node) => pluginMap.get(node.id)!);
 }
 
 export function resolveSlotRef(
   ref: string,
   declaringPluginId: string,
   all: Map<string, NormalizedSlot>,
-): NormalizedSlot {
+): Option.Option<NormalizedSlot> {
   const bareId = `rl:${declaringPluginId}:${ref}`;
   if (all.has(bareId)) {
-    return all.get(bareId)!;
+    return Option.some(all.get(bareId)!);
   }
 
   if (ref.includes(".")) {
@@ -91,13 +100,11 @@ export function resolveSlotRef(
     const otherSlotName = ref.slice(lastDot + 1);
     const dottedId = `rl:${otherPluginId}:${otherSlotName}`;
     if (all.has(dottedId)) {
-      return all.get(dottedId)!;
+      return Option.some(all.get(dottedId)!);
     }
   }
 
-  throw new Error(
-    `[Kernel] Cannot resolve slot reference "${ref}" declared in plugin "${declaringPluginId}"`,
-  );
+  return Option.none();
 }
 
 export function normalizeSlots(sorted: ForgedPlugin[]): NormalizedSlot[] {
@@ -118,7 +125,6 @@ export function normalizeSlots(sorted: ForgedPlugin[]): NormalizedSlot[] {
         expose: slotSpec.expose !== false,
         persist: slotSpec.persist,
         configSchema: slotSpec.config,
-        pluginConfig: plugin.config,
         create: slotSpec.create,
       };
       allSlots.push(slot);
@@ -134,13 +140,23 @@ export function normalizeSlots(sorted: ForgedPlugin[]): NormalizedSlot[] {
 
       const resolvedDeps: string[] = [];
       for (const dep of slotSpec.dependsOn ?? []) {
-        const resolvedSlot = resolveSlotRef(dep, plugin.id, allSlotsMap);
+        const resolvedOpt = resolveSlotRef(dep, plugin.id, allSlotsMap);
+        if (Option.isNone(resolvedOpt)) {
+          throw new UnresolvableSlotRef({
+            ref: dep,
+            declaringPluginId: plugin.id,
+          });
+        }
+        const resolvedSlot = resolvedOpt.value;
 
         if (resolvedSlot.pluginId !== plugin.id) {
           if (!plugin.requires?.includes(resolvedSlot.pluginId)) {
-            throw new Error(
-              `[Kernel] Invalid dependency: Slot "${slotName}" in plugin "${plugin.id}" depends on "${dep}", but "${resolvedSlot.pluginId}" is not in the requires spec of "${plugin.id}".`,
-            );
+            throw new UndeclaredCrossPluginDependency({
+              slotName,
+              pluginId: plugin.id,
+              dep,
+              targetPluginId: resolvedSlot.pluginId,
+            });
           }
         }
         resolvedDeps.push(resolvedSlot.id);
@@ -157,13 +173,11 @@ function sortSlots(slots: NormalizedSlot[]): NormalizedSlot[] {
     id: s.id,
     dependsOn: s.dependsOn,
   }));
-  try {
-    const sortedSlotNodes = topologicalSort(slotGraphNodes);
-    return sortedSlotNodes.map((n) => slots.find((s) => s.id === n.id)!);
-  } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : String(e);
-    throw new Error(`[Kernel] Circular dependency detected in slots: ${msg}`);
+  const sortedResult = topologicalSort(slotGraphNodes);
+  if (Either.isLeft(sortedResult)) {
+    throw new CircularSlotDependency({ cycle: sortedResult.left.cycle });
   }
+  return sortedResult.right.map((n) => slots.find((s) => s.id === n.id)!);
 }
 
 function buildLayers(
@@ -172,45 +186,39 @@ function buildLayers(
     persistence: PersistenceDriver;
     localeAdapter?: LocaleAdapter;
     textMeasurer?: TextMeasurer;
+    pluginConfig?: Record<string, Record<string, unknown>>;
   },
 ): Layer.Layer<unknown, never, never> {
-  const cellsLayer = makeStateCellsLayer({
+  let env = makeStateCellsLayer({
     contributions: new Map<unknown, unknown[]>(),
-  });
-
-  let env = Layer.merge(
-    makePersistenceLayer(options.persistence),
-    cellsLayer,
-  ) as Layer.Layer<unknown, never, never>;
-
-  if (options.localeAdapter) {
-    env = Layer.merge(
-      env,
-      makeLocaleAdapterLayer(options.localeAdapter),
-    ) as Layer.Layer<unknown, never, never>;
-  }
+  }) as Layer.Layer<unknown, never, never>;
 
   for (const slot of slots) {
     const storeTag = Context.GenericTag<unknown>(slot.id);
     const storeLayer = Layer.effect(
       storeTag,
       Effect.gen(function* () {
-        const rawConfig = slot.pluginConfig?.[slot.slotName];
+        const rawConfig = options.pluginConfig?.[slot.pluginId]
+          ?.[slot.slotName];
         let configSlice: unknown = rawConfig;
         if (slot.configSchema) {
           if (rawConfig !== undefined) {
-            try {
-              configSlice = Schema.decodeUnknownSync(
-                slot.configSchema as Parameters<
-                  typeof Schema.decodeUnknownSync
-                >[0],
-              )(rawConfig);
-            } catch (err: unknown) {
-              const errMsg = err instanceof Error ? err.message : String(err);
-              throw new Error(
-                `[Kernel] Config validation failed for plugin "${slot.pluginId}", slot "${slot.slotName}": ${errMsg}`,
+            const decoded = Schema.decodeUnknownEither(
+              slot.configSchema as Parameters<
+                typeof Schema.decodeUnknownEither
+              >[0],
+            )(rawConfig);
+            if (Either.isLeft(decoded)) {
+              const parseError = decoded.left.message ?? String(decoded.left);
+              return yield* Effect.fail(
+                new SlotConfigInvalid({
+                  pluginId: slot.pluginId,
+                  slotName: slot.slotName,
+                  parseError,
+                }),
               );
             }
+            configSlice = decoded.right;
           } else {
             configSlice = undefined;
           }
@@ -245,19 +253,17 @@ function buildLayers(
           }
         }
 
-        let store: unknown = null;
-        try {
-          store = slot.create({
-            config: configSlice,
-            persistence: persistenceHandle,
-            stores: resolvedDeps,
-            locale: options.localeAdapter,
-            textMeasurer: options.textMeasurer,
-          });
-        } catch (e) {
-          console.error(`[Kernel] Failed to initialize slot "${slot.id}":`, e);
-          throw e;
-        }
+        const store = yield* Effect.try({
+          try: () =>
+            slot.create({
+              config: configSlice,
+              persistence: persistenceHandle,
+              stores: resolvedDeps,
+              locale: options.localeAdapter,
+              textMeasurer: options.textMeasurer,
+            }),
+          catch: (cause) => new SlotInitFailed({ slotId: slot.id, cause }),
+        });
 
         if (store !== null && store !== undefined) {
           const storeObj = store as Record<string, unknown>;
@@ -269,17 +275,9 @@ function buildLayers(
                   const res = (storeObj.dispose as () => unknown)();
                   if (res instanceof Promise) await res;
                 },
-                catch: (e) => e,
-              }).pipe(
-                Effect.catchAll((e) =>
-                  Effect.sync(() => {
-                    console.error(
-                      `[Kernel] Error disposing store ${slot.id}:`,
-                      e,
-                    );
-                  })
-                ),
-              )
+                catch: (cause) =>
+                  new SlotDisposeFailed({ slotId: slot.id, cause }),
+              }).pipe(Effect.orDie)
             );
           }
         }
@@ -306,6 +304,7 @@ export function compileEnvironment(
     persistence: PersistenceDriver;
     localeAdapter?: LocaleAdapter;
     textMeasurer?: TextMeasurer;
+    pluginConfig?: Record<string, Record<string, unknown>>;
   },
 ): {
   runtime: KernelRuntime;

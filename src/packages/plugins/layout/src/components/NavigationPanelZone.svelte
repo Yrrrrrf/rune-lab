@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { Snippet } from "svelte";
-import { getT } from "rune-lab";
+import { getT } from "rune-lab/ui";
 import { getLayoutStore } from "../plugin.ts";
 
 let {

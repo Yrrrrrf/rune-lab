@@ -9,7 +9,7 @@
  * what remains here is the one thing genuinely specific to this view — the
  * rebind affordance.
  */
-import { FilterableGroupedList, getT } from "rune-lab";
+import { FilterableGroupedList, getT } from "rune-lab/ui";
 import { onDestroy } from "svelte";
 import { getShortcutsStore } from "../plugin.ts";
 import type { ShortcutEntry } from "../types.ts";

@@ -42,9 +42,9 @@ def patch-file [file: path, version: string]: nothing -> record {
   let ts_import_re = "(from\\s+[\"'])([^\"']*?)\\.ts([\"'])"
   # Dev-time manifest import: `import pkgConfig from "../../deno.json" with { type: "json" };`
   # (matches the old package.json form too, with or without the inline attribute)
-  let manifest_import_re = "import\\s+pkgConfig\\s+from\\s+[\"'][^\"']*(?:deno|package)\\.json[\"']\\s*(?:with\\s*\\{[^}]*\\})?\\s*;?\\s*\\n?"
+  let manifest_import_re = "import\\s+(?:rootConfig|pkgConfig)\\s+from\\s+[\"'][^\"']*(?:deno|package)\\.json[\"']\\s*(?:with\\s*\\{[^}]*\\})?\\s*;?\\s*\\n?"
   let with_type_re = "(?m)^\\s*with\\s*\\{\\s*type:\\s*[\"']json[\"']\\s*\\}\\s*;?\\s*\\n?"
-  let version_call_re = "pkgConfig\\.version"
+  let version_call_re = "(?:rootConfig|pkgConfig)\\.version"
 
   let original = (open --raw $file)
   let rewritten = ($original

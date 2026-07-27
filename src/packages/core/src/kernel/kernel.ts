@@ -8,7 +8,7 @@ import type { ForgedPlugin, PluginInput } from "../forge/define-plugin.ts";
 import type { LocaleAdapter } from "../ports/locale.ts";
 import type { PersistenceDriver } from "../ports/persistence.ts";
 import type { TextMeasurer } from "../ports/text.ts";
-import { StateCellsTag } from "../services/layers.ts";
+import { type StateCells, StateCellsTag } from "../services/layers.ts";
 import { compileEnvironment, type NormalizedSlot } from "./wiring.ts";
 
 export interface Kernel<TCells = Record<string, unknown>> {
@@ -16,17 +16,11 @@ export interface Kernel<TCells = Record<string, unknown>> {
   overlays: unknown[];
 
   getCell<K extends keyof TCells>(cellName: K): TCells[K];
-  setCell<K extends keyof TCells>(cellName: K, value: TCells[K]): Promise<void>;
   subscribe(cellName: keyof TCells, listener: () => void): () => void;
-  getCellVersion(cellName: keyof TCells): number;
 
   getContributions<T>(key: ContributionKey<T>): T[];
   registerContribution<T>(key: ContributionKey<T>, item: T): void;
   unregisterContribution<T>(key: ContributionKey<T>, id: string): void;
-  registerStore<T>(
-    key: ContributionKey<T>,
-    store: { register(item: T): void },
-  ): void;
 
   getStoreEntry(
     id: string,
@@ -41,63 +35,70 @@ export function createKernel<TCells = Record<string, unknown>>(
     persistence: PersistenceDriver;
     localeAdapter?: LocaleAdapter;
     textMeasurer?: TextMeasurer;
+    pluginConfig?: Record<string, Record<string, unknown>>;
   },
 ): Kernel<TCells> {
-  const { runtime, resolvedPlugins, sortedSlots } = compileEnvironment(
-    pluginsInput,
-    options,
-  );
+  let compiled;
+  try {
+    compiled = compileEnvironment(pluginsInput, options);
+  } catch (err: unknown) {
+    if (
+      err && typeof err === "object" && "message" in err &&
+      typeof (err as { message: unknown }).message === "string"
+    ) {
+      throw new Error((err as { message: string }).message);
+    }
+    throw err;
+  }
+  const { runtime, resolvedPlugins, sortedSlots } = compiled;
 
-  const ctx = runtime.runSync(Effect.context());
-  const cellsService = Context.get(ctx, StateCellsTag);
+  let ctx: Context.Context<never>;
+  try {
+    ctx = runtime.runSync(Effect.context());
+  } catch (err: unknown) {
+    if (err && typeof err === "object") {
+      const e = err as Record<string, unknown>;
+      if ("_tag" in e && e._tag === "FiberFailure" && "cause" in e) {
+        const cause = e.cause as Record<string, unknown> | undefined;
+        if (cause && "error" in cause) {
+          const errorObj = cause.error as Record<string, unknown> | undefined;
+          if (
+            errorObj && "message" in errorObj &&
+            typeof errorObj.message === "string"
+          ) {
+            throw new Error(errorObj.message);
+          }
+        }
+      }
+      if ("message" in e && typeof e.message === "string") {
+        throw new Error(e.message);
+      }
+    }
+    throw err;
+  }
+  const cellsService = Context.get(
+    ctx,
+    StateCellsTag as unknown as Context.Tag<never, StateCells>,
+  );
   const cells = cellsService.cells;
 
   const stores = extractStores(ctx, sortedSlots);
   const overlays = extractOverlays(resolvedPlugins);
   const initialContributions = extractInitialContributions(resolvedPlugins);
 
-  const registeredStores = new Map<
-    ContributionKey<unknown>,
-    { register(item: unknown): void }
-  >();
-
-  // Auto-register declarative contributions to matching stores by string ID matching (fallback)
-  for (const plugin of resolvedPlugins) {
-    if (plugin.contributions) {
-      for (const entry of plugin.contributions) {
-        const store = stores.get(entry.key.id) as
-          | { register(item: unknown): void }
-          | undefined;
-        if (store && typeof store.register === "function") {
-          entry.items.forEach((item) => store.register(item));
-        }
-      }
-    }
-  }
-
   cells.contributions.set(initialContributions);
 
   const slotMap = new Map(sortedSlots.map((s) => [s.id, s]));
 
   function getCell(cellName: string): StateCell<unknown> {
-    if (cellName === "contributions") {
-      return cells.contributions;
+    if (cellName !== "contributions") {
+      throw new Error(`[rune-lab] Unknown cell "${cellName}"`);
     }
-    let storeKey = cellName;
-    if (!cellName.startsWith("rl:")) {
-      if (cellName.includes(".")) {
-        const lastDot = cellName.lastIndexOf(".");
-        const pluginId = cellName.slice(0, lastDot);
-        const slotName = cellName.slice(lastDot + 1);
-        storeKey = `rl:${pluginId}:${slotName}`;
-      }
-    }
-    const store = stores.get(storeKey);
-    if (!store) {
-      throw new Error(`[Kernel] Cell "${cellName}" does not exist`);
-    }
-    return store as StateCell<unknown>;
+    return cells.contributions;
   }
+
+  let disposed = false;
+  let disposePromise: Promise<void> | null = null;
 
   return {
     stores,
@@ -106,17 +107,9 @@ export function createKernel<TCells = Record<string, unknown>>(
       const cell = getCell(cellName as string);
       return cell.get() as TCells[typeof cellName];
     },
-    setCell: async (cellName, value) => {
-      const cell = getCell(cellName as string);
-      await cell.set(value as unknown);
-    },
     subscribe: (cellName, listener) => {
       const cell = getCell(cellName as string);
       return cell.subscribe(listener);
-    },
-    getCellVersion: (cellName) => {
-      const cell = getCell(cellName as string);
-      return cell.getVersion();
     },
     getContributions: <T>(key: ContributionKey<T>): T[] => {
       const registry = cells.contributions.get() as Map<
@@ -127,25 +120,43 @@ export function createKernel<TCells = Record<string, unknown>>(
     },
     registerContribution: <T>(key: ContributionKey<T>, item: T) => {
       registerContributionLifecycle(cells, key, item);
-      const store = registeredStores.get(key);
-      if (store) {
-        store.register(item);
-      }
     },
     unregisterContribution: <T>(key: ContributionKey<T>, id: string) =>
       unregisterContributionLifecycle(cells, key, id),
-    registerStore: <T>(
-      key: ContributionKey<T>,
-      store: { register(item: T): void },
-    ) => {
-      registeredStores.set(key, store as { register(item: unknown): void });
-      const items = (
-        cells.contributions.get() as Map<ContributionKey<unknown>, unknown[]>
-      ).get(key) ?? [];
-      items.forEach((item) => store.register(item as T));
-    },
     getStoreEntry: (id) => slotMap.get(id),
-    dispose: () => runtime.dispose(),
+    dispose: () => {
+      if (disposed) return Promise.resolve();
+      if (disposePromise) return disposePromise;
+      disposePromise = (async () => {
+        try {
+          await runtime.dispose();
+        } catch (err: unknown) {
+          disposed = true;
+          const errors: unknown[] = [];
+          if (err && typeof err === "object") {
+            const e = err as Record<string, unknown>;
+            if ("_tag" in e && e._tag === "FiberFailure" && "cause" in e) {
+              const cause = e.cause as Record<string, unknown> | undefined;
+              if (
+                cause && "failures" in cause && Array.isArray(cause.failures)
+              ) {
+                errors.push(...cause.failures);
+              } else if (cause && "error" in cause) {
+                errors.push(cause.error);
+              }
+            } else {
+              errors.push(err);
+            }
+          } else {
+            errors.push(err);
+          }
+          throw new AggregateError(errors, "Kernel disposal failed");
+        } finally {
+          disposed = true;
+        }
+      })();
+      return disposePromise;
+    },
   };
 }
 

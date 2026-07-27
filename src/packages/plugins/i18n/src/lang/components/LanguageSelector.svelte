@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ResourceSelector } from "rune-lab";
+import { ResourceSelector } from "rune-lab/ui";
 import { getLanguageStore } from "../../plugin.ts";
 import { languagePresenter } from "../presenter.ts";
 import type { Language } from "../store.svelte.ts";
@@ -16,8 +16,6 @@ let {
   onchange?: (value: string) => void;
 } = $props();
 
-// C21: ResourceSelector's key-based narrowing prop is gone — narrowing is
-// this domain's own concern now, done against the store's own `available`.
 const available = $derived(
   languageStore.available.filter((l: Language) =>
     allowedLocales.includes(l.code)

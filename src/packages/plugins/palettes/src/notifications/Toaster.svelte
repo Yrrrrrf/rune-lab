@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getT, portal } from "rune-lab";
+import { getT, portal } from "rune-lab/ui";
 import { getToastsStore } from "../plugin.ts";
 
 const toastStore = getToastsStore();

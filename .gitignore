@@ -13,7 +13,8 @@ coverage
 
 # docs & spec files
 # docs
-docs/ref
+docs/ref/
+docs/reports/
 docs/v0.5.1/
 # apps
 some

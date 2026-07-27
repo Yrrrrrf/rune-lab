@@ -19,6 +19,6 @@ export {
   layout,
 } from "./plugin.ts";
 export { PRESETS } from "./presets.ts";
-export { type Theme, type ThemeConfig, THEMES } from "./stores/theme.svelte.ts";
+export { type Theme } from "./stores/theme.svelte.ts";
 export { themePresenter } from "./theme-presenter.ts";
 export * from "./types.ts";

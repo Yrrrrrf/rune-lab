@@ -14,7 +14,7 @@ export interface NotificationBellProps {
 </script>
 
 <script lang="ts">
-import { getT } from "rune-lab";
+import { getT } from "rune-lab/ui";
 
 let {
   unreadCount = 0,

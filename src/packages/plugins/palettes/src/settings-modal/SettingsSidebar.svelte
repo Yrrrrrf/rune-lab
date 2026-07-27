@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getT } from "rune-lab";
+import { getT } from "rune-lab/ui";
 import { onMount } from "svelte";
 import type { SidebarEntry } from "./sections.ts";
 

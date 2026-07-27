@@ -26,5 +26,4 @@ export { default as Icon } from "./selectors/Icon.svelte";
 export { default as ResourceSelector } from "./selectors/ResourceSelector.svelte";
 export { default as SettingsFields } from "./settings/SettingsFields.svelte";
 
-import pkgConfig from "../deno.json" with { type: "json" };
-export const version = (): string => pkgConfig.version;
+export const version = (): string => "0.5.1-rc.2";

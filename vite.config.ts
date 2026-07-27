@@ -28,7 +28,8 @@ const svelteProject = (
   resolve: {
     alias: {
       "rune-lab/core": resolve("./src/packages/core/src/mod.ts"),
-      "rune-lab": resolve("./src/packages/ui/src/mod.ts"),
+      "rune-lab/ui": resolve("./src/packages/ui/src/mod.ts"),
+      "rune-lab": resolve("./src/packages/rune-lab/src/mod.ts"),
       "rune-lab/i18n": resolve("./src/packages/plugins/i18n/src/mod.ts"),
       "rune-lab/layout": resolve("./src/packages/plugins/layout/src/mod.ts"),
       "rune-lab/observer": resolve(

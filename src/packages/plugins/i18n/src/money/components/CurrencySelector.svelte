@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ResourceSelector } from "rune-lab";
+import { ResourceSelector } from "rune-lab/ui";
 import { getCurrencyStore } from "../../plugin.ts";
 import { currencyPresenter } from "../presenter.ts";
 
@@ -13,8 +13,6 @@ let {
   onchange?: (value: string) => void;
 } = $props();
 
-// C21: ResourceSelector's key-based narrowing prop is gone — narrowing is
-// this domain's own concern now, done against the store's own `available`.
 const available = $derived(
   codes.length > 0
     ? currencyStore.available.filter((c) => codes.includes(c.code))

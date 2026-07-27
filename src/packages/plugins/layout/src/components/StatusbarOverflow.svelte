@@ -7,7 +7,7 @@ export interface StatusbarItem {
 }
 </script>
 <script lang="ts">
-import { getKernel } from "rune-lab";
+import { getKernel } from "rune-lab/ui";
 import { onMount } from "svelte";
 import { statusbar } from "../contributions.ts";
 import { getTextStore } from "../plugin.ts";

@@ -1,18 +1,17 @@
 import type { Kernel, SettingsFieldSchema, Translator } from "rune-lab/core";
-import { getContextSymbol } from "rune-lab/core";
+import { getContextSymbol, settingsSections } from "rune-lab/core";
 import type { Component } from "svelte";
 import { getContext } from "svelte";
+import { useCell } from "../reactivity/use-cell.svelte.ts";
 
 export const RUNE_LAB_CONTEXT: {
   kernel: symbol;
   app: symbol;
   persistence: symbol;
-  settingsSections: symbol;
 } = {
   kernel: Symbol("rl:kernel"),
   app: Symbol("rl:app"),
   persistence: Symbol("rl:persistence"),
-  settingsSections: Symbol("rl:settings-sections"),
 } as const;
 
 export function getKernel<TCells = Record<string, unknown>>(): Kernel<TCells> {
@@ -48,22 +47,20 @@ export interface SettingsSection {
   icon?: string;
   fields?: SettingsFieldSchema[];
   component?: Component;
+  pluginId?: string;
 }
 
-export const getSettingsSections: () => SettingsSection[] = createAccessor<
-  SettingsSection[]
->(
-  RUNE_LAB_CONTEXT.settingsSections,
-  "getSettingsSections()",
-  "SettingsSections",
-  "RuneProvider",
-);
+/**
+ * Reads settings sections from the live contributions cell.
+ * MUST be called during component initialization (it calls getContext).
+ */
+export function getSettingsSections(): SettingsSection[] {
+  const kernel = getKernel();
+  const contributions = useCell(kernel, "contributions");
+  return (contributions.current.get(settingsSections) ??
+    []) as SettingsSection[];
+}
 
-// C25: the optional t() port. `i18n`'s "messages" slot exposes a Translator
-// under its own auto-derived context key — a well-known convention
-// (getContextSymbol(pluginId, slotName)), not a package import, so `ui` can
-// reach it without ever depending on the i18n plugin. Absent `i18n`, this
-// always falls back to the call site's own inline default, with zero config.
 const I18N_MESSAGES_KEY = getContextSymbol("rune-lab.i18n", "messages");
 
 const passthroughTranslator: Translator = (_key, fallback) => fallback;

@@ -50,7 +50,7 @@ class ReactiveConfigStoreImpl<T, K extends keyof T>
 
   addItems(newItems: T[]): void {
     this.#vanilla.addItems(newItems);
-    this.#available = this.#vanilla.available;
+    this.#available = [...this.#vanilla.available];
   }
 
   onChange(cb: (newId: T[K], oldId: T[K]) => void): () => void {

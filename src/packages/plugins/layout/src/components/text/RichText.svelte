@@ -3,7 +3,7 @@ import type {
   RichInlineCursor,
   RichInlineItem,
   RichInlineLine,
-} from "rune-lab/core";
+} from "@chenglou/pretext/rich-inline";
 import { getTextStore } from "../../plugin.ts";
 import { resizeWidth } from "../../text/resize.ts";
 

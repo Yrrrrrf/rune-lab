@@ -42,9 +42,12 @@ login: (_with-brave "bunx npm login")
 [doc('Inject the built pkg (build/) into lab for local testing')]
 [group('Deploy')]
 inject root=justfile_directory(): build prepare
+    #!/usr/bin/env nu
+    let lab_modules = $"{{ root }}/apps/lab/node_modules"
     # * Replace lab's installed rune-lab with the freshly built build/ layout
-    rm -rf "{{ root }}/node_modules/rune-lab"
-    cp -r "{{ root }}/build" "{{ root }}/node_modules/rune-lab"
+    rm -rf $"($lab_modules)/rune-lab"
+    cp -r $"{{ root }}/build" $"($lab_modules)/rune-lab"
     # * Verify the injection
-    diff -r "{{ root }}/build" "{{ root }}/node_modules/rune-lab"
-    @echo "✓ injected into node_modules/rune-lab"
+    diff -r $"{{ root }}/build" $"($lab_modules)/rune-lab"
+    print "✓ injected into node_modules/rune-lab"
+

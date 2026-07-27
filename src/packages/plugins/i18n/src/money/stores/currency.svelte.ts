@@ -1,4 +1,4 @@
-import { createConfigStore } from "rune-lab";
+import { createConfigStore } from "rune-lab/ui";
 import type { ConfigStore, SlotContext } from "rune-lab/core";
 import { createMessageResolver } from "../../lang/message-resolver.ts";
 import { m } from "../../lang/messages.ts";

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { SettingsFields } from "rune-lab";
+import { SettingsFields } from "rune-lab/ui";
 import GeneralSection from "./GeneralSection.svelte";
 import type { ModalModel } from "./sections.ts";
 

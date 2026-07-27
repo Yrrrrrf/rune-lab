@@ -12,6 +12,7 @@ export class StateCell<T> {
 
   set(value: T): void {
     Effect.runSync(SubscriptionRef.set(this.ref, value));
+    this.notify();
   }
 
   getVersion(): number {

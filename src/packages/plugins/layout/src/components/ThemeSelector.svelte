@@ -1,13 +1,10 @@
 <script lang="ts">
-import { ResourceSelector } from "rune-lab";
+import { ResourceSelector } from "rune-lab/ui";
 import { getThemeStore } from "../plugin.ts";
 import ThemeSwatch from "./ThemeSwatch.svelte";
 
 const themeStore = getThemeStore();
 
-// C21: which themes exist is single-sourced from the plugin config
-// (`LayoutPlugin.with({ theme: { available: [...] } })`) via `store.available`
-// — there is no client-side narrowing prop anymore.
 let {
   onchange,
 }: {

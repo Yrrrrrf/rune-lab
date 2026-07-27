@@ -60,30 +60,3 @@ export function createMessageResolver<T>(
     return messageFn();
   };
 }
-
-/**
- * Type guard to check if a message key exists
- */
-export function hasMessage(messages: MessageBundle, key: string): boolean {
-  return key in messages && typeof messages[key] === "function";
-}
-
-/**
- * Batch resolver for multiple options at once
- */
-export function batchResolveMessages<T>(
-  messages: MessageBundle,
-  options: T[],
-  config: MessageResolverConfig<T>,
-): Record<string, string> {
-  const resolver = createMessageResolver(messages, config);
-
-  return options.reduce(
-    (acc, option) => {
-      const key = config.keyExtractor(option);
-      acc[key] = resolver(option);
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
-}

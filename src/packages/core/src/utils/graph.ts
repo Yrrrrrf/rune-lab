@@ -1,40 +1,48 @@
+import { Either } from "effect";
+
 export interface GraphNode {
   id: string;
   dependsOn?: string[];
 }
 
-export function topologicalSort<T extends GraphNode>(nodes: T[]): T[] {
+export function topologicalSort<T extends GraphNode>(
+  nodes: T[],
+): Either.Either<T[], { cycle: string[] }> {
   const sorted: T[] = [];
   const visited = new Set<string>();
-  const visiting = new Set<string>(); // cycle detection
+  const visiting: string[] = [];
+  let cycleFound: string[] | null = null;
 
   const nodeMap = new Map(nodes.map((n) => [n.id, n]));
 
-  function visit(node: T) {
-    if (visited.has(node.id)) return;
-    if (visiting.has(node.id)) {
-      throw new Error(
-        `[Graph] Circular dependency detected involving "${node.id}"`,
-      );
+  function visit(node: T): boolean {
+    if (visited.has(node.id)) return true;
+    const cycleIdx = visiting.indexOf(node.id);
+    if (cycleIdx !== -1) {
+      cycleFound = [...visiting.slice(cycleIdx), node.id];
+      return false;
     }
 
-    visiting.add(node.id);
+    visiting.push(node.id);
 
     for (const depId of node.dependsOn ?? []) {
       const dep = nodeMap.get(depId);
       if (dep) {
-        visit(dep);
+        if (!visit(dep)) return false;
       }
     }
 
-    visiting.delete(node.id);
+    visiting.pop();
     visited.add(node.id);
     sorted.push(node);
+    return true;
   }
 
   for (const node of nodes) {
-    visit(node);
+    if (!visit(node)) {
+      return Either.left({ cycle: cycleFound ?? [node.id] });
+    }
   }
 
-  return sorted;
+  return Either.right(sorted);
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getSettingsSections } from "rune-lab";
+import { getSettingsSections } from "rune-lab/ui";
 import {
   getCommandsStore,
   getRegistryStore,

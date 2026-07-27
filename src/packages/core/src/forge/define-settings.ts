@@ -1,11 +1,12 @@
 import { Schema } from "effect";
+import type { SelectOption } from "../config/item-presenter.ts";
 
 export interface SettingsFieldSchema {
   id: string; // e.g. "pluginId.fieldId"
   label: string;
   type: "select" | "toggle" | "text" | "number" | "range" | "color" | "custom";
   component?: unknown;
-  options?: { value: unknown; label: string }[];
+  options?: () => SelectOption[];
   min?: number;
   max?: number;
   step?: number;
@@ -50,14 +51,8 @@ const SettingsFieldSchemaStruct = Schema.Struct({
     "custom",
   ),
   component: Schema.optional(Schema.Any),
-  options: Schema.optional(
-    Schema.Array(
-      Schema.Struct({
-        value: Schema.Any,
-        label: Schema.String,
-      }),
-    ),
-  ),
+  // Defer evaluation to render time (thunk) to avoid CSSOM/DOM work during define time validation
+  options: Schema.optional(Schema.Any),
   min: Schema.optional(Schema.Number),
   max: Schema.optional(Schema.Number),
   step: Schema.optional(Schema.Number),

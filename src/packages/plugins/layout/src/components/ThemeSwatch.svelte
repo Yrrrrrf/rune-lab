@@ -1,9 +1,4 @@
 <script lang="ts">
-// C22: nested `data-theme` scopes daisyUI's CSS variables, so this shows a
-// theme's real colors regardless of which theme is currently active — pure
-// CSS, server-renders, no JS. Four swatches, not nine: base-*/content colors
-// are indistinct at this size.
-//
 // `data-theme={name}` is an attribute binding, safe for Tailwind's literal
 // class scanner. Never interpolate a color into a class string instead
 // (`class={`bg-${color}`}`) — that generates nothing.

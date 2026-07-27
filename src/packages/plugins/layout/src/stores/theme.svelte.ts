@@ -1,114 +1,70 @@
 import { BROWSER } from "esm-env";
-import { createConfigStore } from "rune-lab";
+import { createConfigStore } from "rune-lab/ui";
 import type { ConfigStore, SlotContext } from "rune-lab/core";
 
 export interface Theme {
   name: string;
 }
 
-// C22: no per-item icon anymore — ThemeSwatch renders each theme's actual
-// daisyUI colors via a nested `data-theme`, so the name list is all that's
-// needed here. 35 hand-assigned emoji, derived from nothing, are gone.
-const THEME_NAMES = [
-  "light",
-  "dark",
-  "cupcake",
-  "bumblebee",
-  "emerald",
-  "corporate",
-  "synthwave",
-  "retro",
-  "cyberpunk",
-  "valentine",
-  "halloween",
-  "garden",
-  "forest",
-  "aqua",
-  "lofi",
-  "pastel",
-  "fantasy",
-  "wireframe",
-  "black",
-  "luxury",
-  "dracula",
-  "cmyk",
-  "autumn",
-  "business",
-  "acid",
-  "lemonade",
-  "night",
-  "coffee",
-  "winter",
-  "dim",
-  "nord",
-  "sunset",
-  "caramellatte",
-  "abyss",
-  "silk",
-];
+export const SYSTEM: Theme = { name: "system" };
 
-// "system" is a pseudo-item, not a daisyUI theme: it means "no explicit
-// choice yet", and applyTheme below deliberately never writes it to the DOM.
-// It goes first so the store's default seed (items[0]) lands on it.
-const SYSTEM: Theme = { name: "system" };
+const readableSheet = (s: CSSStyleSheet): boolean =>
+  s.href === null || new URL(s.href, location.href).origin === location.origin;
 
-export const THEMES = [
-  SYSTEM,
-  ...THEME_NAMES.map((name: string) => ({ name })),
-] as Theme[];
+function extractThemesFromRule(
+  rule: CSSRule,
+  discovered: Set<string>,
+): void {
+  if ("selectorText" in rule && typeof rule.selectorText === "string") {
+    const matches = rule.selectorText.matchAll(
+      /\[data-theme=["']?([\w-]+)["']?\]/g,
+    );
+    for (const m of matches) {
+      if (m[1]) discovered.add(m[1]);
+    }
+  }
+  if ("cssRules" in rule && rule.cssRules) {
+    for (const subRule of Array.from(rule.cssRules as CSSRuleList)) {
+      extractThemesFromRule(subRule, discovered);
+    }
+  }
+}
 
-// C21: the plugin config narrows which daisyUI themes exist; default is all
-// 35 (rune-lab cannot detect the consumer's `@plugin "daisyui"` enabled set).
-// `available` and the settings-modal options (C20) both derive from this same
-// narrowed store, so the two surfaces can no longer disagree.
-export interface ThemeConfig {
-  readonly available?: readonly string[];
-  readonly default?: string;
+export function discoverThemesFromCSS(): Theme[] {
+  const discovered = new Set<string>();
+
+  if (BROWSER && typeof document !== "undefined") {
+    for (const sheet of Array.from(document.styleSheets)) {
+      if (readableSheet(sheet) && sheet.cssRules) {
+        for (const rule of Array.from(sheet.cssRules)) {
+          extractThemesFromRule(rule, discovered);
+        }
+      }
+    }
+  }
+
+  return Array.from(discovered).map((name) => ({ name }));
 }
 
 export function createThemeStore(
-  ctx: SlotContext<ThemeConfig>,
+  ctx: SlotContext<unknown>,
 ): ConfigStore<Theme, "name"> {
-  const configured = ctx.config;
+  const saved = ctx.persistence.get("theme");
+  const initialTheme = typeof saved === "string" && saved ? saved : "system";
 
-  // ConfigStoreImpl sets `available` once at construction and never narrows
-  // it afterward, so narrowing has to happen on the item list going in, not
-  // via a prop on the consuming component.
-  const items = configured?.available
-    ? THEMES.filter(
-      (t) => t.name === SYSTEM.name || configured.available!.includes(t.name),
-    )
-    : THEMES;
+  const initialItems: Theme[] = [SYSTEM];
+  if (initialTheme !== "system") {
+    initialItems.push({ name: initialTheme });
+  }
 
   const store = createConfigStore<Theme, "name">({
-    items,
+    items: initialItems,
     storageKey: "theme",
     displayName: "Theme",
     idKey: "name",
     icon: "🎨",
     driver: ctx.persistence,
   });
-
-  const saved = ctx.persistence.get("theme");
-  const hasPersisted = typeof saved === "string"
-    ? Boolean(saved && store.get(saved))
-    : false;
-
-  if (!hasPersisted) {
-    // C28: seeding from config still persists via store.set() today — a
-    // deliberate "not now" call. Fixing it needs a way to set `current`
-    // without writing to storage, which core doesn't expose yet.
-    //
-    // `default` is an explicit author choice, unlike the system-preference
-    // case below, so it's the one branch that's supposed to write on init.
-    const configTheme = configured?.default;
-    if (configTheme && store.get(configTheme)) {
-      store.set(configTheme);
-    }
-    // else: leave current at "system". No matchMedia probe here — after the
-    // daisyUI CSS migration (C16), `:root:not([data-theme])` resolves the OS
-    // preference in CSS, so JS never needs to guess it.
-  }
 
   const applyTheme = (name: string): void => {
     if (!BROWSER) return;
@@ -120,7 +76,16 @@ export function createThemeStore(
   };
 
   store.onChange((name) => applyTheme(String(name)));
-  applyTheme(String(store.current)); // required: sync driver reads don't notify (C27)
+  applyTheme(String(store.current));
+
+  if (BROWSER) {
+    queueMicrotask(() => {
+      const discovered = discoverThemesFromCSS();
+      if (discovered.length > 0) {
+        store.addItems(discovered);
+      }
+    });
+  }
 
   return store;
 }

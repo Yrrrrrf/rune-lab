@@ -1,5 +1,4 @@
 export { StateCell } from "./cells/define-cell.ts";
-export { createPersistedCell } from "./cells/persisted-cell.ts";
 export {
   type ConfigStore,
   ConfigStoreImpl,
@@ -16,8 +15,6 @@ export {
   type ContributionEntry,
   type ContributionKey,
   defineContribution,
-  type MessageBundle,
-  messages,
   type SettingsSectionContribution,
   settingsSections,
 } from "./forge/define-contribution.ts";
@@ -31,6 +28,7 @@ export {
 } from "./forge/define-settings.ts";
 export type {
   BaseSlotSpec,
+  Disposable,
   SlotContext,
   SlotSpec,
 } from "./forge/define-slot.ts";
@@ -46,27 +44,14 @@ export {
 } from "./ports/memory.ts";
 export type { PersistenceDriver } from "./ports/persistence.ts";
 export type { Translator } from "./ports/translate.ts";
-export type {
-  LayoutCursor,
-  LayoutLine,
-  LayoutLineRange,
-  LayoutLinesResult,
-  LayoutResult,
-  LineStats,
-  PreparedRichInline,
-  PreparedText,
-  PreparedTextWithSegments,
-  PrepareOptions,
-  RichInlineCursor,
-  RichInlineFragment,
-  RichInlineFragmentRange,
-  RichInlineItem,
-  RichInlineLine,
-  RichInlineLineRange,
-  RichInlineStats,
-  TextMeasurer,
-  WhiteSpaceMode,
-  WordBreakMode,
-} from "./ports/text.ts";
-export { FakeTextMeasurer } from "./ports/text-fake.ts";
+export type { TextMeasurer } from "./ports/text.ts";
 export type { StateCells } from "./services/layers.ts";
+export {
+  CircularPluginDependency,
+  CircularSlotDependency,
+  MissingRequirement,
+  SlotConfigInvalid,
+  SlotInitFailed,
+  UndeclaredCrossPluginDependency,
+  UnresolvableSlotRef,
+} from "./errors.ts";

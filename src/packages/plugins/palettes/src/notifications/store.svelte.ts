@@ -1,6 +1,7 @@
 /**
  * Toast notification store
  */
+import type { Disposable } from "rune-lab/core";
 import type { Toast, ToastType } from "../types.ts";
 
 export type { Toast, ToastType };
@@ -11,9 +12,19 @@ interface ToastMeta {
   timeoutId?: ReturnType<typeof setTimeout>;
 }
 
-export class ToastStore {
+export class ToastStore implements Disposable {
   toasts: Toast[] = $state<Toast[]>([]);
   #meta = new Map<string, ToastMeta>();
+
+  dispose(): void {
+    for (const [_, meta] of this.#meta) {
+      if (meta.timeoutId) {
+        clearTimeout(meta.timeoutId);
+      }
+    }
+    this.#meta.clear();
+    this.toasts = [];
+  }
 
   /**
    * Add a new toast with FIFO eviction capped at exactly 5

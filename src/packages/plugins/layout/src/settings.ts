@@ -16,7 +16,7 @@ export const layoutSettings: SettingsSchema = defineSettings({
         storeId: "layout",
         property: "preset",
       },
-      options: [
+      options: () => [
         { value: "page", label: "Simple Page" },
         { value: "docs", label: "Documentation" },
         { value: "workspace", label: "Workspace IDE" },
@@ -31,7 +31,7 @@ export const layoutSettings: SettingsSchema = defineSettings({
         storeId: "theme",
         property: "current",
       },
-      options: toOptions(themePresenter),
+      options: () => toOptions(themePresenter),
     },
   ],
 });
