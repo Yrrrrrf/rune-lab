@@ -6,8 +6,6 @@ import type { Toast, ToastType } from "../types.ts";
 
 export type { Toast, ToastType };
 
-const MAX_TOASTS = 5;
-
 interface ToastMeta {
 	remaining: number;
 	lastStarted: number;
@@ -36,11 +34,8 @@ export class ToastStore implements Disposable {
 		type: ToastType = "info",
 		duration: number = 3000,
 	): void {
-		// Evict oldest if we are at cap (FIFO)
-		while (this.toasts.length >= MAX_TOASTS) {
-			const oldest = this.toasts[0];
-			this.dismiss(oldest.id);
-		}
+		const oldest = this.toasts[0];
+		this.dismiss(oldest.id);
 
 		// Generate id: use crypto.randomUUID if available, else fallback
 		let id: string;
@@ -50,8 +45,7 @@ export class ToastStore implements Disposable {
 		) {
 			id = crypto.randomUUID();
 		} else {
-			id =
-				"toast-" +
+			id = "toast-" +
 				Math.random().toString(36).substring(2, 9) +
 				"-" +
 				Date.now();

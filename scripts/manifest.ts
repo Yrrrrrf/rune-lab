@@ -64,6 +64,7 @@ const member = (path: string, svelteEntry = true) => ({
 
 const exports = {
 	".": member("ui"),
+	"./ui": member("ui"),
 	"./core": member("core", false), // core has no svelte components
 	...Object.fromEntries(plugins.map((p) => [`./${p}`, member(`plugins/${p}`)])),
 };
