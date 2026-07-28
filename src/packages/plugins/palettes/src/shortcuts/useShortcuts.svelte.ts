@@ -2,7 +2,7 @@
 // Declarative shortcut registration with automatic lifecycle cleanup.
 // Bridges ShortcutConfig (sdk/core) → ShortcutStore (sdk/state).
 
-import { getShortcutsStore } from "../plugin.ts";
+import { getShortcutStore } from "../plugin.ts";
 import type { ShortcutConfig, ShortcutEntry } from "./types.ts";
 
 /**
@@ -19,7 +19,7 @@ import type { ShortcutConfig, ShortcutEntry } from "./types.ts";
 export function useShortcuts(configs: ShortcutConfig[]): {
 	readonly registered: string[];
 } {
-	const shortcutStore = getShortcutsStore();
+	const shortcutStore = getShortcutStore();
 
 	// Convert ShortcutConfig[] to ShortcutEntry[] respecting the `when` predicate
 	function toEntries(configs: ShortcutConfig[]): ShortcutEntry[] {

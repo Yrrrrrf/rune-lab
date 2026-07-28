@@ -21,9 +21,9 @@ import type { ShortcutStore } from "./shortcuts/store.svelte.ts";
 import { createShortcutStore } from "./shortcuts/store.svelte.ts";
 
 type PalettesSlots = {
-	commands: SlotSpec<unknown, CommandStore>;
-	shortcuts: SlotSpec<unknown, ShortcutStore>;
-	toasts: SlotSpec<unknown, ToastStore>;
+	command: SlotSpec<unknown, CommandStore>;
+	shortcut: SlotSpec<unknown, ShortcutStore>;
+	toast: SlotSpec<unknown, ToastStore>;
 	registry: SlotSpec<unknown, PaletteRegistryStore>;
 };
 
@@ -32,15 +32,15 @@ const palettesPluginSpec: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
 		id: "rune-lab.palettes",
 		requires: ["rune-lab.layout"],
 		slots: {
-			commands: defineSlot({
+			command: defineSlot({
 				create: () => createCommandStore(),
 				expose: true,
 			}),
-			shortcuts: defineSlot({
+			shortcut: defineSlot({
 				create: () => createShortcutStore(),
 				expose: true,
 			}),
-			toasts: defineSlot({
+			toast: defineSlot({
 				create: () => createToastStore(),
 				expose: true,
 			}),
@@ -88,10 +88,10 @@ const kit = createPluginKit(palettesPluginSpec);
 export const palettes: ForgedPlugin<"rune-lab.palettes", PalettesSlots> =
 	kit.plugin;
 
-export const getCommandsStore: () => CommandStore =
-	kit.accessors.getCommandsStore;
-export const getShortcutsStore: () => ShortcutStore =
-	kit.accessors.getShortcutsStore;
-export const getToastsStore: () => ToastStore = kit.accessors.getToastsStore;
+export const getCommandStore: () => CommandStore =
+	kit.accessors.getCommandStore;
+export const getShortcutStore: () => ShortcutStore =
+	kit.accessors.getShortcutStore;
+export const getToastStore: () => ToastStore = kit.accessors.getToastStore;
 export const getRegistryStore: () => PaletteRegistryStore =
 	kit.accessors.getRegistryStore;

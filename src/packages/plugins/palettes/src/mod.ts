@@ -3,10 +3,10 @@ export * from "./host/hotkeys.svelte.ts";
 export { default as PaletteHost } from "./host/PaletteHost.svelte";
 export * from "./notifications/mod.ts";
 export {
-	getCommandsStore,
+	getCommandStore,
 	getRegistryStore,
-	getShortcutsStore,
-	getToastsStore,
+	getShortcutStore,
+	getToastStore,
 	palettes,
 } from "./plugin.ts";
 export * from "./registry/registry.svelte.ts";

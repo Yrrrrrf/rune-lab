@@ -19,6 +19,17 @@ export class MissingRequirement extends MissingRequirementBase {
 	}
 }
 
+const DuplicatePluginIdBase: TaggedErrorConstructor<
+	"DuplicatePluginId",
+	{ readonly pluginId: string }
+> = Data.TaggedError("DuplicatePluginId");
+
+export class DuplicatePluginId extends DuplicatePluginIdBase {
+	get message(): string {
+		return `[Kernel] Plugin "${this.pluginId}" was registered twice with two different plugin objects. Pass only one.`;
+	}
+}
+
 const CircularPluginDependencyBase: TaggedErrorConstructor<
 	"CircularPluginDependency",
 	{ readonly cycle: string[] }

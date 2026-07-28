@@ -2,9 +2,9 @@
 import { getLayoutStore, WorkspaceLayout } from "rune-lab/layout";
 import {
   type Command,
-  getCommandsStore,
+  getCommandStore,
   getRegistryStore,
-  getToastsStore,
+  getToastStore,
   useShortcuts,
 } from "rune-lab/palettes";
 import { onMount, type Snippet } from "svelte";
@@ -12,9 +12,9 @@ import { onMount, type Snippet } from "svelte";
 let { children }: { children: Snippet } = $props();
 
 const layout = getLayoutStore();
-const commands = getCommandsStore();
+const commands = getCommandStore();
 const registry = getRegistryStore();
-const toasts = getToastsStore();
+const toasts = getToastStore();
 
 const zoneToggles = [
   { zone: "strip", keys: "alt+1", label: "Toggle Workspace Strip" },

@@ -17,6 +17,7 @@ export class TextStoreFacade implements Disposable {
 	#engine: PretextTextMeasurer | TextMeasurer | null = null;
 	#cleanupRoot?: () => void;
 	#fontsAbort?: AbortController;
+	#localeOff?: () => void;
 
 	get ready(): boolean {
 		return this.#ready;
@@ -50,9 +51,20 @@ export class TextStoreFacade implements Disposable {
 		this.#epoch++;
 	}
 
+	#setEngineLocale(locale: string): void {
+		if (
+			this.#engine &&
+			typeof (this.#engine as { setLocale?: (l: string) => void }).setLocale ===
+				"function"
+		) {
+			(this.#engine as { setLocale: (l: string) => void }).setLocale(locale);
+		}
+	}
+
 	dispose(): void {
 		this.#cleanupRoot?.();
 		this.#fontsAbort?.abort();
+		this.#localeOff?.();
 	}
 
 	constructor(ctx: SlotContext<unknown>) {
@@ -65,6 +77,21 @@ export class TextStoreFacade implements Disposable {
 		this.#engine =
 			(ctx.textMeasurer as PretextTextMeasurer) ?? new PretextTextMeasurer();
 		this.#ready = true;
+
+		// Locale (Bug D.3 fix). Paraglide's setLocale() reloads the document by
+		// default on a real change (see paraglide-adapter.ts / paraglide docs),
+		// so a fresh construction with the current locale is what actually fixes
+		// CJK segmentation for the default flow — this store is rebuilt from
+		// scratch on that reload. onChange is wired defensively for adapters
+		// that update in-session without a reload; it is a no-op today because
+		// the bundled paraglide adapter's onChange is a stub.
+		if (ctx.locale) {
+			this.#setEngineLocale(ctx.locale.getLocale());
+			this.#localeOff = ctx.locale.onChange((loc) => {
+				this.#setEngineLocale(loc);
+				this.#epoch++;
+			});
+		}
 
 		// Font load invalidation (Bug D.1 fix)
 		if (typeof document !== "undefined" && document.fonts) {

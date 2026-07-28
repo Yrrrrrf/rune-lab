@@ -1,8 +1,8 @@
 <script lang="ts">
 import { getT, portal } from "rune-lab/ui";
-import { getToastsStore } from "../plugin.ts";
+import { getToastStore } from "../plugin.ts";
 
-const toastStore = getToastsStore();
+const toastStore = getToastStore();
 const t = getT();
 
 const typeDetails: Record<

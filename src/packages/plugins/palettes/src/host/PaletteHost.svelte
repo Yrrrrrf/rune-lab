@@ -1,10 +1,10 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import { getRegistryStore, getShortcutsStore } from "../plugin.ts";
+import { getRegistryStore, getShortcutStore } from "../plugin.ts";
 import { bindShortcuts } from "./hotkeys.svelte.ts";
 
 const registryStore = getRegistryStore();
-const shortcutStore = getShortcutsStore();
+const shortcutStore = getShortcutStore();
 
 onMount(() => {
   const unbindShortcuts = bindShortcuts(shortcutStore);

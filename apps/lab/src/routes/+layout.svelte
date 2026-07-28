@@ -16,7 +16,7 @@ let { children }: { children: Snippet } = $props();
       description: "Plugin test bench",
       author: "Yrrrrrf",
       icon: faviconUrl,
-    },
+    }
   }}
 >
   <AppLayout>

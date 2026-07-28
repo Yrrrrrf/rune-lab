@@ -1,12 +1,12 @@
 <script lang="ts">
 import { LanguageSelector } from "rune-lab/i18n";
 import { getLayoutStore, RichText, Text, ThemeSelector } from "rune-lab/layout";
-import { getRegistryStore, getToastsStore } from "rune-lab/palettes";
+import { getRegistryStore, getToastStore } from "rune-lab/palettes";
 import PretextPlayground from "../lib/PretextPlayground.svelte";
 
 const layout = getLayoutStore();
 const registry = getRegistryStore();
-const toasts = getToastsStore();
+const toasts = getToastStore();
 
 let lineCount = $state(0);
 let overflow = $state(false);

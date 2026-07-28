@@ -11,14 +11,14 @@
  */
 import { FilterableGroupedList, getT } from "rune-lab/ui";
 import { onDestroy } from "svelte";
-import { getShortcutsStore } from "../plugin.ts";
+import { getShortcutStore } from "../plugin.ts";
 import type { ShortcutEntry } from "../types.ts";
 import { formatCombos, matchesQuery, scopeLabel } from "./format.ts";
 import { sortScopes } from "./grouping.ts";
 
 let { autofocus = false }: { autofocus?: boolean } = $props();
 
-const shortcutStore = getShortcutsStore();
+const shortcutStore = getShortcutStore();
 const t = getT();
 
 let recordingId = $state<string | null>(null);
