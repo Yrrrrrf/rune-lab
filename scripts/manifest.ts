@@ -76,8 +76,6 @@ const packages = [
 	...plugins.map((p) => `src/packages/plugins/${p}`),
 ];
 
-// todo: Enhance this part to now let it...
-// To be able to read those from the deno.json & then add those in the package.json.dev-deps.
 const DEV_DEPS = new Set([
 	"svelte",
 	"tailwindcss",

@@ -41,15 +41,20 @@ const searchResults = $derived(
 );
 
 function handleResultClick(r: SearchResult) {
-  if (r.type === "section") {
-    registry.setSection(r.sectionId);
-  } else if (r.type === "field") {
-    registry.setSection("general");
-  } else if (r.type === "shortcut") {
-    registry.setSection("shortcuts");
-  } else if (r.type === "command") {
-    r.action?.();
-    registry.close();
+  switch (r.type) {
+    case "section":
+      registry.setSection(r.sectionId);
+      break;
+    case "field":
+      registry.setSection("general");
+      break;
+    case "shortcut":
+      registry.setSection("shortcuts");
+      break;
+    case "command":
+      r.action?.();
+      registry.close();
+      break;
   }
   searchQuery = "";
 }

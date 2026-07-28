@@ -8,6 +8,8 @@ import {
 	createInMemoryDriver,
 	createKernel,
 } from "rune-lab/core";
+import { layout } from "rune-lab/layout";
+import { palettes } from "rune-lab/palettes";
 import { type Component, type Snippet, setContext, untrack } from "svelte";
 import {
 	cookieDriver,
@@ -16,6 +18,8 @@ import {
 } from "./persistence/drivers.ts";
 import { RUNE_LAB_CONTEXT } from "./provider/context.ts";
 import { type AppData, createAppStore } from "./reactivity/app.svelte.ts";
+
+const DEFAULT_PLUGINS: PluginInput[] = [layout, palettes];
 
 /**
  * Configuration options for RuneProvider (persistence driver, head management, app metadata).
@@ -65,7 +69,7 @@ setContext(RUNE_LAB_CONTEXT.app, appStore);
 
 // 1. Construct the kernel
 const kernel = createKernel(
-	untrack(() => plugins),
+	untrack(() => [...DEFAULT_PLUGINS, ...plugins]),
 	{
 		persistence: initialPersistence,
 		localeAdapter: untrack(() => localeAdapter),

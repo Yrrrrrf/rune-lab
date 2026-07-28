@@ -18,8 +18,8 @@ build:
     deno fmt build
     # * Post-build: strip i18n artifacts, rewrite .ts→.js imports, inline the version
     nu scripts/build.nu
-    -cd build; biome format --write .
-    -cd build; biome check --fix .
+    -biome format --write --vcs-use-ignore-file=false ./build
+    -biome check --fix --vcs-use-ignore-file=false ./build
     @echo "✓ build done"
 
 [working-directory('build')]

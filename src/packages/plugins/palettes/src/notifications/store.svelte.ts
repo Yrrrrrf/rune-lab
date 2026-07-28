@@ -45,7 +45,8 @@ export class ToastStore implements Disposable {
 		) {
 			id = crypto.randomUUID();
 		} else {
-			id = "toast-" +
+			id =
+				"toast-" +
 				Math.random().toString(36).substring(2, 9) +
 				"-" +
 				Date.now();

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import { getRegistryStore, getShortcutStore } from "../plugin.ts";
+import { installSettingsRoute } from "../settings-modal/route.svelte.ts";
 import { bindShortcuts } from "./hotkeys.svelte.ts";
 
 const registryStore = getRegistryStore();
@@ -8,8 +9,10 @@ const shortcutStore = getShortcutStore();
 
 onMount(() => {
   const unbindShortcuts = bindShortcuts(shortcutStore);
+  const uninstallRoute = installSettingsRoute(registryStore);
   return () => {
     unbindShortcuts();
+    uninstallRoute();
   };
 });
 

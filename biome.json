@@ -12,5 +12,13 @@
 		"parser": {
 			"tailwindDirectives": true
 		}
-	}
+	},
+	"overrides": [
+		{
+			"includes": ["**/paraglide/**"],
+			"linter": {
+				"enabled": false
+			}
+		}
+	]
 }
