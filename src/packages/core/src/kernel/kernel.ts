@@ -169,7 +169,10 @@ function extractInitialContributions(
 			if (!contributions.has(settingsSections)) {
 				contributions.set(settingsSections, []);
 			}
-			contributions.get(settingsSections)?.push(plugin.settings);
+			contributions.get(settingsSections)?.push({
+				...plugin.settings,
+				pluginId: plugin.id,
+			});
 		}
 	}
 	return contributions;

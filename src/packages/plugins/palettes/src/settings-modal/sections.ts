@@ -5,6 +5,7 @@ export interface FieldGroup {
 	id: string;
 	label: string;
 	fields: SettingsFieldSchema[];
+	pluginId?: string;
 }
 
 export interface SidebarEntry {
@@ -31,6 +32,7 @@ export function deriveModalModel(raw: SettingsSection[]): ModalModel {
 				id: section.id,
 				label: section.label,
 				fields: section.fields,
+				pluginId: section.pluginId,
 			});
 		}
 	}

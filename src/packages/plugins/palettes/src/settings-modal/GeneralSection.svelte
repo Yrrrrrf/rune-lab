@@ -12,7 +12,10 @@ let { groups }: { groups: FieldGroup[] } = $props();
   {#each groups as group}
     {#if group.id === "general"}
       <div class="general-core">
-        <SettingsFields fields={group.fields} />
+        <SettingsFields
+          fields={group.fields}
+          section={{ id: group.id, label: group.label, pluginId: group.pluginId }}
+        />
       </div>
     {:else}
       <div class="flex flex-col gap-4">
@@ -20,7 +23,10 @@ let { groups }: { groups: FieldGroup[] } = $props();
         <div class="text-xs font-semibold uppercase tracking-widest text-base-content/50 px-1">
           {group.label}
         </div>
-        <SettingsFields fields={group.fields} />
+        <SettingsFields
+          fields={group.fields}
+          section={{ id: group.id, label: group.label, pluginId: group.pluginId }}
+        />
       </div>
     {/if}
   {/each}
