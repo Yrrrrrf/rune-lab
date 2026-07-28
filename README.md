@@ -79,41 +79,25 @@ CSS rule can resolve the OS preference instead.
 
 ## Setup & Quick Start
 
-Configure your application layout with the plugins. Here is what you need to set
-up in your root `+layout.svelte`:
+`RuneProvider` ships with `layout` and `palettes` wired in **by default** — you
+don't need to pass them yourself. Any `plugins` you do pass are added on top,
+never replacing the defaults. Here's the minimal setup in your root
+`+layout.svelte`:
 
 ```svelte
 <script lang="ts">
 import "./layout.css";
-import { pushState, replaceState } from "$app/navigation";
 import { RuneProvider, version } from "rune-lab";
-import { i18n } from "rune-lab/i18n";
-import { layout } from "rune-lab/layout";
-import { palettes } from "rune-lab/palettes";
 import type { Snippet } from "svelte";
 import AppLayout from "./AppLayout.svelte";
 
 import faviconUrl from "$lib/assets/img/rune.png";
 
 let { children }: { children: Snippet } = $props();
-
-const layoutPlugin = layout.with({ theme: { default: "dark" } });
-
-// Wiring a router adapter lets the command palette and settings modal
-// update the URL through SvelteKit's router instead of raw history calls.
-const palettesPlugin = palettes.with({
-  registry: {
-    router: {
-      replaceState: (url: string) => replaceState(url, {}),
-      pushState: (url: string) => pushState(url, {}),
-    },
-  },
-});
 </script>
 
 <RuneProvider
   config={{
-    icons: "material",
     app: {
       name: "Rune Lab",
       version: version(),
@@ -122,7 +106,6 @@ const palettesPlugin = palettes.with({
       icon: faviconUrl,
     },
   }}
-  plugins={[layoutPlugin, palettesPlugin, i18n]}
 >
   <AppLayout>
     {@render children()}
@@ -130,16 +113,34 @@ const palettesPlugin = palettes.with({
 </RuneProvider>
 ```
 
+Opt into the rest (`i18n`, `observer`) by adding them to `plugins` — they're
+never on by default:
+
+```svelte
+<script lang="ts">
+import { RuneProvider, version } from "rune-lab";
+import { i18n } from "rune-lab/i18n";
+import { observer } from "rune-lab/observer";
+// ...
+</script>
+
+<RuneProvider plugins={[i18n, observer]} config={{ /* ... */ }}>
+  <AppLayout>{@render children()}</AppLayout>
+</RuneProvider>
+```
+
 ## Plugins
 
 Rune Lab is modular. Plugins are documented in their respective directories:
 
-- **Layout Plugin (`rune-lab/layout`)**: workspace layout shell, theming
-  (`data-theme`, daisyUI themes), and the pretext text engine.
-- **Palettes Plugin (`rune-lab/palettes`)**: command palette, keyboard
-  shortcuts, toast notifications, and the settings modal.
-- **i18n Plugin (`rune-lab/i18n`)**: language selection and currency
+- **Layout Plugin (`rune-lab/layout`)** — default: workspace layout shell,
+  theming (`data-theme`, daisyUI themes), and the pretext text engine.
+- **Palettes Plugin (`rune-lab/palettes`)** — default: command palette,
+  keyboard shortcuts, toast notifications, and the settings modal.
+- **i18n Plugin (`rune-lab/i18n`)** — opt-in: language selection and currency
   formatting/selection.
+- **Observer Plugin (`rune-lab/observer`)** — opt-in: docked developer tools
+  and a capabilities page in settings.
 
 ## License
 
