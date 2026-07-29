@@ -4,7 +4,9 @@
 	"license": "MIT",
 	"authors": ["Yrrrrrf <fer.rezac@outlook.com>"],
 	"nodeModulesDir": "auto",
+	"minimumDependencyAge": 0,
 	"imports": {
+		"vite": "npm:vite",
 		"vite-plus": "npm:vite-plus",
 		"typescript": "npm:typescript@6",
 		"svelte": "npm:svelte@^5",

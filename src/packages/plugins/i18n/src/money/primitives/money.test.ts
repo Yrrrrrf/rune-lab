@@ -1,10 +1,10 @@
 import { toSnapshot } from "dinero.js";
 import { describe, expect, it } from "vite-plus/test";
 import {
-	CURRENCY_MAP,
 	convertAmount,
 	convertMoney,
 	createMoney,
+	CURRENCY_MAP,
 	formatAmount,
 	fromMoneySnapshot,
 	registerCurrency,
