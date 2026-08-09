@@ -34,8 +34,12 @@ export class ToastStore implements Disposable {
 		type: ToastType = "info",
 		duration: number = 3000,
 	): void {
-		const oldest = this.toasts[0];
-		this.dismiss(oldest.id);
+		const MAX_TOASTS = 5;
+		while (this.toasts.length >= MAX_TOASTS) {
+			const oldest = this.toasts[0];
+			if (!oldest) break;
+			this.dismiss(oldest.id);
+		}
 
 		// Generate id: use crypto.randomUUID if available, else fallback
 		let id: string;
