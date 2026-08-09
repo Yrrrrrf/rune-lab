@@ -5,19 +5,19 @@ export * from "./persistence/createConfigStore.svelte.ts";
 export * from "./persistence/drivers.ts";
 export * from "./persistence/usePersistence.ts";
 export {
-	createAccessor,
-	getKernel,
-	getSettingsSections,
-	getT,
-	RUNE_LAB_CONTEXT,
-	type SettingsSection,
+  createAccessor,
+  getKernel,
+  getSettingsSections,
+  getT,
+  RUNE_LAB_CONTEXT,
+  type SettingsSection,
 } from "./provider/context.ts";
 export { default as RuneProvider } from "./RuneProvider.svelte";
 export {
-	type AppData,
-	type AppStore,
-	createAppStore,
-	getAppStore,
+  type AppData,
+  type AppStore,
+  createAppStore,
+  getAppStore,
 } from "./reactivity/app.svelte.ts";
 // Reactivity & Context exports
 export { useCell } from "./reactivity/use-cell.svelte.ts";
@@ -28,4 +28,4 @@ export { default as SettingsFields } from "./settings/SettingsFields.svelte";
 
 // todo: Link this to the main project deno.json file! :)
 // or todo... Make this a new line added just on build time. :)
-export const version = (): string => "0.5.2-rc.1";
+export const version = (): string => "0.5.2-rc.2";
