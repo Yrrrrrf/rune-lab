@@ -47,6 +47,9 @@ const shortcuts = [
   <div>
     <h1 class="text-2xl font-bold">Rune Lab — test bench</h1>
     <p class="text-sm opacity-60">layout + palettes integration</p>
+    <a href="/showcase" class="link link-primary text-xs">
+      🎪 /showcase — simple page for testing Observer
+    </a>
   </div>
 
   <div class="card bg-base-200 card-sm">
