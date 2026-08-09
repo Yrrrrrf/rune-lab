@@ -11,6 +11,22 @@ import type { TextMeasurer } from "../ports/text.ts";
 import { type StateCells, StateCellsTag } from "../services/layers.ts";
 import { compileEnvironment, type NormalizedSlot } from "./wiring.ts";
 
+export interface PluginDescriptor {
+	id: string;
+	requires: string[];
+	slotNames: string[];
+	hasSettings: boolean;
+}
+
+export interface SlotSummary {
+	id: string;
+	slotName: string;
+	pluginId: string;
+	dependsOn: string[];
+	expose: boolean;
+	persist?: boolean | string[];
+}
+
 export interface Kernel<TCells = Record<string, unknown>> {
 	stores: Map<string, unknown>;
 	overlays: unknown[];
@@ -25,6 +41,9 @@ export interface Kernel<TCells = Record<string, unknown>> {
 	getStoreEntry(
 		id: string,
 	): { contextKey?: symbol; expose?: boolean } | undefined;
+
+	listPlugins(): PluginDescriptor[];
+	listSlots(): SlotSummary[];
 
 	dispose(): Promise<void>;
 }
@@ -101,6 +120,22 @@ export function createKernel<TCells = Record<string, unknown>>(
 		unregisterContribution: <T>(key: ContributionKey<T>, id: string) =>
 			unregisterContributionLifecycle(cells, key, id),
 		getStoreEntry: (id) => slotMap.get(id),
+		listPlugins: () =>
+			resolvedPlugins.map((plugin) => ({
+				id: plugin.id,
+				requires: plugin.requires ?? [],
+				slotNames: Object.keys(plugin.slots ?? {}),
+				hasSettings: plugin.settings !== undefined,
+			})),
+		listSlots: () =>
+			sortedSlots.map((slot) => ({
+				id: slot.id,
+				slotName: slot.slotName,
+				pluginId: slot.pluginId,
+				dependsOn: slot.dependsOn,
+				expose: slot.expose,
+				persist: slot.persist,
+			})),
 		dispose: () => {
 			if (disposed) return Promise.resolve();
 			if (disposePromise) return disposePromise;

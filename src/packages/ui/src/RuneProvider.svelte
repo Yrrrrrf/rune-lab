@@ -7,6 +7,7 @@ import type {
 import {
 	createInMemoryDriver,
 	createKernel,
+	rootTakeover,
 } from "rune-lab/core";
 import { type Component, type Snippet, setContext, untrack } from "svelte";
 import {
@@ -76,6 +77,13 @@ $effect(() => () => {
 	kernel.dispose();
 });
 
+// Expose the kernel on window so a same-origin embedder (e.g. the observer
+// plugin's iframe) can poll it without a postMessage protocol.
+if (typeof window !== "undefined") {
+	(window as unknown as { __rune_kernel__?: typeof kernel }).__rune_kernel__ =
+		kernel;
+}
+
 // Provide the kernel itself
 setContext(RUNE_LAB_CONTEXT.kernel, kernel);
 
@@ -92,6 +100,21 @@ setContext(RUNE_LAB_CONTEXT.persistence, initialPersistence);
 
 // 3. Collect all overlays
 const allOverlays = kernel.overlays as Component[];
+
+// 4. Check whether a plugin has claimed the root — if so, it renders instead
+// of {@render children()}. Overlays above still render unconditionally, so
+// e.g. the settings modal stays reachable while a takeover is active.
+const takeoverEntries = kernel.getContributions(rootTakeover);
+if (takeoverEntries.length > 1) {
+	console.warn(
+		`[rune-lab] Multiple plugins contributed rootTakeover (${
+			takeoverEntries.map((e) => e.id).join(",")
+		}); using "${takeoverEntries[0].id}".`,
+	);
+}
+const Takeover = takeoverEntries[0]?.component as
+	| Component<{ children: Snippet }>
+	| undefined;
 
 // Meta tags derived from app store state
 const metaTags = $derived([
@@ -123,5 +146,9 @@ const metaTags = $derived([
   <Overlay />
 {/each}
 
-<!-- Render Children -->
-{@render children()}
+<!-- Render Children, or a plugin's root takeover -->
+{#if Takeover}
+  <Takeover {children} />
+{:else}
+  {@render children()}
+{/if}

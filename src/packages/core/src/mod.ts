@@ -24,6 +24,8 @@ export {
 	type ContributionKey,
 	contribute,
 	defineContribution,
+	type RootTakeoverContribution,
+	rootTakeover,
 	type SettingsSectionContribution,
 	settingsSections,
 } from "./forge/define-contribution.ts";
@@ -44,7 +46,12 @@ export type {
 export { defineSlot } from "./forge/define-slot.ts";
 export type { PersistenceHandle, SlotDescriptor } from "./forge/descriptors.ts";
 export { getContextSymbol } from "./forge/descriptors.ts";
-export { createKernel, type Kernel } from "./kernel/kernel.ts";
+export {
+	createKernel,
+	type Kernel,
+	type PluginDescriptor,
+	type SlotSummary,
+} from "./kernel/kernel.ts";
 export type { LocaleAdapter } from "./ports/locale.ts";
 export {
 	createInMemoryDriver,

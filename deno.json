@@ -1,5 +1,5 @@
 {
-	"version": "0.5.1",
+	"version": "0.5.2-rc.1",
 	"description": "A modern, extensible plugin-based UI shell for Svelte 5 applications",
 	"license": "MIT",
 	"readme": "README.md",

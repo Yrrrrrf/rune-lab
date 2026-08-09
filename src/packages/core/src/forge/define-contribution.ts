@@ -29,3 +29,11 @@ export interface SettingsSectionContribution {
 
 export const settingsSections: ContributionKey<SettingsSectionContribution> =
 	defineContribution<SettingsSectionContribution>("settingsSections");
+
+export interface RootTakeoverContribution {
+	id: string;
+	component: unknown;
+}
+
+export const rootTakeover: ContributionKey<RootTakeoverContribution> =
+	defineContribution<RootTakeoverContribution>("rootTakeover");

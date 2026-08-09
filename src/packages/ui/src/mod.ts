@@ -27,4 +27,4 @@ export { default as ResourceSelector } from "./selectors/ResourceSelector.svelte
 export { default as SettingsFields } from "./settings/SettingsFields.svelte";
 
 // todo: Link this to the main project deno.json file! :)
-export const version = (): string => "0.5.1";
+export const version = (): string => "0.5.2-rc.1";

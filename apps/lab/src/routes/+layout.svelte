@@ -13,7 +13,12 @@ let { children }: { children: Snippet } = $props();
 </script>
 
 <RuneProvider
-  plugins={[layout, palettes, i18n, observer]}
+  plugins={[
+    layout, 
+    palettes, 
+    i18n, 
+    observer
+    ]}
   config={{
     app: {
       name: "Rune Lab",
