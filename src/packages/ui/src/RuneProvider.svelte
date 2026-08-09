@@ -8,8 +8,6 @@ import {
 	createInMemoryDriver,
 	createKernel,
 } from "rune-lab/core";
-import { layout } from "rune-lab/layout";
-import { palettes } from "rune-lab/palettes";
 import { type Component, type Snippet, setContext, untrack } from "svelte";
 import {
 	cookieDriver,
@@ -19,15 +17,11 @@ import {
 import { RUNE_LAB_CONTEXT } from "./provider/context.ts";
 import { type AppData, createAppStore } from "./reactivity/app.svelte.ts";
 
-const DEFAULT_PLUGINS: PluginInput[] = [layout, palettes];
-
 /**
  * Configuration options for RuneProvider (persistence driver, head management, app metadata).
  */
 export interface RuneLabConfig {
 	persistence?: PersistenceDriver;
-	/** Optional head management properties */
-	manageHead?: boolean;
 	/** App metadata — passed to AppStore.init() */
 	app?: Partial<AppData>;
 	pluginConfig?: Record<string, Record<string, unknown>>;
@@ -69,7 +63,7 @@ setContext(RUNE_LAB_CONTEXT.app, appStore);
 
 // 1. Construct the kernel
 const kernel = createKernel(
-	untrack(() => [...DEFAULT_PLUGINS, ...plugins]),
+	untrack(() => plugins),
 	{
 		persistence: initialPersistence,
 		localeAdapter: untrack(() => localeAdapter),
@@ -107,7 +101,6 @@ const metaTags = $derived([
 </script>
 
 <svelte:head>
-  {#if config.manageHead !== false && appStore}
     {#if appStore.data.name}
       <title>{appStore.data.name}</title>
     {/if}
@@ -123,7 +116,6 @@ const metaTags = $derived([
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
-  {/if}
 </svelte:head>
 
 <!-- Plugin Overlays -->
