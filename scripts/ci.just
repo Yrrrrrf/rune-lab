@@ -17,16 +17,3 @@ prepare: prune
     # Install on main lab for testing...
     cd apps/lab; deno install
     cd apps/lab; deno run -A npm:@sveltejs/kit/svelte-kit sync
-
-# todo: Add just commit to my own personal scripts on main path... It absolutly rocks...
-[doc('Commit with AI-generated message via azathoth (pass y to auto-accept)')]
-[group('ci')]
-commit answer='': fmt
-    #!/usr/bin/env nu
-    open --raw ("~/Documents/lab/ai/.env" | path expand)
-        | lines
-        | parse "{key}={value}"
-        | reduce -f {} {|it, acc| $acc | insert $it.key $it.value }
-        | load-env
-    git add -A
-    {{ if answer == '' { '' } else { "'" + answer + "' | " } }}uvx azathoth workflow commit
