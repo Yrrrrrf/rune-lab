@@ -29,16 +29,16 @@ TYPES_RULES := '''
   {
     "packages": "src",
     "pattern": "src/tsconfig.json",
-    "engine": "svelte-check",
+    "engine": "svelte-check-native",
     "cwd": "src",
-    "command": ["deno", "run", "-A", "npm:svelte-check", "--tsconfig", "./tsconfig.json"]
+    "command": ["deno", "run", "-A", "npm:svelte-check-native", "--tsconfig", "./tsconfig.json"]
   },
   {
     "packages": "apps/lab",
     "pattern": "apps/lab/tsconfig.json",
-    "engine": "svelte-check",
+    "engine": "svelte-check-native",
     "cwd": "apps/lab",
-    "command": ["deno", "run", "-A", "npm:svelte-check", "--tsconfig", "./tsconfig.json"]
+    "command": ["deno", "run", "-A", "npm:svelte-check-native", "--tsconfig", "./tsconfig.json"]
   }
 ]
 '''

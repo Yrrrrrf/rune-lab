@@ -18,12 +18,9 @@
 	],
 	"imports": {
 		"svelte": "npm:svelte@^5",
-		"vite": "npm:vite",
 		"vite-plus": "npm:vite-plus",
-		"typescript": "npm:typescript@6",
-		"jsdom": "npm:jsdom",
+		"typescript": "npm:typescript",
 		"@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte",
-		"@testing-library/jest-dom": "npm:@testing-library/jest-dom",
 		"effect": "npm:effect@^3",
 		"esm-env": "npm:esm-env@^1"
 	},
