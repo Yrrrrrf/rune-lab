@@ -1,9 +1,23 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
+	"root": false,
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
-		"useIgnoreFile": true
+		"useIgnoreFile": true,
+		"root": ".."
+	},
+	"files": {
+		"ignoreUnknown": true,
+		"includes": [
+			"src/**",
+			"apps/**",
+			"config/**",
+			"scripts/**",
+			"build/**",
+			"!**/.svelte-kit",
+			"!**/node_modules"
+		]
 	},
 	"html": {
 		"experimentalFullSupportEnabled": true

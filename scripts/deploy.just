@@ -1,11 +1,18 @@
+# deploy.just — ship · build, preview, publish, and release
+
 # Plugins shipped in the published rune-lab package. Canonical registry and dependency facts live in scripts/plugins.ts
 BUILD_PLUGINS := "layout palettes i18n observer"
 
+[doc('Run quality gate (check + test) (pass -v for detailed logs, -p for parallel)')]
+[group('ci')]
+[positional-arguments]
+ci *flags: (test flags) (check flags)
+
 [doc('Build the rune-lab package: deno.json -> build/{dist, package.json, README, LICENSE}')]
-[group('Build')]
+[group('deploy')]
 build:
     # * Clean previous build
-    rm -rf build
+    ^{{ CLI }} rm --paths '["build"]'
     # * Generate build/package.json (exports & deps derived from BUILD_PLUGINS)
     deno run -A scripts/manifest.ts {{ BUILD_PLUGINS }}
     # * Compile i18n messages → paraglide runtime
@@ -18,13 +25,25 @@ build:
     deno fmt build
     # * Post-build: strip i18n artifacts, rewrite .ts→.js imports, inline the version
     nu scripts/build.nu
-    -biome format --write --vcs-use-ignore-file=false ./build
-    -biome check --fix --vcs-use-ignore-file=false ./build
+    -biome format --config-path=config/biome.json --write --vcs-use-ignore-file=false ./build
+    -biome check --config-path=config/biome.json --fix --vcs-use-ignore-file=false ./build
     @echo "✓ build done"
 
+[doc('Production-build and preview an app against the freshly injected pkg')]
+[group('deploy')]
+[positional-arguments]
+preview *flags:
+    ^{{ CLI }} exec {{ flags }} --title BUILD --select one --cwd 'apps/*' -- deno run -A npm:vite build
+    ^{{ CLI }} exec {{ flags }} --title PREVIEW --select one --cwd 'apps/*' -- deno run -A npm:vite preview
+
+[doc('Prepare a clean workspace, run CI quality gates, and build')]
+[group('deploy')]
+cycle: prepare (ci "-vp") build
+
 [working-directory('build')]
+[private]
+[script]
 _with-brave +cmd:
-    #!/usr/bin/env nu
     let d = (mktemp -d)
     "#!/usr/bin/env nu\ndef main [...args] { exec brave ...$args }" | save -f $"($d)/xdg-open"
     chmod +x $"($d)/xdg-open"
@@ -32,22 +51,9 @@ _with-brave +cmd:
     print "✓ {{ cmd }} done"
 
 [doc('Publish build/ to npm')]
-[group('Deploy')]
+[group('deploy')]
 publish: build (_with-brave "bun publish")
 
 [doc('npm login')]
-[group('Deploy')]
+[group('deploy')]
 login: (_with-brave "bunx npm login")
-
-[doc('Inject the built pkg (build/) into lab for local testing')]
-[group('Deploy')]
-inject root=justfile_directory(): build prepare
-    #!/usr/bin/env nu
-    let lab_modules = $"{{ root }}/apps/lab/node_modules"
-    # * Replace lab's installed rune-lab with the freshly built build/ layout
-    rm -rf $"($lab_modules)/rune-lab"
-    cp -r $"{{ root }}/build" $"($lab_modules)/rune-lab"
-    # * Verify the injection
-    diff -r $"{{ root }}/build" $"($lab_modules)/rune-lab"
-    print "✓ injected into node_modules/rune-lab"
-
