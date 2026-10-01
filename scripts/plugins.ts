@@ -14,12 +14,14 @@ export const PLUGINS = [
 	"i18n",
 	"observer",
 	"api",
+	"corpo",
 ] as const;
 
 export type PluginName = (typeof PLUGINS)[number];
 
 export const PLUGIN_DEPS: Record<PluginName, readonly PluginName[]> = {
 	api: [],
+	corpo: ["layout", "palettes", "i18n", "api"],
 	layout: [],
 	palettes: [],
 	i18n: [],

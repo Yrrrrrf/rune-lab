@@ -28,6 +28,7 @@ const svelteProject = (
 	resolve: {
 		alias: {
 			"rune-lab/api": resolve("./src/packages/plugins/api/src/mod.ts"),
+			"rune-lab/corpo": resolve("./src/packages/plugins/corpo/src/mod.ts"),
 			"rune-lab/core": resolve("./src/packages/core/src/mod.ts"),
 			"rune-lab/ui": resolve("./src/packages/ui/src/mod.ts"),
 			"rune-lab": resolve("./src/packages/rune-lab/src/mod.ts"),
@@ -68,6 +69,7 @@ export default defineConfig({
 		projects: [
 			svelteProject("ui", `${PKGS}`),
 			svelteProject("api", `${PLUGINS}`),
+			svelteProject("corpo", `${PLUGINS}`),
 			svelteProject("palettes", `${PLUGINS}`),
 			svelteProject("observer", `${PLUGINS}`),
 			svelteProject("layout", `${PLUGINS}`),

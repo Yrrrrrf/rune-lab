@@ -12,6 +12,7 @@
 		"./src/packages/ui",
 		"./src/packages/core",
 		"./src/packages/plugins/api",
+		"./src/packages/plugins/corpo",
 		"./src/packages/plugins/i18n",
 		"./src/packages/plugins/layout",
 		"./src/packages/plugins/observer",
