@@ -1,5 +1,5 @@
 {
-	"version": "0.5.2",
+	"version": "0.5.3",
 	"description": "A modern, extensible plugin-based UI shell for Svelte 5 applications",
 	"license": "MIT",
 	"readme": "README.md",
@@ -11,6 +11,7 @@
 	"workspace": [
 		"./src/packages/ui",
 		"./src/packages/core",
+		"./src/packages/plugins/api",
 		"./src/packages/plugins/i18n",
 		"./src/packages/plugins/layout",
 		"./src/packages/plugins/observer",
@@ -26,5 +27,8 @@
 	},
 	"test": {
 		"exclude": ["apps/**", "src/packages/ui/**", "src/packages/plugins/**"]
+	},
+	"overrides": {
+		"vite": "^8"
 	}
 }

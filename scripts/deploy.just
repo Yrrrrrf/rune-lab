@@ -1,7 +1,7 @@
 # deploy.just — ship · build, preview, publish, and release
 
 # Plugins shipped in the published rune-lab package. Canonical registry and dependency facts live in scripts/plugins.ts
-BUILD_PLUGINS := "layout palettes i18n observer"
+BUILD_PLUGINS := "layout palettes i18n observer api"
 
 [doc('Run quality gate (check + test) (pass -v for detailed logs, -p for parallel)')]
 [group('ci')]

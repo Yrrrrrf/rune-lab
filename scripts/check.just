@@ -10,7 +10,7 @@ fmt *flags:
 [group('check')]
 [positional-arguments]
 lint *flags:
-    -^{{ CLI }} exec {{ flags }} --title LINT -- deno lint .
+    -^{{ CLI }} exec {{ flags }} --title LINT -- biome lint --config-path=config/biome.json --write .
 
 [doc('Audit all code namespaces')]
 [group('check')]

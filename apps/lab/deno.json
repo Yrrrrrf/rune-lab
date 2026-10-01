@@ -6,7 +6,6 @@
 	"nodeModulesDir": "auto",
 	"minimumDependencyAge": 0,
 	"imports": {
-		"vite": "npm:vite",
 		"vite-plus": "npm:vite-plus",
 		"typescript": "npm:typescript@6",
 		"svelte": "npm:svelte@^5",
@@ -17,5 +16,8 @@
 		"@tailwindcss/vite": "npm:@tailwindcss/vite",
 		"daisyui": "npm:daisyui",
 		"rune-lab": "npm:rune-lab"
+	},
+	"overrides": {
+		"vite": "^8"
 	}
 }

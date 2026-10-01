@@ -1,0 +1,11 @@
+export { api } from "./plugin.ts";
+export { API_PLUGIN_ID, getApiStore } from "./context.ts";
+export { createApiClient, type ApiClient } from "./client.ts";
+export { createApiStore } from "./store.svelte.ts";
+export { ApiConfigurationError, describeApiError } from "./errors.ts";
+export { surrealApiBaseUrl } from "./url.ts";
+export { apiSettings } from "./settings.ts";
+export { default as APIMonitor } from "./components/APIMonitor.svelte";
+export { default as APIEnvironmentSelector } from "./components/APIEnvironmentSelector.svelte";
+export type * from "./types.ts";
+export { isResponseError, isResponseValidationError } from "up-fetch";

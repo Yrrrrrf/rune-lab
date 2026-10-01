@@ -12,6 +12,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
 		"paths": {
+			"rune-lab/api": ["./packages/plugins/api/src/mod.ts"],
 			"rune-lab/core": ["./packages/core/src/mod.ts"],
 			"rune-lab/ui": ["./packages/ui/src/mod.ts"],
 			"rune-lab": ["./packages/rune-lab/src/mod.ts"],

@@ -10,7 +10,7 @@ run *flags:
 [group('dev')]
 [positional-arguments]
 prune *flags:
-    ^{{ CLI }} rm --glob '**/node_modules' '**/.svelte-kit' '**/.vite' 'build' 'dist' 'coverage' '.justcache' 'deno.lock' {{ flags }}
+    ^{{ CLI }} rm --glob '**/node_modules' '**/.svelte-kit' '**/.vite' 'build' 'dist' 'coverage' '**/deno.lock' '**/.fallow' '**/.svelte-check' {{ flags }}
 
 [doc('Purge caches & lockfiles, reinstall deps, resync generated code')]
 [group('dev')]

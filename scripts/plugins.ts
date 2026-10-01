@@ -8,11 +8,18 @@
 //   i18n     - languages + currencies engine
 //   observer - full-shell inspector (takes over WorkspaceLayout)
 //   explorer - (future) api explorer
-export const PLUGINS = ["layout", "palettes", "i18n", "observer"] as const;
+export const PLUGINS = [
+	"layout",
+	"palettes",
+	"i18n",
+	"observer",
+	"api",
+] as const;
 
 export type PluginName = (typeof PLUGINS)[number];
 
 export const PLUGIN_DEPS: Record<PluginName, readonly PluginName[]> = {
+	api: [],
 	layout: [],
 	palettes: [],
 	i18n: [],
