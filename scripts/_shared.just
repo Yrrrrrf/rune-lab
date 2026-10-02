@@ -2,7 +2,7 @@
 # layer via `import`; settings and variables live here once.
 
 PROJECT := "rune-lab"
-CLI := "deno run -A jsr:@yrrrrrf/dv"
+CLI := "deno run -A jsr:@yrrrrrf/dv@0.0.4"
 export DV_JUSTFILE := justfile()
 
 [default]
@@ -33,9 +33,9 @@ svelte-package dir out=("src" / dir):
       -o "{{ justfile_directory() }}/build/dist/{{ out }}"
 
 [doc('Copy a shim file into dir, run cmd there, always remove the shim')]
-[script]
 [positional-arguments]
 [private]
+[script]
 with-shim dir shim *cmd:
     def --wrapped main [dir: string, shim: string, ...cmd: string] {
       let dest = ($dir | path join ($shim | path basename))
